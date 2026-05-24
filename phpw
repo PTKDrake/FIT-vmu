@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+set -eu
+
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+configured_version_file="$project_dir/.php-version"
+pvm_dir=${PVM_DIR:-"$HOME/.local/share/pvm"}
+versions_dir="$pvm_dir/versions"
+
+if [ ! -f "$configured_version_file" ] || [ ! -d "$versions_dir" ]; then
+    exec php "$@"
+fi
+
+configured_version=$(tr -d '[:space:]' < "$configured_version_file")
+
+if [ -z "$configured_version" ]; then
+    exec php "$@"
+fi
+
+resolved_version=$(
+    find "$versions_dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' \
+        | grep -E "^${configured_version}(\\.[0-9]+)?$" \
+        | sort -V \
+        | tail -n 1
+)
+
+if [ -z "${resolved_version:-}" ]; then
+    exec php "$@"
+fi
+
+php_binary="$versions_dir/$resolved_version/bin/php"
+
+if [ ! -x "$php_binary" ]; then
+    exec php "$@"
+fi
+
+exec "$php_binary" "$@"

@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "skipDefaultLibCheck": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "paths": {
+            "@/*": [
+                "./web/*"
+            ],
+        }
+    },
+    "include": [
+        "web/**/*.ts",
+        "web/**/*.tsx",
+        "web/**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "public",
+        "web/routes/**/*.ts",
+        "web/actions/**/*.tsx"
+    ]
+}

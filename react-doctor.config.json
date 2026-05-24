@@ -1,0 +1,46 @@
+{
+    "ignore": {
+        "files": [
+            "bootstrap/ssr/**",
+            "note.md.ts",
+            "public/build/**",
+            "vendor/**",
+            "web/actions/**",
+            "web/routes/**",
+            "web/tests/**",
+            "web/types/**/*.d.ts",
+            "web/wayfinder/**"
+        ],
+        "overrides": [
+            {
+                "files": [
+                    "package.json"
+                ],
+                "rules": [
+                    "react-doctor/require-reduced-motion",
+                    "deslop/unused-dependency",
+                    "deslop/unused-dev-dependency"
+                ]
+            },
+            {
+                "files": [
+                    "web/hooks/use-mount-effect.ts"
+                ],
+                "rules": [
+                    "deslop/unused-file",
+                    "eslint-js/no-restricted-syntax",
+                    "react-doctor/exhaustive-deps",
+                    "react-hooks/exhaustive-deps"
+                ]
+            },
+            {
+                "files": [
+                    "web/pages/**/*.tsx"
+                ],
+                "rules": [
+                    "deslop/unused-export"
+                ]
+            }
+        ]
+    }
+}

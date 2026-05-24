@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+set -eu
+
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+composer_binary=$(command -v composer)
+
+exec "$project_dir/phpw" "$composer_binary" "$@"

@@ -1,0 +1,35 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+services:
+    -
+        class: App\PHPStan\Rules\NoFactoryCreateRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: App\PHPStan\Rules\NoIlluminateHttpRequestImportRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: App\PHPStan\Rules\NoPipeStringInRequestRulesRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: App\PHPStan\Rules\NoRequestInputGetRule
+        tags:
+            - phpstan.rules.rule
+    -
+        class: App\PHPStan\Rules\RequireModelQueryStartRule
+        tags:
+            - phpstan.rules.rule
+
+parameters:
+    paths:
+        - app
+        - database/seeders
+        - routes
+        - tests/Architecture
+    excludePaths:
+        - tests/Architecture/fixtures
+    level: 5
+    tmpDir: storage/framework/cache/phpstan

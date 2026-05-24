@@ -1,0 +1,70 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": [
+        "typescript",
+        "import",
+        "react",
+        "jsx-a11y",
+        "promise",
+        "unicorn"
+    ],
+    "env": {
+        "browser": true,
+        "es2024": true
+    },
+    "jsPlugins": [
+        "oxlint-plugin-eslint",
+        {
+            "name": "react-doctor",
+            "specifier": "./node_modules/.pnpm/node_modules/oxlint-plugin-react-doctor/dist/index.js"
+        }
+    ],
+    "options": {
+        "typeAware": true
+    },
+    "categories": {
+        "correctness": "error"
+    },
+    "ignorePatterns": [
+        "web/types/**/*.d.ts",
+        "web/test-fixtures/**",
+        "web/tests/*.mjs",
+        "web/actions/**/*.ts",
+        "web/components/ui/*",
+        "web/routes/**/*.ts",
+        "web/wayfinder/**/*.ts"
+    ],
+    "rules": {
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn",
+        "react/only-export-components": "off",
+        "react-doctor/no-fetch-in-effect": "warn",
+        "react-doctor/no-derived-state-effect": "warn",
+        "eslint/no-unused-vars": "off",
+        "jsx-a11y/no-autofocus": "off",
+        "jsx-a11y/control-has-associated-label": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "react/no-children-prop": "off",
+        "typescript/no-unnecessary-condition": "off",
+        "eslint-js/no-restricted-syntax": [
+            "error",
+            {
+                "selector": "ImportSpecifier[parent.source.value='react'][imported.name='useEffect']",
+                "message": "Direct useEffect is forbidden in this repository. Read skills/no-use-effect/SKILL.md and skills/no-use-effect/references/patterns.md. Use useMountEffect from @/hooks/use-mount-effect only for true mount-only external synchronization."
+            },
+            {
+                "selector": "CallExpression[callee.object.name='React'][callee.property.name='useEffect']",
+                "message": "Direct useEffect is forbidden in this repository. Read skills/no-use-effect/SKILL.md and skills/no-use-effect/references/patterns.md. Use useMountEffect from @/hooks/use-mount-effect only for true mount-only external synchronization."
+            }
+        ]
+    },
+    "overrides": [
+        {
+            "files": ["web/hooks/use-mount-effect.ts"],
+            "rules": {
+                "eslint-js/no-restricted-syntax": "off",
+                "react/exhaustive-deps": "off"
+            }
+        }
+    ]
+}
