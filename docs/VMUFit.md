@@ -87,7 +87,7 @@ Ghi chú về `maatwebsite/excel:"4.x-dev"`:
 Package frontend khởi tạo cho MVP:
 
 ```bash
-pnpm add @blocknote/core @blocknote/react @blocknote/mantine
+pnpm add @blocknote/core @blocknote/react @blocknote/shadcn
 pnpm add react-hook-form zod @hookform/resolvers
 pnpm add @tanstack/react-table
 pnpm add nuqs
@@ -97,7 +97,7 @@ pnpm add date-fns
 
 Vai trò chính của từng package:
 
-- `@blocknote/core`, `@blocknote/react`, `@blocknote/mantine`: editor block chính cho CMS.
+- `@blocknote/core`, `@blocknote/react`, `@blocknote/shadcn`: editor block chính cho CMS.
 - `react-hook-form`: quản lý form ở frontend.
 - `zod`: validate dữ liệu phía frontend và định nghĩa schema dùng chung cho form.
 - `@hookform/resolvers`: kết nối `zod` với `react-hook-form`.
