@@ -78,7 +78,8 @@
 
 ## Tracking rules
 
-- Khi bắt đầu task: chuyển `todo` sang `doing`, điền `Branch`.
+- Khi bắt đầu task: chuyển `todo` sang `doing`, điền `Branch`, và `git switch` sang đúng branch đó trước khi sửa code.
+- Không làm code của task trên branch khác với giá trị ở cột `Branch`.
 - Khi mở PR: chuyển `doing` sang `review`, điền `PR`.
 - Khi bị chặn: chuyển `blocked`, ghi rõ lý do trong `Notes`.
 - Khi merge hoặc hoàn tất: chuyển `done`.

@@ -48,6 +48,15 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
 
+## Task Branch Discipline
+
+- Before starting any task work, read `docs/tasks.md` and identify the task row you are implementing.
+- Use the branch recorded in that task's `Branch` column as the required working branch for the task.
+- If the current git branch does not match the task branch, switch to the correct branch before making code changes.
+- If the task does not have a branch yet, update `docs/tasks.md` with the intended branch name before implementation work starts.
+- Do not implement a task on an unrelated branch, even for small or urgent changes.
+- If uncommitted local changes prevent switching to the correct task branch safely, stop and report that blocker instead of continuing on the wrong branch.
+
 ## Verification Scripts
 
 - Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
