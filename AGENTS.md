@@ -3,6 +3,14 @@
 
 # Laravel Boost Guidelines
 
+## Fast Context
+
+Load these project documents early when the task touches project scope, implementation rules, or task tracking:
+
+- `docs/VMUFit.md`: product guideline, architecture, authorization model, and project constraints.
+- `docs/tasks.md`: canonical task board, branch naming, owner tracking, and execution status.
+- `docs/VMUFit.tasks.md`: detailed phase breakdown, task checklist, and implementation prompts.
+
 The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
 
 ## Foundational Context
