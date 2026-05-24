@@ -15,7 +15,7 @@
 | Phase | Mục tiêu | Status | Notes |
 | --- | --- | --- | --- |
 | 0 | Setup, package nền, tracking, quality gate | done | Dependency backend/frontend đã có sẵn; tracking đã tạo; Inertia testing config đã được chỉnh cho cấu trúc `web/pages` |
-| 1 | Auth, role, permission | todo | Chưa bắt đầu |
+| 1 | Auth, role, permission | doing | Task 1.1 đã xong; còn seeder role/permission và super-admin gate |
 | 2 | Database domain MVP | todo | Chưa bắt đầu |
 | 3 | Backend actions, data objects, policy | todo | Chưa bắt đầu |
 | 4 | Frontend CMS foundation | todo | Chưa bắt đầu |
@@ -30,7 +30,7 @@
 | 0.1 | Setup | Backend packages | done | Codex | `chore/phase-0-setup` |  | `composer.json`, `composer.lock`, `config/permission.php`, `config/inertia.php`, `database/migrations/2026_05_24_114350_create_permission_tables.php`, `phpunit.xml` | `./phpw artisan test --compact tests/Feature/ExampleTest.php tests/Feature/DashboardTest.php` | Package đã có sẵn; đã sửa Inertia test page path sang `web/pages` và tắt SSR trong test |
 | 0.2 | Setup | Frontend packages | done | Codex | `chore/phase-0-setup` |  | `package.json`, `pnpm-lock.yaml` | `pnpm lint`, `pnpm typecheck` | BlockNote, `react-hook-form`, `zod`, `@tanstack/react-table`, `nuqs`, `react-dropzone`, `date-fns` đã có sẵn trong baseline |
 | 0.3 | Setup | Task tracking document | done | Codex | `chore/phase-0-setup` |  | `docs/tasks.md` | `./phpw artisan test --compact tests/Feature/ExampleTest.php tests/Feature/DashboardTest.php`, `pnpm lint`, `pnpm typecheck` | Tạo file tracking dùng chung cho các phase tiếp theo |
-| 1.1 | Auth | Configure Spatie permission for User | todo |  | `feature/auth-spatie-config` |  | `app/Models/User.php`, `config/permission.php` | `./phpw artisan test --compact` |  |
+| 1.1 | Auth | Configure Spatie permission for User | done | Codex | `feature/auth-spatie-config` |  | `app/Models/User.php`, `tests/Feature/Auth/PermissionConfigurationTest.php` | `./phpw artisan migrate --no-interaction`, `./phpw artisan test --compact tests/Feature/Auth/PermissionConfigurationTest.php` | Đã thêm `HasRoles` cho `User`, dùng guard `web`, xác nhận không thêm `users.role` hoặc `is_admin`; migration permission tables chạy thành công |
 | 1.2 | Auth | Seeder roles and permissions | todo |  | `feature/auth-permission-seeder` |  | `database/seeders/*` | `./phpw artisan test --compact` |  |
 | 1.3 | Auth | `Gate::before` for super-admin | todo |  | `feature/auth-super-admin-gate` |  | `app/Providers/*` | `./phpw artisan test --compact` |  |
 | 2.1 | Domain DB | Students and staff profiles | todo |  | `feature/db-students-staff-profiles` |  | `database/migrations/*`, `app/Models/*` | `./phpw artisan test --compact` |  |
