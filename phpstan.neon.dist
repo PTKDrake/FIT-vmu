@@ -30,6 +30,6 @@ parameters:
         - routes
         - tests/Architecture
     excludePaths:
-        - tests/Architecture/fixtures
+        - tests/Architecture/fixtures (?)
     level: 5
     tmpDir: storage/framework/cache/phpstan

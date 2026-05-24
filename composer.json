@@ -53,7 +53,7 @@
     },
     "scripts": {
         "analyse": [
-            "phpstan analyse --memory-limit=2G"
+            "@php vendor/bin/phpstan analyse --memory-limit=2G --debug --no-progress"
         ],
         "check": [
             "@format:test",

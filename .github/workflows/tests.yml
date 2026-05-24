@@ -1,0 +1,101 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'docs:') && !startsWith(github.event.head_commit.message, 'style:') && !startsWith(github.event.head_commit.message, 'ci:') && !startsWith(github.event.head_commit.message, 'build:')"
+    env:
+      APP_ENV: testing
+      APP_URL: http://127.0.0.1:8000
+      CACHE_STORE: array
+      DB_CONNECTION: sqlite
+      DB_DATABASE: database/database.sqlite
+      MAIL_MAILER: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare environment
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+          mkdir -p bootstrap/cache
+          mkdir -p database
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/cache/data
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/testing
+          mkdir -p storage/framework/views
+          mkdir -p storage/logs
+          touch database/database.sqlite
+
+      - name: Generate application key
+        run: ./phpw artisan key:generate --no-interaction
+
+      - name: Run migrations
+        run: ./phpw artisan migrate --force --no-interaction
+
+      - name: Check code style
+        run: ./composerw format:test
+
+      - name: Run static analysis
+        run: ./composerw analyse
+
+      - name: Build frontend assets
+        run: pnpm build
+
+      - name: Run backend tests
+        run: ./phpw artisan test --compact
+
+      - name: Run frontend checks
+        run: |
+          pnpm lint
+          pnpm typecheck
