@@ -82,7 +82,7 @@ notice.form = noticeForm
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 export const verify = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ verify.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 verify.url = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions) => {
@@ -123,7 +123,7 @@ verify.url = (args: { id: string | number, hash: string | number } | [id: string
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 verify.get = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -133,7 +133,7 @@ verify.get = (args: { id: string | number, hash: string | number } | [id: string
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 verify.head = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -143,7 +143,7 @@ verify.head = (args: { id: string | number, hash: string | number } | [id: strin
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 const verifyForm = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -153,7 +153,7 @@ const verifyForm = (args: { id: string | number, hash: string | number } | [id: 
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 verifyForm.get = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ verifyForm.get = (args: { id: string | number, hash: string | number } | [id: st
 
 /**
 * @see \App\Http\Controllers\Auth\VerifyEmailController::__invoke
-* @see app/Http/Controllers/Auth/VerifyEmailController.php:15
+* @see app/Http/Controllers/Auth/VerifyEmailController.php:16
 * @route '/verify-email/{id}/{hash}'
 */
 verifyForm.head = (args: { id: string | number, hash: string | number } | [id: string | number, hash: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
