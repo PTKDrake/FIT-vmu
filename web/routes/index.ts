@@ -163,7 +163,7 @@ dashboard.form = dashboardForm
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 export const register = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -178,7 +178,7 @@ register.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 register.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ register.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 register.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -197,7 +197,7 @@ register.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -207,7 +207,7 @@ register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 const registerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -217,7 +217,7 @@ const registerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 registerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -227,7 +227,7 @@ registerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
-* @see app/Http/Controllers/Auth/RegisteredUserController.php:20
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:23
 * @route '/register'
 */
 registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
