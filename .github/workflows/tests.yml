@@ -89,8 +89,13 @@ jobs:
       - name: Run static analysis
         run: ./composerw analyse
 
+      - name: Build frontend assets
+        run: pnpm build
+
       - name: Run backend tests
         run: ./phpw artisan test --compact
 
       - name: Run frontend checks
-        run: pnpm check
+        run: |
+          pnpm lint
+          pnpm typecheck
