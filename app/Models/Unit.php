@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Database\Factories\StaffProfileFactory;
+use Database\Factories\UnitFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class StaffProfile extends Model
+class Unit extends Model
 {
-    /** @use HasFactory<StaffProfileFactory> */
+    /** @use HasFactory<UnitFactory> */
     use HasFactory;
 
     /**
@@ -21,16 +20,13 @@ class StaffProfile extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'user_id',
-        'full_name',
+        'name',
         'slug',
-        'avatar_id',
-        'email',
-        'phone',
-        'bio',
-        'bio_format',
-        'is_public',
+        'type',
+        'description',
+        'description_format',
         'sort_order',
+        'is_active',
     ];
 
     /**
@@ -39,9 +35,9 @@ class StaffProfile extends Model
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'bio_format' => 'blocknote_json',
-        'is_public' => false,
+        'description_format' => 'blocknote_json',
         'sort_order' => 0,
+        'is_active' => true,
     ];
 
     /**
@@ -52,17 +48,12 @@ class StaffProfile extends Model
     protected function casts(): array
     {
         return [
-            'is_public' => 'boolean',
             'sort_order' => 'integer',
+            'is_active' => 'boolean',
         ];
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function appointments(): HasMany
+    public function staffAppointments(): HasMany
     {
         return $this->hasMany(StaffAppointment::class);
     }
