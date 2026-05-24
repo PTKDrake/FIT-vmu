@@ -62,6 +62,11 @@ class StaffProfile extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function avatar(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'avatar_id');
+    }
+
     public function appointments(): HasMany
     {
         return $this->hasMany(StaffAppointment::class);
