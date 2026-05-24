@@ -51,6 +51,12 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 ## Verification Scripts
 
 - Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
+- Keep local verification aligned with CI. The current CI checks are:
+  - `./composerw format:test`
+  - `./composerw analyse`
+  - `./phpw artisan test --compact`
+  - `pnpm check`
+- For PHPStan in this repository, use `./composerw analyse`. It is configured to run with the repository PHP wrapper and the stable CI flags already defined in `composer.json`.
 
 ## Application Structure & Architecture
 
@@ -60,6 +66,9 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 ## Frontend Bundling
 
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `pnpm run build`, `pnpm run dev`, or `composer run dev`. Ask them.
+- React Doctor is configured in `react-doctor.config.json`.
+- Use `pnpm doctor` or `pnpm doctor:strict` when working on React-heavy frontend changes.
+- React Doctor is not currently part of the required CI gate because the repository still has baseline diagnostics in shared UI files. Do not add it to CI as a blocking step until those are cleaned up.
 
 ## Documentation Files
 

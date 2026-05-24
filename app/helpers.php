@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 if (! function_exists('flash')) {
-    function flash($message, array $data = [], $type = 'success'): void
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    function flash(string $message, array $data = [], string $type = 'success'): void
     {
         session()->flash('message', $message);
         session()->flash('type', $type);
-        if (is_array($data)) {
-            session()->flash('data', $data);
-        }
+        session()->flash('data', $data);
     }
 }

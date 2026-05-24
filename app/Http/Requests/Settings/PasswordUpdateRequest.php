@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 class PasswordUpdateRequest extends FormRequest
 {
     /**
-     * @return array<string, ValidationRule|array<int, ValidationRule|string>|string>
+     * @return array<string, array<int, mixed>|ValidationRule|string>
      */
     public function rules(): array
     {
