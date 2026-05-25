@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Models\Position;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 
 class PositionData extends Data
 {
@@ -14,8 +14,8 @@ class PositionData extends Data
         public string $slug,
         public int $sortOrder,
         public bool $isActive,
-        public ?Carbon $createdAt = null,
-        public ?Carbon $updatedAt = null,
+        public ?CarbonInterface $createdAt = null,
+        public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,
     ) {}
 
@@ -26,8 +26,8 @@ class PositionData extends Data
             slug: $position->slug,
             sortOrder: $position->sort_order,
             isActive: $position->is_active,
-            createdAt: $position->created_at,
-            updatedAt: $position->updated_at,
+            createdAt: self::normalizeDateTime($position->created_at),
+            updatedAt: self::normalizeDateTime($position->updated_at),
             id: $position->id,
         );
     }

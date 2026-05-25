@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Models\Student;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 
 class StudentData extends Data
 {
@@ -14,8 +14,8 @@ class StudentData extends Data
         public string $studentCode,
         public string $className,
         public string $major,
-        public ?Carbon $createdAt = null,
-        public ?Carbon $updatedAt = null,
+        public ?CarbonInterface $createdAt = null,
+        public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,
     ) {}
 
@@ -26,8 +26,8 @@ class StudentData extends Data
             studentCode: $student->student_code,
             className: $student->class_name,
             major: $student->major,
-            createdAt: $student->created_at,
-            updatedAt: $student->updated_at,
+            createdAt: self::normalizeDateTime($student->created_at),
+            updatedAt: self::normalizeDateTime($student->updated_at),
             id: $student->id,
         );
     }

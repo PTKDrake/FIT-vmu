@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Models\Media;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 
 class MediaData extends Data
 {
@@ -16,8 +16,8 @@ class MediaData extends Data
         public string $mimeType,
         public int $size,
         public ?int $uploadedBy = null,
-        public ?Carbon $createdAt = null,
-        public ?Carbon $updatedAt = null,
+        public ?CarbonInterface $createdAt = null,
+        public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,
     ) {}
 
@@ -30,8 +30,8 @@ class MediaData extends Data
             mimeType: $media->mime_type,
             size: $media->size,
             uploadedBy: $media->uploaded_by,
-            createdAt: $media->created_at,
-            updatedAt: $media->updated_at,
+            createdAt: self::normalizeDateTime($media->created_at),
+            updatedAt: self::normalizeDateTime($media->updated_at),
             id: $media->id,
         );
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Models\Unit;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 
 class UnitData extends Data
 {
@@ -17,8 +17,8 @@ class UnitData extends Data
         public int $sortOrder,
         public bool $isActive,
         public ?string $description = null,
-        public ?Carbon $createdAt = null,
-        public ?Carbon $updatedAt = null,
+        public ?CarbonInterface $createdAt = null,
+        public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,
     ) {}
 
@@ -32,8 +32,8 @@ class UnitData extends Data
             sortOrder: $unit->sort_order,
             isActive: $unit->is_active,
             description: $unit->description,
-            createdAt: $unit->created_at,
-            updatedAt: $unit->updated_at,
+            createdAt: self::normalizeDateTime($unit->created_at),
+            updatedAt: self::normalizeDateTime($unit->updated_at),
             id: $unit->id,
         );
     }

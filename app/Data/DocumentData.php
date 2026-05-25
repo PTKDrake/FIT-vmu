@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Data;
 
 use App\Models\Document;
-use Illuminate\Support\Carbon;
+use App\Models\Media;
+use Carbon\CarbonInterface;
 use Spatie\LaravelData\Lazy;
 
 class DocumentData extends Data
@@ -21,15 +22,17 @@ class DocumentData extends Data
         public ?string $description = null,
         public ?int $fileId = null,
         public ?int $ownerId = null,
-        public ?Carbon $publishedAt = null,
-        public ?Carbon $createdAt = null,
-        public ?Carbon $updatedAt = null,
+        public ?CarbonInterface $publishedAt = null,
+        public ?CarbonInterface $createdAt = null,
+        public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,
         public Lazy|MediaData|null $file = null,
     ) {}
 
     public static function fromModel(Document $document): self
     {
+        $file = $document->relationLoaded('file') ? $document->file : null;
+
         return new self(
             title: $document->title,
             slug: $document->slug,
@@ -41,14 +44,14 @@ class DocumentData extends Data
             description: $document->description,
             fileId: $document->file_id,
             ownerId: $document->owner_id,
-            publishedAt: $document->published_at,
-            createdAt: $document->created_at,
-            updatedAt: $document->updated_at,
+            publishedAt: self::normalizeDateTime($document->published_at),
+            createdAt: self::normalizeDateTime($document->created_at),
+            updatedAt: self::normalizeDateTime($document->updated_at),
             id: $document->id,
             file: Lazy::whenLoaded(
                 'file',
                 $document,
-                fn (): ?MediaData => $document->file ? MediaData::fromModel($document->file) : null,
+                fn (): ?MediaData => $file instanceof Media ? MediaData::fromModel($file) : null,
             )->defaultIncluded(),
         );
     }

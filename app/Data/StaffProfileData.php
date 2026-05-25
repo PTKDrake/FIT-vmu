@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Data;
 
+use App\Models\Media;
 use App\Models\StaffProfile;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 use Spatie\LaravelData\Lazy;
 
 class StaffProfileData extends Data
@@ -21,14 +22,16 @@ class StaffProfileData extends Data
         public ?string $phone = null,
         public ?string $bio = null,
         public ?int $avatarId = null,
-        public ?Carbon $createdAt = null,
-        public ?Carbon $updatedAt = null,
+        public ?CarbonInterface $createdAt = null,
+        public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,
         public Lazy|MediaData|null $avatar = null,
     ) {}
 
     public static function fromModel(StaffProfile $staffProfile): self
     {
+        $avatar = $staffProfile->relationLoaded('avatar') ? $staffProfile->avatar : null;
+
         return new self(
             userId: $staffProfile->user_id,
             fullName: $staffProfile->full_name,
@@ -40,13 +43,13 @@ class StaffProfileData extends Data
             phone: $staffProfile->phone,
             bio: $staffProfile->bio,
             avatarId: $staffProfile->avatar_id,
-            createdAt: $staffProfile->created_at,
-            updatedAt: $staffProfile->updated_at,
+            createdAt: self::normalizeDateTime($staffProfile->created_at),
+            updatedAt: self::normalizeDateTime($staffProfile->updated_at),
             id: $staffProfile->id,
             avatar: Lazy::whenLoaded(
                 'avatar',
                 $staffProfile,
-                fn (): ?MediaData => $staffProfile->avatar ? MediaData::fromModel($staffProfile->avatar) : null,
+                fn (): ?MediaData => $avatar instanceof Media ? MediaData::fromModel($avatar) : null,
             )->defaultIncluded(),
         );
     }
