@@ -60,4 +60,9 @@ class Media extends Model
     {
         return $this->hasMany(Post::class, 'thumbnail_id');
     }
+
+    public function pageThumbnails(): HasMany
+    {
+        return $this->hasMany(Page::class, 'thumbnail_id');
+    }
 }

@@ -85,6 +85,11 @@ class User extends Authenticatable
         return $this->hasMany(Document::class, 'owner_id');
     }
 
+    public function authoredPages(): HasMany
+    {
+        return $this->hasMany(Page::class, 'author_id');
+    }
+
     public function uploadedMedia(): HasMany
     {
         return $this->hasMany(Media::class, 'uploaded_by');
