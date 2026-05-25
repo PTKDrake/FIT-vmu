@@ -16,7 +16,7 @@ import {
   DropdownSection,
   DropdownSeparator,
 } from "./dropdown"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 import { PopoverContent } from "./popover"
 
 interface SelectProps<T extends object, M extends "single" | "multiple" = "single">

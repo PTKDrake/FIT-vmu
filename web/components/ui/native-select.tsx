@@ -1,6 +1,6 @@
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import { twMerge } from "tailwind-merge"
-import { fieldStyles } from "@/components/ui/field"
+import { fieldStyles } from "@/components/ui/field.styles"
 
 export function NativeSelect({ className, ...props }: React.ComponentProps<"div">) {
   return (

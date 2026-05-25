@@ -45,6 +45,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 ## Verification Scripts
 
 - Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
+- Any backend/PHP code change must finish with the relevant automated tests passing and `./composerw analyse` passing before finalizing.
 
 ## Application Structure & Architecture
 

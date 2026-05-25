@@ -8,7 +8,7 @@ import {
   type SearchFieldProps,
 } from "react-aria-components/SearchField"
 import { twJoin } from "tailwind-merge"
-import { fieldStyles } from "@/components/ui/field"
+import { fieldStyles } from "@/components/ui/field.styles"
 import { cx } from "@/lib/primitive"
 import { Input, InputGroup } from "./input"
 

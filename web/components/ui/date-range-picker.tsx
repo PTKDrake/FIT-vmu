@@ -13,7 +13,7 @@ import { twJoin } from "tailwind-merge"
 import { cx } from "@/lib/primitive"
 import { DateInput as PrimitiveDateInput } from "./date-field"
 import { DatePickerOverlay } from "./date-picker"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 import { InputGroup } from "./input"
 
 export interface DateRangePickerProps<T extends DateValue>

@@ -9,7 +9,7 @@ import {
   SliderOutput,
   SliderTrack,
 } from "react-aria-components/ColorSlider"
-import { fieldStyles } from "@/components/ui/field"
+import { fieldStyles } from "@/components/ui/field.styles"
 import { cx } from "@/lib/primitive"
 
 export function ColorSlider({ className, ...props }: ColorSliderProps) {

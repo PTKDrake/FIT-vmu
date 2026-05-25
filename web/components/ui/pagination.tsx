@@ -1,6 +1,9 @@
 import { twMerge } from "tailwind-merge"
-import { type ButtonProps, buttonStyles } from "@/components/ui/button"
+import type { ButtonProps } from "@/components/ui/button"
 import { Link, type LinkProps } from "@/components/ui/link"
+import { buttonStyles } from "@/components/ui/button.styles"
+
+const PAGINATION_GAP_CONTENT = "…"
 
 const Pagination = ({ className, ref, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -301,7 +304,7 @@ const PaginationSpacer = ({ className, ref, ...props }: React.ComponentProps<"di
 
 const PaginationGap = ({
   className,
-  children = <>&hellip;</>,
+  children = PAGINATION_GAP_CONTENT,
   ...props
 }: React.ComponentProps<"li">) => {
   return (

@@ -5,7 +5,7 @@ import {
   type ColorFieldProps,
 } from "react-aria-components/ColorField"
 import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 
 export function ColorField({ className, ...props }: ColorFieldProps) {
   return (

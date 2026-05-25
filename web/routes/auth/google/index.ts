@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 export const redirect = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ redirect.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 redirect.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ redirect.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 redirect.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ redirect.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 redirect.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ redirect.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 const redirectForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const redirectForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 redirectForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ redirectForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::redirect
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:20
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:21
 * @route '/auth/google/redirect'
 */
 redirectForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ redirect.form = redirectForm
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 export const callback = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ callback.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 callback.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ callback.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 callback.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ callback.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 callback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ callback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 const callbackForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const callbackForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 callbackForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ callbackForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleOAuthController::callback
-* @see app/Http/Controllers/Auth/GoogleOAuthController.php:33
+* @see app/Http/Controllers/Auth/GoogleOAuthController.php:37
 * @route '/auth/google/callback'
 */
 callbackForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

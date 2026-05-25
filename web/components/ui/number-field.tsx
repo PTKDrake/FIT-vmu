@@ -7,7 +7,7 @@ import {
 } from "react-aria-components/NumberField"
 import { Input, InputGroup } from "@/components/ui/input"
 import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 
 const NumberField = ({ className, ...props }: NumberFieldProps) => {
   return (

@@ -12,6 +12,7 @@ use App\Models\StaffAppointment;
 use App\Models\StaffProfile;
 use App\Models\Student;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 
@@ -165,52 +166,62 @@ class BuildDashboardOverviewAction
      */
     private function recentActivity(): array
     {
+        $postItems = Post::query()
+            ->with('author:id,name')
+            ->latest('updated_at')
+            ->limit(4)
+            ->get()
+            ->map(function (Post $post): array {
+                /** @var User|null $author */
+                $author = $post->author;
+
+                return [
+                    'id' => 'post-'.$post->id,
+                    'kind' => 'Bài viết',
+                    'title' => $post->title,
+                    'description' => 'Cập nhật bởi '.($author instanceof User ? $author->name : 'hệ thống'),
+                    'status' => $post->status,
+                    'updatedAt' => $this->toIsoString($post->updated_at),
+                ];
+            })
+            ->all();
+
+        $documentItems = Document::query()
+            ->with('owner:id,name')
+            ->latest('updated_at')
+            ->limit(4)
+            ->get()
+            ->map(function (Document $document): array {
+                /** @var User|null $owner */
+                $owner = $document->owner;
+
+                return [
+                    'id' => 'document-'.$document->id,
+                    'kind' => 'Tài liệu',
+                    'title' => $document->title,
+                    'description' => 'Chủ sở hữu: '.($owner instanceof User ? $owner->name : 'hệ thống'),
+                    'status' => $document->status,
+                    'updatedAt' => $this->toIsoString($document->updated_at),
+                ];
+            })
+            ->all();
+
+        $staffProfileItems = StaffProfile::query()
+            ->latest('updated_at')
+            ->limit(3)
+            ->get()
+            ->map(fn (StaffProfile $profile): array => [
+                'id' => 'staff-'.$profile->id,
+                'kind' => 'Hồ sơ cán bộ',
+                'title' => $profile->full_name,
+                'description' => $profile->is_public ? 'Đang hiển thị công khai' : 'Đang được chuẩn bị',
+                'status' => $profile->is_public ? 'published' : 'draft',
+                'updatedAt' => $this->toIsoString($profile->updated_at),
+            ])
+            ->all();
+
         /** @var Collection<int, array{id: string, kind: string, title: string, description: string, status: string, updatedAt: string}> $items */
-        $items = collect()
-            ->concat(
-                Post::query()
-                    ->with('author:id,name')
-                    ->latest('updated_at')
-                    ->limit(4)
-                    ->get()
-                    ->map(fn (Post $post): array => [
-                        'id' => 'post-'.$post->id,
-                        'kind' => 'Bài viết',
-                        'title' => $post->title,
-                        'description' => 'Cập nhật bởi '.($post->author?->name ?? 'hệ thống'),
-                        'status' => $post->status,
-                        'updatedAt' => $this->toIsoString($post->updated_at),
-                    ])
-            )
-            ->concat(
-                Document::query()
-                    ->with('owner:id,name')
-                    ->latest('updated_at')
-                    ->limit(4)
-                    ->get()
-                    ->map(fn (Document $document): array => [
-                        'id' => 'document-'.$document->id,
-                        'kind' => 'Tài liệu',
-                        'title' => $document->title,
-                        'description' => 'Chủ sở hữu: '.($document->owner?->name ?? 'hệ thống'),
-                        'status' => $document->status,
-                        'updatedAt' => $this->toIsoString($document->updated_at),
-                    ])
-            )
-            ->concat(
-                StaffProfile::query()
-                    ->latest('updated_at')
-                    ->limit(3)
-                    ->get()
-                    ->map(fn (StaffProfile $profile): array => [
-                        'id' => 'staff-'.$profile->id,
-                        'kind' => 'Hồ sơ cán bộ',
-                        'title' => $profile->full_name,
-                        'description' => $profile->is_public ? 'Đang hiển thị công khai' : 'Đang được chuẩn bị',
-                        'status' => $profile->is_public ? 'published' : 'draft',
-                        'updatedAt' => $this->toIsoString($profile->updated_at),
-                    ])
-            )
+        $items = collect(array_merge($postItems, $documentItems, $staffProfileItems))
             ->sortByDesc('updatedAt')
             ->take(8)
             ->values();
@@ -230,40 +241,50 @@ class BuildDashboardOverviewAction
      */
     private function pendingReviewItems(): array
     {
+        $pendingPostItems = Post::query()
+            ->with('author:id,name')
+            ->where('status', 'pending')
+            ->latest('updated_at')
+            ->limit(4)
+            ->get()
+            ->map(function (Post $post): array {
+                /** @var User|null $author */
+                $author = $post->author;
+
+                return [
+                    'id' => 'post-pending-'.$post->id,
+                    'kind' => 'Bài viết',
+                    'title' => $post->title,
+                    'owner' => $author instanceof User ? $author->name : 'Hệ thống',
+                    'status' => $post->status,
+                    'updatedAt' => $this->toIsoString($post->updated_at),
+                ];
+            })
+            ->all();
+
+        $pendingDocumentItems = Document::query()
+            ->with('owner:id,name')
+            ->where('status', 'pending')
+            ->latest('updated_at')
+            ->limit(4)
+            ->get()
+            ->map(function (Document $document): array {
+                /** @var User|null $owner */
+                $owner = $document->owner;
+
+                return [
+                    'id' => 'document-pending-'.$document->id,
+                    'kind' => 'Tài liệu',
+                    'title' => $document->title,
+                    'owner' => $owner instanceof User ? $owner->name : 'Hệ thống',
+                    'status' => $document->status,
+                    'updatedAt' => $this->toIsoString($document->updated_at),
+                ];
+            })
+            ->all();
+
         /** @var Collection<int, array{id: string, kind: string, title: string, owner: string, status: string, updatedAt: string}> $items */
-        $items = collect()
-            ->concat(
-                Post::query()
-                    ->with('author:id,name')
-                    ->where('status', 'pending')
-                    ->latest('updated_at')
-                    ->limit(4)
-                    ->get()
-                    ->map(fn (Post $post): array => [
-                        'id' => 'post-pending-'.$post->id,
-                        'kind' => 'Bài viết',
-                        'title' => $post->title,
-                        'owner' => $post->author?->name ?? 'Hệ thống',
-                        'status' => $post->status,
-                        'updatedAt' => $this->toIsoString($post->updated_at),
-                    ])
-            )
-            ->concat(
-                Document::query()
-                    ->with('owner:id,name')
-                    ->where('status', 'pending')
-                    ->latest('updated_at')
-                    ->limit(4)
-                    ->get()
-                    ->map(fn (Document $document): array => [
-                        'id' => 'document-pending-'.$document->id,
-                        'kind' => 'Tài liệu',
-                        'title' => $document->title,
-                        'owner' => $document->owner?->name ?? 'Hệ thống',
-                        'status' => $document->status,
-                        'updatedAt' => $this->toIsoString($document->updated_at),
-                    ])
-            )
+        $items = collect(array_merge($pendingPostItems, $pendingDocumentItems))
             ->sortByDesc('updatedAt')
             ->take(6)
             ->values();

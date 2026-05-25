@@ -6,7 +6,7 @@ import {
 } from "react-aria-components/DateField"
 import { twJoin } from "tailwind-merge"
 import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 
 export function DateField<T extends DateValue>({ className, ...props }: DateFieldProps<T>) {
   return (

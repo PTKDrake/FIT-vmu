@@ -12,6 +12,12 @@ import {
 } from "./chart"
 import { DEFAULT_COLORS, constructCategoryColors, getColorValue, valueToPercent } from "./chart.utils"
 
+const EMPTY_LINE_CHART_DATA: BaseChartProps["data"] = []
+
+function defaultLineValueFormatter(value: number): string {
+  return value.toString()
+}
+
 export interface LineChartProps extends BaseChartProps {
   connectNulls?: boolean
   lineProps?: LineProps
@@ -19,7 +25,7 @@ export interface LineChartProps extends BaseChartProps {
 }
 
 export function LineChart({
-  data = [],
+  data = EMPTY_LINE_CHART_DATA,
   dataKey,
   colors = DEFAULT_COLORS,
   connectNulls = false,
@@ -36,7 +42,7 @@ export function LineChart({
 
   intervalType = "equidistantPreserveStart",
 
-  valueFormatter = (value: number) => value.toString(),
+  valueFormatter = defaultLineValueFormatter,
 
   // XAxis
   displayEdgeLabelsOnly = false,

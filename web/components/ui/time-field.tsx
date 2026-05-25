@@ -5,7 +5,7 @@ import {
 } from "react-aria-components/TimeField"
 import { DateInput } from "@/components/ui/date-field"
 import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 
 export function TimeField<T extends TimeValue>({ className, ...props }: TimeFieldProps<T>) {
   return (

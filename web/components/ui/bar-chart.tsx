@@ -15,6 +15,12 @@ import {
 } from "./chart"
 import { DEFAULT_COLORS, constructCategoryColors, getColorValue, valueToPercent } from "./chart.utils"
 
+const EMPTY_BAR_CHART_DATA: BaseChartProps["data"] = []
+
+function defaultBarValueFormatter(value: number): string {
+  return value.toString()
+}
+
 export interface BarChartProps extends BaseChartProps {
   barCategoryGap?: number
   barRadius?: number
@@ -26,7 +32,7 @@ export interface BarChartProps extends BaseChartProps {
 }
 
 export function BarChart({
-  data = [],
+  data = EMPTY_BAR_CHART_DATA,
   dataKey,
   colors = DEFAULT_COLORS,
   type = "default",
@@ -49,7 +55,7 @@ export function BarChart({
   barRadius,
   barProps,
 
-  valueFormatter = (value: number) => value.toString(),
+  valueFormatter = defaultBarValueFormatter,
 
   // XAxis
   displayEdgeLabelsOnly = false,

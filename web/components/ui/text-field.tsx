@@ -5,7 +5,7 @@ import {
   type TextFieldProps,
 } from "react-aria-components/TextField"
 import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 
 export function TextField({ className, ...props }: TextFieldProps) {
   return (

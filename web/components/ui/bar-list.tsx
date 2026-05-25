@@ -2,6 +2,12 @@ import { Button } from "react-aria-components/Button"
 import { twJoin, twMerge } from "tailwind-merge"
 import { Link } from "./link"
 
+const EMPTY_BAR_LIST_DATA: Array<Bar<unknown>> = []
+
+function defaultBarListValueFormatter(value: number): string {
+  return value.toString()
+}
+
 type Bar<T> = T & {
   key?: string
   href?: string
@@ -18,8 +24,8 @@ interface BarListProps<T = unknown> extends React.ComponentProps<"div"> {
 
 /** @deprecated Use Leaderboard component instead */
 export function BarList<T>({
-  data = [],
-  valueFormatter = (value) => value.toString(),
+  data = EMPTY_BAR_LIST_DATA as Bar<T>[],
+  valueFormatter = defaultBarListValueFormatter,
   onValueChange,
   sortOrder = "descending",
   className,

@@ -10,6 +10,12 @@ import {
 } from "./chart"
 import { DEFAULT_COLORS, getColorValue } from "./chart.utils"
 
+const EMPTY_PIE_CHART_DATA: BaseChartProps["data"] = []
+
+function defaultPieValueFormatter(value: number): string {
+  return value.toString()
+}
+
 type PieChartDatum = BaseChartProps["data"][number]
 
 function sumNumericArray(arr: number[]): number {
@@ -57,7 +63,7 @@ interface PieChartProps
 }
 
 const PieChart = ({
-  data = [],
+  data = EMPTY_PIE_CHART_DATA,
   dataKey,
   colors = DEFAULT_COLORS,
   config,
@@ -74,7 +80,7 @@ const PieChart = ({
 
   chartProps,
 
-  valueFormatter = (value: number) => value.toString(),
+  valueFormatter = defaultPieValueFormatter,
   pieProps,
   ...props
 }: PieChartProps) => {

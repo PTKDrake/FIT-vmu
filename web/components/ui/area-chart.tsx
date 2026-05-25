@@ -14,10 +14,15 @@ import {
 import { DEFAULT_COLORS, constructCategoryColors, getColorValue, valueToPercent } from "./chart.utils"
 
 const slugRegExp = /[^a-zA-Z0-9]/g
+const EMPTY_AREA_CHART_DATA: BaseChartProps["data"] = []
 
 const fillNone = <stop stopColor="currentColor" stopOpacity={0} />
 
 const fillGradientEnd = <stop offset="95%" stopColor="currentColor" stopOpacity={0} />
+
+function defaultAreaValueFormatter(value: number): string {
+  return value.toString()
+}
 
 function getFillContent({
   fillType,
@@ -49,7 +54,7 @@ export interface AreaChartProps extends BaseChartProps {
 }
 
 export function AreaChart({
-  data = [],
+  data = EMPTY_AREA_CHART_DATA,
   dataKey,
   colors = DEFAULT_COLORS,
   connectNulls = false,
@@ -72,7 +77,7 @@ export function AreaChart({
 
   intervalType = "equidistantPreserveStart",
 
-  valueFormatter = (value: number) => value.toString(),
+  valueFormatter = defaultAreaValueFormatter,
 
   // XAxis
   displayEdgeLabelsOnly = false,

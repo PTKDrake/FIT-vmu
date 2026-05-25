@@ -33,7 +33,7 @@ test('users with dashboard permission are redirected to dashboard after login', 
     ]);
 
     $this->assertAuthenticatedAs($user);
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('cms.dashboard', absolute: false));
 });
 
 test('users can not authenticate with invalid password', function () {

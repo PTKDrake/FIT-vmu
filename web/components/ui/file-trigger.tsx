@@ -6,7 +6,8 @@ import {
   type FileTriggerProps as FileTriggerPrimitiveProps,
 } from "react-aria-components/FileTrigger"
 import type { VariantProps } from "tailwind-variants"
-import { Button, type buttonStyles } from "./button"
+import { Button } from "./button"
+import { type buttonStyles } from "./button.styles"
 import { Loader } from "./loader"
 
 export interface FileTriggerProps

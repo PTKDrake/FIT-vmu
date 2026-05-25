@@ -10,7 +10,7 @@ abstract class Controller
     protected function redirectToAuthenticatedDestination(User $user): RedirectResponse
     {
         $intendedRoute = $user->can('view admin dashboard')
-            ? route('dashboard', absolute: false)
+            ? route('cms.dashboard', absolute: false)
             : route('home', absolute: false);
 
         return redirect()->intended($intendedRoute);

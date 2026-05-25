@@ -8,7 +8,7 @@ import {
 } from "react-aria-components/ColorPicker"
 import { twMerge } from "tailwind-merge"
 import { Button } from "./button"
-import { fieldStyles } from "./field"
+import { fieldStyles } from "./field.styles"
 
 interface ColorPickerProps extends ColorPickerPrimitiveProps {
   className?: string

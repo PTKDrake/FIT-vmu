@@ -76,7 +76,7 @@ test('google callback authenticates existing cms users and redirects to dashboar
     $response = $this->get(route('auth.google.callback', ['code' => 'oauth-code']));
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('cms.dashboard', absolute: false));
 
     expect(auth()->id())->toBe($user->id);
 });
