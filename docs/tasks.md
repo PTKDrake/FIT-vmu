@@ -17,7 +17,7 @@
 | 0 | Setup, package nền, tracking, quality gate | done | Dependency backend/frontend đã có sẵn; tracking đã tạo; Inertia testing config đã được chỉnh cho cấu trúc `web/pages` |
 | 1 | Auth, role, permission | done | Task 1.1, 1.2, 1.3 đã xong |
 | 2 | Database domain MVP | todo | Chưa bắt đầu |
-| 3 | Backend actions, data objects, policy | todo | Chưa bắt đầu |
+| 3 | Backend actions, data objects, policy | doing | Task 3.1 đã xong; các task 3.2-3.4 chưa bắt đầu |
 | 4 | Frontend CMS foundation | todo | Chưa bắt đầu |
 | 5 | Module nội dung chính | todo | Chưa bắt đầu |
 | 6 | Public website MVP | todo | Chưa bắt đầu |
@@ -37,7 +37,7 @@
 | 2.1 | Domain DB | Students and staff profiles | done | `feature/db-students-staff-profiles` |  | `database/migrations/*`, `app/Models/User.php`, `app/Models/Student.php`, `app/Models/StaffProfile.php`, `database/factories/*`, `tests/Feature/StudentAndStaffProfileSchemaTest.php` | `vendor/bin/pint --dirty --format agent`, `./phpw artisan test --compact tests/Feature/StudentAndStaffProfileSchemaTest.php` | Đã tạo schema `students` và `staff_profiles`, factory/test, và relationship một-một với `users` |
 | 2.2 | Domain DB | Units, positions, staff appointments | done | `feature/db-units-positions-appointments` |  | `database/migrations/*`, `app/Models/*`, `database/factories/*`, `tests/Feature/UnitPositionAppointmentSchemaTest.php`, `docs/tasks.md` | `vendor/bin/pint --dirty --format agent`, `./phpw artisan test --compact tests/Feature/UnitPositionAppointmentSchemaTest.php` | Đã tạo schema `units`, `positions`, `staff_appointments`, factory/test, relationship và xác nhận không dùng `is_current` |
 | 2.3 | Domain DB | Posts, documents, document rows, media | done | `feature/db-content-tables` |  | `database/migrations/*`, `app/Models/*`, `database/factories/*`, `tests/Feature/ContentDomainSchemaTest.php`, `docs/tasks.md` | `vendor/bin/pint --dirty --format agent`, `./phpw artisan test --compact tests/Feature/ContentDomainSchemaTest.php` | Đã tạo schema/model/factory/test cho posts, documents, document_rows, media; bổ sung relation content ownership và media references |
-| 3.1 | Backend | Foundation data objects | todo | `feature/backend-data-objects` |  | `app/Data/*` | `./phpw artisan test --compact` |  |
+| 3.1 | Backend | Foundation data objects | done | `feature/backend-data-objects` |  | `app/Data/*`, `tests/Unit/DomainDataTest.php`, `docs/tasks.md` | `vendor/bin/pint --dirty --format agent`, `./phpw artisan test --compact tests/Unit/DomainDataTest.php` | Đã tạo base `App\Data\Data`, 6 data object theo checklist và bổ sung `MediaData` để chuẩn hóa relation media cho post/document/staff profile |
 | 3.2 | Backend | Posts policy and form requests | todo | `feature/posts-policy-validation` |  | `app/Policies/*`, `app/Http/Requests/*` | `./phpw artisan test --compact` |  |
 | 3.3 | Backend | Documents policy and form requests | todo | `feature/documents-policy-validation` |  | `app/Policies/*`, `app/Http/Requests/*` | `./phpw artisan test --compact` |  |
 | 3.4 | Backend | Query builder for CMS lists | todo | `feature/cms-query-builders` |  | `app/*QueryBuilder*`, `app/Http/Controllers/*` | `./phpw artisan test --compact` |  |
