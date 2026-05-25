@@ -34,6 +34,14 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user() ? AuthenticatedUserResource::make($request->user()) : null,
+                'permissions' => fn (): array => $request->user()
+                    ? $request->user()->getPermissionNames()->sort()->values()->all()
+                    : [],
+                'social' => [
+                    'googleEnabled' => filled(config('services.google.client_id'))
+                        && filled(config('services.google.client_secret'))
+                        && filled(config('services.google.redirect')),
+                ],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => fn () => [
