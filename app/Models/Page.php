@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Database\Factories\PostFactory;
+use Database\Factories\PageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Post extends Model
+class Page extends Model
 {
-    /** @use HasFactory<PostFactory> */
+    /** @use HasFactory<PageFactory> */
     use HasFactory;
 
     /**
@@ -23,7 +23,6 @@ class Post extends Model
     protected $fillable = [
         'title',
         'slug',
-        'category_id',
         'excerpt',
         'content',
         'content_format',
@@ -39,7 +38,7 @@ class Post extends Model
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'content_format' => 'blocknote_json',
+        'content_format' => 'puck_json',
         'status' => 'draft',
     ];
 
@@ -58,11 +57,6 @@ class Post extends Model
     public function thumbnail(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'thumbnail_id');
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(PostCategory::class, 'category_id');
     }
 
     public function author(): BelongsTo

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Database\Factories\PostFactory;
+use Database\Factories\PostCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Post extends Model
+class PostCategory extends Model
 {
-    /** @use HasFactory<PostFactory> */
+    /** @use HasFactory<PostCategoryFactory> */
     use HasFactory;
 
     /**
@@ -21,16 +21,12 @@ class Post extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'title',
+        'name',
         'slug',
-        'category_id',
-        'excerpt',
-        'content',
-        'content_format',
-        'thumbnail_id',
-        'author_id',
-        'status',
-        'published_at',
+        'description',
+        'parent_id',
+        'sort_order',
+        'is_active',
     ];
 
     /**
@@ -39,8 +35,8 @@ class Post extends Model
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'content_format' => 'blocknote_json',
-        'status' => 'draft',
+        'sort_order' => 0,
+        'is_active' => true,
     ];
 
     /**
@@ -51,23 +47,25 @@ class Post extends Model
     protected function casts(): array
     {
         return [
-            'published_at' => 'datetime',
+            'parent_id' => 'integer',
+            'sort_order' => 'integer',
+            'is_active' => 'boolean',
         ];
     }
 
-    public function thumbnail(): BelongsTo
+    public function parent(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'thumbnail_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
-    public function category(): BelongsTo
+    public function children(): HasMany
     {
-        return $this->belongsTo(PostCategory::class, 'category_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function author(): BelongsTo
+    public function posts(): HasMany
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->hasMany(Post::class, 'category_id');
     }
 
     public function navigationItems(): HasMany
