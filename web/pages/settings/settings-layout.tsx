@@ -1,5 +1,5 @@
-import type { PropsWithChildren } from "react"
 import { Link, usePage } from "@inertiajs/react"
+import type { PropsWithChildren } from "react"
 
 const links = [
   { href: "/settings/profile", label: "Profile" },
@@ -18,8 +18,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
           <Link
             key={link.href}
             href={link.href}
-            className={`block rounded-md px-3 py-2 text-sm ${
-              page.url === link.href ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"
+            className={`block rounded-md px-3 py-2 text-sm transition-colors ${
+              page.url === link.href ? "bg-primary text-primary-fg" : "bg-muted text-muted-fg hover:text-fg"
             }`}
           >
             {link.label}

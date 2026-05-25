@@ -14,6 +14,7 @@ const { lines, height } = layoutWithLines(prepared, maxWidth, lineHeight)
 // Build an SVG string
 const tspans = lines.map((line, i) => {
   const y = (i + 1) * lineHeight
+
   return `  <tspan x="0" y="${y}">${escapeXml(line.text)}</tspan>`
 }).join('\n')
 

@@ -1,4 +1,5 @@
-import { prepare, layout, type PreparedText } from '@chenglou/pretext'
+import { prepare, layout  } from '@chenglou/pretext'
+import type {PreparedText} from '@chenglou/pretext';
 
 // The canonical resize pattern: prepare() once, layout() on every resize.
 // layout() is pure arithmetic — no DOM reads, no canvas calls, no allocations.
@@ -15,12 +16,14 @@ const prepared: PreparedText = prepare(text, FONT)
 function onResize(containerWidth: number) {
   // layout() is the cheap part — pure math over cached widths
   const { height, lineCount } = layout(prepared, containerWidth, LINE_HEIGHT)
+
   // container.style.height = `${height}px`
   return { height, lineCount }
 }
 
 // Example: responsive breakpoints
 const widths = [800, 600, 400, 300, 200]
+
 for (const w of widths) {
   const { height, lineCount } = onResize(w)
   console.log(`${w}px → ${height}px (${lineCount} lines)`)

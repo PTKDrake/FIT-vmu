@@ -20,9 +20,11 @@ if (targetLines <= 1) {
   // Step 2: binary search for the narrowest width that keeps the same line count
   let lo = 50
   let hi = maxWidth
+
   while (hi - lo > 1) {
     const mid = (lo + hi) / 2
     const { lineCount } = measureLineStats(prepared, mid)
+
     if (lineCount <= targetLines) {
       hi = mid
     } else {
@@ -34,8 +36,13 @@ if (targetLines <= 1) {
   let maxLineWidth = 0
   let minLineWidth = Infinity
   walkLineRanges(prepared, hi, line => {
-    if (line.width > maxLineWidth) maxLineWidth = line.width
-    if (line.width < minLineWidth) minLineWidth = line.width
+    if (line.width > maxLineWidth) {
+maxLineWidth = line.width
+}
+
+    if (line.width < minLineWidth) {
+minLineWidth = line.width
+}
   })
 
   console.log(`Balanced at ${Math.ceil(hi)}px`)

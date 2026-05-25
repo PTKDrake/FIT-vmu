@@ -23,10 +23,10 @@ export default function PasswordPage() {
   return (
     <>
       <Head title="Password" />
-      <div className="space-y-6 rounded-xl border border-slate-200 bg-white p-6">
+      <div className="space-y-6 rounded-xl border border-border bg-overlay p-6">
         <div>
-          <h1 className="text-2xl font-semibold">Change Password</h1>
-          <p className="text-sm text-slate-600">Update your password to keep your account secure.</p>
+          <h1 className="text-2xl font-semibold text-fg">Change Password</h1>
+          <p className="text-sm text-muted-fg">Update your password to keep your account secure.</p>
         </div>
 
         <form className="space-y-4" onSubmit={submit}>
@@ -36,12 +36,12 @@ export default function PasswordPage() {
             ["password_confirmation", "Confirm Password"],
           ].map(([field, label]) => (
             <div key={field} className="space-y-2">
-              <label htmlFor={field} className="block text-sm font-medium">{label}</label>
+              <label htmlFor={field} className="block text-sm font-medium text-fg">{label}</label>
               <input
                 id={field}
                 name={field}
                 aria-label={label}
-                className="w-full rounded-md border border-slate-300 px-3 py-2"
+                className="w-full rounded-md border border-input bg-bg px-3 py-2 text-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
                 type="password"
                 value={form.data[field as keyof typeof form.data]}
                 onChange={(event) =>
@@ -49,7 +49,7 @@ export default function PasswordPage() {
                 }
               />
               {form.errors[field as keyof typeof form.errors] ? (
-                <p className="text-sm text-red-600">
+                <p className="text-sm text-danger-subtle-fg">
                   {form.errors[field as keyof typeof form.errors]}
                 </p>
               ) : null}
@@ -59,12 +59,12 @@ export default function PasswordPage() {
           <div className="flex items-center gap-3">
             <button
               type="submit"
-              className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
               disabled={form.processing}
             >
               Save
             </button>
-            {form.recentlySuccessful ? <span className="text-sm text-slate-500">Saved.</span> : null}
+            {form.recentlySuccessful ? <span className="text-sm text-muted-fg">Saved.</span> : null}
           </div>
         </form>
       </div>

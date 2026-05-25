@@ -1,4 +1,5 @@
-import { prepareWithSegments, layoutNextLineRange, materializeLineRange, type LayoutCursor } from '@chenglou/pretext'
+import { prepareWithSegments, layoutNextLineRange, materializeLineRange  } from '@chenglou/pretext'
+import type {LayoutCursor} from '@chenglou/pretext';
 
 const text = 'Long article text that needs to flow around an embedded image. 春天到了 🚀 بدأت الرحلة...'
 const prepared = prepareWithSegments(text, '16px Inter')
@@ -16,7 +17,10 @@ let y = 0
 while (true) {
   const width = y < imageBottom ? columnWidth - imageWidth : columnWidth
   const range = layoutNextLineRange(prepared, cursor, width)
-  if (range === null) break
+
+  if (range === null) {
+break
+}
 
   const line = materializeLineRange(prepared, range)
   const x = y < imageBottom ? imageWidth : 0

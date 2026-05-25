@@ -3,14 +3,6 @@
 
 # Laravel Boost Guidelines
 
-## Fast Context
-
-Load these project documents early when the task touches project scope, implementation rules, or task tracking:
-
-- `docs/VMUFit.md`: product guideline, architecture, authorization model, and project constraints.
-- `docs/tasks.md`: canonical task board, branch naming, owner tracking, and execution status.
-- `docs/VMUFit.tasks.md`: detailed phase breakdown, task checklist, and implementation prompts.
-
 The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
 
 ## Foundational Context
@@ -22,6 +14,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v4
+- laravel/socialite (SOCIALITE) - v5
 - laravel/wayfinder (WAYFINDER) - v0
 - larastan/larastan (LARASTAN) - v3
 - laravel/boost (BOOST) - v2
@@ -47,25 +40,11 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
-
-## Task Branch Discipline
-
-- Before starting any task work, read `docs/tasks.md` and identify the task row you are implementing.
-- Use the branch recorded in that task's `Branch` column as the required working branch for the task.
-- If the current git branch does not match the task branch, switch to the correct branch before making code changes.
-- If the task does not have a branch yet, update `docs/tasks.md` with the intended branch name before implementation work starts.
-- Do not implement a task on an unrelated branch, even for small or urgent changes.
-- If uncommitted local changes prevent switching to the correct task branch safely, stop and report that blocker instead of continuing on the wrong branch.
+- All user-facing Vietnamese text shown on the web UI must use full Vietnamese diacritics. Prefer building the UI fully in Vietnamese unless there is a clear product reason to keep specific terms in another language.
 
 ## Verification Scripts
 
 - Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
-- Keep local verification aligned with CI. The current CI checks are:
-  - `./composerw format:test`
-  - `./composerw analyse`
-  - `./phpw artisan test --compact`
-  - `pnpm check`
-- For PHPStan in this repository, use `./composerw analyse`. It is configured to run with the repository PHP wrapper and the stable CI flags already defined in `composer.json`.
 
 ## Application Structure & Architecture
 
@@ -75,9 +54,9 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 ## Frontend Bundling
 
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `pnpm run build`, `pnpm run dev`, or `composer run dev`. Ask them.
-- React Doctor is configured in `react-doctor.config.json`.
-- Use `pnpm doctor` or `pnpm doctor:strict` when working on React-heavy frontend changes.
-- React Doctor is not currently part of the required CI gate because the repository still has baseline diagnostics in shared UI files. Do not add it to CI as a blocking step until those are cleaned up.
+- Any frontend-related change must finish with both `pnpm check` passing.
+- Do not edit files inside `web/components/ui` unless the user explicitly asks for it.
+- If a requested frontend change appears to require edits inside `web/components/ui`, stop, warn the user, and ask for confirmation before changing that directory.
 
 ## Documentation Files
 
@@ -123,7 +102,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
 - Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
-  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
+    - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
 === php rules ===
 

@@ -1,28 +1,58 @@
-import type { PropsWithChildren } from "react"
-import { Link, usePage } from "@inertiajs/react"
-import type { SharedData } from "@/types/shared"
+import { Link, usePage } from "@inertiajs/react";
+import type { PropsWithChildren } from "react";
+import {
+  create,
+  destroy,
+} from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
+import { home, register } from "@/routes";
+import { edit } from "@/routes/profile";
+import type { SharedData } from "@/types/shared";
 
 export default function AppLayout({ children }: PropsWithChildren) {
-  const { auth } = usePage<SharedData>().props
+  const { auth } = usePage<SharedData>().props;
+  const canAccessAdmin = auth.permissions.includes("view admin dashboard");
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <header className="border-b border-slate-200">
+    <div className="min-h-screen bg-bg text-fg">
+      <header className="border-b border-border bg-overlay">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link href="/" className="font-semibold">
+          <Link href={home.url()} className="font-semibold text-fg">
             VMUFit
           </Link>
-          <nav className="flex items-center gap-4 text-sm">
-            <Link href="/">Home</Link>
+          <nav className="flex items-center gap-4 text-sm text-muted-fg">
+            <Link href={home.url()} className="transition hover:text-fg">
+              Home
+            </Link>
             {auth.user ? (
               <>
-                <Link href="/dashboard">Dashboard</Link>
-                <Link href="/settings/profile">Settings</Link>
+                {canAccessAdmin ? (
+                  <Link href="/cms" className="transition hover:text-fg">
+                    CMS
+                  </Link>
+                ) : null}
+                <Link href={edit.url()} className="transition hover:text-fg">
+                  Settings
+                </Link>
+                <Link
+                  href={destroy.url()}
+                  method="post"
+                  as="button"
+                  className="transition hover:text-fg"
+                >
+                  Logout
+                </Link>
               </>
             ) : (
               <>
-                <Link href="/login">Login</Link>
-                <Link href="/register">Register</Link>
+                <Link href={create.url()} className="transition hover:text-fg">
+                  Login
+                </Link>
+                <Link
+                  href={register.url()}
+                  className="transition hover:text-fg"
+                >
+                  Register
+                </Link>
               </>
             )}
           </nav>
@@ -30,5 +60,5 @@ export default function AppLayout({ children }: PropsWithChildren) {
       </header>
       <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
     </div>
-  )
+  );
 }

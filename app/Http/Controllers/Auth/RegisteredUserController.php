@@ -50,6 +50,6 @@ class RegisteredUserController extends Controller
 
         flash('Your account has been successfully created.');
 
-        return to_route('dashboard');
+        return $this->redirectToAuthenticatedDestination($user);
     }
 }

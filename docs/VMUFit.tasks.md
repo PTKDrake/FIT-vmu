@@ -59,7 +59,8 @@ Phạm vi:
 
 Checklist:
 
-- [ ] Cài BlockNote packages.
+- [ ] Cài BlockNote packages theo hướng `@blocknote/shadcn`.
+- [ ] Cài `@measured/puck` cho page builder.
 - [ ] Cài `react-hook-form`, `zod`, `@hookform/resolvers`.
 - [ ] Cài `@tanstack/react-table`.
 - [ ] Cài `nuqs`.
@@ -71,7 +72,7 @@ Checklist:
 Prompt mẫu cho Codex:
 
 ```text
-Dựa theo guideline VMUFit.md, hãy cài các package frontend MVP. Không tạo page nghiệp vụ. Nếu cần chỉnh config TypeScript/Vite thì chỉ chỉnh tối thiểu. Cuối cùng liệt kê file đã sửa và lệnh kiểm tra.
+Dựa theo guideline VMUFit.md, hãy cài các package frontend MVP gồm BlockNote, Puck, form/table/query/upload/date utilities. Không tạo page nghiệp vụ. Nếu cần chỉnh config TypeScript/Vite thì chỉ chỉnh tối thiểu. Cuối cùng liệt kê file đã sửa và lệnh kiểm tra.
 ```
 
 #### Task 0.3 - Tạo tài liệu tracking task
@@ -162,7 +163,8 @@ Nên chia migration theo nhóm để tránh conflict:
 
 - Người A: users/students/staff_profiles.
 - Người B: units/positions/staff_appointments.
-- Người C: posts/documents/document_rows/media.
+- Người C: posts/post_categories/pages/navigation.
+- Người D: documents/document_rows/media.
 
 #### Task 2.1 - Students và Staff Profiles
 
@@ -197,22 +199,39 @@ Prompt mẫu:
 Triển khai units, positions, staff_appointments theo VMUFit.md. Tạo migration, model, relationship. Không thêm is_current. Chức vụ hiện tại sẽ xác định bằng end_date.
 ```
 
-#### Task 2.3 - Posts, Documents, Document Rows và Media
+#### Task 2.3 - Posts, Post Categories, Pages và Navigation
 
 Checklist:
 
-- [ ] Tạo migration `posts`.
+- [ ] Tạo migration `post_categories`.
+- [ ] Tạo migration hoặc cập nhật `posts` có `category_id`.
+- [ ] Tạo migration `pages` dùng `content_format` mặc định `puck_json`.
+- [ ] Tạo migration `navigation_menus`.
+- [ ] Tạo migration `navigation_items` có `parent_id`, `type`, `linkable_type`, `linkable_id`, `url`, `sort_order`.
+- [ ] Tạo model và relationship cơ bản: category tree, page author, navigation menu/items, item parent/children, `morphTo linkable`.
+- [ ] Validate ở schema/test rằng navigation item có thể trỏ tới `post_category`, `page`, `post` hoặc `custom_url`.
+
+Prompt mẫu:
+
+```text
+Triển khai post_categories, posts có category_id, pages và navigation theo VMUFit.md. Pages lưu Puck JSON, posts lưu BlockNote JSON. Navigation hỗ trợ parent-child và polymorphic link tới post_category/page/post hoặc custom_url.
+```
+
+#### Task 2.4 - Documents, Document Rows và Media
+
+Checklist:
+
 - [ ] Tạo migration `documents`.
 - [ ] Tạo migration `document_rows`.
 - [ ] Tạo migration `media`.
-- [ ] Content/description dùng LONGTEXT và format field.
+- [ ] Description dùng LONGTEXT và `description_format`.
 - [ ] Status/visibility/document_mode dùng enum-like string rõ ràng.
 - [ ] Tạo model và relationship cơ bản.
 
 Prompt mẫu:
 
 ```text
-Triển khai posts, documents, document_rows và media theo VMUFit.md. Tạo migration, model, relationship. Content dạng block lưu LONGTEXT kèm *_format, không lưu HTML làm source of truth.
+Triển khai documents, document_rows và media theo VMUFit.md. Tạo migration, model, relationship. Description dạng block lưu LONGTEXT kèm *_format, không lưu HTML làm source of truth.
 ```
 
 ### 1.4. Phase 3 - Backend actions, data objects và policy
@@ -230,6 +249,9 @@ Chia theo domain:
 Checklist:
 
 - [ ] Tạo `PostData`.
+- [ ] Tạo `PostCategoryData`.
+- [ ] Tạo `PageData`.
+- [ ] Tạo `NavigationMenuData` và `NavigationItemData`.
 - [ ] Tạo `DocumentData`.
 - [ ] Tạo `StaffProfileData`.
 - [ ] Tạo `StudentData`.
@@ -240,7 +262,7 @@ Checklist:
 Prompt mẫu:
 
 ```text
-Tạo các Spatie Laravel Data object cho domain chính theo VMUFit.md. Data object chỉ chuẩn hóa dữ liệu vào/ra, không chứa business logic database phức tạp.
+Tạo các Spatie Laravel Data object cho domain chính theo VMUFit.md, bao gồm posts, post categories, pages, navigation, documents, staff, students, units, positions và media. Data object chỉ chuẩn hóa dữ liệu vào/ra, không chứa business logic database phức tạp.
 ```
 
 #### Task 3.2 - Policy và Form Request cho Posts
@@ -250,6 +272,7 @@ Checklist:
 - [ ] Tạo policy cho posts.
 - [ ] Check bằng `$user->can(...)`.
 - [ ] Tạo request validate create/update/publish nếu cần.
+- [ ] Validate `category_id` nếu post gắn category.
 - [ ] Không check bằng `$user->hasRole('admin')` trong policy.
 
 Prompt mẫu:
@@ -288,13 +311,30 @@ Prompt mẫu:
 Dùng spatie/laravel-query-builder để chuẩn hóa list query cho CMS theo VMUFit.md. Chỉ allow filter/sort/include được khai báo rõ, không cho query tự do.
 ```
 
+#### Task 3.5 - Policy, Form Request và Query Builder cho Pages, Categories, Navigation
+
+Checklist:
+
+- [ ] Tạo policy/request cho `pages` với publish workflow `draft|pending|published|rejected`.
+- [ ] Tạo policy/request cho `post_categories`.
+- [ ] Tạo policy/request cho `navigation_menus` và `navigation_items`.
+- [ ] Validate navigation item: `custom_url` bắt buộc `url`; `post_category/page/post` bắt buộc `linkable_type` + `linkable_id`.
+- [ ] Tạo query builder/list query cho pages, categories và navigation.
+- [ ] Không check role trực tiếp trong policy.
+
+Prompt mẫu:
+
+```text
+Triển khai policy, form request và query builder cho pages, post_categories và navigation theo VMUFit.md. Pages dùng Puck JSON. Navigation item hỗ trợ parent-child và link tới post_category/page/post hoặc custom_url. Authorization phải check bằng permission, không check role trực tiếp.
+```
+
 ### 1.5. Phase 4 - Frontend CMS foundation
 
 Mục tiêu:
 
 - Có layout admin.
 - Có authorization props.
-- Có component nền cho form, table, upload, editor.
+- Có component nền cho form, table, upload, BlockNote editor, Puck builder và navigation tree.
 
 #### Task 4.1 - Admin layout và navigation theo permission
 
@@ -355,6 +395,38 @@ Prompt mẫu:
 Tạo component upload dùng react-dropzone cho VMUFit. Hỗ trợ avatar, thumbnail, document file, Excel. Validate frontend chỉ để UX, backend vẫn phải validate.
 ```
 
+#### Task 4.5 - Puck page builder wrapper
+
+Checklist:
+
+- [ ] Tạo wrapper/config cho Puck.
+- [ ] Input/output là Puck JSON dùng cho `pages.content`.
+- [ ] Chỉ expose component đã được kiểm soát trong config.
+- [ ] Không dùng Puck thay cho posts/documents/staff bio.
+- [ ] Có chế độ preview/render cơ bản cho page published.
+
+Prompt mẫu:
+
+```text
+Tạo Puck page builder wrapper cho VMUFit theo guideline. Component dùng cho pages.content, lưu Puck JSON, chỉ expose component đã định nghĩa trong config và không thay thế BlockNote cho posts/documents/staff bio.
+```
+
+#### Task 4.6 - Navigation tree UI foundation
+
+Checklist:
+
+- [ ] Tạo component hiển thị/sửa cây navigation parent-child.
+- [ ] Hỗ trợ reorder bằng `sort_order` trong cùng cấp.
+- [ ] Cho chọn loại item: `custom_url`, `post_category`, `page`, `post`.
+- [ ] Với `custom_url`, nhập `url`; với internal link, chọn resource nội bộ.
+- [ ] Không hardcode menu public trong frontend nếu dữ liệu đã có trong CMS.
+
+Prompt mẫu:
+
+```text
+Tạo foundation UI cho navigation tree theo VMUFit.md. Navigation item hỗ trợ parent-child, reorder, và link tới custom_url/post_category/page/post. UI chỉ phục vụ trải nghiệm; backend vẫn validate toàn bộ.
+```
+
 ### 1.6. Phase 5 - Module nội dung chính
 
 Mục tiêu:
@@ -367,10 +439,13 @@ Thứ tự đề xuất:
 1. Media.
 2. Units/Positions.
 3. Staff Profiles.
-4. Posts.
-5. Documents thường.
-6. Documents Excel cá nhân hóa.
-7. Public pages.
+4. Post Categories.
+5. Posts.
+6. Pages bằng Puck.
+7. Navigation.
+8. Documents thường.
+9. Documents Excel cá nhân hóa.
+10. Public website render pages/navigation.
 
 #### Task 5.1 - Media module
 
@@ -400,17 +475,52 @@ Checklist:
 - [ ] Bio dùng BlockNote.
 - [ ] Public listing chỉ lấy hồ sơ `is_public`.
 
-#### Task 5.4 - Posts module
+#### Task 5.4 - Post Categories module
+
+Checklist:
+
+- [ ] CRUD post categories.
+- [ ] Hỗ trợ category cha/con nếu cần.
+- [ ] Sort order/is_active.
+- [ ] Dùng category để filter posts trong CMS và public.
+- [ ] Category có thể được chọn làm đích navigation item.
+
+#### Task 5.5 - Posts module
 
 Checklist:
 
 - [ ] CRUD posts.
+- [ ] Gắn `category_id` cho post.
 - [ ] Draft/pending/published/rejected.
 - [ ] Publish permission riêng.
 - [ ] Thumbnail qua media.
+- [ ] Content dùng BlockNote JSON.
 - [ ] Public page chỉ hiển thị bài published.
 
-#### Task 5.5 - Documents module thường
+#### Task 5.6 - Pages module bằng Puck
+
+Checklist:
+
+- [ ] CRUD pages.
+- [ ] Dựng layout bằng Puck.
+- [ ] Lưu `pages.content` dạng Puck JSON.
+- [ ] Draft/pending/published/rejected.
+- [ ] Publish permission riêng.
+- [ ] Page published có thể được chọn làm navigation item.
+- [ ] Không gọi module này là `static_pages`.
+
+#### Task 5.7 - Navigation module
+
+Checklist:
+
+- [ ] CRUD navigation menus.
+- [ ] CRUD navigation items.
+- [ ] Hỗ trợ parent-child qua `parent_id`.
+- [ ] Hỗ trợ reorder bằng `sort_order`.
+- [ ] Item có thể trỏ tới `post_category`, `page`, `post` hoặc `custom_url`.
+- [ ] Chỉ render item `is_active` ở public.
+
+#### Task 5.8 - Documents module thường
 
 Checklist:
 
@@ -420,7 +530,7 @@ Checklist:
 - [ ] Download authorize ở backend.
 - [ ] Public/login/staff/student/private behavior rõ ràng.
 
-#### Task 5.6 - Excel cá nhân hóa theo student_code
+#### Task 5.9 - Excel cá nhân hóa theo student_code
 
 Checklist:
 
@@ -442,13 +552,15 @@ Triển khai import Excel cá nhân hóa cho documents theo VMUFit.md. Logic imp
 Mục tiêu:
 
 - Có các trang public đủ dùng.
-- Không cần page builder phức tạp.
+- Render page bằng Puck JSON đã published.
+- Render navigation từ CMS theo location và cây parent-child.
 - Chỉ render dữ liệu đã published/public.
 
 Task đề xuất:
 
-- [ ] Trang chủ đơn giản.
-- [ ] Danh sách bài viết.
+- [ ] Trang chủ từ `pages` nếu có page published tương ứng.
+- [ ] Header/footer navigation từ `navigation_menus/items`.
+- [ ] Danh sách bài viết theo category.
 - [ ] Chi tiết bài viết.
 - [ ] Danh sách cán bộ/giảng viên.
 - [ ] Chi tiết hồ sơ cán bộ.
@@ -464,6 +576,9 @@ Checklist:
 - [ ] Test seeder permission.
 - [ ] Test policy quan trọng.
 - [ ] Test import Excel.
+- [ ] Test page publish/render bằng Puck JSON.
+- [ ] Test category filter cho posts.
+- [ ] Test navigation tree và linkable target.
 - [ ] Test user không có quyền không truy cập được route quản trị.
 - [ ] Test public chỉ thấy dữ liệu published/public.
 - [ ] Chạy Pint.
@@ -501,7 +616,7 @@ Mỗi task phải được tracking theo mẫu sau:
 | ID | Phase | Task | Status | Owner | Branch | PR | Files touched | Test commands | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0.1 | Setup | Backend packages | todo |  | feature/setup-backend-packages |  | composer.json, composer.lock | composer test |  |
-| 0.2 | Setup | Frontend packages | todo |  | feature/setup-frontend-packages |  | package.json, pnpm-lock.yaml | pnpm lint, pnpm typecheck |  |
+| 0.2 | Setup | Frontend packages | todo |  | feature/setup-frontend-packages |  | package.json, pnpm-lock.yaml | pnpm lint, pnpm typecheck | BlockNote + Puck + form/table/query/upload/date packages |
 | 1.1 | Auth | Configure Spatie permission | todo |  | feature/auth-spatie-config |  | app/Models/User.php, config/permission.php | php artisan test |  |
 ```
 
@@ -584,8 +699,11 @@ Quy tắc:
 ```text
 Backend auth/permission: 1 người
 Backend database/migration: 1-2 người nhưng chia theo nhóm bảng
+Backend pages/navigation/categories: 1 người
 Backend documents/excel: 1 người
 Frontend layout/components nền: 1 người
+Frontend Puck/page builder: 1 người
+Frontend navigation tree: 1 người
 Frontend từng module CMS: mỗi module 1 người
 Public website: 1 người
 ```
@@ -602,6 +720,8 @@ package.json
 pnpm-lock.yaml
 web/layouts/*
 web/components/ui/*
+web/components/page-builder/*
+web/components/navigation/*
 docs/tasks.md
 ```
 
@@ -701,14 +821,15 @@ Quy tắc review:
 
 1. Setup package backend/frontend.
 2. Permission config + seeder.
-3. Migration domain.
-4. Model relationship.
-5. Policy/Form Request/Data object.
-6. Backend action/controller/list query.
-7. Frontend component nền.
-8. Frontend module CMS.
-9. Public pages.
-10. Test/hardening.
+3. Migration domain nền.
+4. Migration pages/categories/navigation.
+5. Model relationship.
+6. Policy/Form Request/Data object.
+7. Backend action/controller/list query.
+8. Frontend component nền.
+9. Frontend module CMS.
+10. Public pages/navigation.
+11. Test/hardening.
 
 ### 3.6. Cách xử lý khi conflict
 

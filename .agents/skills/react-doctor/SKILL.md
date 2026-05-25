@@ -1,35 +1,32 @@
 ---
 name: react-doctor
-description: Use when finishing a frontend feature, auditing React health, or before merging React changes. Runs the repository's local react-doctor baseline and keeps diagnostics from regressing.
+description: Use when finishing a feature, fixing a bug, before committing React code, or when the user wants to improve code quality or clean up a codebase. Checks for score regression. Covers lint, accessibility, bundle size, architecture diagnostics.
 version: "1.0.0"
 ---
 
 # React Doctor
 
-This repository uses `react-doctor` through the local `pnpm doctor` scripts and `react-doctor.config.json`.
+Scans React codebases for security, performance, correctness, and architecture issues. Outputs a 0–100 health score.
 
-## Commands
+## After making React code changes:
 
-Run the baseline scan:
+Run `pnpx react-doctor@latest --verbose --diff` and check the score did not regress.
+
+If the score dropped, fix the regressions before committing.
+
+## For general cleanup or code improvement:
+
+Run `pnpx react-doctor@latest --verbose` (without `--diff`) to scan the full codebase. Fix issues by severity — errors first, then warnings.
+
+## Command
 
 ```bash
-pnpm doctor
+pnpx react-doctor@latest --verbose --diff
 ```
 
-Run the stricter warning-gated scan:
-
-```bash
-pnpm doctor:strict
-```
-
-## Expectations
-
-- Run `pnpm doctor` after meaningful React changes.
-- Fix `error` findings before finalizing work.
-- Use config overrides only for generated files, framework artifacts, and intentional escape hatches such as `web/hooks/use-mount-effect.ts`.
-
-## Related Files
-
-- `react-doctor.config.json`
-- `.oxlintrc.json`
-- `skills/no-use-effect/SKILL.md`
+| Flag        | Purpose                                       |
+| ----------- | --------------------------------------------- |
+| `.`         | Scan current directory                        |
+| `--verbose` | Show affected files and line numbers per rule |
+| `--diff`    | Only scan changed files vs base branch        |
+| `--score`   | Output only the numeric score                 |

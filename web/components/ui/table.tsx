@@ -1,5 +1,3 @@
-"use client"
-
 import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
 import { createContext, use } from "react"
 import { Button } from "react-aria-components/Button"

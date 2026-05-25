@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\RoleAndPermissionSeeder;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -17,6 +18,21 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
+    $response->assertRedirect(route('home', absolute: false));
+});
+
+test('users with dashboard permission are redirected to dashboard after login', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+
+    $user = User::factory()->create();
+    $user->assignRole('staff');
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticatedAs($user);
     $response->assertRedirect(route('dashboard', absolute: false));
 });
 
