@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 test('super admin user seeder creates and updates the seeded account when password is configured', function () {
     config()->set('app.env', 'local');
-    putenv('ADMIN_SEED_PASSWORD=SeededPassword#2026');
-    $_ENV['ADMIN_SEED_PASSWORD'] = 'SeededPassword#2026';
-    $_SERVER['ADMIN_SEED_PASSWORD'] = 'SeededPassword#2026';
+    config()->set('services.admin_seed_password', 'SeededPassword#2026');
 
     $this->seed(SuperAdminUserSeeder::class);
 
@@ -21,9 +19,7 @@ test('super admin user seeder creates and updates the seeded account when passwo
         ->and($user?->email_verified_at)->not->toBeNull()
         ->and(Hash::check('SeededPassword#2026', $user?->password ?? ''))->toBeTrue();
 
-    putenv('ADMIN_SEED_PASSWORD=UpdatedSeedPassword#2026');
-    $_ENV['ADMIN_SEED_PASSWORD'] = 'UpdatedSeedPassword#2026';
-    $_SERVER['ADMIN_SEED_PASSWORD'] = 'UpdatedSeedPassword#2026';
+    config()->set('services.admin_seed_password', 'UpdatedSeedPassword#2026');
 
     $this->seed(SuperAdminUserSeeder::class);
 
@@ -34,8 +30,7 @@ test('super admin user seeder creates and updates the seeded account when passwo
 });
 
 test('super admin user seeder skips creation when password is missing', function () {
-    putenv('ADMIN_SEED_PASSWORD');
-    unset($_ENV['ADMIN_SEED_PASSWORD'], $_SERVER['ADMIN_SEED_PASSWORD']);
+    config()->set('services.admin_seed_password', null);
 
     $this->seed(SuperAdminUserSeeder::class);
 
@@ -43,9 +38,7 @@ test('super admin user seeder skips creation when password is missing', function
 });
 
 test('database seeder creates a reusable admin account without duplicate emails', function () {
-    putenv('ADMIN_SEED_PASSWORD=SeededPassword#2026');
-    $_ENV['ADMIN_SEED_PASSWORD'] = 'SeededPassword#2026';
-    $_SERVER['ADMIN_SEED_PASSWORD'] = 'SeededPassword#2026';
+    config()->set('services.admin_seed_password', 'SeededPassword#2026');
 
     $this->seed(DatabaseSeeder::class);
     $this->seed(DatabaseSeeder::class);

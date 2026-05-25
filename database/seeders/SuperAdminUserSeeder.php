@@ -17,10 +17,10 @@ class SuperAdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $password = env('ADMIN_SEED_PASSWORD');
+        $password = config('services.admin_seed_password');
 
         if (! is_string($password) || trim($password) === '') {
-            $this->command?->warn('Skipping super-admin seeding because ADMIN_SEED_PASSWORD is not set.');
+            $this->command->warn('Skipping super-admin seeding because ADMIN_SEED_PASSWORD is not set.');
 
             return;
         }
@@ -38,6 +38,6 @@ class SuperAdminUserSeeder extends Seeder
 
         $user->assignRole('super-admin');
 
-        $this->command?->info(sprintf('Super-admin account is ready: %s', self::SUPER_ADMIN_EMAIL));
+        $this->command->info(sprintf('Super-admin account is ready: %s', self::SUPER_ADMIN_EMAIL));
     }
 }
