@@ -1,5 +1,30 @@
 #!/bin/sh
 
+wayfinder_inputs_changed() {
+  git diff --cached --name-only -- app/Http/Controllers routes | grep -q .
+}
+
+stage_wayfinder_outputs() {
+  if ! wayfinder_inputs_changed; then
+    return
+  fi
+
+  if [ ! -x "./phpw" ]; then
+    printf '%s\n' "wayfinder: ./phpw not found; skipping generated types refresh."
+    return
+  fi
+
+  printf '%s\n' "wayfinder: generating action and route types."
+  if ! ./phpw artisan wayfinder:generate >/dev/null; then
+    printf '%s\n' "wayfinder: generation failed; aborting commit." >&2
+    exit 1
+  fi
+
+  git add web/actions web/routes
+}
+
+stage_wayfinder_outputs
+
 # react-doctor hook start
 react_doctor_scan_staged_files() {
   if [ -x "./node_modules/.bin/react-doctor" ]; then
