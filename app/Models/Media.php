@@ -41,26 +41,31 @@ class Media extends Model
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function uploadedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
 
+    /** @return HasMany<StaffProfile, $this> */
     public function avatarStaffProfiles(): HasMany
     {
         return $this->hasMany(StaffProfile::class, 'avatar_id');
     }
 
+    /** @return HasMany<Document, $this> */
     public function documentFiles(): HasMany
     {
         return $this->hasMany(Document::class, 'file_id');
     }
 
+    /** @return HasMany<Post, $this> */
     public function postThumbnails(): HasMany
     {
         return $this->hasMany(Post::class, 'thumbnail_id');
     }
 
+    /** @return HasMany<Page, $this> */
     public function pageThumbnails(): HasMany
     {
         return $this->hasMany(Page::class, 'thumbnail_id');

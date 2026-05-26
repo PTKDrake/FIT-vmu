@@ -8,6 +8,7 @@ if (! app()->isProduction()) {
         $user = $id === null
             ? User::query()->firstOrFail()
             : User::query()->findOrFail($id);
+        assert($user instanceof User);
 
         auth()->login($user);
 

@@ -30,6 +30,7 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         $post = $this->route('post');
+        $postId = $post instanceof Post ? $post->getKey() : null;
 
         return [
             'title' => ['required', 'string', 'max:255'],
@@ -37,7 +38,7 @@ class UpdatePostRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique((new Post)->getTable(), 'slug')->ignore($post?->getKey()),
+                Rule::unique((new Post)->getTable(), 'slug')->ignore($postId),
             ],
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],

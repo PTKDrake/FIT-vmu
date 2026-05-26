@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,8 +16,11 @@ class EmailVerificationPromptController extends Controller
      */
     public function __invoke(Request $request): Response|RedirectResponse
     {
-        return $request->user()->hasVerifiedEmail()
-                    ? redirect()->intended(route('cms.dashboard', absolute: false))
-                    : Inertia::render('auth/verify-email', ['status' => $request->session()->get('status')]);
+        $user = $request->user();
+        assert($user instanceof User);
+
+        return $user->hasVerifiedEmail()
+            ? redirect()->intended(route('cms.dashboard', absolute: false))
+            : Inertia::render('auth/verify-email', ['status' => $request->session()->get('status')]);
     }
 }

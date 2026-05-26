@@ -49,6 +49,7 @@ class Position extends Model
         ];
     }
 
+    /** @return HasMany<StaffAppointment, $this> */
     public function staffAppointments(): HasMany
     {
         return $this->hasMany(StaffAppointment::class);

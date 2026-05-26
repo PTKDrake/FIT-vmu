@@ -12,8 +12,8 @@ class StudentData extends Data
     public function __construct(
         public int $userId,
         public string $studentCode,
-        public string $className,
-        public string $major,
+        public ?string $className,
+        public ?string $major,
         public ?CarbonInterface $createdAt = null,
         public ?CarbonInterface $updatedAt = null,
         public ?int $id = null,

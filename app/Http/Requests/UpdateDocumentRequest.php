@@ -28,6 +28,7 @@ class UpdateDocumentRequest extends FormRequest
     public function rules(): array
     {
         $document = $this->route('document');
+        $documentId = $document instanceof Document ? $document->getKey() : null;
 
         return [
             'title' => ['required', 'string', 'max:255'],
@@ -35,7 +36,7 @@ class UpdateDocumentRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique((new Document)->getTable(), 'slug')->ignore($document?->getKey()),
+                Rule::unique((new Document)->getTable(), 'slug')->ignore($documentId),
             ],
             'description' => ['nullable', 'string'],
             'description_format' => ['required', 'string', Rule::in(DocumentRequestOptions::storageFormats())],

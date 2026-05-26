@@ -226,7 +226,10 @@ class BuildDashboardOverviewAction
             ->take(8)
             ->values();
 
-        return $items->all();
+        /** @var list<array{id: string, kind: string, title: string, description: string, status: string, updatedAt: string}> $recentActivity */
+        $recentActivity = $items->all();
+
+        return $recentActivity;
     }
 
     /**
@@ -289,7 +292,10 @@ class BuildDashboardOverviewAction
             ->take(6)
             ->values();
 
-        return $items->all();
+        /** @var list<array{id: string, kind: string, title: string, owner: string, status: string, updatedAt: string}> $pendingReviewItems */
+        $pendingReviewItems = $items->all();
+
+        return $pendingReviewItems;
     }
 
     /**
@@ -304,7 +310,7 @@ class BuildDashboardOverviewAction
      */
     private function recentDocuments(): array
     {
-        return Document::query()
+        $documents = Document::query()
             ->latest('updated_at')
             ->limit(6)
             ->get()
@@ -317,6 +323,9 @@ class BuildDashboardOverviewAction
                 'updatedAt' => $this->toIsoString($document->updated_at),
             ])
             ->all();
+
+        /** @var list<array{id: string, title: string, documentType: string, visibility: string, status: string, updatedAt: string}> $documents */
+        return $documents;
     }
 
     private function toIsoString(?CarbonInterface $date): string

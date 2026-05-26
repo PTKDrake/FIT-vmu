@@ -54,16 +54,19 @@ class Page extends Model
         ];
     }
 
+    /** @return BelongsTo<Media, $this> */
     public function thumbnail(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'thumbnail_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /** @return HasMany<NavigationItem, $this> */
     public function navigationItems(): HasMany
     {
         return $this->hasMany(NavigationItem::class, 'linkable_id')

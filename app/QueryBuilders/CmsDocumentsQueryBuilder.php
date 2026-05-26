@@ -12,6 +12,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 final class CmsDocumentsQueryBuilder
 {
+    /** @return QueryBuilder<Document> */
     public static function make(): QueryBuilder
     {
         return QueryBuilder::for(Document::query())
@@ -40,8 +41,13 @@ final class CmsDocumentsQueryBuilder
             ->defaultSort('-created_at');
     }
 
+    /** @param Builder<Document> $query */
     private static function searchFilter(Builder $query, mixed $value): void
     {
+        if (! is_scalar($value)) {
+            return;
+        }
+
         $searchTerm = trim((string) $value);
 
         if ($searchTerm === '') {

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Dashboard\BuildDashboardOverviewAction;
 use Illuminate\Http\Request;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
@@ -15,7 +16,7 @@ class DashboardController extends Controller
     public function __invoke(
         Request $request,
         BuildDashboardOverviewAction $buildDashboardOverviewAction,
-    ) {
+    ): Response {
         return inertia('cms/dashboard', [
             'overview' => $buildDashboardOverviewAction(),
         ]);

@@ -31,5 +31,5 @@ parameters:
         - tests/Architecture
     excludePaths:
         - tests/Architecture/fixtures (?)
-    level: 5
+    level: max
     tmpDir: storage/framework/cache/phpstan

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Settings;
 use App\Actions\Settings\UpdateUserProfileAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,13 @@ class ProfileController extends Controller
         ProfileUpdateRequest $request,
         UpdateUserProfileAction $updateUserProfileAction,
     ): RedirectResponse {
-        $updateUserProfileAction($request->user(), $request->validated());
+        $user = $request->user();
+        assert($user instanceof User);
+
+        /** @var array{name: string, email: string} $attributes */
+        $attributes = $request->validated();
+
+        $updateUserProfileAction($user, $attributes);
 
         return to_route('profile.edit');
     }

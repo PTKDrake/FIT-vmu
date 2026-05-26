@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +16,9 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use HasRoles;
     use Notifiable;
 
@@ -42,6 +45,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /** @return Attribute<string, never> */
     public function gravatar(): Attribute
     {
         return Attribute::make(fn () => $this->avatar());
@@ -65,31 +69,37 @@ class User extends Authenticatable
         return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?s='.$size.'&d=mp';
     }
 
+    /** @return HasOne<Student, $this> */
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
     }
 
+    /** @return HasOne<StaffProfile, $this> */
     public function staffProfile(): HasOne
     {
         return $this->hasOne(StaffProfile::class);
     }
 
+    /** @return HasMany<Post, $this> */
     public function authoredPosts(): HasMany
     {
         return $this->hasMany(Post::class, 'author_id');
     }
 
+    /** @return HasMany<Document, $this> */
     public function ownedDocuments(): HasMany
     {
         return $this->hasMany(Document::class, 'owner_id');
     }
 
+    /** @return HasMany<Page, $this> */
     public function authoredPages(): HasMany
     {
         return $this->hasMany(Page::class, 'author_id');
     }
 
+    /** @return HasMany<Media, $this> */
     public function uploadedMedia(): HasMany
     {
         return $this->hasMany(Media::class, 'uploaded_by');

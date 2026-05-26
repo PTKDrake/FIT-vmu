@@ -60,21 +60,25 @@ class NavigationItem extends Model
         ];
     }
 
+    /** @return BelongsTo<NavigationMenu, $this> */
     public function menu(): BelongsTo
     {
         return $this->belongsTo(NavigationMenu::class, 'menu_id');
     }
 
+    /** @return BelongsTo<self, $this> */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    /** @return HasMany<self, $this> */
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    /** @return MorphTo<Model, $this> */
     public function linkable(): MorphTo
     {
         return $this->morphTo();

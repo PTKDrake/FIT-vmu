@@ -57,16 +57,19 @@ class StaffProfile extends Model
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return BelongsTo<Media, $this> */
     public function avatar(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'avatar_id');
     }
 
+    /** @return HasMany<StaffAppointment, $this> */
     public function appointments(): HasMany
     {
         return $this->hasMany(StaffAppointment::class);

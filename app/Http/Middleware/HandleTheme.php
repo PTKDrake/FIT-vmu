@@ -13,6 +13,9 @@ class HandleTheme
     {
         View::share('theme', $request->cookie('theme') ?? 'system');
 
-        return $next($request);
+        /** @var Response $response */
+        $response = $next($request);
+
+        return $response;
     }
 }

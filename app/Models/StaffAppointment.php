@@ -41,16 +41,19 @@ class StaffAppointment extends Model
         ];
     }
 
+    /** @return BelongsTo<StaffProfile, $this> */
     public function staffProfile(): BelongsTo
     {
         return $this->belongsTo(StaffProfile::class);
     }
 
+    /** @return BelongsTo<Unit, $this> */
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
     }
 
+    /** @return BelongsTo<Position, $this> */
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);

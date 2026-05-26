@@ -58,16 +58,19 @@ class Document extends Model
         ];
     }
 
+    /** @return BelongsTo<Media, $this> */
     public function file(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'file_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /** @return HasMany<DocumentRow, $this> */
     public function rows(): HasMany
     {
         return $this->hasMany(DocumentRow::class);
