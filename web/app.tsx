@@ -3,6 +3,7 @@ import "@blocknote/shadcn/style.css";
 import { createInertiaApp } from "@inertiajs/react";
 import type { ComponentType } from "react";
 import { createRoot } from "react-dom/client";
+import { NuqsAdapter } from "nuqs/adapters/react";
 import { initializeTheme } from "@/hooks/use-theme";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -20,7 +21,11 @@ void createInertiaApp({
     return page().then((module) => module.default as ComponentType);
   },
   setup({ el, App, props }) {
-    createRoot(el!).render(<App {...props} />);
+    createRoot(el!).render(
+      <NuqsAdapter>
+        <App {...props} />
+      </NuqsAdapter>,
+    );
   },
   strictMode: true,
   progress: {

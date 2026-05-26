@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
-* @see app/Http/Controllers/DashboardController.php:15
+* @see app/Http/Controllers/DashboardController.php:16
 * @route '/cms'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -81,7 +81,8 @@ dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 dashboard.form = dashboardForm
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 export const posts = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -95,7 +96,8 @@ posts.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 posts.url = (options?: RouteQueryOptions) => {
@@ -103,7 +105,8 @@ posts.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 posts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +115,8 @@ posts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 posts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -121,7 +125,8 @@ posts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 const postsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -130,7 +135,8 @@ const postsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 postsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -139,7 +145,8 @@ postsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:16
+* @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostsIndexController.php:27
 * @route '/cms/posts'
 */
 postsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

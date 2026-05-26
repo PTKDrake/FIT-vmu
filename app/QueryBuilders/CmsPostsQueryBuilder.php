@@ -6,6 +6,7 @@ namespace App\QueryBuilders;
 
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -13,9 +14,9 @@ use Spatie\QueryBuilder\QueryBuilder;
 final class CmsPostsQueryBuilder
 {
     /** @return QueryBuilder<Post> */
-    public static function make(): QueryBuilder
+    public static function make(?Request $request = null): QueryBuilder
     {
-        return QueryBuilder::for(Post::query())
+        return QueryBuilder::for(Post::query(), $request)
             ->allowedFilters(
                 AllowedFilter::callback('search', self::searchFilter(...)),
                 AllowedFilter::exact('status'),

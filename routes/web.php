@@ -13,7 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('view admin dashboard')
             ->name('dashboard');
 
-        Route::get('posts', fn () => inertia('cms/posts/index'))
+        Route::get('posts', Controllers\Cms\PostsIndexController::class)
             ->can('view posts')
             ->name('posts');
 
