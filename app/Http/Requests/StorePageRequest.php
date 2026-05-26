@@ -26,6 +26,8 @@ class StorePageRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique((new Page)->getTable(), 'slug')],
             'excerpt' => ['nullable', 'string'],
+            'seo_title' => ['nullable', 'string', 'max:255'],
+            'seo_description' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['puck_json'])],
             'thumbnail_id' => ['nullable', 'integer', Rule::exists((new Media)->getTable(), 'id')],

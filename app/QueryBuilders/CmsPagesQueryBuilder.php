@@ -52,7 +52,9 @@ final class CmsPagesQueryBuilder
             $query
                 ->where('title', 'like', "%{$searchTerm}%")
                 ->orWhere('slug', 'like', "%{$searchTerm}%")
-                ->orWhere('excerpt', 'like', "%{$searchTerm}%");
+                ->orWhere('excerpt', 'like', "%{$searchTerm}%")
+                ->orWhere('seo_title', 'like', "%{$searchTerm}%")
+                ->orWhere('seo_description', 'like', "%{$searchTerm}%");
         });
     }
 }

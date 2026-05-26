@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers;
+use App\Models\Page;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Controllers\HomeController::class)->name('home');
@@ -21,9 +22,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('view posts')
             ->name('post-categories');
 
-        Route::get('pages', fn () => inertia('cms/pages/index'))
-            ->can('view posts')
+        Route::get('pages', Controllers\Cms\PagesIndexController::class)
+            ->can('viewAny', Page::class)
             ->name('pages');
+        Route::post('pages', Controllers\Cms\StorePageController::class)
+            ->can('create', Page::class)
+            ->name('pages.store');
+        Route::get('pages/{page}/edit', Controllers\Cms\PageEditorController::class)
+            ->can('update', 'page')
+            ->name('pages.edit');
+        Route::patch('pages/{page}/metadata', Controllers\Cms\UpdatePageMetadataController::class)
+            ->can('update', 'page')
+            ->name('pages.metadata.update');
+        Route::patch('pages/{page}/content', Controllers\Cms\UpdatePageContentController::class)
+            ->can('update', 'page')
+            ->name('pages.content.update');
+        Route::post('pages/{page}/clone', Controllers\Cms\ClonePageController::class)
+            ->can('create', Page::class)
+            ->name('pages.clone');
+        Route::delete('pages/{page}', Controllers\Cms\DeletePageController::class)
+            ->can('delete', 'page')
+            ->name('pages.destroy');
 
         Route::get('navigation', fn () => inertia('cms/navigation/index'))
             ->can('view posts')

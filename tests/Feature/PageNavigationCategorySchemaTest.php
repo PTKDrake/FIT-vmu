@@ -30,6 +30,8 @@ test('post category page and navigation tables expose the expected domain column
             'title',
             'slug',
             'excerpt',
+            'seo_title',
+            'seo_description',
             'content',
             'content_format',
             'thumbnail_id',
@@ -97,6 +99,8 @@ test('post category page and navigation defaults match the mvp content conventio
         ->and($category->sort_order)->toBe(0)
         ->and($category->is_active)->toBeTrue()
         ->and($page->excerpt)->toBeNull()
+        ->and($page->seo_title)->toBeNull()
+        ->and($page->seo_description)->toBeNull()
         ->and($page->content)->toBeNull()
         ->and($page->content_format)->toBe('puck_json')
         ->and($page->status)->toBe('draft')

@@ -1,285 +1,259 @@
 import {
-  ArrowPathIcon,
-  CodeBracketIcon,
-  EyeIcon,
-  RocketLaunchIcon,
+  EllipsisHorizontalIcon,
+  PencilSquareIcon,
+  PlusIcon,
   Squares2X2Icon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Head } from "@inertiajs/react";
-import { type ReactNode, startTransition, useDeferredValue, useState } from "react";
-import { PuckPageBuilder } from "@/components/page-builder/puck-page-builder";
-import { PuckPageRender } from "@/components/page-builder/puck-page-render";
+import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
+import { Head, router } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import { useMemo, useState } from "react";
+import { CmsDataTable } from "@/components/cms/cms-data-table";
+import { PageFormDialog, type PageFormValues } from "@/components/cms/page-form-dialog";
+import type { CmsPageTableRow, CmsPagesPageProps } from "@/components/cms/types";
+import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Heading } from "@/components/ui/heading";
-import { Note } from "@/components/ui/note";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@/components/ui/tabs";
-import { Code, Strong, Text } from "@/components/ui/text";
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuTrigger,
+} from "@/components/ui/menu";
+import { Text } from "@/components/ui/text";
 import CmsLayout from "@/layouts/cms-layout";
-import {
-  createDefaultPuckPageData,
-  serializePuckPageData,
-} from "@/lib/puck/page-builder-data";
+import { clone, destroy, edit } from "@/routes/cms/pages";
 
-const defaultPageJson = serializePuckPageData(createDefaultPuckPageData());
+const columnHelper = createColumnHelper<CmsPageTableRow>();
 
-export default function CmsContentPagesPage() {
-  const [builderRevision, setBuilderRevision] = useState(0);
-  const [draftJson, setDraftJson] = useState(defaultPageJson);
-  const [publishedJson, setPublishedJson] = useState(defaultPageJson);
-  const deferredPublishedJson = useDeferredValue(publishedJson);
-  const isPreviewSynced = draftJson === publishedJson;
-  const draftSize = new TextEncoder().encode(draftJson).length;
+const statusOptions = [
+  { label: "Tất cả trạng thái", value: "all" },
+  { label: "Bản nháp", value: "draft" },
+  { label: "Chờ duyệt", value: "pending" },
+  { label: "Đã xuất bản", value: "published" },
+  { label: "Bị từ chối", value: "rejected" },
+] as const;
 
-  function handleReset(): void {
-    const nextJson = serializePuckPageData(createDefaultPuckPageData());
+const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
 
-    startTransition(() => {
-      setBuilderRevision((currentValue) => currentValue + 1);
-      setDraftJson(nextJson);
-      setPublishedJson(nextJson);
-    });
-  }
+const emptyPageFormValues: PageFormValues = {
+  excerpt: "",
+  seo_description: "",
+  seo_title: "",
+  slug: "",
+  title: "",
+};
 
-  function handlePreviewPublish(): void {
-    startTransition(() => {
-      setPublishedJson(draftJson);
-    });
-  }
+export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
+  const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [activePage, setActivePage] = useState<PageFormValues>(emptyPageFormValues);
+
+  const tableQueryState = useCmsTableQueryState({
+    defaultPerPage: pages.meta.perPage,
+    defaultSortColumn: "created_at",
+    only: ["pages"],
+  });
+
+  const columns = useMemo<Array<ColumnDef<CmsPageTableRow, any>>>(
+    () => [
+      columnHelper.accessor("title", {
+        header: "Trang",
+        cell: ({ row }) => (
+          <div className="space-y-1">
+            <p className="font-medium text-fg">{row.original.title}</p>
+            <Text className="line-clamp-2 text-sm text-muted-fg">
+              {row.original.excerpt ?? `Slug: ${row.original.slug}`}
+            </Text>
+          </div>
+        ),
+      }),
+      columnHelper.accessor("urlPath", {
+        header: "URL",
+        cell: ({ getValue, row }) => (
+          <div className="space-y-1">
+            <Text className="font-medium text-fg">{getValue()}</Text>
+            <Text className="text-sm text-muted-fg">{row.original.slug}</Text>
+          </div>
+        ),
+      }),
+      columnHelper.accessor("seoTitle", {
+        header: "SEO",
+        cell: ({ row }) => (
+          <div className="space-y-1">
+            <Text className="line-clamp-1 font-medium text-fg">
+              {row.original.seoTitle ?? "Chưa cấu hình SEO title"}
+            </Text>
+            <Text className="line-clamp-2 text-sm text-muted-fg">
+              {row.original.seoDescription ?? "Chưa có SEO description"}
+            </Text>
+          </div>
+        ),
+      }),
+      columnHelper.accessor("status", {
+        header: "Trạng thái",
+        cell: ({ getValue }) => {
+          const value = getValue() as CmsPageTableRow["status"];
+
+          return (
+            <Badge
+              intent={statusIntentMap[value]}
+              isCircle={false}
+              className="capitalize"
+            >
+              {statusLabelMap[value]}
+            </Badge>
+          );
+        },
+      }),
+      columnHelper.accessor("updatedAt", {
+        header: "Cập nhật",
+        cell: ({ getValue }) => formatDate(getValue()),
+      }),
+      columnHelper.display({
+        id: "actions",
+        header: "",
+        cell: ({ row }) => (
+          <Menu>
+            <MenuTrigger
+              aria-label={`Tác vụ cho trang ${row.original.title}`}
+              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+            >
+              <EllipsisHorizontalIcon className="size-5" />
+            </MenuTrigger>
+            <MenuContent placement="bottom right">
+              <MenuItem href={edit.url({ page: row.original.id })}>
+                <Squares2X2Icon />
+                Mở trình dựng
+              </MenuItem>
+              <MenuItem
+                onAction={() => {
+                  setDialogMode("edit");
+                  setActivePage({
+                    excerpt: row.original.excerpt ?? "",
+                    id: row.original.id,
+                    seo_description: row.original.seoDescription ?? "",
+                    seo_title: row.original.seoTitle ?? "",
+                    slug: row.original.slug,
+                    title: row.original.title,
+                  });
+                  setDialogOpen(true);
+                }}
+              >
+                <PencilSquareIcon />
+                Sửa URL và SEO
+              </MenuItem>
+              <MenuItem
+                onAction={() => {
+                  router.post(clone.url({ page: row.original.id }), {}, { preserveScroll: true });
+                }}
+              >
+                <PlusIcon />
+                Nhân bản
+              </MenuItem>
+              <MenuItem
+                intent="danger"
+                onAction={() => {
+                  if (!window.confirm(`Xóa trang "${row.original.title}"?`)) {
+                    return;
+                  }
+
+                  router.delete(destroy.url({ page: row.original.id }), {
+                    preserveScroll: true,
+                  });
+                }}
+              >
+                <TrashIcon />
+                Xóa trang
+              </MenuItem>
+            </MenuContent>
+          </Menu>
+        ),
+      }),
+    ],
+    [],
+  );
 
   return (
     <>
       <Head title="Trang" />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <Card className="rounded-xl border-border bg-overlay shadow-none">
-          <CardHeader className="gap-4">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div className="space-y-3">
-                <Badge intent="outline" isCircle={false}>
-                  Frontend foundation
-                </Badge>
-                <div className="space-y-2">
-                  <CardTitle className="text-2xl/8 sm:text-3xl/9">
-                    Puck page builder wrapper cho pages.content
-                  </CardTitle>
-                  <CardDescription className="max-w-3xl">
-                    Màn này dựng wrapper/editor/read-only render cho dữ liệu
-                    `puck_json`, giới hạn palette thành các component đã định
-                    nghĩa trong config và tách rõ khỏi luồng BlockNote của bài
-                    viết, tài liệu, hồ sơ cán bộ.
-                  </CardDescription>
-                </div>
-              </div>
-
-              <CardAction className="flex flex-wrap gap-2">
-                <Button intent="secondary" onPress={handlePreviewPublish}>
-                  <RocketLaunchIcon />
-                  Đồng bộ preview published
-                </Button>
-                <Button intent="outline" onPress={handleReset}>
-                  <ArrowPathIcon />
-                  Khôi phục bản mẫu
-                </Button>
-              </CardAction>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            <Note intent="info">
-              <Text className="text-current">
-                Wrapper này chỉ phục vụ cho trường <Code>pages.content</Code>.
-                Các module <Code>posts</Code>, <Code>documents</Code> và{" "}
-                <Code>staff profiles</Code> vẫn giữ convention BlockNote JSON
-                riêng của chúng.
-              </Text>
-            </Note>
-
-            <div className="grid gap-4 xl:grid-cols-3">
-              <SummaryCard
-                description="Parser và renderer cùng dùng một shape `puck_json` để chuẩn bị cho task Pages module ở phase 5."
-                icon={<CodeBracketIcon className="size-5" />}
-                title="JSON chuẩn cho pages.content"
-              />
-              <SummaryCard
-                description="Palette hiện chỉ expose `HeroBanner`, `RichTextSection` và `HighlightsGrid` thông qua config allow-list."
-                icon={<Squares2X2Icon className="size-5" />}
-                title="Palette bị kiểm soát"
-              />
-              <SummaryCard
-                description="Preview published đọc từ snapshot riêng, không phụ thuộc trực tiếp vào state draft đang sửa trong editor."
-                icon={<EyeIcon className="size-5" />}
-                title="Render published cơ bản"
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Tabs
-          aria-label="Puck page builder workspace"
-          className="gap-4"
-          defaultSelectedKey="builder"
-        >
-          <TabList aria-label="Chế độ làm việc page builder">
-            <Tab id="builder">Trình dựng trang</Tab>
-            <Tab id="preview">Preview published</Tab>
-          </TabList>
-
-          <TabPanels>
-            <TabPanel id="builder">
-              <div className="grid gap-4 2xl:grid-cols-[minmax(0,1fr)_24rem]">
-                <PuckPageBuilder
-                  editorKey={builderRevision}
-                  content={draftJson}
-                  onChange={(nextValue) => {
-                    startTransition(() => {
-                      setDraftJson(nextValue.json);
-                    });
-                  }}
-                  onPublish={(nextValue) => {
-                    startTransition(() => {
-                      setDraftJson(nextValue.json);
-                      setPublishedJson(nextValue.json);
-                    });
-                  }}
-                />
-
-                <div className="space-y-4">
-                  <Card className="rounded-3xl border-border bg-overlay py-0 shadow-xs">
-                  <CardHeader>
-                      <CardTitle>Trạng thái wrapper</CardTitle>
-                      <CardDescription>
-                        Snapshot này mô phỏng payload sẽ được lưu vào cột
-                        `pages.content`.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-3 pb-6">
-                      <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-1">
-                    <StatusBlock
-                      label="Định dạng"
-                      value="puck_json"
-                        />
-                        <StatusBlock
-                          label="Kích thước payload"
-                          value={`${draftSize} bytes`}
-                        />
-                        <StatusBlock
-                          label="Preview published"
-                          value={isPreviewSynced ? "Đồng bộ" : "Chưa đồng bộ"}
-                        />
-                        <StatusBlock
-                          label="Scope"
-                          value="pages.content"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="rounded-3xl border-border bg-overlay py-0 shadow-xs">
-                    <CardHeader>
-                      <CardTitle>JSON hiện tại</CardTitle>
-                      <CardDescription>
-                        Dùng để kiểm tra input/output của wrapper trước khi nối
-                        sang form thật ở task module Pages.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-6">
-                      <ScrollArea className="max-h-[34rem] rounded-2xl border border-border bg-bg p-4">
-                        <pre className="text-wrap break-words font-mono text-sm text-fg">
-                          {draftJson}
-                        </pre>
-                      </ScrollArea>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </TabPanel>
-
-            <TabPanel id="preview">
-              <div className="grid gap-4 xl:grid-cols-[20rem_minmax(0,1fr)]">
-                <Card className="rounded-3xl border-border bg-overlay py-0 shadow-xs">
-                  <CardHeader>
-                    <CardTitle>Published snapshot</CardTitle>
-                    <CardDescription>
-                      Preview này đọc từ bản JSON đã được xuất bản mô phỏng,
-                      giúp kiểm tra component render công khai mà không cần chờ
-                      module public website.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3 pb-6">
-                    <StatusBlock
-                      label="Trạng thái"
-                      value={isPreviewSynced ? "Theo bản nháp mới nhất" : "Đang dùng snapshot cũ"}
-                    />
-                    <StatusBlock
-                      label="Nguồn dữ liệu"
-                      value="publishedJson"
-                    />
-                    <Text>
-                      Khi bấm <Strong>Đồng bộ preview published</Strong> hoặc
-                      publish ngay trong Puck header, snapshot này sẽ được cập
-                      nhật.
-                    </Text>
-                  </CardContent>
-                </Card>
-
-                <PuckPageRender content={deferredPublishedJson} />
-              </div>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+        <CmsDataTable
+          columns={columns}
+          data={pages.data}
+          defaultSort={{ column: "created_at", direction: "desc" }}
+          description="Quản lý danh sách page, đường dẫn public, metadata SEO và điều hướng sang trình dựng nội dung Puck cho từng trang."
+          emptyDescription="Tạo trang đầu tiên để bắt đầu dựng nội dung cho website."
+          emptyTitle="Chưa có trang nào"
+          filterOptions={statusOptions.map((option) => ({ ...option }))}
+          filterValue={tableQueryState.query.status}
+          isReloading={tableQueryState.isReloading}
+          meta={pages.meta}
+          onFilterChange={(value) => tableQueryState.setStatus(value)}
+          onPageChange={(page) => tableQueryState.setPage(page)}
+          onPerPageChange={(value) => tableQueryState.setPerPage(value)}
+          onSearchChange={(value) => tableQueryState.setSearch(value)}
+          onSortingChange={(column, direction) =>
+            tableQueryState.setSorting(column, direction)
+          }
+          primaryAction={
+            <Button
+              onPress={() => {
+                setDialogMode("create");
+                setActivePage(emptyPageFormValues);
+                setDialogOpen(true);
+              }}
+            >
+              <PlusIcon />
+              Tạo trang
+            </Button>
+          }
+          searchPlaceholder="Tìm theo tiêu đề, slug, mô tả hoặc SEO"
+          searchValue={tableQueryState.query.search}
+          sort={{
+            column: tableQueryState.query.sort,
+            direction: tableQueryState.query.direction,
+          }}
+          title="Trang"
+        />
       </div>
+
+      <PageFormDialog
+        key={`${dialogMode}-${activePage.id ?? "new"}`}
+        initialValues={activePage}
+        isOpen={dialogOpen}
+        mode={dialogMode}
+        onOpenChange={setDialogOpen}
+      />
     </>
   );
 }
 
-CmsContentPagesPage.layout = (page: ReactNode) => (
-  <CmsLayout>{page}</CmsLayout>
-);
+CmsPagesPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;
 
-function StatusBlock({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-border bg-bg p-4">
-      <Text className="text-sm text-muted-fg">{label}</Text>
-      <Heading level={4} className="mt-2 break-words">
-        {value}
-      </Heading>
-    </div>
-  );
+function formatDate(value: string | null): string {
+  if (!value) {
+    return "Chưa xuất bản";
+  }
+
+  return dateFormatter.format(new Date(value));
 }
 
-function SummaryCard({
-  description,
-  icon,
-  title,
-}: {
-  description: string;
-  icon: ReactNode;
-  title: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-border bg-muted/40 p-4">
-      <div className="flex items-center gap-3">
-        <div className="flex size-10 items-center justify-center rounded-full bg-primary-subtle text-primary-subtle-fg">
-          {icon}
-        </div>
-        <Heading level={4}>{title}</Heading>
-      </div>
-      <Text className="mt-3">{description}</Text>
-    </div>
-  );
-}
+const statusIntentMap = {
+  draft: "secondary",
+  pending: "warning",
+  published: "success",
+  rejected: "danger",
+} as const;
+
+const statusLabelMap = {
+  draft: "Bản nháp",
+  pending: "Chờ duyệt",
+  published: "Đã xuất bản",
+  rejected: "Bị từ chối",
+} as const;

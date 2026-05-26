@@ -29,6 +29,8 @@ class PageFactory extends Factory
             'title' => $title,
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(100, 999),
             'excerpt' => fake()->optional()->paragraph(),
+            'seo_title' => fake()->optional()->sentence(6),
+            'seo_description' => fake()->optional()->sentence(12),
             'content' => json_encode([
                 'root' => [
                     'props' => [

@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import pagesAf6a29 from './pages'
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
 * @see app/Http/Controllers/DashboardController.php:16
@@ -162,7 +163,7 @@ postsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 posts.form = postsForm
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 export const postCategories = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -176,7 +177,7 @@ postCategories.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 postCategories.url = (options?: RouteQueryOptions) => {
@@ -184,7 +185,7 @@ postCategories.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 postCategories.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -193,7 +194,7 @@ postCategories.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 postCategories.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -202,7 +203,7 @@ postCategories.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 const postCategoriesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -211,7 +212,7 @@ const postCategoriesForm = (options?: RouteQueryOptions): RouteFormDefinition<'g
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 postCategoriesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -220,7 +221,7 @@ postCategoriesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/cms/post-categories'
 */
 postCategoriesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -236,7 +237,8 @@ postCategoriesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 postCategories.form = postCategoriesForm
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 export const pages = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -250,7 +252,8 @@ pages.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 pages.url = (options?: RouteQueryOptions) => {
@@ -258,7 +261,8 @@ pages.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 pages.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -267,7 +271,8 @@ pages.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 pages.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -276,7 +281,8 @@ pages.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 const pagesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -285,7 +291,8 @@ const pagesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 pagesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -294,7 +301,8 @@ pagesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:24
+* @see \App\Http\Controllers\Cms\PagesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PagesIndexController.php:27
 * @route '/cms/pages'
 */
 pagesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -310,7 +318,7 @@ pagesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 pages.form = pagesForm
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 export const navigation = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -324,7 +332,7 @@ navigation.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 navigation.url = (options?: RouteQueryOptions) => {
@@ -332,7 +340,7 @@ navigation.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 navigation.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -341,7 +349,7 @@ navigation.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 navigation.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -350,7 +358,7 @@ navigation.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 const navigationForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -359,7 +367,7 @@ const navigationForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 })
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 navigationForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -368,7 +376,7 @@ navigationForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 /**
-* @see routes/web.php:28
+* @see routes/web.php:47
 * @route '/cms/navigation'
 */
 navigationForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -384,7 +392,7 @@ navigationForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 navigation.form = navigationForm
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 export const media = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -398,7 +406,7 @@ media.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 media.url = (options?: RouteQueryOptions) => {
@@ -406,7 +414,7 @@ media.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 media.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -415,7 +423,7 @@ media.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 media.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -424,7 +432,7 @@ media.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 const mediaForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -433,7 +441,7 @@ const mediaForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 mediaForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -442,7 +450,7 @@ mediaForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:32
+* @see routes/web.php:51
 * @route '/cms/media'
 */
 mediaForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -458,7 +466,7 @@ mediaForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 media.form = mediaForm
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 export const documents = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -472,7 +480,7 @@ documents.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 documents.url = (options?: RouteQueryOptions) => {
@@ -480,7 +488,7 @@ documents.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -489,7 +497,7 @@ documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -498,7 +506,7 @@ documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -507,7 +515,7 @@ const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 })
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -516,7 +524,7 @@ documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 })
 
 /**
-* @see routes/web.php:36
+* @see routes/web.php:55
 * @route '/cms/documents'
 */
 documentsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -532,7 +540,7 @@ documentsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 documents.form = documentsForm
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 export const staffProfiles = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -546,7 +554,7 @@ staffProfiles.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 staffProfiles.url = (options?: RouteQueryOptions) => {
@@ -554,7 +562,7 @@ staffProfiles.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 staffProfiles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -563,7 +571,7 @@ staffProfiles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 staffProfiles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -572,7 +580,7 @@ staffProfiles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 })
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 const staffProfilesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -581,7 +589,7 @@ const staffProfilesForm = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 })
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 staffProfilesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -590,7 +598,7 @@ staffProfilesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 })
 
 /**
-* @see routes/web.php:40
+* @see routes/web.php:59
 * @route '/cms/staff-profiles'
 */
 staffProfilesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -606,7 +614,7 @@ staffProfilesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get
 staffProfiles.form = staffProfilesForm
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 export const units = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -620,7 +628,7 @@ units.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 units.url = (options?: RouteQueryOptions) => {
@@ -628,7 +636,7 @@ units.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 units.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -637,7 +645,7 @@ units.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 units.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -646,7 +654,7 @@ units.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 const unitsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -655,7 +663,7 @@ const unitsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 unitsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -664,7 +672,7 @@ unitsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:44
+* @see routes/web.php:63
 * @route '/cms/units'
 */
 unitsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -680,7 +688,7 @@ unitsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 units.form = unitsForm
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 export const users = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -694,7 +702,7 @@ users.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 users.url = (options?: RouteQueryOptions) => {
@@ -702,7 +710,7 @@ users.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 users.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -711,7 +719,7 @@ users.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 users.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -720,7 +728,7 @@ users.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 const usersForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -729,7 +737,7 @@ const usersForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 usersForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -738,7 +746,7 @@ usersForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:48
+* @see routes/web.php:67
 * @route '/cms/users'
 */
 usersForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -754,7 +762,7 @@ usersForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 users.form = usersForm
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 export const rolesPermissions = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -768,7 +776,7 @@ rolesPermissions.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.url = (options?: RouteQueryOptions) => {
@@ -776,7 +784,7 @@ rolesPermissions.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -785,7 +793,7 @@ rolesPermissions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 })
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -794,7 +802,7 @@ rolesPermissions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
 })
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 const rolesPermissionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -803,7 +811,7 @@ const rolesPermissionsForm = (options?: RouteQueryOptions): RouteFormDefinition<
 })
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 rolesPermissionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -812,7 +820,7 @@ rolesPermissionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'g
 })
 
 /**
-* @see routes/web.php:52
+* @see routes/web.php:71
 * @route '/cms/roles-permissions'
 */
 rolesPermissionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -831,7 +839,7 @@ const cms = {
     dashboard: Object.assign(dashboard, dashboard),
     posts: Object.assign(posts, posts),
     postCategories: Object.assign(postCategories, postCategories),
-    pages: Object.assign(pages, pages),
+    pages: Object.assign(pages, pagesAf6a29),
     navigation: Object.assign(navigation, navigation),
     media: Object.assign(media, media),
     documents: Object.assign(documents, documents),

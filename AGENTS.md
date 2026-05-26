@@ -59,6 +59,17 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Do not edit files inside `web/components/ui` unless the user explicitly asks for it.
 - If a requested frontend change appears to require edits inside `web/components/ui`, stop, warn the user, and ask for confirmation before changing that directory.
 
+## Frontend Content Quality
+
+- Every frontend block must earn its space by helping the user complete a task, understand real data, or make a decision.
+- Do not add filler copy, placeholder explanations, implementation notes, or decorative sections that do not improve the real workflow.
+- Do not render technical notes in the UI such as `Dữ liệu phân trang từ backend qua Inertia`, `UI này chỉ hỗ trợ trải nghiệm biên tập ở frontend`, or similar backend/frontend responsibility reminders unless the user explicitly asks for that documentation in the interface.
+- Do not add low-value metric cards, item counters, summary badges, or stat blocks unless they drive a real user action or answer an important operational question.
+- Prefer showing the real primary content first. If a page mainly exists to manage a list, form, editor, or workflow, prioritize that content instead of surrounding it with generic overview blocks.
+- Empty states, helper text, and loading states must be concise and useful. They should guide the next action, not explain implementation details.
+- Keep validation and security responsibility in backend code, tests, and developer documentation. Do not surface those reminders in normal UI copy unless the user has a direct reason to see them.
+- When adding page descriptions or support text, make them domain-specific, short, and actionable. Avoid generic sentences that could fit any screen.
+
 ## Documentation Files
 
 - You must only create documentation files if explicitly requested by the user.

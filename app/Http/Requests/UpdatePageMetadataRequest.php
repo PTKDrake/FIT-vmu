@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Models\Media;
 use App\Models\Page;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdatePageRequest extends FormRequest
+class UpdatePageMetadataRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -21,9 +20,7 @@ class UpdatePageRequest extends FormRequest
             : false;
     }
 
-    /**
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
+    /** @return array<string, ValidationRule|array<mixed>|string> */
     public function rules(): array
     {
         $page = $this->route('page');
@@ -35,10 +32,6 @@ class UpdatePageRequest extends FormRequest
             'excerpt' => ['nullable', 'string'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],
-            'content' => ['required', 'string'],
-            'content_format' => ['required', 'string', Rule::in(['puck_json'])],
-            'thumbnail_id' => ['nullable', 'integer', Rule::exists((new Media)->getTable(), 'id')],
-            'status' => ['required', 'string', Rule::in(['draft', 'pending', 'published', 'rejected'])],
         ];
     }
 }

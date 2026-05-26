@@ -75,3 +75,33 @@ export interface CmsPostTableRow {
 export interface CmsPostsPageProps extends SharedData {
   posts: CmsPaginatedCollection<CmsPostTableRow>;
 }
+
+export interface CmsPageTableRow {
+  authorName: string | null;
+  excerpt: string | null;
+  id: number;
+  publishedAt: string | null;
+  seoDescription: string | null;
+  seoTitle: string | null;
+  slug: string;
+  status: "draft" | "pending" | "published" | "rejected";
+  title: string;
+  updatedAt: string;
+  urlPath: string;
+}
+
+export interface CmsPagesPageProps extends SharedData {
+  pages: CmsPaginatedCollection<CmsPageTableRow>;
+}
+
+export interface CmsPageEditorPageProps extends SharedData {
+  page: {
+    content: string | null;
+    contentFormat: "puck_json";
+    id: number;
+    slug: string;
+    status: "draft" | "pending" | "published" | "rejected";
+    title: string;
+    updatedAt: string;
+  };
+}

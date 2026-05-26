@@ -24,6 +24,8 @@ class Page extends Model
         'title',
         'slug',
         'excerpt',
+        'seo_title',
+        'seo_description',
         'content',
         'content_format',
         'thumbnail_id',
