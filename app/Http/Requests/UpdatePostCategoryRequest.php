@@ -27,10 +27,11 @@ class UpdatePostCategoryRequest extends FormRequest
     public function rules(): array
     {
         $postCategory = $this->route('post_category');
+        $postCategoryId = $postCategory instanceof PostCategory ? $postCategory->getKey() : null;
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique((new PostCategory)->getTable(), 'slug')->ignore($postCategory?->getKey())],
+            'slug' => ['required', 'string', 'max:255', Rule::unique((new PostCategory)->getTable(), 'slug')->ignore($postCategoryId)],
             'description' => ['nullable', 'string'],
             'parent_id' => [
                 'nullable',

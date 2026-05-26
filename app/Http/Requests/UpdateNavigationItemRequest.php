@@ -10,6 +10,7 @@ use App\Models\Page;
 use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -63,7 +64,9 @@ class UpdateNavigationItemRequest extends FormRequest
         $parentId = $this->integer('parent_id');
         $menuId = $this->integer('menu_id');
 
-        if ($navigationItem instanceof NavigationItem && $parentId === (int) $navigationItem->getKey()) {
+        $navigationItemKey = $navigationItem instanceof NavigationItem ? $navigationItem->getKey() : null;
+
+        if (is_int($navigationItemKey) && $parentId === $navigationItemKey) {
             $validator->errors()->add('parent_id', 'The selected parent item is invalid.');
 
             return;
@@ -119,11 +122,14 @@ class UpdateNavigationItemRequest extends FormRequest
 
         if ($linkableId === null) {
             $validator->errors()->add('linkable_id', 'The linkable id field is required for the selected item type.');
-        } elseif ($linkableType === $expectedLinkableType && ! $expectedLinkableType::query()->whereKey($linkableId)->exists()) {
+        } elseif ($linkableType === $expectedLinkableType && ! $this->linkableExists($linkableType, $linkableId)) {
             $validator->errors()->add('linkable_id', 'The selected link target is invalid.');
         }
     }
 
+    /**
+     * @return class-string<Model>|null
+     */
     private function expectedLinkableType(string $type): ?string
     {
         return match ($type) {
@@ -132,6 +138,12 @@ class UpdateNavigationItemRequest extends FormRequest
             'post' => Post::class,
             default => null,
         };
+    }
+
+    /** @param class-string<Model> $linkableType */
+    private function linkableExists(string $linkableType, int $linkableId): bool
+    {
+        return $linkableType::query()->whereKey($linkableId)->exists();
     }
 
     private function isValidNavigationUrl(string $url): bool

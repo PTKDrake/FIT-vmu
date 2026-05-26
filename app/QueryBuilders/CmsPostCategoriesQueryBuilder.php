@@ -12,6 +12,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 final class CmsPostCategoriesQueryBuilder
 {
+    /** @return QueryBuilder<PostCategory> */
     public static function make(): QueryBuilder
     {
         return QueryBuilder::for(PostCategory::query())
@@ -35,8 +36,13 @@ final class CmsPostCategoriesQueryBuilder
             ->defaultSort('sort_order', 'name');
     }
 
+    /** @param Builder<PostCategory> $query */
     private static function searchFilter(Builder $query, mixed $value): void
     {
+        if (! is_scalar($value)) {
+            return;
+        }
+
         $searchTerm = trim((string) $value);
 
         if ($searchTerm === '') {

@@ -26,10 +26,11 @@ class UpdateNavigationMenuRequest extends FormRequest
     public function rules(): array
     {
         $navigationMenu = $this->route('navigation_menu');
+        $navigationMenuId = $navigationMenu instanceof NavigationMenu ? $navigationMenu->getKey() : null;
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique((new NavigationMenu)->getTable(), 'slug')->ignore($navigationMenu?->getKey())],
+            'slug' => ['required', 'string', 'max:255', Rule::unique((new NavigationMenu)->getTable(), 'slug')->ignore($navigationMenuId)],
             'location' => ['required', 'string', 'max:255'],
             'is_active' => ['required', 'boolean'],
         ];

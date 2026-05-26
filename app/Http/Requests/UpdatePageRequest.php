@@ -27,10 +27,11 @@ class UpdatePageRequest extends FormRequest
     public function rules(): array
     {
         $page = $this->route('page');
+        $pageId = $page instanceof Page ? $page->getKey() : null;
 
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique((new Page)->getTable(), 'slug')->ignore($page?->getKey())],
+            'slug' => ['required', 'string', 'max:255', Rule::unique((new Page)->getTable(), 'slug')->ignore($pageId)],
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['puck_json'])],

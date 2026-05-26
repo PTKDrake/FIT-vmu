@@ -11,6 +11,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 final class CmsNavigationMenusQueryBuilder
 {
+    /** @return QueryBuilder<NavigationMenu> */
     public static function make(): QueryBuilder
     {
         return QueryBuilder::for(NavigationMenu::query())
@@ -30,8 +31,13 @@ final class CmsNavigationMenusQueryBuilder
             ->defaultSort('name');
     }
 
+    /** @param Builder<NavigationMenu> $query */
     private static function searchFilter(Builder $query, mixed $value): void
     {
+        if (! is_scalar($value)) {
+            return;
+        }
+
         $searchTerm = trim((string) $value);
 
         if ($searchTerm === '') {
