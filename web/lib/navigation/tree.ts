@@ -1,8 +1,16 @@
-export type NavigationItemType = "custom_url" | "post_category" | "page" | "post";
+export type NavigationItemType =
+  | "custom_url"
+  | "post_category"
+  | "page"
+  | "post";
 
-export type NavigationInternalResourceType = Exclude<NavigationItemType, "custom_url">;
+export type NavigationInternalResourceType = Exclude<
+  NavigationItemType,
+  "custom_url"
+>;
 
 export type NavigationItemTarget = "_self" | "_blank";
+export type NavigationDropPosition = "after" | "before" | "on";
 
 export interface NavigationResourceOption {
   id: number;
@@ -74,6 +82,24 @@ export const navigationResourceCatalog: Record<
       meta: "/lien-he",
       type: "page",
     },
+    {
+      id: 304,
+      label: "Trang Chương trình đào tạo",
+      meta: "/chuong-trinh-dao-tao",
+      type: "page",
+    },
+    {
+      id: 305,
+      label: "Trang Hợp tác doanh nghiệp",
+      meta: "/hop-tac-doanh-nghiep",
+      type: "page",
+    },
+    {
+      id: 306,
+      label: "Trang Đội ngũ giảng viên",
+      meta: "/doi-ngu-giang-vien",
+      type: "page",
+    },
   ],
   post: [
     {
@@ -94,6 +120,24 @@ export const navigationResourceCatalog: Record<
       meta: "Bài viết published",
       type: "post",
     },
+    {
+      id: 404,
+      label: "Thông báo lịch đăng ký học phần",
+      meta: "Bài viết published",
+      type: "post",
+    },
+    {
+      id: 405,
+      label: "Sinh viên đạt giải Olympic tin học",
+      meta: "Bài viết published",
+      type: "post",
+    },
+    {
+      id: 406,
+      label: "Bản tin hợp tác doanh nghiệp tháng 5",
+      meta: "Bài viết published",
+      type: "post",
+    },
   ],
   post_category: [
     {
@@ -111,6 +155,24 @@ export const navigationResourceCatalog: Record<
     {
       id: 203,
       label: "Sự kiện sinh viên",
+      meta: "Danh mục con",
+      type: "post_category",
+    },
+    {
+      id: 204,
+      label: "Tuyển sinh",
+      meta: "Danh mục gốc",
+      type: "post_category",
+    },
+    {
+      id: 205,
+      label: "Hợp tác doanh nghiệp",
+      meta: "Danh mục gốc",
+      type: "post_category",
+    },
+    {
+      id: 206,
+      label: "Nghiên cứu khoa học",
       meta: "Danh mục con",
       type: "post_category",
     },
@@ -193,6 +255,129 @@ export function createMockNavigationMenus(): NavigationMenuDraft[] {
           type: "post",
           url: null,
         }),
+        createNavigationItem({
+          id: 14,
+          isActive: true,
+          linkableId: null,
+          linkableType: null,
+          menuId: 1,
+          parentId: null,
+          sortOrder: 4,
+          target: "_self",
+          title: "Tuyển sinh",
+          type: "custom_url",
+          url: "/tuyen-sinh",
+          children: [
+            createNavigationItem({
+              id: 141,
+              isActive: true,
+              linkableId: 204,
+              linkableType: "post_category",
+              menuId: 1,
+              parentId: 14,
+              sortOrder: 1,
+              target: "_self",
+              title: "Tin tuyển sinh",
+              type: "post_category",
+              url: null,
+            }),
+            createNavigationItem({
+              id: 142,
+              isActive: true,
+              linkableId: 304,
+              linkableType: "page",
+              menuId: 1,
+              parentId: 14,
+              sortOrder: 2,
+              target: "_self",
+              title: "Chương trình đào tạo",
+              type: "page",
+              url: null,
+              children: [
+                createNavigationItem({
+                  id: 1421,
+                  isActive: true,
+                  linkableId: 404,
+                  linkableType: "post",
+                  menuId: 1,
+                  parentId: 142,
+                  sortOrder: 1,
+                  target: "_self",
+                  title: "Lịch đăng ký học phần",
+                  type: "post",
+                  url: null,
+                }),
+                createNavigationItem({
+                  id: 1422,
+                  isActive: false,
+                  linkableId: 302,
+                  linkableType: "page",
+                  menuId: 1,
+                  parentId: 142,
+                  sortOrder: 2,
+                  target: "_self",
+                  title: "Thông tin tuyển sinh",
+                  type: "page",
+                  url: null,
+                }),
+              ],
+            }),
+            createNavigationItem({
+              id: 143,
+              isActive: true,
+              linkableId: null,
+              linkableType: null,
+              menuId: 1,
+              parentId: 14,
+              sortOrder: 3,
+              target: "_blank",
+              title: "Đăng ký xét tuyển online",
+              type: "custom_url",
+              url: "https://tuyensinh.vimaru.edu.vn",
+            }),
+          ],
+        }),
+        createNavigationItem({
+          id: 15,
+          isActive: true,
+          linkableId: 305,
+          linkableType: "page",
+          menuId: 1,
+          parentId: null,
+          sortOrder: 5,
+          target: "_self",
+          title: "Hợp tác doanh nghiệp",
+          type: "page",
+          url: null,
+          children: [
+            createNavigationItem({
+              id: 151,
+              isActive: true,
+              linkableId: 205,
+              linkableType: "post_category",
+              menuId: 1,
+              parentId: 15,
+              sortOrder: 1,
+              target: "_self",
+              title: "Tin hợp tác",
+              type: "post_category",
+              url: null,
+            }),
+            createNavigationItem({
+              id: 152,
+              isActive: true,
+              linkableId: 406,
+              linkableType: "post",
+              menuId: 1,
+              parentId: 15,
+              sortOrder: 2,
+              target: "_blank",
+              title: "Bản tin tháng 5",
+              type: "post",
+              url: null,
+            }),
+          ],
+        }),
       ]),
     },
     {
@@ -227,6 +412,143 @@ export function createMockNavigationMenus(): NavigationMenuDraft[] {
           title: "Cổng thông tin sinh viên",
           type: "custom_url",
           url: "https://student.vimaru.edu.vn",
+        }),
+        createNavigationItem({
+          id: 23,
+          isActive: true,
+          linkableId: null,
+          linkableType: null,
+          menuId: 2,
+          parentId: null,
+          sortOrder: 3,
+          target: "_self",
+          title: "Liên kết nhanh",
+          type: "custom_url",
+          url: "/lien-ket-nhanh",
+          children: [
+            createNavigationItem({
+              id: 231,
+              isActive: true,
+              linkableId: 303,
+              linkableType: "page",
+              menuId: 2,
+              parentId: 23,
+              sortOrder: 1,
+              target: "_self",
+              title: "Liên hệ",
+              type: "page",
+              url: null,
+            }),
+            createNavigationItem({
+              id: 232,
+              isActive: true,
+              linkableId: 405,
+              linkableType: "post",
+              menuId: 2,
+              parentId: 23,
+              sortOrder: 2,
+              target: "_self",
+              title: "Sinh viên tiêu biểu",
+              type: "post",
+              url: null,
+            }),
+          ],
+        }),
+      ]),
+    },
+    {
+      id: 3,
+      isActive: true,
+      location: "header",
+      name: "Header tuyển sinh",
+      slug: "header-admission",
+      items: normalizeNavigationTree([
+        createNavigationItem({
+          id: 31,
+          isActive: true,
+          linkableId: 302,
+          linkableType: "page",
+          menuId: 3,
+          parentId: null,
+          sortOrder: 1,
+          target: "_self",
+          title: "Tổng quan tuyển sinh",
+          type: "page",
+          url: null,
+        }),
+        createNavigationItem({
+          id: 32,
+          isActive: true,
+          linkableId: 204,
+          linkableType: "post_category",
+          menuId: 3,
+          parentId: null,
+          sortOrder: 2,
+          target: "_self",
+          title: "Tin tuyển sinh",
+          type: "post_category",
+          url: null,
+        }),
+        createNavigationItem({
+          id: 33,
+          isActive: false,
+          linkableId: null,
+          linkableType: null,
+          menuId: 3,
+          parentId: null,
+          sortOrder: 3,
+          target: "_blank",
+          title: "Tư vấn trực tuyến",
+          type: "custom_url",
+          url: "https://zalo.me/vmu-fit",
+        }),
+      ]),
+    },
+    {
+      id: 4,
+      isActive: true,
+      location: "footer",
+      name: "Footer học thuật",
+      slug: "footer-academic",
+      items: normalizeNavigationTree([
+        createNavigationItem({
+          id: 41,
+          isActive: true,
+          linkableId: 304,
+          linkableType: "page",
+          menuId: 4,
+          parentId: null,
+          sortOrder: 1,
+          target: "_self",
+          title: "Chương trình đào tạo",
+          type: "page",
+          url: null,
+        }),
+        createNavigationItem({
+          id: 42,
+          isActive: true,
+          linkableId: 206,
+          linkableType: "post_category",
+          menuId: 4,
+          parentId: null,
+          sortOrder: 2,
+          target: "_self",
+          title: "Nghiên cứu khoa học",
+          type: "post_category",
+          url: null,
+        }),
+        createNavigationItem({
+          id: 43,
+          isActive: true,
+          linkableId: 306,
+          linkableType: "page",
+          menuId: 4,
+          parentId: null,
+          sortOrder: 3,
+          target: "_self",
+          title: "Đội ngũ giảng viên",
+          type: "page",
+          url: null,
         }),
       ]),
     },
@@ -380,12 +702,90 @@ export function moveNavigationItem(
   );
 }
 
+export function moveNavigationItemsToTarget(
+  items: NavigationItemDraft[],
+  itemIds: number[],
+  targetId: number,
+  dropPosition: NavigationDropPosition,
+): NavigationItemDraft[] {
+  const movingItemIds = new Set(itemIds);
+
+  if (movingItemIds.size === 0 || movingItemIds.has(targetId)) {
+    return normalizeNavigationTree(items);
+  }
+
+  for (const itemId of movingItemIds) {
+    if (collectDescendantIds(items, itemId).has(targetId)) {
+      return normalizeNavigationTree(items);
+    }
+  }
+
+  let remainingItems = items;
+  const movedItems: NavigationItemDraft[] = [];
+
+  for (const itemId of movingItemIds) {
+    const result = removeNavigationItem(remainingItems, itemId);
+
+    if (result.removedItem) {
+      remainingItems = result.items;
+      movedItems.push(result.removedItem);
+    }
+  }
+
+  if (movedItems.length === 0) {
+    return normalizeNavigationTree(items);
+  }
+
+  if (dropPosition === "on") {
+    const targetItem = findNavigationItem(remainingItems, targetId);
+
+    if (!targetItem) {
+      return normalizeNavigationTree(items);
+    }
+
+    return insertNavigationItemsAtIndex(
+      remainingItems,
+      movedItems,
+      targetItem.id,
+      targetItem.children.length,
+    );
+  }
+
+  const targetItem = findNavigationItem(remainingItems, targetId);
+
+  if (!targetItem) {
+    return normalizeNavigationTree(items);
+  }
+
+  const siblingItems = getNavigationSiblingItems(
+    remainingItems,
+    targetItem.parentId,
+  );
+  const targetIndex = siblingItems.findIndex(
+    (item) => item.id === targetItem.id,
+  );
+
+  if (targetIndex === -1) {
+    return normalizeNavigationTree(items);
+  }
+
+  return insertNavigationItemsAtIndex(
+    remainingItems,
+    movedItems,
+    targetItem.parentId,
+    dropPosition === "before" ? targetIndex : targetIndex + 1,
+  );
+}
+
 export function collectNavigationParentOptions(
   items: NavigationItemDraft[],
   currentItemId: number | null = null,
   depth = 0,
 ): NavigationParentOption[] {
-  const descendantIds = currentItemId === null ? new Set<number>() : collectDescendantIds(items, currentItemId);
+  const descendantIds =
+    currentItemId === null
+      ? new Set<number>()
+      : collectDescendantIds(items, currentItemId);
 
   return items.flatMap((item) => {
     if (item.id === currentItemId || descendantIds.has(item.id)) {
@@ -399,7 +799,11 @@ export function collectNavigationParentOptions(
         id: item.id,
         label: `${prefix}${item.title}`,
       },
-      ...collectNavigationParentOptions(item.children, currentItemId, depth + 1),
+      ...collectNavigationParentOptions(
+        item.children,
+        currentItemId,
+        depth + 1,
+      ),
     ];
   });
 }
@@ -411,7 +815,9 @@ export function countNavigationItems(items: NavigationItemDraft[]): number {
   );
 }
 
-export function describeNavigationDestination(item: NavigationItemDraft): string {
+export function describeNavigationDestination(
+  item: NavigationItemDraft,
+): string {
   if (item.type === "custom_url") {
     return item.url || "Chưa nhập URL";
   }
@@ -472,4 +878,74 @@ function collectDescendantIds(
   visitChildren(currentItem.children);
 
   return descendantIds;
+}
+
+function getNavigationSiblingItems(
+  items: NavigationItemDraft[],
+  parentId: number | null,
+): NavigationItemDraft[] {
+  if (parentId === null) {
+    return items;
+  }
+
+  return findNavigationItem(items, parentId)?.children ?? [];
+}
+
+function insertNavigationItemsAtIndex(
+  items: NavigationItemDraft[],
+  movedItems: NavigationItemDraft[],
+  parentId: number | null,
+  index: number,
+): NavigationItemDraft[] {
+  if (parentId === null) {
+    const nextItems = [...items];
+
+    nextItems.splice(
+      index,
+      0,
+      ...movedItems.map((item) => ({ ...item, parentId: null })),
+    );
+
+    return normalizeNavigationTree(
+      nextItems.map((item, itemIndex) => ({
+        ...item,
+        sortOrder: itemIndex + 1,
+      })),
+    );
+  }
+
+  return normalizeNavigationTree(
+    items.map((item) => {
+      if (item.id === parentId) {
+        const nextChildren = [...item.children];
+
+        nextChildren.splice(
+          index,
+          0,
+          ...movedItems.map((movedItem) => ({ ...movedItem, parentId })),
+        );
+
+        return {
+          ...item,
+          children: normalizeNavigationTree(
+            nextChildren.map((childItem, childIndex) => ({
+              ...childItem,
+              sortOrder: childIndex + 1,
+            })),
+            parentId,
+          ),
+        };
+      }
+
+      return {
+        ...item,
+        children: insertNavigationItemsAtIndex(
+          item.children,
+          movedItems,
+          parentId,
+          index,
+        ),
+      };
+    }),
+  );
 }

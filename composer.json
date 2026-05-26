@@ -100,7 +100,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "pnpm exec concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"./phpw artisan serve\" \"./phpw artisan queue:listen --tries=1\" \"./phpw artisan pail --timeout=0\" \"pnpm run dev\" --names=server,queue,logs,vite"
+            "pnpm exec concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"./phpw artisan serve @additional_args\" \"./phpw artisan queue:listen --tries=1\" \"./phpw artisan pail --timeout=0\" \"pnpm run dev\" --names=server,queue,logs,vite"
         ]
     },
     "extra": {
