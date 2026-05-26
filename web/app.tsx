@@ -1,5 +1,6 @@
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
+import "@measured/puck/puck.css";
 import { createInertiaApp } from "@inertiajs/react";
 import type { ComponentType } from "react";
 import { createRoot } from "react-dom/client";
