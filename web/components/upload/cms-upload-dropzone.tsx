@@ -208,9 +208,9 @@ export function CmsUploadDropzone({
 
             <div className="mt-3 space-y-3">
               {rejections.length > 0 ? (
-                rejections.map(({ errors, file }, index) => (
+                rejections.map(({ errors, file }) => (
                   <div
-                    key={`${file.name}-${index}`}
+                    key={`${file.name}-${file.size}-${file.lastModified}`}
                     className="rounded-lg border border-danger-subtle/50 bg-danger-subtle/20 px-3 py-2"
                   >
                     <p className="font-medium text-fg">{file.name}</p>
