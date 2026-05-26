@@ -1,21 +1,25 @@
-"use client"
+"use client";
 
-import { ChevronRightIcon } from "@heroicons/react/20/solid"
-import { Button } from "react-aria-components/Button"
+import { Bars3Icon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { Button } from "react-aria-components/Button";
 import type {
   TreeItemContentProps,
   TreeItemContentRenderProps,
   TreeItemProps,
   TreeProps,
-} from "react-aria-components/Tree"
+} from "react-aria-components/Tree";
 import {
   TreeItemContent,
   TreeItem as TreeItemPrimitive,
   Tree as TreePrimitive,
-} from "react-aria-components/Tree"
-import { twJoin, twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
-import { Checkbox } from "./checkbox"
+} from "react-aria-components/Tree";
+import {
+  DropIndicator as DropIndicatorPrimitive,
+  type DropIndicatorProps,
+} from "react-aria-components/useDragAndDrop";
+import { twJoin, twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
+import { Checkbox } from "./checkbox";
 
 const Tree = <T extends object>({ className, ...props }: TreeProps<T>) => {
   return (
@@ -29,10 +33,13 @@ const Tree = <T extends object>({ className, ...props }: TreeProps<T>) => {
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-const TreeItem = <T extends object>({ className, ...props }: TreeItemProps<T>) => {
+const TreeItem = <T extends object>({
+  className,
+  ...props
+}: TreeItemProps<T>) => {
   return (
     <TreeItemPrimitive
       className={cx(
@@ -49,11 +56,11 @@ const TreeItem = <T extends object>({ className, ...props }: TreeItemProps<T>) =
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
 interface TreeContentProps extends TreeItemContentProps {
-  className?: string
+  className?: string;
 }
 
 const TreeContent = ({ className, children, ...props }: TreeContentProps) => {
@@ -66,10 +73,21 @@ const TreeContent = ({ className, children, ...props }: TreeContentProps) => {
             className,
           )}
         >
-          {values.allowsDragging && <Button className="sr-only" slot="drag" />}
-          {values.selectionMode === "multiple" && values.selectionBehavior === "toggle" && (
-            <Checkbox className="[--indicator-mt:0] sm:[--indicator-mt:0]" slot="selection" />
+          {values.allowsDragging && (
+            <Button
+              slot="drag"
+              className="shrink-0 cursor-grab rounded-md p-0.5 text-muted-fg outline-hidden hover:text-fg active:cursor-grabbing"
+            >
+              <Bars3Icon className="size-4" />
+            </Button>
           )}
+          {values.selectionMode === "multiple" &&
+            values.selectionBehavior === "toggle" && (
+              <Checkbox
+                className="[--indicator-mt:0] sm:[--indicator-mt:0]"
+                slot="selection"
+              />
+            )}
           <div
             className={twJoin(
               "relative w-[calc(calc(var(--tree-item-level)-1)*(--spacing(5)))] shrink-0",
@@ -90,13 +108,13 @@ const TreeContent = ({ className, children, ...props }: TreeContentProps) => {
         </div>
       )}
     </TreeItemContent>
-  )
-}
+  );
+};
 
 const TreeIndicator = ({
   values,
 }: {
-  values: Pick<TreeItemContentRenderProps, "isDisabled" | "isExpanded">
+  values: Pick<TreeItemContentRenderProps, "isDisabled" | "isExpanded">;
 }) => {
   return (
     <Button
@@ -115,8 +133,23 @@ const TreeIndicator = ({
         )}
       />
     </Button>
-  )
-}
+  );
+};
 
-export type { TreeItemProps, TreeProps }
-export { Tree, TreeContent, TreeIndicator, TreeItem }
+const TreeDropIndicator = (props: DropIndicatorProps) => {
+  return (
+    <DropIndicatorPrimitive
+      className={({ isDropTarget }) =>
+        twMerge(
+          "relative block h-2 rounded-full",
+          "before:absolute before:inset-x-2 before:top-1/2 before:h-0.5 before:-translate-y-1/2 before:rounded-full before:bg-primary/35",
+          isDropTarget && "before:bg-primary",
+        )
+      }
+      {...props}
+    />
+  );
+};
+
+export type { TreeItemProps, TreeProps };
+export { Tree, TreeContent, TreeDropIndicator, TreeIndicator, TreeItem };

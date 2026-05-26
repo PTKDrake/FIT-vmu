@@ -1,8 +1,16 @@
-export type NavigationItemType = "custom_url" | "post_category" | "page" | "post";
+export type NavigationItemType =
+  | "custom_url"
+  | "post_category"
+  | "page"
+  | "post";
 
-export type NavigationInternalResourceType = Exclude<NavigationItemType, "custom_url">;
+export type NavigationInternalResourceType = Exclude<
+  NavigationItemType,
+  "custom_url"
+>;
 
 export type NavigationItemTarget = "_self" | "_blank";
+export type NavigationDropPosition = "after" | "before" | "on";
 
 export interface NavigationResourceOption {
   id: number;
@@ -380,12 +388,90 @@ export function moveNavigationItem(
   );
 }
 
+export function moveNavigationItemsToTarget(
+  items: NavigationItemDraft[],
+  itemIds: number[],
+  targetId: number,
+  dropPosition: NavigationDropPosition,
+): NavigationItemDraft[] {
+  const movingItemIds = new Set(itemIds);
+
+  if (movingItemIds.size === 0 || movingItemIds.has(targetId)) {
+    return normalizeNavigationTree(items);
+  }
+
+  for (const itemId of movingItemIds) {
+    if (collectDescendantIds(items, itemId).has(targetId)) {
+      return normalizeNavigationTree(items);
+    }
+  }
+
+  let remainingItems = items;
+  const movedItems: NavigationItemDraft[] = [];
+
+  for (const itemId of movingItemIds) {
+    const result = removeNavigationItem(remainingItems, itemId);
+
+    if (result.removedItem) {
+      remainingItems = result.items;
+      movedItems.push(result.removedItem);
+    }
+  }
+
+  if (movedItems.length === 0) {
+    return normalizeNavigationTree(items);
+  }
+
+  if (dropPosition === "on") {
+    const targetItem = findNavigationItem(remainingItems, targetId);
+
+    if (!targetItem) {
+      return normalizeNavigationTree(items);
+    }
+
+    return insertNavigationItemsAtIndex(
+      remainingItems,
+      movedItems,
+      targetItem.id,
+      targetItem.children.length,
+    );
+  }
+
+  const targetItem = findNavigationItem(remainingItems, targetId);
+
+  if (!targetItem) {
+    return normalizeNavigationTree(items);
+  }
+
+  const siblingItems = getNavigationSiblingItems(
+    remainingItems,
+    targetItem.parentId,
+  );
+  const targetIndex = siblingItems.findIndex(
+    (item) => item.id === targetItem.id,
+  );
+
+  if (targetIndex === -1) {
+    return normalizeNavigationTree(items);
+  }
+
+  return insertNavigationItemsAtIndex(
+    remainingItems,
+    movedItems,
+    targetItem.parentId,
+    dropPosition === "before" ? targetIndex : targetIndex + 1,
+  );
+}
+
 export function collectNavigationParentOptions(
   items: NavigationItemDraft[],
   currentItemId: number | null = null,
   depth = 0,
 ): NavigationParentOption[] {
-  const descendantIds = currentItemId === null ? new Set<number>() : collectDescendantIds(items, currentItemId);
+  const descendantIds =
+    currentItemId === null
+      ? new Set<number>()
+      : collectDescendantIds(items, currentItemId);
 
   return items.flatMap((item) => {
     if (item.id === currentItemId || descendantIds.has(item.id)) {
@@ -399,7 +485,11 @@ export function collectNavigationParentOptions(
         id: item.id,
         label: `${prefix}${item.title}`,
       },
-      ...collectNavigationParentOptions(item.children, currentItemId, depth + 1),
+      ...collectNavigationParentOptions(
+        item.children,
+        currentItemId,
+        depth + 1,
+      ),
     ];
   });
 }
@@ -411,7 +501,9 @@ export function countNavigationItems(items: NavigationItemDraft[]): number {
   );
 }
 
-export function describeNavigationDestination(item: NavigationItemDraft): string {
+export function describeNavigationDestination(
+  item: NavigationItemDraft,
+): string {
   if (item.type === "custom_url") {
     return item.url || "Chưa nhập URL";
   }
@@ -472,4 +564,74 @@ function collectDescendantIds(
   visitChildren(currentItem.children);
 
   return descendantIds;
+}
+
+function getNavigationSiblingItems(
+  items: NavigationItemDraft[],
+  parentId: number | null,
+): NavigationItemDraft[] {
+  if (parentId === null) {
+    return items;
+  }
+
+  return findNavigationItem(items, parentId)?.children ?? [];
+}
+
+function insertNavigationItemsAtIndex(
+  items: NavigationItemDraft[],
+  movedItems: NavigationItemDraft[],
+  parentId: number | null,
+  index: number,
+): NavigationItemDraft[] {
+  if (parentId === null) {
+    const nextItems = [...items];
+
+    nextItems.splice(
+      index,
+      0,
+      ...movedItems.map((item) => ({ ...item, parentId: null })),
+    );
+
+    return normalizeNavigationTree(
+      nextItems.map((item, itemIndex) => ({
+        ...item,
+        sortOrder: itemIndex + 1,
+      })),
+    );
+  }
+
+  return normalizeNavigationTree(
+    items.map((item) => {
+      if (item.id === parentId) {
+        const nextChildren = [...item.children];
+
+        nextChildren.splice(
+          index,
+          0,
+          ...movedItems.map((movedItem) => ({ ...movedItem, parentId })),
+        );
+
+        return {
+          ...item,
+          children: normalizeNavigationTree(
+            nextChildren.map((childItem, childIndex) => ({
+              ...childItem,
+              sortOrder: childIndex + 1,
+            })),
+            parentId,
+          ),
+        };
+      }
+
+      return {
+        ...item,
+        children: insertNavigationItemsAtIndex(
+          item.children,
+          movedItems,
+          parentId,
+          index,
+        ),
+      };
+    }),
+  );
 }
