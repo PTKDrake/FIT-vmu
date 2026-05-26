@@ -16,7 +16,7 @@ test('role and permission seeder is idempotent and syncs the mvp matrix', functi
         'super-admin',
     ]);
 
-    expect(Permission::query()->count())->toBe(35);
+    expect(Permission::query()->count())->toBe(44);
 
     $adminPermissions = Role::findByName('admin', 'web')
         ->permissions
@@ -30,9 +30,25 @@ test('role and permission seeder is idempotent and syncs the mvp matrix', functi
         'manage roles',
         'manage permissions',
         'publish posts',
+        'publish pages',
         'publish documents',
+        'manage post categories',
+        'manage navigation',
         'manage staff appointments',
     )->not->toContain('non-existent permission');
+
+    $editorPermissions = Role::findByName('editor', 'web')
+        ->permissions
+        ->pluck('name')
+        ->sort()
+        ->values()
+        ->all();
+
+    expect($editorPermissions)->toContain(
+        'manage post categories',
+        'publish pages',
+        'manage navigation',
+    );
 
     $studentPermissions = Role::findByName('student', 'web')
         ->permissions
