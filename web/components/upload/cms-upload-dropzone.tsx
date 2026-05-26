@@ -8,11 +8,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useMemo, useState } from "react";
-import {
-  type Accept,
-  type FileRejection,
-  useDropzone,
-} from "react-dropzone";
+import { type Accept, type FileRejection, useDropzone } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DropZone } from "@/components/ui/drop-zone";
 import {
   ProgressBar,
   ProgressBarHeader,
@@ -107,44 +104,43 @@ export function CmsUploadDropzone({
       </CardHeader>
 
       <CardContent className="grid gap-4">
-        <div
-          {...getRootProps()}
-          className={twMerge(
-            "rounded-xl border border-dashed p-5 transition-colors",
-            "bg-muted/30 hover:bg-muted/45",
-            "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/40",
-            isDragActive ? "border-info-subtle-fg bg-info-subtle/40" : "",
-            isDragAccept ? "border-success-subtle-fg bg-success-subtle/35" : "",
-            isDragReject ? "border-danger-subtle-fg bg-danger-subtle/30" : "",
-            disabled ? "cursor-not-allowed opacity-60" : "",
-          )}
-        >
-          <input {...getInputProps()} />
+        <div {...getRootProps()}>
+          <DropZone
+            className={twMerge(
+              "rounded-xl border border-dashed p-5 transition-colors",
+              "bg-muted/30 hover:bg-muted/45",
+              "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/40",
+              isDragActive ? "border-info-subtle-fg bg-info-subtle/40" : "",
+              isDragAccept
+                ? "border-success-subtle-fg bg-success-subtle/35"
+                : "",
+              isDragReject ? "border-danger-subtle-fg bg-danger-subtle/30" : "",
+              disabled ? "cursor-not-allowed opacity-60" : "",
+            )}
+          >
+            <input {...getInputProps()} />
 
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <ArrowUpTrayIcon className="size-5 text-muted-fg" />
-                <Strong className="text-fg">
-                  {isDragActive
-                    ? "Thả tệp vào đây"
-                    : "Kéo thả hoặc dùng nút để chọn tệp"}
-                </Strong>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <ArrowUpTrayIcon className="size-5 text-muted-fg" />
+                  <Strong className="text-fg">
+                    {isDragActive
+                      ? "Thả tệp vào đây"
+                      : "Kéo thả hoặc dùng nút để chọn tệp"}
+                  </Strong>
+                </div>
+                <Text>{helperText}</Text>
+                <Text className="text-xs uppercase tracking-[0.18em] text-muted-fg">
+                  Định dạng hỗ trợ: {acceptSummary}
+                </Text>
               </div>
-              <Text>{helperText}</Text>
-              <Text className="text-xs uppercase tracking-[0.18em] text-muted-fg">
-                Định dạng hỗ trợ: {acceptSummary}
-              </Text>
-            </div>
 
-            <Button
-              intent="outline"
-              onPress={open}
-              isDisabled={disabled}
-            >
-              Chọn tệp
-            </Button>
-          </div>
+              <Button intent="outline" isDisabled={disabled} onPress={open}>
+                Chọn tệp
+              </Button>
+            </div>
+          </DropZone>
         </div>
 
         {progress !== null ? (
@@ -185,7 +181,9 @@ export function CmsUploadDropzone({
                       size="sq-xs"
                       aria-label={`Xóa ${file.name}`}
                       onPress={() => {
-                        onFilesChange(files.filter((_, current) => current !== index));
+                        onFilesChange(
+                          files.filter((_, current) => current !== index),
+                        );
                       }}
                     >
                       <XMarkIcon />
@@ -216,7 +214,10 @@ export function CmsUploadDropzone({
                     <p className="font-medium text-fg">{file.name}</p>
                     <div className="mt-2 space-y-1">
                       {errors.map((error) => (
-                        <Text key={error.code} className="text-danger-subtle-fg">
+                        <Text
+                          key={error.code}
+                          className="text-danger-subtle-fg"
+                        >
                           {mapDropzoneError(error.message, maxFiles, maxSize)}
                         </Text>
                       ))}
@@ -225,7 +226,8 @@ export function CmsUploadDropzone({
                 ))
               ) : (
                 <Text>
-                  Frontend chỉ chặn nhanh để hỗ trợ UX. Backend vẫn phải validate
+                  Frontend chỉ chặn nhanh để hỗ trợ UX. Backend vẫn phải
+                  validate
                   <Code className="mx-1">mime type</Code>, kích thước và quyền
                   upload.
                 </Text>

@@ -47,6 +47,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('navigation', fn () => inertia('cms/navigation/index'))
             ->can('view posts')
             ->name('navigation');
+        Route::get('navigation/{navigationMenu}', fn (int $navigationMenu) => inertia('cms/navigation/show', [
+            'navigationMenuId' => $navigationMenu,
+        ]))
+            ->whereNumber('navigationMenu')
+            ->can('view posts')
+            ->name('navigation.show');
 
         Route::get('media', fn () => inertia('cms/media/index'))
             ->can('view posts')

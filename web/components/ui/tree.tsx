@@ -44,11 +44,11 @@ const TreeItem = <T extends object>({
     <TreeItemPrimitive
       className={cx(
         [
-          "shrink-0 rounded-lg px-2 py-1.5 pe-2",
+          "shrink-0 rounded-lg px-5 py-1.5 pe-2 border-1",
           "group/tree-item relative flex select-none rounded-lg focus:outline-hidden",
           "focus:bg-(--tree-active-bg) focus:text-(--tree-active-fg) focus:**:[.text-muted-fg]:text-(--tree-active-fg)",
           "**:data-[slot=avatar]:*:size-6 **:data-[slot=avatar]:size-6 sm:**:data-[slot=avatar]:*:size-5 sm:**:data-[slot=avatar]:size-5",
-          "**:[svg]:me-1 **:[svg]:size-5 **:[svg]:shrink-0 sm:**:[svg]:size-4",
+          "**:[svg]:size-5 **:[svg]:shrink-0 sm:**:[svg]:size-4",
           "disabled:opacity-50 forced-colors:[",
           "href" in props ? "cursor-pointer" : "cursor-default",
         ],
@@ -78,7 +78,7 @@ const TreeContent = ({ className, children, ...props }: TreeContentProps) => {
               slot="drag"
               className="shrink-0 cursor-grab rounded-md p-0.5 text-muted-fg outline-hidden hover:text-fg active:cursor-grabbing"
             >
-              <Bars3Icon className="size-4" />
+              <Bars3Icon className="size-4 me-1" />
             </Button>
           )}
           {values.selectionMode === "multiple" &&
@@ -128,7 +128,7 @@ const TreeIndicator = ({
       <ChevronRightIcon
         data-slot="chevron"
         className={twJoin(
-          "-mx-0.5 size-5 transition-transform duration-200 ease-in-out sm:size-4",
+          "me-1 -mx-0.5 size-5 transition-transform duration-200 ease-in-out sm:size-4",
           values.isExpanded && "rotate-90",
         )}
       />

@@ -57,6 +57,12 @@ Chay moi truong dev:
 composer run dev
 ```
 
+Truyen them args cho `artisan serve` qua Composer:
+
+```bash
+composer run dev -- --host=0.0.0.0 --port=8000
+```
+
 Hoac chay rieng:
 
 ```bash
