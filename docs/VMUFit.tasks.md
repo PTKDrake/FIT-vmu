@@ -355,10 +355,10 @@ Tạo admin layout và navigation cho CMS VMUFit. Menu/action chỉ hiển thị
 
 Checklist:
 
-- [ ] Tạo component editor dùng BlockNote.
-- [ ] Input/output là BlockNote JSON string hoặc object thống nhất.
-- [ ] Có prop disabled/readOnly nếu cần.
-- [ ] Không convert HTML thành source of truth.
+- [x] Tạo component editor dùng BlockNote.
+- [x] Input/output là BlockNote JSON string hoặc object thống nhất.
+- [x] Có prop disabled/readOnly nếu cần.
+- [x] Không convert HTML thành source of truth.
 
 Prompt mẫu:
 

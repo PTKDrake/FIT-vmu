@@ -6,12 +6,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@source "../node_modules/@blocknote/shadcn";
+
 @theme inline {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-sans:
+        "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
     --font-display: var(--font-sans);
 
-    --font-mono: "Geist Mono", 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace';
+    --font-mono:
+        "Geist Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco",
+        "Consolas", '"Liberation Mono"', '"Courier New"', "monospace";
 
     --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     --font-mono--font-feature-settings: "ss02", "zero";
@@ -217,41 +223,95 @@
 }
 
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--border, currentColor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--border, currentColor);
+    }
 }
 
 @layer base {
-  * {
-    font-feature-settings: "cv11", "ss01";
-    font-variation-settings: "opsz" 850;
-    text-rendering: optimizeLegibility;
+    * {
+        font-feature-settings: "cv11", "ss01";
+        font-variation-settings: "opsz" 850;
+        text-rendering: optimizeLegibility;
 
-    /*
+        /*
          * Scrollbar
          */
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+    }
 
-  body {
-    background-color: var(--bg);
-    color: var(--fg);
-  }
+    body {
+        background-color: var(--bg);
+        color: var(--fg);
+    }
+}
+
+@layer components {
+    .vmu-blocknote {
+        --bn-colors-editor-background: var(--overlay);
+        --bn-colors-editor-text: var(--fg);
+        --bn-colors-menu-background: var(--overlay);
+        --bn-colors-menu-text: var(--fg);
+        --bn-colors-tooltip-background: var(--bg);
+        --bn-colors-tooltip-text: var(--fg);
+        --bn-colors-hovered-background: color-mix(
+            in oklch,
+            var(--accent) 88%,
+            transparent
+        );
+        --bn-colors-hovered-text: var(--fg);
+        --bn-colors-selected-background: var(--primary);
+        --bn-colors-selected-text: var(--primary-fg);
+        --bn-colors-disabled-background: var(--muted);
+        --bn-colors-disabled-text: var(--muted-fg);
+        --bn-colors-shadow: color-mix(in oklch, var(--fg) 16%, transparent);
+        --bn-colors-border: var(--border);
+        --bn-colors-side-menu: var(--muted-fg);
+        --bn-font-family: var(--font-sans);
+        --bn-border-radius: var(--radius-lg);
+    }
+
+    .vmu-blocknote .bn-root {
+        background-color: transparent;
+    }
+
+    .vmu-blocknote .bn-editor {
+        min-height: 18rem;
+        background-color: transparent;
+        padding-block: 1rem;
+        padding-inline: 1.25rem;
+    }
+
+    .vmu-blocknote .bn-toolbar {
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem;
+    }
+
+    .vmu-blocknote .bn-side-menu {
+        color: var(--muted-fg);
+    }
+
+    .vmu-blocknote--readonly {
+        border-color: transparent;
+    }
+
+    .vmu-blocknote--readonly .bn-editor {
+        min-height: auto;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  ::after,
-  ::before {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
+    *,
+    ::after,
+    ::before {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
 }
