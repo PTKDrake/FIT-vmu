@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::destroy
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -97,7 +97,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::destroy
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 destroy.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::destroy
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -116,7 +116,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::destroy
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -131,7 +131,7 @@ const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::destroy
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

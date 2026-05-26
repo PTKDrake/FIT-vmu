@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 const AppearanceController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ AppearanceController.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 AppearanceController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ AppearanceController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 AppearanceController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ AppearanceController.get = (options?: RouteQueryOptions): RouteDefinition<'get'>
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 AppearanceController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ AppearanceController.head = (options?: RouteQueryOptions): RouteDefinition<'head
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 const AppearanceControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const AppearanceControllerForm = (options?: RouteQueryOptions): RouteFormDefinit
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 AppearanceControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ AppearanceControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinitio
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 AppearanceControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

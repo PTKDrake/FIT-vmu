@@ -44,3 +44,34 @@ export interface DashboardOverview {
 export interface CmsDashboardPageProps extends SharedData {
   overview: DashboardOverview;
 }
+
+export interface CmsTablePaginationMeta {
+  currentPage: number;
+  from: number | null;
+  lastPage: number;
+  perPage: number;
+  to: number | null;
+  total: number;
+}
+
+export interface CmsPaginatedCollection<TItem> {
+  data: TItem[];
+  meta: CmsTablePaginationMeta;
+}
+
+export type CmsTableSortDirection = "asc" | "desc";
+
+export interface CmsPostTableRow {
+  authorName: string | null;
+  excerpt: string | null;
+  id: number;
+  publishedAt: string | null;
+  slug: string;
+  status: "draft" | "pending" | "published" | "rejected";
+  title: string;
+  updatedAt: string;
+}
+
+export interface CmsPostsPageProps extends SharedData {
+  posts: CmsPaginatedCollection<CmsPostTableRow>;
+}

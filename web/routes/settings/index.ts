@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 export const appearance = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ appearance.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 appearance.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ appearance.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 const appearanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const appearanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 appearanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ appearanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 /**
 * @see \App\Http\Controllers\Settings\AppearanceController::__invoke
-* @see app/Http/Controllers/Settings/AppearanceController.php:9
+* @see app/Http/Controllers/Settings/AppearanceController.php:10
 * @route '/settings/appearance'
 */
 appearanceForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ appearance.form = appearanceForm
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::index
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:15
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:17
 * @route '/settings/delete-account'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::deleteAccount
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 export const deleteAccount = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -178,7 +178,7 @@ deleteAccount.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::deleteAccount
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 deleteAccount.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ deleteAccount.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::deleteAccount
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 deleteAccount.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -197,7 +197,7 @@ deleteAccount.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> 
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::deleteAccount
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 const deleteAccountForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ const deleteAccountForm = (options?: RouteQueryOptions): RouteFormDefinition<'po
 
 /**
 * @see \App\Http\Controllers\Settings\DeleteAccountController::deleteAccount
-* @see app/Http/Controllers/Settings/DeleteAccountController.php:23
+* @see app/Http/Controllers/Settings/DeleteAccountController.php:25
 * @route '/settings/delete-account'
 */
 deleteAccountForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
