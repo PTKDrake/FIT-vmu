@@ -191,93 +191,89 @@ export function CmsDataTable<TData extends object>({
           </NativeSelect>
         </div>
 
-        <div className="px-5">
-          <div className="overflow-hidden rounded-xl border border-border bg-bg">
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse">
-                <thead className="bg-muted/40">
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id} className="border-b border-border">
-                      {headerGroup.headers.map((header) => {
-                        const isSorted = header.column.getIsSorted();
-                        const canSort = header.column.getCanSort();
+        <div className="overflow-x-auto border-y border-border">
+          <table className="min-w-full border-collapse">
+            <thead className="bg-muted/40">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="border-b border-border">
+                  {headerGroup.headers.map((header) => {
+                    const isSorted = header.column.getIsSorted();
+                    const canSort = header.column.getCanSort();
 
-                        return (
-                          <th
-                            key={header.id}
-                            scope="col"
-                            className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5"
-                          >
-                            {header.isPlaceholder ? null : canSort ? (
-                              <Button
-                                intent="plain"
-                                className="inline-flex min-h-0 items-center gap-2 px-0 py-0 text-sm font-medium text-muted-fg hover:text-fg"
-                                onPress={header.column.getToggleSortingHandler()}
-                              >
-                                <span>
-                                  {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                                </span>
-                                <SortIndicator direction={isSorted} />
-                              </Button>
-                            ) : (
-                              <span className="inline-flex items-center gap-2 text-sm font-medium text-muted-fg">
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )}
-                              </span>
-                            )}
-                          </th>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </thead>
-
-                <tbody>
-                  {table.getRowModel().rows.length > 0 ? (
-                    table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className="border-b border-border last:border-b-0 hover:bg-muted/30"
+                    return (
+                      <th
+                        key={header.id}
+                        scope="col"
+                        className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5"
                       >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5"
+                        {header.isPlaceholder ? null : canSort ? (
+                          <Button
+                            intent="plain"
+                            className="inline-flex min-h-0 items-center gap-2 px-0 py-0 text-sm font-medium text-muted-fg hover:text-fg"
+                            onPress={header.column.getToggleSortingHandler()}
                           >
+                            <span>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                            </span>
+                            <SortIndicator direction={isSorted} />
+                          </Button>
+                        ) : (
+                          <span className="inline-flex items-center gap-2 text-sm font-medium text-muted-fg">
                             {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
+                              header.column.columnDef.header,
+                              header.getContext(),
                             )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
+                          </span>
+                        )}
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
+            </thead>
+
+            <tbody>
+              {table.getRowModel().rows.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="border-b border-border last:border-b-0 hover:bg-muted/30"
+                  >
+                    {row.getVisibleCells().map((cell) => (
                       <td
-                        colSpan={columns.length}
-                        className="px-5 py-12 text-center"
+                        key={cell.id}
+                        className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5"
                       >
-                        <div className="mx-auto max-w-md space-y-2">
-                          <p className="text-lg font-semibold text-fg">
-                            {emptyTitle}
-                          </p>
-                          <Text className="text-muted-fg">
-                            {emptyDescription}
-                          </Text>
-                        </div>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
                       </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="px-5 py-12 text-center"
+                  >
+                    <div className="mx-auto max-w-md space-y-2">
+                      <p className="text-lg font-semibold text-fg">
+                        {emptyTitle}
+                      </p>
+                      <Text className="text-muted-fg">
+                        {emptyDescription}
+                      </Text>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
 
         <div className="flex flex-col gap-3 px-5 pb-5 lg:flex-row lg:items-center lg:justify-between">

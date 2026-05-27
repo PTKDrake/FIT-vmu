@@ -58,6 +58,8 @@ const ModalContent = ({
   size = "md",
   role = "dialog",
   closeButton = true,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
   ...props
 }: ModalContentProps) => {
   const isDismissable = isDismissableInternal ?? role !== "alertdialog"
@@ -92,7 +94,11 @@ const ModalContent = ({
           className,
         )}
       >
-        <Dialog role={role}>
+        <Dialog
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledby}
+          role={role}
+        >
           {(values) => (
             <>
               {typeof children === "function" ? children(values) : children}

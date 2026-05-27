@@ -35,5 +35,9 @@ class DatabaseSeeder extends Seeder
         );
 
         $admin->assignRole('admin');
+
+        $this->call([
+            MediaSeeder::class,
+        ]);
     }
 }

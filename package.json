@@ -13,6 +13,7 @@
         "format:check": "prettier --check web/",
         "lint": "oxlint --config .oxlintrc.json web",
         "lint:check": "pnpm lint",
+        "lint:eslint": "eslint web",
         "lint:fix": "oxlint --config .oxlintrc.json --fix web",
         "preview": "tsc && pnpm run build:ssr && ./phpw artisan inertia:start-ssr",
         "typecheck": "tsgo --noEmit",

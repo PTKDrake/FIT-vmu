@@ -15,10 +15,10 @@ use Inertia\Response;
 
 final class MediaIndexController extends Controller
 {
-    private const DEFAULT_PER_PAGE = 24;
+    private const DEFAULT_PER_PAGE = 12;
 
     /** @var list<int> */
-    private const ALLOWED_PER_PAGE = [24, 48, 96];
+    private const ALLOWED_PER_PAGE = [12, 24, 48];
 
     /** @var list<string> */
     private const ALLOWED_DATE_FILTERS = ['all', 'today', '7d', '30d', '365d'];
@@ -51,7 +51,7 @@ final class MediaIndexController extends Controller
                     'uploaded_by' => $uploadedBy > 0 ? $uploadedBy : null,
                     'uploaded_at' => $date !== 'all' ? $date : null,
                 ]),
-                'sort' => ($direction === 'desc' ? '-' : '').$sort,
+                'sort' => ($direction === 'desc' ? '-' : '') . $sort,
             ]),
         );
 
@@ -66,7 +66,7 @@ final class MediaIndexController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
 
         $rows = $media->getCollection()
-            ->map(fn (Media $media): array => $this->mapMediaRow($media))
+            ->map(fn(Media $media): array => $this->mapMediaRow($media))
             ->values()
             ->all();
 
@@ -74,7 +74,7 @@ final class MediaIndexController extends Controller
             ->whereHas('uploadedMedia')
             ->orderBy('name')
             ->get(['id', 'name'])
-            ->map(fn (User $user): array => [
+            ->map(fn(User $user): array => [
                 'id' => $user->getKey(),
                 'name' => $user->name,
             ])

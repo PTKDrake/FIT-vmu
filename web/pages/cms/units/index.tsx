@@ -1,19 +1,27 @@
 import {
+  CheckIcon,
   EllipsisHorizontalIcon,
   EyeIcon,
   PencilSquareIcon,
   PlusIcon,
   TrashIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Head, Link, router } from "@inertiajs/react";
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import type { ReactNode } from "react";
 import { useMemo, useRef, useState } from "react";
 import { useDragAndDrop } from "react-aria-components/useDragAndDrop";
+import {
+  DropIndicator as DropIndicatorPrimitive
+  
+} from "react-aria-components/useDragAndDrop";
+import type {DropIndicatorProps} from "react-aria-components/useDragAndDrop";
 import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
-import type { CmsUnitRow, CmsUnitsPageProps } from "@/components/cms/types";
+import { twMerge } from "tailwind-merge";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
+import type { CmsUnitRow, CmsUnitsPageProps } from "@/components/cms/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +38,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { NativeSelect, NativeSelectContent } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
@@ -38,11 +46,6 @@ import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import { create, destroy, edit, reorder, show } from "@/routes/cms/units";
 import type { FlashData } from "@/types/shared";
-import {
-  DropIndicator as DropIndicatorPrimitive,
-  type DropIndicatorProps,
-} from "react-aria-components/useDragAndDrop";
-import { twMerge } from "tailwind-merge";
 
 export default function CmsUnitsIndexPage({
   can,
@@ -51,7 +54,8 @@ export default function CmsUnitsIndexPage({
 }: CmsUnitsPageProps) {
   const [deleteTarget, setDeleteTarget] = useState<CmsUnitRow | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isReordering, setIsReordering] = useState(false);
+  const [draftUnits, setDraftUnits] = useState<CmsUnitRow[] | null>(null);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
   const [query, setQuery] = useQueryStates(
     {
       search: parseAsString.withDefault(""),
@@ -67,7 +71,6 @@ export default function CmsUnitsIndexPage({
 
   const canReorder = can.manageUnits && query.search === "" && query.status === "all";
   const queryRef = useRef(query);
-  queryRef.current = query;
   const unitList = useAsyncList<CmsUnitRow>({
     async load({ signal }) {
       const { items } = await fetchInertiaCollectionPage("units", queryRef.current, signal);
@@ -84,19 +87,24 @@ export default function CmsUnitsIndexPage({
         : unitList.items,
     [unitList.items, unitList.loadingState, units],
   );
+  const displayedUnits = useMemo(
+    () => draftUnits ?? visibleUnits,
+    [draftUnits, visibleUnits],
+  );
   const unitById = useMemo(
-    () => new Map(visibleUnits.map((unit) => [unit.id, unit])),
-    [visibleUnits],
+    () => new Map(displayedUnits.map((unit) => [unit.id, unit])),
+    [displayedUnits],
   );
 
   async function syncQuery(nextQuery: Partial<typeof query>): Promise<void> {
     const resolvedQuery = {
-      ...query,
+      ...queryRef.current,
       ...nextQuery,
     };
 
     queryRef.current = resolvedQuery;
     await setQuery(resolvedQuery);
+    setDraftUnits(null);
     unitList.reload();
   }
 
@@ -114,6 +122,36 @@ export default function CmsUnitsIndexPage({
       },
       preserveScroll: true,
     });
+  }
+
+  function handleCancelReorder(): void {
+    setDraftUnits(null);
+  }
+
+  function handleSaveReorder(): void {
+    if (!draftUnits) {
+      return;
+    }
+
+    setIsSavingOrder(true);
+    router.patch(
+      reorder.url(),
+      {
+        nodes: draftUnits.map((unit, index) => ({
+          id: unit.id,
+          sort_order: index + 1,
+        })),
+      } as never,
+      {
+        onFinish: () => setIsSavingOrder(false),
+        onSuccess: () => {
+          setDraftUnits(null);
+          unitList.reload();
+          toast.success("Đã lưu thứ tự hiển thị đơn vị thành công.");
+        },
+        preserveScroll: true,
+      },
+    );
   }
 
   const { dragAndDropHooks } = useDragAndDrop<CmsUnitRow>({
@@ -136,28 +174,13 @@ export default function CmsUnitsIndexPage({
       }
 
       const targetUnitId = Number(event.target.key);
-      const nextUnits = moveUnit(visibleUnits, movedUnitId, targetUnitId, event.target.dropPosition);
+      const nextUnits = moveUnit(displayedUnits, movedUnitId, targetUnitId, event.target.dropPosition);
 
       if (nextUnits.length === 0) {
         return;
       }
 
-      setIsReordering(true);
-      router.patch(
-        reorder.url(),
-        {
-          nodes: nextUnits.map((unit, index) => ({
-            id: unit.id,
-            sort_order: index + 1,
-          })),
-        } as never,
-        {
-          onFinish: () => setIsReordering(false),
-          onSuccess: () => {
-            unitList.reload();
-          },
-        },
-      );
+      setDraftUnits(nextUnits);
     },
     renderDropIndicator: (target) => (
       <UnitTableDropIndicator isHidden={!canReorder} target={target} />
@@ -182,7 +205,7 @@ export default function CmsUnitsIndexPage({
                 </p>
                 <Text className="text-sm text-muted-fg">
                   {canReorder
-                    ? (isReordering ? "Đang cập nhật thứ tự đơn vị..." : "Kéo thả để thay đổi thứ tự hiển thị.")
+                    ? (isSavingOrder ? "Đang cập nhật thứ tự đơn vị..." : "Kéo thả để thay đổi thứ tự hiển thị.")
                     : "Drag & drop tạm tắt khi đang lọc để tránh xáo trộn thứ tự đang xem."}
                 </Text>
               </div>
@@ -214,127 +237,159 @@ export default function CmsUnitsIndexPage({
               <SearchInput placeholder="Tìm theo tên, slug hoặc mô tả" />
             </SearchField>
 
-            <NativeSelect>
-              <NativeSelectContent
-                aria-label="Lọc theo trạng thái"
-                value={query.status}
-                onChange={(event) => {
-                  void syncQuery({ status: event.target.value as typeof query.status });
-                }}
-              >
-                <option value="all">Tất cả trạng thái</option>
-                <option value="active">Đang hoạt động</option>
-                <option value="inactive">Đang ẩn</option>
-              </NativeSelectContent>
-            </NativeSelect>
+            <Select
+              aria-label="Lọc theo trạng thái"
+              selectedKey={query.status}
+              onSelectionChange={(key) => {
+                if (key !== null) {
+                  void syncQuery({ status: key as typeof query.status });
+                }
+              }}
+            >
+              <SelectTrigger />
+              <SelectContent>
+                <SelectItem id="all" textValue="Tất cả trạng thái">
+                  <SelectLabel>Tất cả trạng thái</SelectLabel>
+                </SelectItem>
+                <SelectItem id="active" textValue="Đang hoạt động">
+                  <SelectLabel>Đang hoạt động</SelectLabel>
+                </SelectItem>
+                <SelectItem id="inactive" textValue="Đang ẩn">
+                  <SelectLabel>Đang ẩn</SelectLabel>
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="px-5 py-5">
-            <div className="overflow-hidden rounded-2xl border border-border bg-bg">
-              <Table
-                aria-label="Danh sách đơn vị"
-                className="bg-bg"
-                dragAndDropHooks={dragAndDropHooks}
+          <div className="overflow-hidden border-t border-border">
+            <Table
+              aria-label="Danh sách đơn vị"
+              className="bg-bg"
+              dragAndDropHooks={dragAndDropHooks}
+            >
+              <TableHeader>
+                <TableColumn id="name" isRowHeader>
+                  Đơn vị
+                </TableColumn>
+                <TableColumn id="slug">Slug</TableColumn>
+                <TableColumn id="status">Trạng thái</TableColumn>
+                <TableColumn id="sortOrder">Thứ tự</TableColumn>
+                <TableColumn id="updatedAt">Cập nhật</TableColumn>
+                <TableColumn id="actions" className="text-end">
+                  Thao tác
+                </TableColumn>
+              </TableHeader>
+              <TableBody
+                items={displayedUnits}
+                renderEmptyState={() => (
+                  <div className="px-6 py-14 text-center">
+                    <Text className="font-medium text-fg">
+                      Không có đơn vị phù hợp với bộ lọc hiện tại.
+                    </Text>
+                    <Text className="mt-2 text-sm text-muted-fg">
+                      Hãy đổi bộ lọc hoặc tạo một đơn vị mới để bắt đầu quản lý danh sách.
+                    </Text>
+                    {can.manageUnits ? (
+                      <div className="mt-5">
+                        <Button intent="secondary" onPress={() => router.visit(create.url())}>
+                          <PlusIcon />
+                          Tạo đơn vị
+                        </Button>
+                      </div>
+                    ) : null}
+                  </div>
+                )}
               >
-                <TableHeader>
-                  <TableColumn id="name" isRowHeader>
-                    Đơn vị
-                  </TableColumn>
-                  <TableColumn id="slug">Slug</TableColumn>
-                  <TableColumn id="status">Trạng thái</TableColumn>
-                  <TableColumn id="sortOrder">Thứ tự</TableColumn>
-                  <TableColumn id="updatedAt">Cập nhật</TableColumn>
-                  <TableColumn id="actions" className="text-end">
-                    Thao tác
-                  </TableColumn>
-                </TableHeader>
-                <TableBody
-                  items={visibleUnits}
-                  renderEmptyState={() => (
-                    <div className="px-6 py-14 text-center">
-                      <Text className="font-medium text-fg">
-                        Không có đơn vị phù hợp với bộ lọc hiện tại.
-                      </Text>
-                      <Text className="mt-2 text-sm text-muted-fg">
-                        Hãy đổi bộ lọc hoặc tạo một đơn vị mới để bắt đầu quản lý danh sách.
-                      </Text>
-                      {can.manageUnits ? (
-                        <div className="mt-5">
-                          <Button intent="secondary" onPress={() => router.visit(create.url())}>
-                            <PlusIcon />
-                            Tạo đơn vị
-                          </Button>
-                        </div>
-                      ) : null}
-                    </div>
-                  )}
-                >
-                  {(unit) => (
-                    <TableRow key={unit.id} id={unit.id} textValue={unit.name}>
-                      <TableCell>
-                        <div className="space-y-1 py-1">
-                          <div className="flex items-center gap-2">
-                            <Link
-                              href={show.url({ unit: unit.id })}
-                              className="font-medium text-fg transition hover:text-primary"
-                            >
-                              {unit.name}
-                            </Link>
-                            <Badge intent={unit.isActive ? "success" : "secondary"} isCircle={false}>
-                              {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
-                            </Badge>
-                          </div>
-                          <Text className="line-clamp-1 text-sm text-muted-fg">
-                            {unit.descriptionSummary ?? "Chưa có mô tả"}
-                          </Text>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Text className="text-sm text-fg">{unit.slug}</Text>
-                      </TableCell>
-                      <TableCell>
+                {(unit) => (
+                  <TableRow key={unit.id} id={unit.id} textValue={unit.name}>
+                    <TableCell>
+                      <div className="flex items-center gap-2 py-1">
+                        <Link
+                          href={show.url({ unit: unit.id })}
+                          className="font-medium text-fg transition hover:text-primary"
+                        >
+                          {unit.name}
+                        </Link>
                         <Badge intent={unit.isActive ? "success" : "secondary"} isCircle={false}>
                           {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
                         </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Text className="font-medium text-fg">{unit.sortOrder}</Text>
-                      </TableCell>
-                      <TableCell>{formatDateTime(unit.updatedAt)}</TableCell>
-                      <TableCell className="text-end">
-                        {can.manageUnits ? (
-                          <Menu>
-                            <MenuTrigger
-                              aria-label={`Tác vụ cho ${unit.name}`}
-                              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
-                            >
-                              <EllipsisHorizontalIcon className="size-5" />
-                            </MenuTrigger>
-                            <MenuContent placement="bottom right">
-                              <MenuItem href={show.url({ unit: unit.id })}>
-                                <EyeIcon />
-                                Xem chi tiết
-                              </MenuItem>
-                              <MenuItem href={edit.url({ unit: unit.id })}>
-                                <PencilSquareIcon />
-                                Chỉnh sửa
-                              </MenuItem>
-                              <MenuItem intent="danger" onAction={() => setDeleteTarget(unit)}>
-                                <TrashIcon />
-                                Xóa đơn vị
-                              </MenuItem>
-                            </MenuContent>
-                          </Menu>
-                        ) : null}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Text className="text-sm text-fg">{unit.slug}</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Badge intent={unit.isActive ? "success" : "secondary"} isCircle={false}>
+                        {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Text className="font-medium text-fg">{unit.sortOrder}</Text>
+                    </TableCell>
+                    <TableCell>{formatDateTime(unit.updatedAt)}</TableCell>
+                    <TableCell className="text-end">
+                      {can.manageUnits ? (
+                        <Menu>
+                          <MenuTrigger
+                            aria-label={`Tác vụ cho ${unit.name}`}
+                            className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+                          >
+                            <EllipsisHorizontalIcon className="size-5" />
+                          </MenuTrigger>
+                          <MenuContent placement="bottom right">
+                            <MenuItem href={show.url({ unit: unit.id })}>
+                              <EyeIcon />
+                              Xem chi tiết
+                            </MenuItem>
+                            <MenuItem href={edit.url({ unit: unit.id })}>
+                              <PencilSquareIcon />
+                              Chỉnh sửa
+                            </MenuItem>
+                            <MenuItem intent="danger" onAction={() => setDeleteTarget(unit)}>
+                              <TrashIcon />
+                              Xóa đơn vị
+                            </MenuItem>
+                          </MenuContent>
+                        </Menu>
+                      ) : null}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>
+
+      {draftUnits !== null ? (
+        <div className="sticky bottom-4 z-20 mt-4 px-20">
+          <div className="rounded-2xl border border-border bg-overlay/85 p-3 shadow-lg backdrop-blur-xs">
+            <div className="flex items-center justify-between gap-3">
+              <Text className="text-sm font-medium text-fg">
+                Thay đổi thứ tự hiển thị đơn vị chưa được lưu.
+              </Text>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  intent="outline"
+                  onPress={handleCancelReorder}
+                >
+                  <XMarkIcon className="size-4" />
+                  Hủy
+                </Button>
+                <Button
+                  intent="primary"
+                  isDisabled={isSavingOrder}
+                  onPress={handleSaveReorder}
+                >
+                  <CheckIcon className="size-4" />
+                  Lưu thay đổi
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {deleteTarget ? (
         <ModalContent

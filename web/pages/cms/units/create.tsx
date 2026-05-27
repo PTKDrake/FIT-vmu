@@ -1,8 +1,8 @@
 import { Head, useForm } from "@inertiajs/react";
 import type { ReactNode } from "react";
+import type { CmsUnitFormPageProps } from "@/components/cms/types";
 import { UnitEditorForm } from "@/components/cms/unit-editor-form";
 import type { UnitEditorFormData } from "@/components/cms/unit-editor-form";
-import type { CmsUnitFormPageProps } from "@/components/cms/types";
 import CmsLayout from "@/layouts/cms-layout";
 import { units as unitsIndex } from "@/routes/cms";
 import { store } from "@/routes/cms/units";

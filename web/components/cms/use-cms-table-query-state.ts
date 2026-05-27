@@ -1,8 +1,8 @@
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { useMemo, useRef, useState } from "react";
 import { useAsyncList } from "react-stately";
-import type { CmsTablePaginationMeta } from "@/components/cms/types";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
+import type { CmsTablePaginationMeta } from "@/components/cms/types";
 import type { CmsTableSortDirection } from "@/components/cms/types";
 
 interface UseCmsTableQueryStateConfig<TItem extends object> {
@@ -45,10 +45,8 @@ export function useCmsTableQueryState<TItem extends object>({
       shallow: true,
     },
   );
-  const queryRef = useRef(query);
-  queryRef.current = query;
   const [meta, setMeta] = useState(initialMeta);
-  const initialItemsRef = useRef(initialItems);
+  const queryRef = useRef(query);
 
   const list = useAsyncList<TItem>({
     async load({ signal }) {
@@ -75,9 +73,9 @@ export function useCmsTableQueryState<TItem extends object>({
   const items = useMemo<TItem[]>(
     () =>
       list.loadingState === "loading" && list.items.length === 0
-        ? initialItemsRef.current
+        ? initialItems
         : list.items,
-    [list.items, list.loadingState],
+    [initialItems, list.items, list.loadingState],
   );
 
   async function syncQuery(

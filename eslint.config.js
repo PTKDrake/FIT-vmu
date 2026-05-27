@@ -23,6 +23,8 @@ const paddingAroundControl = [
     { blankLine: "always", prev: statement, next: "*" },
   ]),
 ];
+const noUseEffectMessage =
+  "Direct useEffect is forbidden in this repository. Read skills/no-use-effect/SKILL.md and skills/no-use-effect/references/patterns.md. Use useMountEffect from @/hooks/use-mount-effect only for true mount-only external synchronization.";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -40,7 +42,21 @@ export default [
     rules: {
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
+      "react/no-children-prop": "off",
       "react/no-unescaped-entities": "off",
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "ImportSpecifier[parent.source.value='react'][imported.name='useEffect']",
+          message: noUseEffectMessage,
+        },
+        {
+          selector:
+            "CallExpression[callee.object.name='React'][callee.property.name='useEffect']",
+          message: noUseEffectMessage,
+        },
+      ],
     },
     settings: {
       react: {
@@ -62,7 +78,9 @@ export default [
       },
     },
     rules: {
+      "no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
@@ -100,6 +118,13 @@ export default [
     },
   },
   {
+    files: ["web/hooks/use-mount-effect.ts"],
+    rules: {
+      "no-restricted-syntax": "off",
+      "react-hooks/exhaustive-deps": "off",
+    },
+  },
+  {
     ignores: [
       ".agents/**",
       "vendor",
@@ -107,6 +132,9 @@ export default [
       "public",
       "bootstrap/ssr",
       "vite.config.ts",
+      "web/types/**/*.d.ts",
+      "web/test-fixtures/**",
+      "web/tests/*.mjs",
       "web/actions/**",
       "web/components/ui/*",
       "web/routes/**",

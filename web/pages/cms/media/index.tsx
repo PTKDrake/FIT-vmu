@@ -25,8 +25,8 @@ import type { FileRejection } from "react-dropzone";
 import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
-import type { CmsMediaPageProps, CmsMediaRow } from "@/components/cms/types";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
+import type { CmsMediaPageProps, CmsMediaRow } from "@/components/cms/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,8 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { NativeSelect, NativeSelectContent } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
+import { ComboBox, ComboBoxContent, ComboBoxInput, ComboBoxItem, ComboBoxLabel } from "@/components/ui/combo-box";
 import {
   Pagination,
   PaginationFirst,
@@ -62,6 +63,7 @@ import {
   ProgressBarTrack,
   ProgressBarValue,
 } from "@/components/ui/progress-bar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
 import { Code, Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
@@ -112,6 +114,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isDeletingMedia, setIsDeletingMedia] = useState(false);
+  const [deleteTargetMediaId, setDeleteTargetMediaId] = useState<number | null>(null);
   const [renameTargetMediaId, setRenameTargetMediaId] = useState<number | null>(null);
   const [selectedMediaId, setSelectedMediaId] = useState<number | null>(null);
   const [previewScale, setPreviewScale] = useState(1);
@@ -138,9 +141,8 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       shallow: true,
     },
   );
-  const queryRef = useRef(query);
-  queryRef.current = query;
   const [mediaMeta, setMediaMeta] = useState(media.meta);
+  const queryRef = useRef(query);
 
   const uploadForm = useForm<{
     files: File[];
@@ -173,6 +175,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
         : mediaList.items,
     [media.data, mediaList.items, mediaList.loadingState],
   );
+  const deleteTargetMedia = visibleMedia.find((item) => item.id === deleteTargetMediaId) ?? null;
   const selectedMedia = visibleMedia.find((item) => item.id === selectedMediaId) ?? null;
   const renameTargetMedia = visibleMedia.find((item) => item.id === renameTargetMediaId) ?? null;
 
@@ -220,7 +223,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   ): Promise<void> {
     const nextPage = options.resetPage ? 1 : (nextQuery.page ?? query.page);
     const resolvedQuery = {
-      ...query,
+      ...queryRef.current,
       ...nextQuery,
       page: nextPage,
     };
@@ -244,18 +247,23 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   }
 
   function deleteSelectedMedia(): void {
-    if (!selectedMedia) {
+    if (!deleteTargetMedia) {
       return;
     }
 
+    const deletingMediaId = deleteTargetMedia.id;
+
     setIsDeletingMedia(true);
-    router.delete(mediaRoutes.destroy.url({ media: selectedMedia.id }), {
+    router.delete(mediaRoutes.destroy.url({ media: deleteTargetMedia.id }), {
       onFinish: () => {
         setIsDeletingMedia(false);
       },
       onSuccess: () => {
         setIsDeleteConfirmOpen(false);
-        setSelectedMediaId(null);
+        setDeleteTargetMediaId(null);
+        if (selectedMediaId === deletingMediaId) {
+          setSelectedMediaId(null);
+        }
         mediaList.reload();
       },
       preserveScroll: true,
@@ -287,6 +295,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
   function openMediaViewer(mediaId: number): void {
     setIsDeleteConfirmOpen(false);
+    setDeleteTargetMediaId(null);
     setPreviewScale(1);
     setSelectedMediaId(mediaId);
   }
@@ -306,7 +315,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   }
 
   function requestDeleteMedia(mediaId: number): void {
-    setSelectedMediaId(mediaId);
+    setDeleteTargetMediaId(mediaId);
     setIsDeleteConfirmOpen(true);
   }
 
@@ -426,53 +435,83 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               <SearchInput placeholder="Tìm theo tên tệp hoặc MIME type" />
             </SearchField>
 
-            <NativeSelect>
-              <NativeSelectContent
-                aria-label="Lọc theo loại media"
-                value={query.type}
-                onChange={(event) => {
-                  void syncQuery({ type: event.target.value as typeof query.type }, { resetPage: true });
-                }}
-              >
-                {typeFilterOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </NativeSelectContent>
-            </NativeSelect>
+            <Select
+              aria-label="Lọc theo loại media"
+              selectedKey={query.type}
+              onSelectionChange={(key) => {
+                if (key !== null) {
+                  void syncQuery({ type: key as typeof query.type }, { resetPage: true });
+                }
+              }}
+            >
+              <SelectTrigger />
+              <SelectContent items={typeFilterOptions}>
+                {(option) => (
+                  <SelectItem id={option.value} textValue={option.label}>
+                    <SelectLabel>{option.label}</SelectLabel>
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
 
-            <NativeSelect>
-              <NativeSelectContent
+            {uploaderOptions.length > 5 ? (
+              <ComboBox
                 aria-label="Lọc theo người tải lên"
-                value={String(query.uploadedBy)}
-                onChange={(event) => {
-                  void syncQuery({ uploadedBy: Number(event.target.value) }, { resetPage: true });
+                selectedKey={String(query.uploadedBy)}
+                onSelectionChange={(key) => {
+                  if (key !== null) {
+                    void syncQuery({ uploadedBy: Number(key) }, { resetPage: true });
+                  }
                 }}
               >
-                {uploaderOptions.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                  </option>
-                ))}
-              </NativeSelectContent>
-            </NativeSelect>
+                <ComboBoxInput placeholder="Lọc theo người tải lên" />
+                <ComboBoxContent items={uploaderOptions}>
+                  {(option) => (
+                    <ComboBoxItem id={String(option.id)} textValue={option.name}>
+                      <ComboBoxLabel>{option.name}</ComboBoxLabel>
+                    </ComboBoxItem>
+                  )}
+                </ComboBoxContent>
+              </ComboBox>
+            ) : (
+              <Select
+                aria-label="Lọc theo người tải lên"
+                selectedKey={String(query.uploadedBy)}
+                onSelectionChange={(key) => {
+                  if (key !== null) {
+                    void syncQuery({ uploadedBy: Number(key) }, { resetPage: true });
+                  }
+                }}
+              >
+                <SelectTrigger />
+                <SelectContent items={uploaderOptions}>
+                  {(option) => (
+                    <SelectItem id={String(option.id)} textValue={option.name}>
+                      <SelectLabel>{option.name}</SelectLabel>
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            )}
 
-            <NativeSelect>
-              <NativeSelectContent
-                aria-label="Lọc theo thời gian tải lên"
-                value={query.date}
-                onChange={(event) => {
-                  void syncQuery({ date: event.target.value as typeof query.date }, { resetPage: true });
-                }}
-              >
-                {dateFilterOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </NativeSelectContent>
-            </NativeSelect>
+            <Select
+              aria-label="Lọc theo thời gian tải lên"
+              selectedKey={query.date}
+              onSelectionChange={(key) => {
+                if (key !== null) {
+                  void syncQuery({ date: key as typeof query.date }, { resetPage: true });
+                }
+              }}
+            >
+              <SelectTrigger />
+              <SelectContent items={dateFilterOptions}>
+                {(option) => (
+                  <SelectItem id={option.value} textValue={option.label}>
+                    <SelectLabel>{option.label}</SelectLabel>
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-4 px-5 py-4">
@@ -481,34 +520,43 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 {mediaMeta.total} media{mediaList.isLoading ? " · đang làm mới" : ""}
               </Text>
 
-              <NativeSelect className="w-36 min-w-36">
-                <NativeSelectContent
-                  aria-label="Số media mỗi trang"
-                  value={String(mediaMeta.perPage)}
-                  onChange={(event) => {
-                    void syncQuery({ perPage: Number(event.target.value) }, { resetPage: true });
-                  }}
-                >
-                  {[24, 48, 96].map((option) => (
-                    <option key={option} value={option}>
-                      {option} mục / trang
-                    </option>
+              <Select
+                className="w-36 min-w-36"
+                aria-label="Số media mỗi trang"
+                selectedKey={String(mediaMeta.perPage)}
+                onSelectionChange={(key) => {
+                  if (key !== null) {
+                    void syncQuery({ perPage: Number(key) }, { resetPage: true });
+                  }
+                }}
+              >
+                <SelectTrigger />
+                <SelectContent>
+                  {[12, 24, 48].map((option) => (
+                    <SelectItem key={option} id={String(option)} textValue={`${option} mục / trang`}>
+                      <SelectLabel>{option} mục / trang</SelectLabel>
+                    </SelectItem>
                   ))}
-                </NativeSelectContent>
-              </NativeSelect>
+                </SelectContent>
+              </Select>
             </div>
 
             {query.view === "grid" ? (
-              <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-4 2xl:grid-cols-6">
                 {visibleMedia.map((item) => (
-                  <button
+                  <div
                     key={item.id}
-                    type="button"
-                    className="group relative rounded-2xl border border-border bg-bg text-left transition hover:border-muted-fg/30 hover:bg-muted/20"
-                    onClick={() => {
-                      openMediaViewer(item.id);
-                    }}
+                    className="group relative rounded-2xl border border-border bg-bg transition hover:border-muted-fg/30 hover:bg-muted/20"
                   >
+                    <button
+                      aria-label={`Xem media ${item.displayName}`}
+                      className="absolute inset-0 rounded-2xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+                      type="button"
+                      onClick={() => {
+                        openMediaViewer(item.id);
+                      }}
+                    />
+
                     <div className="absolute right-3 top-3 z-10">
                       <MediaActionsMenu
                         canDeleteMedia={canDeleteMedia}
@@ -521,11 +569,11 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                       />
                     </div>
 
-                    <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-t-2xl border-b border-border bg-muted/20">
+                    <div className="pointer-events-none relative z-0 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-t-2xl border-b border-border bg-muted/20">
                       <MediaPreview media={item} className="size-full" />
                     </div>
 
-                    <div className="space-y-3 p-4">
+                    <div className="pointer-events-none relative z-0 space-y-3 p-4 text-left">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 space-y-1">
                           <p className="truncate font-medium text-fg">{item.displayName}</p>
@@ -554,93 +602,91 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                         <Text className="text-sm text-muted-fg">{formatBytes(item.size)}</Text>
                       </div>
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             ) : (
-              <div className="overflow-hidden rounded-2xl border border-border bg-bg">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full border-collapse">
-                    <thead className="bg-muted/30">
-                      <tr className="border-b border-border">
-                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg">
-                          Tệp
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg">
-                          Loại
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg">
-                          Người tải lên
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg">
-                          Tải lên
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg">
-                          Dung lượng
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg">
-                          Sử dụng
-                        </th>
-                        <th className="w-14 px-4 py-3 text-right text-sm font-medium text-muted-fg">
-                          Tác vụ
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {visibleMedia.map((item) => (
-                        <tr
-                          key={item.id}
-                          className="cursor-pointer border-b border-border transition hover:bg-muted/20 last:border-b-0"
-                          onClick={() => {
-                            openMediaViewer(item.id);
-                          }}
-                        >
-                          <td className="px-4 py-4 align-top">
-                            <div className="flex items-start gap-3">
-                              <div className="size-14 shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
-                                <MediaPreview media={item} className="size-full" mode="compact" />
-                              </div>
-                              <div className="min-w-0 space-y-1">
-                                <p className="truncate font-medium text-fg">{item.displayName}</p>
-                                <Text className="truncate text-sm text-muted-fg">
-                                  {item.mimeType}
-                                </Text>
-                              </div>
+              <div className="overflow-x-auto rounded-xl border border-border bg-bg">
+                <table className="min-w-full border-collapse">
+                  <thead className="bg-muted/30">
+                    <tr className="border-b border-border">
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Tệp
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Loại
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Người tải lên
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Tải lên
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Dung lượng
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Sử dụng
+                      </th>
+                      <th className="w-14 px-4 py-3 text-right text-sm font-medium text-muted-fg first:pl-5 last:pr-5">
+                        Tác vụ
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visibleMedia.map((item) => (
+                      <tr
+                        key={item.id}
+                        className="cursor-pointer border-b border-border transition hover:bg-muted/20 last:border-b-0"
+                        onClick={() => {
+                          openMediaViewer(item.id);
+                        }}
+                      >
+                        <td className="px-4 py-4 align-top first:pl-5 last:pr-5">
+                          <div className="flex items-start gap-3">
+                            <div className="size-14 shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
+                              <MediaPreview media={item} className="size-full" mode="compact" />
                             </div>
-                          </td>
-                          <td className="px-4 py-4 align-top text-sm text-fg">
-                            <Badge intent={kindIntentMap[item.kind]} isCircle={false}>
-                              {kindLabelMap[item.kind]}
-                            </Badge>
-                          </td>
-                          <td className="px-4 py-4 align-top text-sm text-fg">
-                            {item.uploader?.name ?? "Không rõ"}
-                          </td>
-                          <td className="px-4 py-4 align-top text-sm text-fg">
-                            {formatDateTime(item.uploadedAt)}
-                          </td>
-                          <td className="px-4 py-4 align-top text-sm text-fg">
-                            {formatBytes(item.size)}
-                          </td>
-                          <td className="px-4 py-4 align-top text-sm text-fg">
-                            {item.usage.total}
-                          </td>
-                          <td className="px-4 py-4 align-top text-right">
-                            <MediaActionsMenu
-                              canDeleteMedia={canDeleteMedia}
-                              canDuplicateMedia={canDuplicateMedia}
-                              canRenameMedia={canRenameMedia}
-                              mediaName={item.displayName}
-                              onDelete={() => requestDeleteMedia(item.id)}
-                              onDuplicate={() => duplicateMedia(item.id)}
-                              onRename={() => openRenameModal(item.id)}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                            <div className="min-w-0 space-y-1">
+                              <p className="truncate font-medium text-fg">{item.displayName}</p>
+                              <Text className="truncate text-sm text-muted-fg">
+                                {item.mimeType}
+                              </Text>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5">
+                          <Badge intent={kindIntentMap[item.kind]} isCircle={false}>
+                            {kindLabelMap[item.kind]}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5">
+                          {item.uploader?.name ?? "Không rõ"}
+                        </td>
+                        <td className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5">
+                          {formatDateTime(item.uploadedAt)}
+                        </td>
+                        <td className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5">
+                          {formatBytes(item.size)}
+                        </td>
+                        <td className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5">
+                          {item.usage.total}
+                        </td>
+                        <td className="px-4 py-4 align-top text-right first:pl-5 last:pr-5">
+                          <MediaActionsMenu
+                            canDeleteMedia={canDeleteMedia}
+                            canDuplicateMedia={canDuplicateMedia}
+                            canRenameMedia={canRenameMedia}
+                            mediaName={item.displayName}
+                            onDelete={() => requestDeleteMedia(item.id)}
+                            onDuplicate={() => duplicateMedia(item.id)}
+                            onRename={() => openRenameModal(item.id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
 
@@ -896,7 +942,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       {selectedMedia ? (
         <ModalContent
           aria-label={`Xem media ${selectedMedia.displayName}`}
-          className="pointer-events-none w-screen max-w-none bg-transparent shadow-none ring-0 inset-shadow-none"
+          className="w-screen max-w-none bg-transparent shadow-none ring-0 inset-shadow-none"
           closeButton={false}
           isOpen={selectedMedia !== null}
           onOpenChange={(isOpen) => {
@@ -909,8 +955,8 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
         >
           <ModalBody className="h-full overflow-hidden p-0">
             <div className="grid h-full min-h-0 grid-cols-1 gap-4 p-3 lg:grid-cols-[minmax(0,1fr)_22rem] lg:p-4">
-              <div className="pointer-events-none flex min-h-0 overflow-hidden flex-col gap-4">
-                <div className="pointer-events-auto flex items-center gap-4">
+              <div className="flex min-h-0 overflow-hidden flex-col gap-4">
+                <div className="flex items-center gap-4">
                   <Button
                     aria-label="Đóng trình xem media"
                     intent="plain"
@@ -939,7 +985,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     </div>
                   </div>
                 </div>
-                <div className="pointer-events-auto rounded-xl border border-border/70 bg-overlay/95 px-5 py-2 shadow-xl">
+                <div className="rounded-xl border border-border/70 bg-overlay/95 px-5 py-2 shadow-xl">
                   <div className="flex flex-wrap items-center gap-2">
                     <Button
                       aria-label="Thu nhỏ preview"
@@ -985,7 +1031,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                   <div className="flex h-full min-h-0 w-full items-center justify-center overflow-hidden">
                     <MediaPreview
                       media={selectedMedia}
-                      className="pointer-events-auto max-h-full max-w-full"
+                      className="max-h-full max-w-full"
                       mode="viewer"
                       scale={previewScale}
                     />
@@ -993,7 +1039,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 </div>
               </div>
 
-              <aside className="pointer-events-auto flex min-h-0 flex-col overflow-hidden rounded-xl border border-border/70 bg-overlay/95 shadow-xl">
+              <aside className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-border/70 bg-overlay/95 shadow-xl">
                 <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
                   <p className="font-medium text-fg">Thông tin chi tiết</p>
                   <Badge intent={kindIntentMap[selectedMedia.kind]} isCircle={false}>
@@ -1001,48 +1047,56 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                   </Badge>
                 </div>
 
-                <div className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-5">
-                  <section className="space-y-3">
-                    <div className="space-y-2 rounded-2xl border border-border bg-bg px-4 py-4">
-                      <MetadataRow label="Tên media" value={selectedMedia.displayName} />
-                      <MetadataRow label="Loại" value={kindLabelMap[selectedMedia.kind]} />
-                      <MetadataRow label="MIME type" value={selectedMedia.mimeType} />
-                      <MetadataRow label="Đuôi tệp" value={selectedMedia.extension.toUpperCase()} />
-                      <MetadataRow label="Kích thước" value={formatBytes(selectedMedia.size)} />
-                      <MetadataRow label="Bộ nhớ đã dùng" value={formatBytes(selectedMedia.size)} />
-                      <MetadataRow label="Kích thước xem" value={formatPercent(previewScale)} />
-                      <MetadataRow
-                        label="Người tải lên"
-                        value={selectedMedia.uploader?.name ?? "Không rõ"}
-                      />
-                      <MetadataRow label="Ngày tải lên" value={formatDateTime(selectedMedia.uploadedAt)} />
-                    </div>
-                  </section>
+                <ScrollArea orientation="vertical" className="min-h-0 flex-1">
+                  <div className="space-y-6 p-5">
+                    <section className="space-y-3">
+                      <div className="space-y-2 rounded-2xl border border-border bg-bg px-4 py-4">
+                        <MetadataRow label="Tên media" value={selectedMedia.displayName} />
+                        <MetadataRow label="Loại" value={kindLabelMap[selectedMedia.kind]} />
+                        <MetadataRow label="MIME type" value={selectedMedia.mimeType} />
+                        <MetadataRow label="Đuôi tệp" value={selectedMedia.extension.toUpperCase()} />
+                        <MetadataRow label="Kích thước" value={formatBytes(selectedMedia.size)} />
+                        <MetadataRow label="Bộ nhớ đã dùng" value={formatBytes(selectedMedia.size)} />
+                        <MetadataRow label="Kích thước xem" value={formatPercent(previewScale)} />
+                        <MetadataRow
+                          label="Người tải lên"
+                          value={selectedMedia.uploader?.name ?? "Không rõ"}
+                        />
+                        <MetadataRow label="Ngày tải lên" value={formatDateTime(selectedMedia.uploadedAt)} />
+                      </div>
+                    </section>
 
-                  <section className="space-y-3">
-                    <p className="font-medium text-fg">Mức độ sử dụng</p>
-                    <div className="grid gap-3 rounded-2xl border border-border bg-bg p-4">
-                      <UsageStat label="Bài viết" value={selectedMedia.usage.posts} />
-                      <UsageStat label="Trang" value={selectedMedia.usage.pages} />
-                      <UsageStat label="Tài liệu" value={selectedMedia.usage.documents} />
-                      <UsageStat label="Hồ sơ cán bộ" value={selectedMedia.usage.staffProfiles} />
-                    </div>
-                    <Text className="text-sm text-muted-fg">
-                      Tổng số nơi đang dùng media này: {selectedMedia.usage.total}.
-                    </Text>
-                  </section>
-                </div>
+                    <section className="space-y-3">
+                      <p className="font-medium text-fg">Mức độ sử dụng</p>
+                      <div className="grid gap-3 rounded-2xl border border-border bg-bg p-4">
+                        <UsageStat label="Bài viết" value={selectedMedia.usage.posts} />
+                        <UsageStat label="Trang" value={selectedMedia.usage.pages} />
+                        <UsageStat label="Tài liệu" value={selectedMedia.usage.documents} />
+                        <UsageStat label="Hồ sơ cán bộ" value={selectedMedia.usage.staffProfiles} />
+                      </div>
+                      <Text className="text-sm text-muted-fg">
+                        Tổng số nơi đang dùng media này: {selectedMedia.usage.total}.
+                      </Text>
+                    </section>
+                  </div>
+                </ScrollArea>
               </aside>
             </div>
           </ModalBody>
         </ModalContent>
       ) : null}
 
-      {selectedMedia && isDeleteConfirmOpen ? (
+      {deleteTargetMedia && isDeleteConfirmOpen ? (
         <ModalContent
           aria-label="Xác nhận xóa media"
           isOpen={isDeleteConfirmOpen}
-          onOpenChange={setIsDeleteConfirmOpen}
+          onOpenChange={(isOpen) => {
+            setIsDeleteConfirmOpen(isOpen);
+
+            if (!isOpen) {
+              setDeleteTargetMediaId(null);
+            }
+          }}
           role="alertdialog"
           size="md"
         >
@@ -1055,13 +1109,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
           <ModalBody>
             <div className="rounded-2xl border border-border bg-muted/15 px-4 py-4">
-              <Text className="font-medium text-fg">{selectedMedia.displayName}</Text>
+              <Text className="font-medium text-fg">{deleteTargetMedia.displayName}</Text>
               <Text className="mt-1 text-sm text-muted-fg">
-                {kindLabelMap[selectedMedia.kind]} · {formatBytes(selectedMedia.size)}
+                {kindLabelMap[deleteTargetMedia.kind]} · {formatBytes(deleteTargetMedia.size)}
               </Text>
-              {selectedMedia.usage.total > 0 ? (
+              {deleteTargetMedia.usage.total > 0 ? (
                 <Text className="mt-3 text-sm text-warning-subtle-fg">
-                  Media này đang được dùng ở {selectedMedia.usage.total} nơi nên hiện chưa thể xóa.
+                  Media này đang được dùng ở {deleteTargetMedia.usage.total} nơi nên hiện chưa thể xóa.
                 </Text>
               ) : null}
             </div>
@@ -1073,7 +1127,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             </Button>
             <Button
               intent="danger"
-              isDisabled={selectedMedia.usage.total > 0 || isDeletingMedia}
+              isDisabled={deleteTargetMedia.usage.total > 0 || isDeletingMedia}
               onPress={deleteSelectedMedia}
             >
               Xác nhận xóa
