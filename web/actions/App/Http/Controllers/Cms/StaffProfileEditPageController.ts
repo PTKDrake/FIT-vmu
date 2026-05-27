@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 const StaffProfileEditPageController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ StaffProfileEditPageController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 StaffProfileEditPageController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ StaffProfileEditPageController.url = (args: { staffProfile: number | { id: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 StaffProfileEditPageController.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ StaffProfileEditPageController.get = (args: { staffProfile: number | { id: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 StaffProfileEditPageController.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ StaffProfileEditPageController.head = (args: { staffProfile: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 const StaffProfileEditPageControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const StaffProfileEditPageControllerForm = (args: { staffProfile: number | { id:
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 StaffProfileEditPageControllerForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ StaffProfileEditPageControllerForm.get = (args: { staffProfile: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileEditPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:15
+* @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
 StaffProfileEditPageControllerForm.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

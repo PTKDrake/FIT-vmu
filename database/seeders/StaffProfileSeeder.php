@@ -110,16 +110,18 @@ class StaffProfileSeeder extends Seeder
             ]
         );
 
-        $profile2->appointments()->updateOrCreate(
-            [
-                'unit_id' => $unitKcntt->id,
-                'position_id' => $posPtk->id,
-            ],
-            [
-                'start_date' => '2023-03-15',
-                'note' => 'Quyết định bổ nhiệm số 222/QĐ-ĐHHP',
-            ]
-        );
+        if ($posPtk) {
+            $profile2->appointments()->updateOrCreate(
+                [
+                    'unit_id' => $unitKcntt->id,
+                    'position_id' => $posPtk->id,
+                ],
+                [
+                    'start_date' => '2023-03-15',
+                    'note' => 'Quyết định bổ nhiệm số 222/QĐ-ĐHHP',
+                ]
+            );
+        }
 
         if ($unitHttt && $posTbm) {
             $profile2->appointments()->updateOrCreate(

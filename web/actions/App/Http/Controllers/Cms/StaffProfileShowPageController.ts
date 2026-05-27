@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const StaffProfileShowPageController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ StaffProfileShowPageController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 StaffProfileShowPageController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ StaffProfileShowPageController.url = (args: { staffProfile: number | { id: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 StaffProfileShowPageController.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ StaffProfileShowPageController.get = (args: { staffProfile: number | { id: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 StaffProfileShowPageController.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ StaffProfileShowPageController.head = (args: { staffProfile: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const StaffProfileShowPageControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const StaffProfileShowPageControllerForm = (args: { staffProfile: number | { id:
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 StaffProfileShowPageControllerForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ StaffProfileShowPageControllerForm.get = (args: { staffProfile: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfileShowPageController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:13
+* @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 StaffProfileShowPageControllerForm.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

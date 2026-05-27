@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 const StaffProfilesIndexController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ StaffProfilesIndexController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 StaffProfilesIndexController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ StaffProfilesIndexController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 StaffProfilesIndexController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ StaffProfilesIndexController.get = (options?: RouteQueryOptions): RouteDefinitio
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 StaffProfilesIndexController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ StaffProfilesIndexController.head = (options?: RouteQueryOptions): RouteDefiniti
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 const StaffProfilesIndexControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const StaffProfilesIndexControllerForm = (options?: RouteQueryOptions): RouteFor
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 StaffProfilesIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ StaffProfilesIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormD
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 StaffProfilesIndexControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

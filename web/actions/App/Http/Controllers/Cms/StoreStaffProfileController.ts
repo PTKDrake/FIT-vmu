@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\StoreStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:15
+* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:17
 * @route '/cms/staff-profiles'
 */
 const StoreStaffProfileController = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ StoreStaffProfileController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\StoreStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:15
+* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:17
 * @route '/cms/staff-profiles'
 */
 StoreStaffProfileController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ StoreStaffProfileController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\StoreStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:15
+* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:17
 * @route '/cms/staff-profiles'
 */
 StoreStaffProfileController.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ StoreStaffProfileController.post = (options?: RouteQueryOptions): RouteDefinitio
 
 /**
 * @see \App\Http\Controllers\Cms\StoreStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:15
+* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:17
 * @route '/cms/staff-profiles'
 */
 const StoreStaffProfileControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const StoreStaffProfileControllerForm = (options?: RouteQueryOptions): RouteForm
 
 /**
 * @see \App\Http\Controllers\Cms\StoreStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:15
+* @see app/Http/Controllers/Cms/StoreStaffProfileController.php:17
 * @route '/cms/staff-profiles'
 */
 StoreStaffProfileControllerForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

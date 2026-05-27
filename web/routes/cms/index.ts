@@ -553,7 +553,7 @@ documents.form = documentsForm
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 export const staffProfiles = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -568,7 +568,7 @@ staffProfiles.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfiles.url = (options?: RouteQueryOptions) => {
@@ -577,7 +577,7 @@ staffProfiles.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfiles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -587,7 +587,7 @@ staffProfiles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfiles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -597,7 +597,7 @@ staffProfiles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 const staffProfilesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -607,7 +607,7 @@ const staffProfilesForm = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfilesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -617,7 +617,7 @@ staffProfilesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
-* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:27
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfilesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

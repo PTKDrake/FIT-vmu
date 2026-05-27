@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\UpdateStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:16
+* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const UpdateStaffProfileController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -16,7 +16,7 @@ UpdateStaffProfileController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\UpdateStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:16
+* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 UpdateStaffProfileController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ UpdateStaffProfileController.url = (args: { staffProfile: number | { id: number 
 
 /**
 * @see \App\Http\Controllers\Cms\UpdateStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:16
+* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 UpdateStaffProfileController.patch = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -59,7 +59,7 @@ UpdateStaffProfileController.patch = (args: { staffProfile: number | { id: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\UpdateStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:16
+* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const UpdateStaffProfileControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const UpdateStaffProfileControllerForm = (args: { staffProfile: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\UpdateStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:16
+* @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 UpdateStaffProfileControllerForm.patch = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

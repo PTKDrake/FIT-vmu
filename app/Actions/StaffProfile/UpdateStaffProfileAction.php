@@ -43,7 +43,7 @@ class UpdateStaffProfileAction
                 'is_public' => $attributes['is_public'] ?? false,
             ]);
 
-            if (isset($attributes['appointments']) && is_array($attributes['appointments'])) {
+            if (isset($attributes['appointments'])) {
                 $existingIds = [];
                 foreach ($attributes['appointments'] as $appt) {
                     $appointmentData = [

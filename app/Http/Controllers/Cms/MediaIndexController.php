@@ -51,7 +51,7 @@ final class MediaIndexController extends Controller
                     'uploaded_by' => $uploadedBy > 0 ? $uploadedBy : null,
                     'uploaded_at' => $date !== 'all' ? $date : null,
                 ]),
-                'sort' => ($direction === 'desc' ? '-' : '') . $sort,
+                'sort' => ($direction === 'desc' ? '-' : '').$sort,
             ]),
         );
 
@@ -66,7 +66,7 @@ final class MediaIndexController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
 
         $rows = $media->getCollection()
-            ->map(fn(Media $media): array => $this->mapMediaRow($media))
+            ->map(fn (Media $media): array => $this->mapMediaRow($media))
             ->values()
             ->all();
 
@@ -74,7 +74,7 @@ final class MediaIndexController extends Controller
             ->whereHas('uploadedMedia')
             ->orderBy('name')
             ->get(['id', 'name'])
-            ->map(fn(User $user): array => [
+            ->map(fn (User $user): array => [
                 'id' => $user->getKey(),
                 'name' => $user->name,
             ])

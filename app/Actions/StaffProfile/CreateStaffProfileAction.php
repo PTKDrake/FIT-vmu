@@ -44,7 +44,7 @@ class CreateStaffProfileAction
                 'is_public' => $attributes['is_public'] ?? false,
             ]);
 
-            if (isset($attributes['appointments']) && is_array($attributes['appointments'])) {
+            if (isset($attributes['appointments'])) {
                 foreach ($attributes['appointments'] as $appt) {
                     $profile->appointments()->create([
                         'unit_id' => $appt['unit_id'],

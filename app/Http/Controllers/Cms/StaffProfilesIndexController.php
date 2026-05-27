@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use App\Models\StaffProfile;
+use App\Models\User;
 use App\QueryBuilders\CmsStaffProfilesQueryBuilder;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
@@ -138,7 +139,7 @@ final class StaffProfilesIndexController extends Controller
             'phone' => $profile->phone,
             'avatarUrl' => $profile->avatar?->preview_url,
             'isPublic' => $profile->is_public,
-            'userEmail' => $profile->user?->email ?? '',
+            'userEmail' => $profile->user instanceof User ? $profile->user->email : '',
             'updatedAt' => $this->formatDateTime($profile->updated_at) ?? now()->toAtomString(),
         ];
     }
