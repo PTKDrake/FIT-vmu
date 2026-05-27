@@ -30,7 +30,6 @@ class StaffProfile extends Model
         'bio',
         'bio_format',
         'is_public',
-        'sort_order',
     ];
 
     /**
@@ -41,7 +40,6 @@ class StaffProfile extends Model
     protected $attributes = [
         'bio_format' => 'blocknote_json',
         'is_public' => false,
-        'sort_order' => 0,
     ];
 
     /**
@@ -53,7 +51,6 @@ class StaffProfile extends Model
     {
         return [
             'is_public' => 'boolean',
-            'sort_order' => 'integer',
         ];
     }
 

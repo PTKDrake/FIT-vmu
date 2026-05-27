@@ -45,7 +45,6 @@ class StaffProfileFactory extends Factory
             ], JSON_THROW_ON_ERROR),
             'bio_format' => 'blocknote_json',
             'is_public' => false,
-            'sort_order' => 0,
         ];
     }
 }

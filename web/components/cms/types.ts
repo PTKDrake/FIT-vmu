@@ -208,3 +208,91 @@ export interface CmsPageEditorPageProps extends SharedData {
     updatedAt: string;
   };
 }
+
+export interface CmsStaffProfileRow {
+  avatarUrl: string | null;
+  email: string | null;
+  fullName: string;
+  id: number;
+  isPublic: boolean;
+  phone: string | null;
+  slug: string;
+  userEmail: string;
+  updatedAt: string;
+}
+
+export interface CmsStaffProfilesPageProps extends SharedData {
+  can: {
+    createStaffProfile: boolean;
+    deleteStaffProfile: boolean;
+  };
+  profiles: CmsPaginatedCollection<CmsStaffProfileRow>;
+}
+
+export interface CmsStaffProfileFormPageProps extends SharedData {
+  users?: Array<{
+    id: number;
+    name: string;
+    email: string;
+  }>;
+  units?: Array<{
+    id: number;
+    name: string;
+  }>;
+  positions?: Array<{
+    id: number;
+    name: string;
+  }>;
+  profile?: {
+    id: number | null;
+    userId?: number;
+    fullName: string;
+    slug: string;
+    email: string | null;
+    phone: string | null;
+    bio: string | null;
+    bioFormat: "blocknote_json";
+    isPublic: boolean;
+    avatarId: number | null;
+    avatarUrl: string | null;
+    userEmail?: string;
+    userName?: string;
+    appointments?: Array<{
+      id?: number;
+      unit_id: number;
+      position_id: number;
+      start_date: string;
+      end_date?: string | null;
+      note?: string | null;
+    }>;
+  };
+}
+
+export interface CmsStaffProfileShowPageProps extends SharedData {
+  can: {
+    manage: boolean;
+    edit: boolean;
+  };
+  profile: {
+    id: number;
+    fullName: string;
+    slug: string;
+    email: string | null;
+    phone: string | null;
+    bio: string | null;
+    bioFormat: "blocknote_json";
+    isPublic: boolean;
+    avatarUrl: string | null;
+    userName: string | null;
+    userEmail: string | null;
+    appointments: Array<{
+      id: number;
+      unitName: string | null;
+      positionName: string | null;
+      startDate: string | null;
+      endDate: string | null;
+      note: string | null;
+    }>;
+  };
+}
+

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\MediaFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -40,6 +42,12 @@ class Media extends Model
         return [
             'size' => 'integer',
         ];
+    }
+
+    /** @return Attribute<string, never> */
+    protected function previewUrl(): Attribute
+    {
+        return Attribute::get(fn (): string => Storage::disk($this->disk)->url($this->path));
     }
 
     /** @return BelongsTo<User, $this> */

@@ -4,6 +4,7 @@ use App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\Position;
+use App\Models\StaffProfile;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Route;
 
@@ -76,10 +77,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('documents', fn () => inertia('cms/documents/index'))
             ->can('view documents')
             ->name('documents');
-
-        Route::get('staff-profiles', fn () => inertia('cms/staff-profiles/index'))
-            ->can('view staff profiles')
+        Route::get('staff-profiles', Controllers\Cms\StaffProfilesIndexController::class)
+            ->can('viewAny', StaffProfile::class)
             ->name('staff-profiles');
+        Route::get('staff-profiles/create', Controllers\Cms\StaffProfileCreatePageController::class)
+            ->can('create', StaffProfile::class)
+            ->name('staff-profiles.create');
+        Route::get('staff-profiles/{staffProfile}', Controllers\Cms\StaffProfileShowPageController::class)
+            ->can('view', 'staffProfile')
+            ->name('staff-profiles.show');
+        Route::get('staff-profiles/{staffProfile}/edit', Controllers\Cms\StaffProfileEditPageController::class)
+            ->can('update', 'staffProfile')
+            ->name('staff-profiles.edit');
+        Route::post('staff-profiles', Controllers\Cms\StoreStaffProfileController::class)
+            ->can('create', StaffProfile::class)
+            ->name('staff-profiles.store');
+        Route::patch('staff-profiles/{staffProfile}', Controllers\Cms\UpdateStaffProfileController::class)
+            ->can('update', 'staffProfile')
+            ->name('staff-profiles.update');
+        Route::delete('staff-profiles/{staffProfile}', Controllers\Cms\DeleteStaffProfileController::class)
+            ->can('delete', 'staffProfile')
+            ->name('staff-profiles.destroy');
 
         Route::get('units', Controllers\Cms\UnitsIndexController::class)
             ->can('viewAny', Unit::class)

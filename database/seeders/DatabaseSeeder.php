@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             SuperAdminUserSeeder::class,
             UnitsAndPositionsSeeder::class,
+            StaffProfileSeeder::class,
         ]);
 
         User::factory()->count(10)->createMany();
