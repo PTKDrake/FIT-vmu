@@ -1,16 +1,16 @@
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
 import { useState } from "react";
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ComboBox, ComboBoxInput, ComboBoxContent, ComboBoxItem } from "@/components/ui/combo-box";
 import { Description, FieldError, FieldGroup, Fieldset, Legend, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
-import { ComboBox, ComboBoxInput, ComboBoxContent, ComboBoxItem } from "@/components/ui/combo-box";
-import { Avatar } from "@/components/ui/avatar";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 
 export interface StaffProfileFormData {
   user_id: number;
@@ -103,6 +103,7 @@ export function StaffProfileForm({
       if (i === index) {
         return { ...appt, [field]: value };
       }
+
       return appt;
     });
     onUpdate("appointments", nextAppts);

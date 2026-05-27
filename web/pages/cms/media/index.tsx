@@ -30,6 +30,7 @@ import type { CmsMediaPageProps, CmsMediaRow } from "@/components/cms/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ComboBox, ComboBoxContent, ComboBoxInput, ComboBoxItem, ComboBoxLabel } from "@/components/ui/combo-box";
 import { DropZone } from "@/components/ui/drop-zone";
 import { FieldError, FieldGroup, Fieldset, Legend } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -47,8 +48,6 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
-import { ComboBox, ComboBoxContent, ComboBoxInput, ComboBoxItem, ComboBoxLabel } from "@/components/ui/combo-box";
 import {
   Pagination,
   PaginationFirst,
@@ -65,6 +64,7 @@ import {
 } from "@/components/ui/progress-bar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { Code, Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -261,9 +261,11 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       onSuccess: () => {
         setIsDeleteConfirmOpen(false);
         setDeleteTargetMediaId(null);
+
         if (selectedMediaId === deletingMediaId) {
           setSelectedMediaId(null);
         }
+
         mediaList.reload();
       },
       preserveScroll: true,

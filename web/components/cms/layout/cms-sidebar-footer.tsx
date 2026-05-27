@@ -4,6 +4,10 @@ import {
   HomeIcon,
   LifebuoyIcon,
   ShieldCheckIcon,
+  PaintBrushIcon,
+  SunIcon,
+  MoonIcon,
+  ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
 import { destroy } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
@@ -16,9 +20,11 @@ import {
   MenuItem,
   MenuSection,
   MenuSeparator,
+  MenuSubMenu,
   MenuTrigger,
 } from "@/components/ui/menu";
 import { SidebarFooter, SidebarLabel } from "@/components/ui/sidebar";
+import { useTheme } from "@/hooks/use-theme";
 import { home } from "@/routes";
 import { edit } from "@/routes/profile";
 import type { SharedData } from "@/types/shared";
@@ -28,6 +34,7 @@ export function CmsSidebarFooter({
 }: {
   user: SharedData["auth"]["user"];
 }) {
+  const { theme, updateTheme } = useTheme();
   const userInitials = user?.name
     .split(" ")
     .map((name) => name[0])
@@ -78,6 +85,27 @@ export function CmsSidebarFooter({
             <ShieldCheckIcon />
             Bảo mật
           </MenuItem>
+          <MenuSeparator />
+          <MenuSubMenu>
+            <MenuItem>
+              <PaintBrushIcon />
+              Giao diện: {theme === "light" ? "Sáng" : theme === "dark" ? "Tối" : "Hệ thống"}
+            </MenuItem>
+            <MenuContent placement="right top">
+              <MenuItem onAction={() => updateTheme("light")}>
+                <SunIcon />
+                Sáng
+              </MenuItem>
+              <MenuItem onAction={() => updateTheme("dark")}>
+                <MoonIcon />
+                Tối
+              </MenuItem>
+              <MenuItem onAction={() => updateTheme("system")}>
+                <ComputerDesktopIcon />
+                Hệ thống
+              </MenuItem>
+            </MenuContent>
+          </MenuSubMenu>
           <MenuSeparator />
           <MenuItem href={home.url()}>
             <LifebuoyIcon />

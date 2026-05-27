@@ -1,8 +1,8 @@
+
 import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
   CheckIcon,
-  ListBulletIcon,
 } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@measured/puck";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/ui/button";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
   clonePuckPageData,
@@ -62,6 +63,50 @@ export function PuckPageBuilder({
 }: PuckPageBuilderProps) {
   const initialData = parsePuckPageData(content);
 
+  useMountEffect(() => {
+    const syncTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      const iframe = document.querySelector(".vmu-puck-page-builder iframe") as HTMLIFrameElement | null;
+
+      if (iframe && iframe.contentDocument) {
+        const iframeHtml = iframe.contentDocument.documentElement;
+
+        if (iframeHtml) {
+          if (iframeHtml.classList.contains("dark") !== isDark) {
+            iframeHtml.classList.toggle("dark", isDark);
+            iframeHtml.style.colorScheme = isDark ? "dark" : "light";
+          }
+        }
+      }
+    };
+
+    // 1. Sync theme immediately
+    syncTheme();
+
+    // 2. Observe changes to document.documentElement class list (parent theme changes)
+    const docObserver = new MutationObserver(() => {
+      syncTheme();
+    });
+    docObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    // 3. Observe body changes (for iframe insertion/re-render by Puck)
+    const bodyObserver = new MutationObserver(() => {
+      syncTheme();
+    });
+    bodyObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      docObserver.disconnect();
+      bodyObserver.disconnect();
+    };
+  });
+
   function toChange(nextData: VmuFitPageBuilderData): PuckPageBuilderChange {
     return {
       data: clonePuckPageData(nextData),
@@ -90,7 +135,7 @@ export function PuckPageBuilder({
         className,
       )}
     >
-      {/* <style>{puckBuilderStyles}</style> */}
+      <style>{puckBuilderStyles}</style>
 
       <Puck
         key={editorKey}
@@ -164,18 +209,7 @@ function PuckPageBuilderHeaderActions({
         <ArrowUturnRightIcon className="size-4" />
       </Button>
 
-      {backHref ? (
-        <Button
-          intent="outline"
-          onPress={() => {
-            router.get(backHref);
-          }}
-          size="sm"
-        >
-          <ListBulletIcon className="size-4" />
-          {backLabel}
-        </Button>
-      ) : null}
+
 
       <Button
         isDisabled={!canSave || isSaving}
@@ -199,7 +233,7 @@ const puckBuilderStyles = `
 }
 
 .vmu-puck-page-builder [class*="_PuckHeader_"] {
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-bottom: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
   background: var(--color-overlay, #fff);
 }
 
@@ -211,12 +245,12 @@ const puckBuilderStyles = `
 .vmu-puck-page-builder [class*="_PuckLayout-inner_"] {
   min-height: calc(100vh - 11rem);
   background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary, #1d4ed8) 10%, white) 0%, transparent 32%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-muted, #f5f5f5) 55%, white) 0%, white 18rem);
+    radial-gradient(circle at top left, color-mix(in oklch, var(--color-primary) 10%, var(--color-bg)) 0%, transparent 32%),
+    linear-gradient(180deg, color-mix(in oklch, var(--color-muted) 55%, var(--color-bg)) 0%, var(--color-bg) 18rem);
 }
 
 .vmu-puck-page-builder [class*="_PuckFields_"] {
-  border-left: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  border-left: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
   background: var(--color-overlay, #fff);
 }
 

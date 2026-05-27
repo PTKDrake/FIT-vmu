@@ -13,9 +13,9 @@ import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
 import type { CmsStaffProfileRow, CmsStaffProfilesPageProps } from "@/components/cms/types";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
 import {
   Menu,
   MenuContent,
@@ -30,8 +30,8 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";

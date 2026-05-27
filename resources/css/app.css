@@ -252,6 +252,23 @@
 }
 
 @layer components {
+    .dark .vmu-puck-page-builder {
+        --puck-color-white: var(--overlay);
+        --puck-color-black: var(--fg);
+        --puck-color-grey-12: var(--bg);
+        --puck-color-grey-11: var(--muted);
+        --puck-color-grey-10: var(--border);
+        --puck-color-grey-09: var(--border);
+        --puck-color-grey-08: var(--muted-fg);
+        --puck-color-grey-07: var(--muted-fg);
+        --puck-color-grey-06: var(--muted-fg);
+        --puck-color-grey-05: var(--fg);
+        --puck-color-grey-04: var(--fg);
+        --puck-color-grey-03: var(--fg);
+        --puck-color-grey-02: var(--fg);
+        --puck-color-grey-01: var(--fg);
+    }
+
     .vmu-blocknote {
         --bn-colors-editor-background: var(--overlay);
         --bn-colors-editor-text: var(--fg);

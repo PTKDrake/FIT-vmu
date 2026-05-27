@@ -39,12 +39,6 @@ export default function CmsUnitShowPage({ can, unit }: CmsUnitShowPageProps) {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <Link
-                href={unitsIndex.url()}
-                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-bg px-4 text-sm font-medium text-fg transition hover:bg-muted/40"
-              >
-                Quay lại danh sách
-              </Link>
               {can.manageUnits ? (
                 <>
                   <Link

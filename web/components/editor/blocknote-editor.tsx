@@ -1,6 +1,7 @@
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { twMerge } from "tailwind-merge";
+import { useTheme } from "@/hooks/use-theme";
 import {
   cloneBlockNoteContent,
   getBlockNoteFormat,
@@ -9,6 +10,7 @@ import {
   serializeBlockNoteContent,
 } from "./blocknote-parse";
 import type { BlockNoteContent, BlockNoteValue } from "./blocknote-types";
+
 
 export interface BlockNoteEditorChange {
   blocks: BlockNoteContent;
@@ -39,6 +41,7 @@ export function BlockNoteEditor({
   readOnly = false,
   uploadFile,
 }: BlockNoteEditorProps) {
+  const { resolvedTheme } = useTheme();
   const initialContent = parseBlockNoteContent(content);
   const isEditable = !disabled && !readOnly;
   const editor = useCreateBlockNote(
@@ -75,6 +78,7 @@ export function BlockNoteEditor({
         key={editorKey}
         className="vmu-blocknote__view"
         editor={editor}
+        theme={resolvedTheme}
         editable={isEditable}
         emojiPicker={isEditable}
         filePanel={isEditable}

@@ -1,5 +1,4 @@
 import {
-  ArrowLeftIcon,
   BriefcaseIcon,
   CalendarIcon,
   EnvelopeIcon,
@@ -9,11 +8,11 @@ import {
 } from "@heroicons/react/24/outline";
 import { Head, Link } from "@inertiajs/react";
 import type { ReactNode } from "react";
-import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
 import type { CmsStaffProfileShowPageProps } from "@/components/cms/types";
+import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
@@ -30,15 +29,7 @@ export default function CmsStaffProfileShowPage({
       <Head title={`Hồ sơ: ${profile.fullName}`} />
 
       <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
-        <div className="flex items-center justify-between gap-4">
-          <Link
-            href={staffProfiles.url()}
-            className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
-            aria-label="Quay lại danh sách"
-          >
-            <ArrowLeftIcon className="size-5" />
-          </Link>
-
+        <div className="flex items-center justify-end gap-4">
           {can.edit ? (
             <Link
               href={edit.url({ staffProfile: profile.id })}
