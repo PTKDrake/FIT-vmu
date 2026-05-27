@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleAndPermissionSeeder::class,
             SuperAdminUserSeeder::class,
+            UnitsAndPositionsSeeder::class,
         ]);
 
         User::factory()->count(10)->createMany();

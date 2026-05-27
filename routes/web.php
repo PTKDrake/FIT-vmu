@@ -3,6 +3,8 @@
 use App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Page;
+use App\Models\Position;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Controllers\HomeController::class)->name('home');
@@ -79,9 +81,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('view staff profiles')
             ->name('staff-profiles');
 
-        Route::get('units', fn () => inertia('cms/units/index'))
-            ->can('view units')
+        Route::get('units', Controllers\Cms\UnitsIndexController::class)
+            ->can('viewAny', Unit::class)
             ->name('units');
+        Route::patch('units/reorder', Controllers\Cms\ReorderUnitsController::class)
+            ->can('manage units')
+            ->name('units.reorder');
+        Route::get('units/create', Controllers\Cms\UnitCreatePageController::class)
+            ->can('create', Unit::class)
+            ->name('units.create');
+        Route::get('units/{unit}', Controllers\Cms\UnitShowPageController::class)
+            ->can('view', 'unit')
+            ->name('units.show');
+        Route::get('units/{unit}/edit', Controllers\Cms\UnitEditPageController::class)
+            ->can('update', 'unit')
+            ->name('units.edit');
+        Route::post('units', Controllers\Cms\StoreUnitController::class)
+            ->can('create', Unit::class)
+            ->name('units.store');
+        Route::patch('units/{unit}', Controllers\Cms\UpdateUnitController::class)
+            ->can('update', 'unit')
+            ->name('units.update');
+        Route::delete('units/{unit}', Controllers\Cms\DeleteUnitController::class)
+            ->can('delete', 'unit')
+            ->name('units.destroy');
+
+        Route::get('positions', Controllers\Cms\PositionsIndexController::class)
+            ->can('viewAny', Position::class)
+            ->name('positions');
+        Route::post('positions', Controllers\Cms\StorePositionController::class)
+            ->can('create', Position::class)
+            ->name('positions.store');
+        Route::patch('positions/{position}', Controllers\Cms\UpdatePositionController::class)
+            ->can('update', 'position')
+            ->name('positions.update');
+        Route::delete('positions/{position}', Controllers\Cms\DeletePositionController::class)
+            ->can('delete', 'position')
+            ->name('positions.destroy');
 
         Route::get('users', fn () => inertia('cms/users/index'))
             ->can('manage users')

@@ -11,6 +11,18 @@ import StoreMediaController from './StoreMediaController'
 import RenameMediaController from './RenameMediaController'
 import DuplicateMediaController from './DuplicateMediaController'
 import DeleteMediaController from './DeleteMediaController'
+import UnitsIndexController from './UnitsIndexController'
+import ReorderUnitsController from './ReorderUnitsController'
+import UnitCreatePageController from './UnitCreatePageController'
+import UnitShowPageController from './UnitShowPageController'
+import UnitEditPageController from './UnitEditPageController'
+import StoreUnitController from './StoreUnitController'
+import UpdateUnitController from './UpdateUnitController'
+import DeleteUnitController from './DeleteUnitController'
+import PositionsIndexController from './PositionsIndexController'
+import StorePositionController from './StorePositionController'
+import UpdatePositionController from './UpdatePositionController'
+import DeletePositionController from './DeletePositionController'
 
 const Cms = {
     PostsIndexController: Object.assign(PostsIndexController, PostsIndexController),
@@ -26,6 +38,18 @@ const Cms = {
     RenameMediaController: Object.assign(RenameMediaController, RenameMediaController),
     DuplicateMediaController: Object.assign(DuplicateMediaController, DuplicateMediaController),
     DeleteMediaController: Object.assign(DeleteMediaController, DeleteMediaController),
+    UnitsIndexController: Object.assign(UnitsIndexController, UnitsIndexController),
+    ReorderUnitsController: Object.assign(ReorderUnitsController, ReorderUnitsController),
+    UnitCreatePageController: Object.assign(UnitCreatePageController, UnitCreatePageController),
+    UnitShowPageController: Object.assign(UnitShowPageController, UnitShowPageController),
+    UnitEditPageController: Object.assign(UnitEditPageController, UnitEditPageController),
+    StoreUnitController: Object.assign(StoreUnitController, StoreUnitController),
+    UpdateUnitController: Object.assign(UpdateUnitController, UpdateUnitController),
+    DeleteUnitController: Object.assign(DeleteUnitController, DeleteUnitController),
+    PositionsIndexController: Object.assign(PositionsIndexController, PositionsIndexController),
+    StorePositionController: Object.assign(StorePositionController, StorePositionController),
+    UpdatePositionController: Object.assign(UpdatePositionController, UpdatePositionController),
+    DeletePositionController: Object.assign(DeletePositionController, DeletePositionController),
 }
 
 export default Cms

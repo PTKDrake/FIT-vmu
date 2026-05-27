@@ -1,13 +1,17 @@
-import { router } from "@inertiajs/react";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useAsyncList } from "react-stately";
+import type { CmsTablePaginationMeta } from "@/components/cms/types";
+import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
 import type { CmsTableSortDirection } from "@/components/cms/types";
 
-interface UseCmsTableQueryStateConfig {
+interface UseCmsTableQueryStateConfig<TItem extends object> {
   defaultPerPage?: number;
   defaultSortColumn: string;
   defaultSortDirection?: CmsTableSortDirection;
-  only?: string[];
+  initialItems: TItem[];
+  initialMeta: CmsTablePaginationMeta;
+  resourceKey: string;
 }
 
 interface ReloadOptions {
@@ -15,13 +19,14 @@ interface ReloadOptions {
   resetPage?: boolean;
 }
 
-export function useCmsTableQueryState({
+export function useCmsTableQueryState<TItem extends object>({
   defaultPerPage = 10,
   defaultSortColumn,
   defaultSortDirection = "desc",
-  only,
-}: UseCmsTableQueryStateConfig) {
-  const [isReloading, setIsReloading] = useState(false);
+  initialItems,
+  initialMeta,
+  resourceKey,
+}: UseCmsTableQueryStateConfig<TItem>) {
   const [query, setQuery] = useQueryStates(
     {
       direction: parseAsStringLiteral(["asc", "desc"]).withDefault(
@@ -40,26 +45,61 @@ export function useCmsTableQueryState({
       shallow: true,
     },
   );
+  const queryRef = useRef(query);
+  queryRef.current = query;
+  const [meta, setMeta] = useState(initialMeta);
+  const initialItemsRef = useRef(initialItems);
+
+  const list = useAsyncList<TItem>({
+    async load({ signal }) {
+      const { items, meta: nextMeta } = await fetchInertiaCollectionPage(
+        resourceKey,
+        queryRef.current,
+        signal,
+      );
+
+      setMeta((currentMeta) => {
+        if (!nextMeta || typeof nextMeta !== "object") {
+          return currentMeta;
+        }
+
+        return nextMeta as unknown as CmsTablePaginationMeta;
+      });
+
+      return {
+        items: items as TItem[],
+      };
+    },
+  });
+
+  const items = useMemo<TItem[]>(
+    () =>
+      list.loadingState === "loading" && list.items.length === 0
+        ? initialItemsRef.current
+        : list.items,
+    [list.items, list.loadingState],
+  );
 
   async function syncQuery(
     nextQuery: Partial<typeof query>,
     options: ReloadOptions = {},
   ): Promise<void> {
-    await setQuery({
+    const resolvedQuery = {
+      ...queryRef.current,
       ...nextQuery,
-      page: options.page ?? (options.resetPage ? 1 : nextQuery.page),
-    });
+      page: options.page ?? (options.resetPage ? 1 : nextQuery.page ?? queryRef.current.page),
+    };
 
-    router.reload({
-      only,
-      replace: true,
-      onFinish: () => setIsReloading(false),
-      onStart: () => setIsReloading(true),
-    });
+    queryRef.current = resolvedQuery;
+    await setQuery(resolvedQuery);
+    list.reload();
   }
 
   return {
-    isReloading,
+    data: items,
+    isReloading: list.isLoading,
+    list,
+    meta,
     query,
     async setPage(page: number): Promise<void> {
       await syncQuery({ page }, { page });

@@ -8,11 +8,8 @@ import {
   functionalUpdate,
   getCoreRowModel,
   useReactTable
-  
-  
-  
 } from "@tanstack/react-table";
-import type {ColumnDef, SortingState, Updater} from "@tanstack/react-table";
+import type { ColumnDef, SortingState, Updater } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 import type {

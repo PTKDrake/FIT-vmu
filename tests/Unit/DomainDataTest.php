@@ -50,7 +50,6 @@ test('foundation data objects map scalar domain fields from models', function ()
         'id' => $unit->id,
         'name' => $unit->name,
         'slug' => $unit->slug,
-        'type' => $unit->type,
         'descriptionFormat' => $unit->description_format,
         'sortOrder' => $unit->sort_order,
         'isActive' => $unit->is_active,

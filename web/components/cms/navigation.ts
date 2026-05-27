@@ -48,6 +48,7 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
     items: [
       { href: "/cms/staff-profiles", title: "Hồ sơ cán bộ" },
       { href: "/cms/units", title: "Đơn vị" },
+      { href: "/cms/positions", title: "Chức vụ" },
     ],
     title: "Nhân sự",
   },

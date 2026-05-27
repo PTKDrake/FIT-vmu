@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Post;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -53,4 +54,33 @@ test('cms posts index filters sorts and paginates rows from backend props', func
             ->where('posts.meta.perPage', 10)
             ->where('posts.meta.total', 11)
         );
+});
+
+test('cms posts inertia xhr response keeps collection data under props', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    Post::factory()->for($editor, 'author')->create([
+        'title' => 'Thong bao FIT thử nghiệm',
+        'slug' => 'thong-bao-fit-thu-nghiem',
+        'status' => 'published',
+    ]);
+
+    $version = app(HandleInertiaRequests::class)->version(request());
+
+    $response = $this->actingAs($editor)
+        ->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => (string) $version,
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+        ->get('/cms/posts?search=FIT');
+
+    $response->assertOk()
+        ->assertJsonPath('component', 'cms/posts/index')
+        ->assertJsonPath('props.posts.data.0.title', 'Thong bao FIT thử nghiệm');
+
+    expect($response->json('posts'))->toBeNull();
 });

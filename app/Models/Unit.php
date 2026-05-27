@@ -22,7 +22,6 @@ class Unit extends Model
     protected $fillable = [
         'name',
         'slug',
-        'type',
         'description',
         'description_format',
         'sort_order',
@@ -35,6 +34,7 @@ class Unit extends Model
      * @var array<string, mixed>
      */
     protected $attributes = [
+        'type' => 'department',
         'description_format' => 'blocknote_json',
         'sort_order' => 0,
         'is_active' => true,

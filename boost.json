@@ -2,7 +2,8 @@
     "agents": [
         "claude_code",
         "codex",
-        "cursor"
+        "cursor",
+        "gemini"
     ],
     "cloud": false,
     "guidelines": true,

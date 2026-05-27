@@ -59,7 +59,9 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: pages.meta.perPage,
     defaultSortColumn: "created_at",
-    only: ["pages"],
+    initialItems: pages.data,
+    initialMeta: pages.meta,
+    resourceKey: "pages",
   });
 
   const columns = useMemo<Array<ColumnDef<CmsPageTableRow, any>>>(
@@ -187,7 +189,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <CmsDataTable
           columns={columns}
-          data={pages.data}
+          data={tableQueryState.data}
           defaultSort={{ column: "created_at", direction: "desc" }}
           description="Quản lý trang tĩnh, đường dẫn hiển thị và thông tin SEO."
           emptyDescription="Tạo trang đầu tiên để bắt đầu quản lý nội dung."
@@ -195,7 +197,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
           filterOptions={statusOptions.map((option) => ({ ...option }))}
           filterValue={tableQueryState.query.status}
           isReloading={tableQueryState.isReloading}
-          meta={pages.meta}
+          meta={tableQueryState.meta}
           onFilterChange={(value) => tableQueryState.setStatus(value)}
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}

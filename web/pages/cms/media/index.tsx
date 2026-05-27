@@ -19,17 +19,26 @@ import {
 import { Head, router, useForm } from "@inertiajs/react";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import type { FileRejection } from "react-dropzone";
+import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import type { CmsMediaPageProps, CmsMediaRow } from "@/components/cms/types";
+import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropZone } from "@/components/ui/drop-zone";
 import { FieldError, FieldGroup, Fieldset, Legend } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuTrigger,
+} from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -38,13 +47,6 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { Input } from "@/components/ui/input";
-import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
 import { NativeSelect, NativeSelectContent } from "@/components/ui/native-select";
 import {
   Pagination,
@@ -65,7 +67,6 @@ import { Code, Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
-import { media as mediaIndexRoute } from "@/routes/cms";
 import mediaRoutes from "@/routes/cms/media";
 import type { FlashData } from "@/types/shared";
 
@@ -107,7 +108,6 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
 });
 
 export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
-  const [isReloading, setIsReloading] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -138,6 +138,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       shallow: true,
     },
   );
+  const queryRef = useRef(query);
+  queryRef.current = query;
+  const [mediaMeta, setMediaMeta] = useState(media.meta);
 
   const uploadForm = useForm<{
     files: File[];
@@ -150,8 +153,28 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
     name: "",
   });
 
-  const selectedMedia = media.data.find((item) => item.id === selectedMediaId) ?? null;
-  const renameTargetMedia = media.data.find((item) => item.id === renameTargetMediaId) ?? null;
+  const mediaList = useAsyncList<CmsMediaRow>({
+    async load({ signal }) {
+      const { items, meta } = await fetchInertiaCollectionPage("media", queryRef.current, signal);
+
+      if (meta && typeof meta === "object") {
+        setMediaMeta(meta as unknown as typeof media.meta);
+      }
+
+      return {
+        items: items as CmsMediaRow[],
+      };
+    },
+  });
+  const visibleMedia = useMemo(
+    () =>
+      mediaList.loadingState === "loading" && mediaList.items.length === 0
+        ? media.data
+        : mediaList.items,
+    [media.data, mediaList.items, mediaList.loadingState],
+  );
+  const selectedMedia = visibleMedia.find((item) => item.id === selectedMediaId) ?? null;
+  const renameTargetMedia = visibleMedia.find((item) => item.id === renameTargetMediaId) ?? null;
 
   const canDeleteMedia = can.deleteMedia;
   const canDuplicateMedia = can.duplicateMedia;
@@ -202,31 +225,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       page: nextPage,
     };
 
+    queryRef.current = resolvedQuery;
     await setQuery(resolvedQuery);
-
-    router.visit(
-      mediaIndexRoute.url({
-        query: {
-          date: resolvedQuery.date,
-          direction: resolvedQuery.direction,
-          page: resolvedQuery.page,
-          perPage: resolvedQuery.perPage,
-          search: resolvedQuery.search,
-          sort: resolvedQuery.sort,
-          type: resolvedQuery.type,
-          uploadedBy: resolvedQuery.uploadedBy,
-          view: resolvedQuery.view,
-        },
-      }),
-      {
-        only: ["media"],
-        onFinish: () => setIsReloading(false),
-        onStart: () => setIsReloading(true),
-        preserveScroll: true,
-        preserveState: true,
-        replace: true,
-      },
-    );
+    mediaList.reload();
   }
 
   function submitUpload(): void {
@@ -236,6 +237,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
         setClientRejections([]);
         setIsUploadOpen(false);
         uploadForm.reset();
+        mediaList.reload();
       },
       preserveScroll: true,
     });
@@ -254,6 +256,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       onSuccess: () => {
         setIsDeleteConfirmOpen(false);
         setSelectedMediaId(null);
+        mediaList.reload();
       },
       preserveScroll: true,
     });
@@ -308,7 +311,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   }
 
   function openRenameModal(mediaId: number): void {
-    const mediaToRename = media.data.find((item) => item.id === mediaId);
+    const mediaToRename = visibleMedia.find((item) => item.id === mediaId);
 
     if (!mediaToRename) {
       return;
@@ -336,6 +339,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       errorBag: "renameMedia",
       onSuccess: () => {
         closeRenameModal();
+        mediaList.reload();
       },
       preserveScroll: true,
     });
@@ -346,6 +350,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       mediaRoutes.duplicate.url({ media: mediaId }),
       {},
       {
+        onSuccess: () => {
+          mediaList.reload();
+        },
         preserveScroll: true,
       },
     );
@@ -471,13 +478,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <div className="space-y-4 px-5 py-4">
             <div className="flex items-center justify-between gap-3">
               <Text className="text-sm text-muted-fg">
-                {media.meta.total} media{isReloading ? " · đang làm mới" : ""}
+                {mediaMeta.total} media{mediaList.isLoading ? " · đang làm mới" : ""}
               </Text>
 
               <NativeSelect className="w-36 min-w-36">
                 <NativeSelectContent
                   aria-label="Số media mỗi trang"
-                  value={String(media.meta.perPage)}
+                  value={String(mediaMeta.perPage)}
                   onChange={(event) => {
                     void syncQuery({ perPage: Number(event.target.value) }, { resetPage: true });
                   }}
@@ -493,7 +500,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
             {query.view === "grid" ? (
               <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-                {media.data.map((item) => (
+                {visibleMedia.map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -580,7 +587,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                       </tr>
                     </thead>
                     <tbody>
-                      {media.data.map((item) => (
+                      {visibleMedia.map((item) => (
                         <tr
                           key={item.id}
                           className="cursor-pointer border-b border-border transition hover:bg-muted/20 last:border-b-0"
@@ -637,7 +644,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               </div>
             )}
 
-            {media.data.length === 0 ? (
+            {visibleMedia.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border bg-muted/10 px-6 py-12 text-center">
                 <p className="font-medium text-fg">Chưa có media phù hợp</p>
                 <Text className="mt-2 text-muted-fg">
@@ -648,31 +655,31 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
             <div className="flex flex-col gap-3 border-t border-border pt-4 md:flex-row md:items-center md:justify-between">
               <Text className="text-sm text-muted-fg">
-                Hiển thị {media.meta.from ?? 0}-{media.meta.to ?? 0} trên {media.meta.total} media
+                Hiển thị {mediaMeta.from ?? 0}-{mediaMeta.to ?? 0} trên {mediaMeta.total} media
               </Text>
 
               <Pagination>
                 <PaginationList>
                   <PaginationFirst
-                    isDisabled={media.meta.currentPage <= 1}
+                    isDisabled={mediaMeta.currentPage <= 1}
                     onPress={() => {
                       void syncQuery({ page: 1 });
                     }}
                   />
                   <PaginationPrevious
-                    isDisabled={media.meta.currentPage <= 1}
+                    isDisabled={mediaMeta.currentPage <= 1}
                     onPress={() => {
-                      void syncQuery({ page: Math.max(media.meta.currentPage - 1, 1) });
+                      void syncQuery({ page: Math.max(mediaMeta.currentPage - 1, 1) });
                     }}
                   />
                   <PaginationItem>
-                    {`Trang ${media.meta.currentPage} / ${media.meta.lastPage}`}
+                    {`Trang ${mediaMeta.currentPage} / ${mediaMeta.lastPage}`}
                   </PaginationItem>
                   <PaginationNext
-                    isDisabled={media.meta.currentPage >= media.meta.lastPage}
+                    isDisabled={mediaMeta.currentPage >= mediaMeta.lastPage}
                     onPress={() => {
                       void syncQuery({
-                        page: Math.min(media.meta.currentPage + 1, media.meta.lastPage),
+                        page: Math.min(mediaMeta.currentPage + 1, mediaMeta.lastPage),
                       });
                     }}
                   />

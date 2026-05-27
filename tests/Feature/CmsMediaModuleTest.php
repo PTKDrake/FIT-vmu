@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Document;
 use App\Models\Media;
 use App\Models\Post;
@@ -99,6 +100,38 @@ test('cms media index filters and paginates rows from backend props', function (
             ->where('media.meta.total', 25)
             ->has('media.filters.uploaders', 2)
         );
+});
+
+test('cms media inertia xhr response keeps collection data under props', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $uploader = User::factory()->create([
+        'name' => 'Tran Thi Upload',
+    ]);
+
+    Media::factory()->for($uploader, 'uploadedBy')->create([
+        'original_name' => '01jvheroasset.jpg',
+        'display_name' => 'hero-fit.jpg',
+        'mime_type' => 'image/jpeg',
+        'path' => 'media/2026/05/01jvheroasset.jpg',
+    ]);
+
+    $version = app(HandleInertiaRequests::class)->version(request());
+
+    $response = $this->actingAs($editor)
+        ->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => (string) $version,
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+        ->get('/cms/media?search=hero-fit');
+
+    $response->assertOk()
+        ->assertJsonPath('component', 'cms/media/index')
+        ->assertJsonPath('props.media.data.0.displayName', 'hero-fit.jpg');
+
+    expect($response->json('media'))->toBeNull();
 });
 
 test('authorized users can upload image audio and video media', function () {

@@ -33,7 +33,9 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: posts.meta.perPage,
     defaultSortColumn: "created_at",
-    only: ["posts"],
+    initialItems: posts.data,
+    initialMeta: posts.meta,
+    resourceKey: "posts",
   });
 
   const columns = useMemo<Array<ColumnDef<CmsPostTableRow, any>>>(
@@ -88,7 +90,7 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <CmsDataTable
           columns={columns}
-          data={posts.data}
+          data={tableQueryState.data}
           defaultSort={{ column: "created_at", direction: "desc" }}
           description="Quản lý nội dung bài viết, trạng thái biên tập và lịch xuất bản."
           emptyDescription="Chưa có bài viết phù hợp với bộ lọc hiện tại."
@@ -96,7 +98,7 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
           filterOptions={statusOptions.map((option) => ({ ...option }))}
           filterValue={tableQueryState.query.status}
           isReloading={tableQueryState.isReloading}
-          meta={posts.meta}
+          meta={tableQueryState.meta}
           onFilterChange={(value) => tableQueryState.setStatus(value)}
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}

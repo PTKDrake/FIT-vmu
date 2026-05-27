@@ -133,6 +133,70 @@ export interface CmsMediaPageProps extends SharedData {
   };
 }
 
+export interface CmsPositionRow {
+  appointmentCount: number;
+  id: number;
+  isActive: boolean;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  updatedAt: string;
+}
+
+export interface CmsPositionsPageProps extends SharedData {
+  can: {
+    managePositions: boolean;
+  };
+  positions: CmsPaginatedCollection<CmsPositionRow>;
+}
+
+export interface CmsUnitRow {
+  appointmentCount: number;
+  descriptionSummary: string | null;
+  id: number;
+  isActive: boolean;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  updatedAt: string;
+}
+
+export interface CmsUnitsPageProps extends SharedData {
+  can: {
+    manageUnits: boolean;
+  };
+  units: CmsUnitRow[];
+}
+
+export interface CmsUnitFormPageProps extends SharedData {
+  unit: {
+    description: string | null;
+    descriptionFormat: "blocknote_json";
+    id: number | null;
+    isActive: boolean;
+    name: string;
+    slug: string;
+    sortOrder: number;
+  };
+}
+
+export interface CmsUnitShowPageProps extends SharedData {
+  can: {
+    manageUnits: boolean;
+  };
+  unit: {
+    appointmentCount: number;
+    description: string | null;
+    descriptionFormat: "blocknote_json";
+    id: number;
+    isActive: boolean;
+    name: string;
+    slug: string;
+    sortOrder: number;
+    updatedAt: string;
+  };
+}
+
 export interface CmsPageEditorPageProps extends SharedData {
   page: {
     content: string | null;

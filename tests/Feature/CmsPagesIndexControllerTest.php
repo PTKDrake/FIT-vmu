@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Page;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -55,4 +56,33 @@ test('cms pages index filters sorts and paginates rows from backend props', func
             ->where('pages.meta.perPage', 10)
             ->where('pages.meta.total', 11)
         );
+});
+
+test('cms pages inertia xhr response keeps collection data under props', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    Page::factory()->for($editor, 'author')->create([
+        'title' => 'Trang FIT thử nghiệm',
+        'slug' => 'trang-fit-thu-nghiem',
+        'status' => 'published',
+    ]);
+
+    $version = app(HandleInertiaRequests::class)->version(request());
+
+    $response = $this->actingAs($editor)
+        ->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => (string) $version,
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+        ->get('/cms/pages?search=FIT');
+
+    $response->assertOk()
+        ->assertJsonPath('component', 'cms/pages/index')
+        ->assertJsonPath('props.pages.data.0.title', 'Trang FIT thử nghiệm');
+
+    expect($response->json('pages'))->toBeNull();
 });

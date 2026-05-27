@@ -460,10 +460,10 @@ Checklist:
 
 Checklist:
 
-- [ ] CRUD units.
-- [ ] CRUD positions.
-- [ ] Sort order/is_active.
-- [ ] Description dùng BlockNote JSON.
+- [x] CRUD units.
+- [x] CRUD positions.
+- [x] Sort order/is_active.
+- [x] Description dùng BlockNote JSON.
 
 #### Task 5.3 - Staff Profiles module
 
