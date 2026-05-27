@@ -69,6 +69,8 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Empty states, helper text, and loading states must be concise and useful. They should guide the next action, not explain implementation details.
 - Keep validation and security responsibility in backend code, tests, and developer documentation. Do not surface those reminders in normal UI copy unless the user has a direct reason to see them.
 - When adding page descriptions or support text, make them domain-specific, short, and actionable. Avoid generic sentences that could fit any screen.
+- Any UI action that deletes persisted data or stored assets must require an explicit confirm dialog before the destructive request is sent.
+- Use toast notifications for user-facing action feedback such as create, update, delete, upload, copy, or failure states. Do not fall back to static inline status banners unless the user explicitly asks for persistent on-page messaging.
 
 ## Documentation Files
 

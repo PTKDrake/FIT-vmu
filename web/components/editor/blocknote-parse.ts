@@ -1,12 +1,13 @@
 import type { Block } from "@blocknote/core";
 import {
   BLOCKNOTE_FORMAT,
-  EMPTY_BLOCKNOTE_CONTENT,
-  type BlockNoteContent,
-  type BlockNoteFormat,
-  type BlockNoteInitialContent,
-  type BlockNoteValue,
+  EMPTY_BLOCKNOTE_CONTENT
+  
+  
+  
+  
 } from "./blocknote-types";
+import type {BlockNoteContent, BlockNoteFormat, BlockNoteInitialContent, BlockNoteValue} from "./blocknote-types";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

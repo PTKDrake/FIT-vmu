@@ -1,5 +1,6 @@
 import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
+import updatePageMetadata from "@/actions/App/Http/Controllers/Cms/UpdatePageMetadataController";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldGroup, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { createDefaultPuckPageData, serializePuckPageData } from "@/lib/puck/page-builder-data";
 import { store as storePage } from "@/routes/cms/pages";
-import updatePageMetadata from "@/actions/App/Http/Controllers/Cms/UpdatePageMetadataController";
 
 const defaultPageJson = serializePuckPageData(createDefaultPuckPageData());
 

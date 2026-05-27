@@ -24,6 +24,7 @@ class Media extends Model
         'disk',
         'path',
         'original_name',
+        'display_name',
         'mime_type',
         'size',
         'uploaded_by',

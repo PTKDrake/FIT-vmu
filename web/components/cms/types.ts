@@ -94,6 +94,45 @@ export interface CmsPagesPageProps extends SharedData {
   pages: CmsPaginatedCollection<CmsPageTableRow>;
 }
 
+export interface CmsMediaRow {
+  displayName: string;
+  extension: string;
+  id: number;
+  kind: "audio" | "image" | "video";
+  mimeType: string;
+  previewUrl: string;
+  size: number;
+  uploadedAt: string;
+  uploader: {
+    id: number;
+    name: string;
+  } | null;
+  usage: {
+    documents: number;
+    pages: number;
+    posts: number;
+    staffProfiles: number;
+    total: number;
+  };
+}
+
+export interface CmsMediaPageProps extends SharedData {
+  can: {
+    deleteMedia: boolean;
+    duplicateMedia: boolean;
+    renameMedia: boolean;
+    uploadMedia: boolean;
+  };
+  media: CmsPaginatedCollection<CmsMediaRow> & {
+    filters: {
+      uploaders: Array<{
+        id: number;
+        name: string;
+      }>;
+    };
+  };
+}
+
 export interface CmsPageEditorPageProps extends SharedData {
   page: {
     content: string | null;

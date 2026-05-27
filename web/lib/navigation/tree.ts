@@ -600,6 +600,7 @@ export function removeNavigationItem(
   const nextItems = items.reduce<NavigationItemDraft[]>((carry, item) => {
     if (item.id === itemId) {
       removedItem = item;
+
       return carry;
     }
 
@@ -611,10 +612,12 @@ export function removeNavigationItem(
         ...item,
         children: normalizeNavigationTree(nestedResult.items, item.id),
       });
+
       return carry;
     }
 
     carry.push(item);
+
     return carry;
   }, []);
 
