@@ -2,9 +2,10 @@ import { Render } from "@measured/puck";
 import { twMerge } from "tailwind-merge";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
-  parsePuckPageData,
-  type VmuFitPageBuilderValue,
+  parsePuckPageData
+  
 } from "@/lib/puck/page-builder-data";
+import type {VmuFitPageBuilderValue} from "@/lib/puck/page-builder-data";
 
 interface PuckPageRenderProps {
   className?: string;

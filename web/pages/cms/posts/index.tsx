@@ -1,5 +1,6 @@
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import { Head } from "@inertiajs/react";
+import { createColumnHelper  } from "@tanstack/react-table";
+import type {ColumnDef} from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 import { CmsDataTable } from "@/components/cms/cms-data-table";

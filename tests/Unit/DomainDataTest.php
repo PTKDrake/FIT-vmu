@@ -97,6 +97,7 @@ test('media data maps persisted media fields', function () {
         'disk' => $media->disk,
         'path' => $media->path,
         'originalName' => $media->original_name,
+        'displayName' => $media->display_name,
         'mimeType' => $media->mime_type,
         'size' => $media->size,
         'uploadedBy' => $media->uploaded_by,

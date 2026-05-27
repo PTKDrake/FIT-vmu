@@ -5,12 +5,14 @@ import {
   Squares2X2Icon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
 import { Head, router } from "@inertiajs/react";
+import { createColumnHelper  } from "@tanstack/react-table";
+import type {ColumnDef} from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { CmsDataTable } from "@/components/cms/cms-data-table";
-import { PageFormDialog, type PageFormValues } from "@/components/cms/page-form-dialog";
+import { PageFormDialog  } from "@/components/cms/page-form-dialog";
+import type {PageFormValues} from "@/components/cms/page-form-dialog";
 import type { CmsPageTableRow, CmsPagesPageProps } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Badge } from "@/components/ui/badge";

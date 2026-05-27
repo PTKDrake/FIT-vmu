@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers;
+use App\Models\Media;
 use App\Models\Page;
 use Illuminate\Support\Facades\Route;
 
@@ -54,9 +55,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('view posts')
             ->name('navigation.show');
 
-        Route::get('media', fn () => inertia('cms/media/index'))
-            ->can('view posts')
+        Route::get('media', Controllers\Cms\MediaIndexController::class)
+            ->can('viewAny', Media::class)
             ->name('media');
+        Route::post('media', Controllers\Cms\StoreMediaController::class)
+            ->can('create', Media::class)
+            ->name('media.store');
+        Route::patch('media/{media}/rename', Controllers\Cms\RenameMediaController::class)
+            ->can('update', 'media')
+            ->name('media.rename');
+        Route::post('media/{media}/duplicate', Controllers\Cms\DuplicateMediaController::class)
+            ->can('create', Media::class)
+            ->name('media.duplicate');
+        Route::delete('media/{media}', Controllers\Cms\DeleteMediaController::class)
+            ->can('delete', 'media')
+            ->name('media.destroy');
 
         Route::get('documents', fn () => inertia('cms/documents/index'))
             ->can('view documents')

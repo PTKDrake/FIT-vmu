@@ -7,11 +7,12 @@ import {
   flexRender,
   functionalUpdate,
   getCoreRowModel,
-  useReactTable,
-  type ColumnDef,
-  type SortingState,
-  type Updater,
+  useReactTable
+  
+  
+  
 } from "@tanstack/react-table";
+import type {ColumnDef, SortingState, Updater} from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 import type {
@@ -118,6 +119,7 @@ export function CmsDataTable<TData extends object>({
 
       if (!nextColumn) {
         void onSortingChange(defaultSort.column, defaultSort.direction);
+
         return;
       }
 

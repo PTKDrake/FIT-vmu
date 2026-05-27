@@ -1,5 +1,5 @@
-import { BlockNoteView } from "@blocknote/shadcn";
 import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/shadcn";
 import { twMerge } from "tailwind-merge";
 import { parseBlockNoteContent } from "./blocknote-parse";
 import type { BlockNoteValue } from "./blocknote-types";

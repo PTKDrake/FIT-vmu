@@ -16,6 +16,7 @@ test('content domain tables expose the expected domain columns', function () {
         'disk',
         'path',
         'original_name',
+        'display_name',
         'mime_type',
         'size',
         'uploaded_by',
