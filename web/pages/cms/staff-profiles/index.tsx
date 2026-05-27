@@ -9,7 +9,7 @@ export default function CmsStaffProfilesPage() {
       <Head title="Hồ sơ cán bộ" />
       <CmsPagePlaceholder
         title="Hồ sơ cán bộ"
-        description="Trang hồ sơ cán bộ sẽ tái sử dụng layout CMS để hiển thị danh sách, trạng thái công khai và thao tác cập nhật hồ sơ."
+        description="Quản lý hồ sơ, trạng thái hiển thị và nội dung công khai."
       />
     </>
   );

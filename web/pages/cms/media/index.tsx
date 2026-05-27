@@ -3,9 +3,6 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { CmsUploadDropzone } from "@/components/upload/cms-upload-dropzone";
 import { uploadPresets } from "@/components/upload/upload-presets";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heading } from "@/components/ui/heading";
 import { Code, Text } from "@/components/ui/text";
 import CmsLayout from "@/layouts/cms-layout";
 
@@ -19,28 +16,15 @@ export default function CmsMediaPage() {
     <>
       <Head title="Media" />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <Card className="rounded-xl border-border bg-overlay shadow-none">
-          <CardHeader className="gap-4">
-            <div className="space-y-3">
-              <Badge intent="outline" isCircle={false}>
-                Upload foundation
-              </Badge>
-              <div className="space-y-2">
-                <Heading level={2} className="text-2xl/8 sm:text-3xl/9">
-                  Tải tệp dùng chung cho CMS
-                </Heading>
-                <Text className="max-w-4xl">
-                  Foundation này dùng <Code>react-dropzone</Code> để xử lý kéo
-                  thả và chọn tệp, đồng thời bọc lại bằng component cùng token
-                  giao diện hiện tại. Validate ở frontend chỉ để hỗ trợ UX;
-                  backend vẫn phải kiểm tra mime type, kích thước, quyền upload
-                  và luồng lưu trữ thực tế.
-                </Text>
-              </div>
-            </div>
-          </CardHeader>
+        <div className="rounded-2xl border border-border bg-overlay">
+          <div className="border-b border-border px-5 py-4">
+            <p className="text-lg font-semibold text-fg">Thư viện tệp</p>
+            <p className="max-w-4xl text-sm text-muted-fg">
+              Tải ảnh và tài liệu theo từng nhóm sử dụng trong CMS.
+            </p>
+          </div>
 
-          <CardContent className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 p-5 md:grid-cols-2">
             <CmsUploadDropzone
               {...uploadPresets.avatar}
               files={avatarFiles}
@@ -61,34 +45,37 @@ export default function CmsMediaPage() {
               files={excelFiles}
               onFilesChange={setExcelFiles}
             />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="rounded-xl border-border bg-overlay shadow-none">
-          <CardHeader>
-            <CardTitle>Gợi ý tích hợp tiếp theo</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-3">
+        <div className="rounded-2xl border border-border bg-overlay">
+          <div className="border-b border-border px-5 py-4">
+            <p className="text-lg font-semibold text-fg">Gợi ý sử dụng</p>
+            <p className="text-sm text-muted-fg">
+              Một số kiểu tệp đang sẵn sàng để nối vào form nội dung.
+            </p>
+          </div>
+
+          <div className="grid gap-3 p-5 md:grid-cols-3">
             <div className="rounded-xl border border-border bg-muted/30 p-4">
               <Text className="text-fg">
-                Avatar và thumbnail có thể gắn vào form <Code>staff_profiles</Code>,{" "}
-                <Code>posts</Code>, <Code>pages</Code>.
+                Avatar và thumbnail có thể dùng cho <Code>staff_profiles</Code>,{" "}
+                <Code>posts</Code> và <Code>pages</Code>.
               </Text>
             </div>
             <div className="rounded-xl border border-border bg-muted/30 p-4">
               <Text className="text-fg">
-                Tài liệu và Excel có thể nối với <Code>useForm</Code> của
-                Inertia để hiển thị progress upload từ backend.
+                Tài liệu và Excel có thể nối vào form Inertia khi có API tải lên.
               </Text>
             </div>
             <div className="rounded-xl border border-border bg-muted/30 p-4">
               <Text className="text-fg">
-                Khi có endpoint thật, chỉ cần thay <Code>onFilesChange</Code>{" "}
-                bằng state form và submit multipart qua Inertia.
+                Khi có endpoint thật, chỉ cần thay <Code>onFilesChange</Code> bằng
+                state form tương ứng.
               </Text>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </>
   );

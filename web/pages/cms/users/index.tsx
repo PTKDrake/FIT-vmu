@@ -9,7 +9,7 @@ export default function CmsUsersPage() {
       <Head title="Người dùng" />
       <CmsPagePlaceholder
         title="Người dùng"
-        description="Trang người dùng sẽ tái sử dụng layout CMS để quản lý danh sách tài khoản, vai trò và trạng thái truy cập."
+        description="Quản lý tài khoản, vai trò và trạng thái truy cập."
       />
     </>
   );

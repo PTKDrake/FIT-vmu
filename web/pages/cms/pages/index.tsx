@@ -187,8 +187,8 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
           columns={columns}
           data={pages.data}
           defaultSort={{ column: "created_at", direction: "desc" }}
-          description="Quản lý danh sách page, đường dẫn public, metadata SEO và điều hướng sang trình dựng nội dung Puck cho từng trang."
-          emptyDescription="Tạo trang đầu tiên để bắt đầu dựng nội dung cho website."
+          description="Quản lý trang tĩnh, đường dẫn hiển thị và thông tin SEO."
+          emptyDescription="Tạo trang đầu tiên để bắt đầu quản lý nội dung."
           emptyTitle="Chưa có trang nào"
           filterOptions={statusOptions.map((option) => ({ ...option }))}
           filterValue={tableQueryState.query.status}

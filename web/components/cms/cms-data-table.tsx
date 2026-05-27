@@ -18,16 +18,7 @@ import type {
   CmsTablePaginationMeta,
   CmsTableSortDirection,
 } from "@/components/cms/types";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { NativeSelect, NativeSelectContent } from "@/components/ui/native-select";
 import {
   Pagination,
@@ -138,25 +129,20 @@ export function CmsDataTable<TData extends object>({
   });
 
   return (
-    <Card className="min-h-[100vh] flex-1 rounded-xl border-border bg-overlay shadow-none md:min-h-min">
-      <CardHeader className="gap-4">
+    <div className="min-h-[100vh] flex-1 rounded-2xl border border-border bg-overlay md:min-h-min">
+      <div className="border-b border-border px-5 py-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-2">
-            <Badge intent="outline" isCircle={false}>
-              Nền tảng bảng CMS
-            </Badge>
-            <CardTitle className="text-2xl/8 sm:text-3xl/9">{title}</CardTitle>
-            <CardDescription className="max-w-3xl">
-              {description}
-            </CardDescription>
+            <p className="text-lg font-semibold text-fg">{title}</p>
+            <p className="max-w-3xl text-sm text-muted-fg">{description}</p>
           </div>
 
-          {primaryAction ? <CardAction>{primaryAction}</CardAction> : null}
+          {primaryAction ? <div>{primaryAction}</div> : null}
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="space-y-4 px-0">
-        <div className="grid gap-3 px-(--gutter) xl:grid-cols-[minmax(0,1fr)_auto_auto]">
+      <div className="space-y-4 py-4">
+        <div className="grid gap-3 px-5 xl:grid-cols-[minmax(0,1fr)_auto_auto]">
           <SearchField
             key={searchValue}
             aria-label="Tìm kiếm bảng dữ liệu"
@@ -206,7 +192,7 @@ export function CmsDataTable<TData extends object>({
           </NativeSelect>
         </div>
 
-        <div className="px-(--gutter)">
+        <div className="px-5">
           <div className="overflow-hidden rounded-xl border border-border bg-bg">
             <div className="overflow-x-auto">
               <table className="min-w-full border-collapse">
@@ -279,7 +265,9 @@ export function CmsDataTable<TData extends object>({
                         className="px-5 py-12 text-center"
                       >
                         <div className="mx-auto max-w-md space-y-2">
-                          <CardTitle className="text-lg">{emptyTitle}</CardTitle>
+                          <p className="text-lg font-semibold text-fg">
+                            {emptyTitle}
+                          </p>
                           <Text className="text-muted-fg">
                             {emptyDescription}
                           </Text>
@@ -293,16 +281,18 @@ export function CmsDataTable<TData extends object>({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 px-(--gutter) pb-(--gutter) lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-3 px-5 pb-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-1">
             <Text>
               {meta.total > 0
                 ? `Hiển thị ${meta.from} - ${meta.to} trên ${meta.total} kết quả`
                 : "Chưa có dữ liệu phù hợp với bộ lọc hiện tại"}
             </Text>
-            <Text className="text-xs uppercase tracking-[0.18em] text-muted-fg">
-              {isReloading ? "Đang đồng bộ dữ liệu từ máy chủ" : "Dữ liệu phân trang từ backend qua Inertia"}
-            </Text>
+            {isReloading ? (
+              <Text className="text-xs uppercase tracking-[0.18em] text-muted-fg">
+                Đang cập nhật dữ liệu
+              </Text>
+            ) : null}
           </div>
 
           <Pagination className="mx-0 justify-start lg:justify-end">
@@ -345,8 +335,8 @@ export function CmsDataTable<TData extends object>({
             </PaginationList>
           </Pagination>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

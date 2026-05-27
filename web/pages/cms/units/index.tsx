@@ -9,7 +9,7 @@ export default function CmsUnitsPage() {
       <Head title="Đơn vị" />
       <CmsPagePlaceholder
         title="Đơn vị"
-        description="Trang đơn vị sẽ kế thừa shell CMS để quản lý cấu trúc tổ chức, cây đơn vị và thông tin hiển thị liên quan."
+        description="Quản lý cấu trúc tổ chức, cây đơn vị và thông tin hiển thị."
       />
     </>
   );

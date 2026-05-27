@@ -441,7 +441,7 @@ export function NavigationTreeEditor({
         </ScrollArea>
       </div>
 
-      <div className="sticky bottom-4 z-20 mt-4">
+      <div className="sticky bottom-4 z-20 mt-4 px-20">
         <div className="rounded-2xl border border-border bg-overlay/85 p-3 shadow-lg backdrop-blur-xs">
           <div className="flex items-center justify-between gap-3">
             <Button intent="secondary" onPress={() => handleAddItem(null)}>

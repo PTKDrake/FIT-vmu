@@ -9,7 +9,7 @@ export default function CmsPostCategoriesPage() {
       <Head title="Danh mục bài viết" />
       <CmsPagePlaceholder
         title="Danh mục bài viết"
-        description="Trang này sẽ tái sử dụng shell CMS để quản lý cây danh mục, thứ tự hiển thị và các metadata liên quan tới nội dung."
+        description="Quản lý cây danh mục và thứ tự hiển thị cho bài viết."
       />
     </>
   );

@@ -1,10 +1,10 @@
 import { Head, router } from "@inertiajs/react";
 import type { ReactNode } from "react";
 import { startTransition, useState } from "react";
-import { PuckPageBuilder } from "@/components/page-builder/puck-page-builder";
-import type { CmsPageEditorPageProps } from "@/components/cms/types";
-import CmsLayout from "@/layouts/cms-layout";
 import updatePageContent from "@/actions/App/Http/Controllers/Cms/UpdatePageContentController";
+import type { CmsPageEditorPageProps } from "@/components/cms/types";
+import { PuckPageBuilder } from "@/components/page-builder/puck-page-builder";
+import CmsLayout from "@/layouts/cms-layout";
 import { pages } from "@/routes/cms";
 
 export default function CmsPageEditor({ page }: CmsPageEditorPageProps) {
@@ -21,7 +21,7 @@ export default function CmsPageEditor({ page }: CmsPageEditorPageProps) {
           backHref={pages.url()}
           backLabel="Danh sách trang"
           canSave={draftJson !== savedJson}
-          className="min-h-[calc(100vh-6.5rem)] rounded-xl border border-border bg-overlay"
+          className="min-h-[calc(100vh-6.5rem)] rounded-xl border border-border"
           content={draftJson}
           headerTitle={page.title}
           isSaving={isSaving}

@@ -89,8 +89,8 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
           columns={columns}
           data={posts.data}
           defaultSort={{ column: "created_at", direction: "desc" }}
-          description="Danh sách bài viết này dùng TanStack Table cho cấu hình cột và trạng thái bảng, đồng thời đồng bộ tìm kiếm, lọc, sắp xếp, phân trang với query string bằng nuqs."
-          emptyDescription="Hãy thử thay đổi bộ lọc hoặc tạo dữ liệu bài viết để kiểm tra luồng phân trang từ backend."
+          description="Quản lý nội dung bài viết, trạng thái biên tập và lịch xuất bản."
+          emptyDescription="Chưa có bài viết phù hợp với bộ lọc hiện tại."
           emptyTitle="Chưa có bài viết phù hợp"
           filterOptions={statusOptions.map((option) => ({ ...option }))}
           filterValue={tableQueryState.query.status}
@@ -103,7 +103,7 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
           onSortingChange={(column, direction) =>
             tableQueryState.setSorting(column, direction)
           }
-          searchPlaceholder="Tìm theo tiêu đề, slug hoặc mô tả ngắn"
+          searchPlaceholder="Tìm theo tiêu đề, slug hoặc mô tả"
           searchValue={tableQueryState.query.search}
           sort={{
             column: tableQueryState.query.sort,

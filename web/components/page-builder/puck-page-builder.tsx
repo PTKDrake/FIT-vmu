@@ -1,15 +1,15 @@
 import {
-  Puck,
-  createUsePuck,
-  useGetPuck,
-} from "@measured/puck";
-import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
   CheckIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
+import {
+  Puck,
+  createUsePuck,
+  useGetPuck,
+} from "@measured/puck";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/ui/button";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
@@ -18,10 +18,11 @@ import {
   getPuckPageContentFormat,
   isEmptyPuckPageData,
   parsePuckPageData,
-  serializePuckPageData,
-  type VmuFitPageBuilderData,
-  type VmuFitPageBuilderValue,
+  serializePuckPageData
+
+
 } from "@/lib/puck/page-builder-data";
+import type { VmuFitPageBuilderData, VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
 
 const usePageBuilderPuck = createUsePuck<typeof vmuFitPageBuilderConfig>();
 
@@ -85,11 +86,11 @@ export function PuckPageBuilder({
   return (
     <div
       className={twMerge(
-        "vmu-puck-page-builder overflow-hidden rounded-3xl border border-border bg-overlay shadow-xs",
+        "vmu-puck-page-builder overflow-hidden rounded-3xl border border-border shadow-xs",
         className,
       )}
     >
-      <style>{puckBuilderStyles}</style>
+      {/* <style>{puckBuilderStyles}</style> */}
 
       <Puck
         key={editorKey}
