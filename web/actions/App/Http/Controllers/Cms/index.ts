@@ -11,6 +11,13 @@ import StoreMediaController from './StoreMediaController'
 import RenameMediaController from './RenameMediaController'
 import DuplicateMediaController from './DuplicateMediaController'
 import DeleteMediaController from './DeleteMediaController'
+import StaffProfilesIndexController from './StaffProfilesIndexController'
+import StaffProfileCreatePageController from './StaffProfileCreatePageController'
+import StaffProfileShowPageController from './StaffProfileShowPageController'
+import StaffProfileEditPageController from './StaffProfileEditPageController'
+import StoreStaffProfileController from './StoreStaffProfileController'
+import UpdateStaffProfileController from './UpdateStaffProfileController'
+import DeleteStaffProfileController from './DeleteStaffProfileController'
 import UnitsIndexController from './UnitsIndexController'
 import ReorderUnitsController from './ReorderUnitsController'
 import UnitCreatePageController from './UnitCreatePageController'
@@ -38,6 +45,13 @@ const Cms = {
     RenameMediaController: Object.assign(RenameMediaController, RenameMediaController),
     DuplicateMediaController: Object.assign(DuplicateMediaController, DuplicateMediaController),
     DeleteMediaController: Object.assign(DeleteMediaController, DeleteMediaController),
+    StaffProfilesIndexController: Object.assign(StaffProfilesIndexController, StaffProfilesIndexController),
+    StaffProfileCreatePageController: Object.assign(StaffProfileCreatePageController, StaffProfileCreatePageController),
+    StaffProfileShowPageController: Object.assign(StaffProfileShowPageController, StaffProfileShowPageController),
+    StaffProfileEditPageController: Object.assign(StaffProfileEditPageController, StaffProfileEditPageController),
+    StoreStaffProfileController: Object.assign(StoreStaffProfileController, StoreStaffProfileController),
+    UpdateStaffProfileController: Object.assign(UpdateStaffProfileController, UpdateStaffProfileController),
+    DeleteStaffProfileController: Object.assign(DeleteStaffProfileController, DeleteStaffProfileController),
     UnitsIndexController: Object.assign(UnitsIndexController, UnitsIndexController),
     ReorderUnitsController: Object.assign(ReorderUnitsController, ReorderUnitsController),
     UnitCreatePageController: Object.assign(UnitCreatePageController, UnitCreatePageController),

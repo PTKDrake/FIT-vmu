@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 export const show = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ show.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 show.url = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -40,7 +40,7 @@ show.url = (args: { navigationMenu: string | number } | [navigationMenu: string 
 }
 
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 show.get = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -49,7 +49,7 @@ show.get = (args: { navigationMenu: string | number } | [navigationMenu: string 
 })
 
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 show.head = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -58,7 +58,7 @@ show.head = (args: { navigationMenu: string | number } | [navigationMenu: string
 })
 
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 const showForm = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -67,7 +67,7 @@ const showForm = (args: { navigationMenu: string | number } | [navigationMenu: s
 })
 
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 showForm.get = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -76,7 +76,7 @@ showForm.get = (args: { navigationMenu: string | number } | [navigationMenu: str
 })
 
 /**
-* @see routes/web.php:53
+* @see routes/web.php:54
 * @route '/cms/navigation/{navigationMenu}'
 */
 showForm.head = (args: { navigationMenu: string | number } | [navigationMenu: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
