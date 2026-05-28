@@ -8,11 +8,11 @@ import { Head, router } from "@inertiajs/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
 import { CategoryFormDialog } from "@/components/cms/category-form-dialog";
 import type { CategoryFormValues } from "@/components/cms/category-form-dialog";
+import { CmsDataTable } from "@/components/cms/cms-data-table";
 import type { CmsPostCategoryRow, CmsPostCategoriesPageProps } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Badge } from "@/components/ui/badge";
@@ -83,8 +83,7 @@ export default function CmsPostCategoriesPage({
     resourceKey: "categories",
   });
 
-  const columns = useMemo<Array<ColumnDef<CmsPostCategoryRow, any>>>(
-    () => [
+  const columns: Array<ColumnDef<CmsPostCategoryRow, any>> = [
       categoryColumnHelper.accessor("name", {
         header: "Danh mục",
         cell: ({ row }) => (
@@ -171,9 +170,7 @@ export default function CmsPostCategoriesPage({
             </Menu>
           ) : null,
       }),
-    ],
-    [can.manageCategories],
-  );
+    ];
 
   function deleteCategory(): void {
     if (!deleteTarget) {

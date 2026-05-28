@@ -15,7 +15,7 @@ stage_wayfinder_outputs() {
   fi
 
   printf '%s\n' "wayfinder: generating action and route types."
-  if ! ./phpw artisan wayfinder:generate >/dev/null; then
+  if ! ./phpw artisan wayfinder:generate --with-form --path=web >/dev/null; then
     printf '%s\n' "wayfinder: generation failed; aborting commit." >&2
     exit 1
   fi

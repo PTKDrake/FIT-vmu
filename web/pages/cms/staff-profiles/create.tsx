@@ -2,15 +2,19 @@ import { Head, useForm } from "@inertiajs/react";
 import type { ReactNode } from "react";
 import { StaffProfileForm } from "@/components/cms/staff-profile-form";
 import type { CmsStaffProfileFormPageProps } from "@/components/cms/types";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
 import { staffProfiles } from "@/routes/cms";
 import { store } from "@/routes/cms/staff-profiles";
-import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
+
+const EMPTY_USERS: NonNullable<CmsStaffProfileFormPageProps["users"]> = [];
+const EMPTY_UNITS: NonNullable<CmsStaffProfileFormPageProps["units"]> = [];
+const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> = [];
 
 export default function CmsStaffProfileCreatePage({
-  users = [],
-  units = [],
-  positions = [],
+  users = EMPTY_USERS,
+  units = EMPTY_UNITS,
+  positions = EMPTY_POSITIONS,
 }: CmsStaffProfileFormPageProps) {
   const { data, setData, post, processing, errors, isDirty } = useForm({
     user_id: 0,
@@ -48,7 +52,6 @@ export default function CmsStaffProfileCreatePage({
     isDirty,
     onSave: handleSubmit,
   }, "staff-profile-create");
-
 
   return (
     <>

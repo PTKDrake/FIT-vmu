@@ -1,11 +1,4 @@
-import {
-  AIExtension,
-  AIMenuController,
-  AIToolbarButton,
-  getAISlashMenuItems,
-} from "@blocknote/xl-ai";
 import { filterSuggestionItems } from "@blocknote/core/extensions";
-import { DefaultChatTransport } from "ai";
 import {
   FormattingToolbar,
   FormattingToolbarController,
@@ -14,19 +7,11 @@ import {
   SuggestionMenuController,
   useBlockNoteEditor,
 } from "@blocknote/react";
-import aiRoutes from "@/routes/cms/ai";
-
-export function createBlockNoteAiExtension() {
-  return AIExtension({
-    transport: new DefaultChatTransport({
-      api: aiRoutes.blocknote.url(),
-      credentials: "same-origin",
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-      },
-    }),
-  });
-}
+import {
+  AIMenuController,
+  AIToolbarButton,
+  getAISlashMenuItems,
+} from "@blocknote/xl-ai";
 
 function BlockNoteAiFormattingToolbar() {
   return (

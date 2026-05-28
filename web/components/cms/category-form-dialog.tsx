@@ -1,6 +1,5 @@
 import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
-import { store as storeCategory, update as updateCategory } from "@/routes/cms/post-categories";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
 import { Description, FieldError, FieldGroup, Fieldset, Legend, Label } from "@/components/ui/field";
@@ -18,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+import { store as storeCategory, update as updateCategory } from "@/routes/cms/post-categories";
 
 export interface CategoryFormValues {
   id?: number;
@@ -70,6 +70,7 @@ export function CategoryFormDialog({
         onSuccess: () => onOpenChange(false),
         preserveScroll: true,
       });
+
       return;
     }
 
@@ -118,6 +119,7 @@ export function CategoryFormDialog({
                   value={form.data.name}
                   onChange={(value) => {
                     form.setData("name", value);
+
                     // Proactively slugify name on create
                     if (mode === "create") {
                       const slug = value

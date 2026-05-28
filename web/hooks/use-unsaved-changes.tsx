@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { router } from "@inertiajs/react";
+import React, { createContext, use, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   ModalContent,
   ModalHeader,
@@ -7,7 +8,7 @@ import {
   ModalDescription,
   ModalFooter,
 } from "@/components/ui/modal";
-import { Button } from "@/components/ui/button";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 
 type UnsavedChangesState = {
   isDirty: boolean;
@@ -19,55 +20,146 @@ type UnsavedChangesContextType = {
   removeDirty: (id: string) => void;
 };
 
-const UnsavedChangesContext = createContext<UnsavedChangesContextType | null>(null);
+function saveDirtyEntry(
+  id: string,
+  state: UnsavedChangesState,
+  onSaveRef: Record<string, () => Promise<boolean> | boolean | void>,
+): Promise<boolean> {
+  const onSave = onSaveRef[id] ?? state.onSave;
 
-export function UnsavedChangesProvider({ children }: { children: React.ReactNode }) {
-  const [dirtyStates, setDirtyStates] = useState<Record<string, UnsavedChangesState>>({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pendingVisit, setPendingVisit] = useState<any>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  return new Promise<boolean>((resolve) => {
+    let resolved = false;
 
-  const bypassRef = useRef(false);
-  const onSaveRefs = useRef<Record<string, () => Promise<boolean> | boolean | void>>({});
-
-  const setDirty = useCallback((id: string, isDirty: boolean, onSave: () => Promise<boolean> | boolean | void) => {
-    onSaveRefs.current[id] = onSave;
-
-    setDirtyStates((prev) => {
-      if (prev[id]?.isDirty === isDirty) {
-        return prev;
+    const removeSuccess = router.on("success", () => {
+      if (!resolved) {
+        resolved = true;
+        removeSuccess();
+        removeError();
+        resolve(true);
       }
-
-      return { ...prev, [id]: { isDirty, onSave } };
     });
-  }, []);
 
-  const removeDirty = useCallback((id: string) => {
-    delete onSaveRefs.current[id];
-
-    setDirtyStates((prev) => {
-      if (!(id in prev)) {
-        return prev;
+    const removeError = router.on("error", () => {
+      if (!resolved) {
+        resolved = true;
+        removeSuccess();
+        removeError();
+        resolve(false);
       }
-      const next = { ...prev };
-      delete next[id];
-      return next;
     });
-  }, []);
 
-  const isAnyDirty = Object.values(dirtyStates).some((d) => d.isDirty);
+    try {
+      const saveResult = onSave();
 
-  // Intercept Inertia visits
-  useEffect(() => {
-    const removeListener = router.on("before", (event) => {
-      if (bypassRef.current) {
-        bypassRef.current = false;
+      if (saveResult instanceof Promise) {
+        saveResult.then(
+          (value) => {
+            if (value === false && !resolved) {
+              resolved = true;
+              removeSuccess();
+              removeError();
+              resolve(false);
+            }
+          },
+          () => {
+            if (!resolved) {
+              resolved = true;
+              removeSuccess();
+              removeError();
+              resolve(false);
+            }
+          },
+        );
+
         return;
       }
 
-      if (isAnyDirty) {
+      if (saveResult === false) {
+        resolved = true;
+        removeSuccess();
+        removeError();
+        resolve(false);
+
+        return;
+      }
+
+      setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          removeSuccess();
+          removeError();
+          resolve(true);
+        }
+      }, 100);
+    } catch (error) {
+      console.error("Save error:", error);
+
+      if (!resolved) {
+        resolved = true;
+        removeSuccess();
+        removeError();
+        resolve(false);
+      }
+    }
+  });
+}
+
+async function saveDirtyEntriesSequentially(
+  dirtyEntries: Array<[string, UnsavedChangesState]>,
+  onSaveRef: Record<string, () => Promise<boolean> | boolean | void>,
+  index = 0,
+): Promise<boolean> {
+  const currentEntry = dirtyEntries[index];
+
+  if (!currentEntry) {
+    return true;
+  }
+
+  const [id, state] = currentEntry;
+  const didSave = await saveDirtyEntry(id, state, onSaveRef);
+
+  if (!didSave) {
+    return false;
+  }
+
+  return saveDirtyEntriesSequentially(dirtyEntries, onSaveRef, index + 1);
+}
+
+const UnsavedChangesContext = createContext<UnsavedChangesContextType | null>(null);
+
+export function UnsavedChangesProvider({ children }: { children: React.ReactNode }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const bypassRef = useRef(false);
+  const dirtyStatesRef = useRef<Record<string, UnsavedChangesState>>({});
+  const onSaveRefs = useRef<Record<string, () => Promise<boolean> | boolean | void>>({});
+  const isAnyDirtyRef = useRef(false);
+  const pendingVisitRef = useRef<any>(null);
+  const [contextValue] = useState<UnsavedChangesContextType>(() => ({
+    setDirty(id, isDirty, onSave) {
+      onSaveRefs.current[id] = onSave;
+      dirtyStatesRef.current[id] = { isDirty, onSave };
+      isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some((state) => state.isDirty);
+    },
+    removeDirty(id) {
+      delete onSaveRefs.current[id];
+      delete dirtyStatesRef.current[id];
+      isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some((state) => state.isDirty);
+    },
+  }));
+
+  useMountEffect(() => {
+    const removeListener = router.on("before", (event) => {
+      if (bypassRef.current) {
+        bypassRef.current = false;
+
+        return;
+      }
+
+      if (isAnyDirtyRef.current) {
         event.preventDefault();
-        setPendingVisit(event.detail.visit);
+        pendingVisitRef.current = event.detail.visit;
         setIsModalOpen(true);
       }
     });
@@ -75,141 +167,63 @@ export function UnsavedChangesProvider({ children }: { children: React.ReactNode
     return () => {
       removeListener();
     };
-  }, [isAnyDirty]);
+  });
 
-  // Intercept native browser close/reload
-  useEffect(() => {
+  useMountEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isAnyDirty) {
+      if (isAnyDirtyRef.current) {
         e.preventDefault();
         e.returnValue = "Bạn có thay đổi chưa lưu. Bạn có chắc muốn rời đi?";
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [isAnyDirty]);
+  });
 
   // Actions
   const handleCancel = () => {
     setIsModalOpen(false);
-    setPendingVisit(null);
+    pendingVisitRef.current = null;
   };
 
   const handleDiscard = () => {
     setIsModalOpen(false);
-    if (pendingVisit) {
+
+    if (pendingVisitRef.current) {
       bypassRef.current = true;
-      router.visit(pendingVisit.url, pendingVisit);
+      router.visit(pendingVisitRef.current.url, pendingVisitRef.current);
+      pendingVisitRef.current = null;
     }
   };
 
   const handleSave = async () => {
     setIsSaving(true);
+    const dirtyEntries = Object.entries(dirtyStatesRef.current).filter(([_, state]) => state.isDirty);
+
     try {
-      let allSaved = true;
-
-      // Filter states that are actually dirty
-      const dirtyEntries = Object.entries(dirtyStates).filter(([_, d]) => d.isDirty);
-
-      for (const [id, state] of dirtyEntries) {
-        const onSave = onSaveRefs.current[id] ?? state.onSave;
-        const resultPromise = new Promise<boolean>((resolve) => {
-          let resolved = false;
-
-          const removeSuccess = router.on("success", () => {
-            if (!resolved) {
-              resolved = true;
-              removeSuccess();
-              removeError();
-              resolve(true);
-            }
-          });
-
-          const removeError = router.on("error", () => {
-            if (!resolved) {
-              resolved = true;
-              removeSuccess();
-              removeError();
-              resolve(false);
-            }
-          });
-
-          // Trigger the config's save
-          try {
-            const saveRes = onSave();
-            if (saveRes instanceof Promise) {
-              saveRes.then(
-                (val) => {
-                  if (val === false) {
-                    if (!resolved) {
-                      resolved = true;
-                      removeSuccess();
-                      removeError();
-                      resolve(false);
-                    }
-                  }
-                },
-                () => {
-                  if (!resolved) {
-                    resolved = true;
-                    removeSuccess();
-                    removeError();
-                    resolve(false);
-                  }
-                }
-              );
-            } else if (saveRes === false) {
-              if (!resolved) {
-                resolved = true;
-                removeSuccess();
-                removeError();
-                resolve(false);
-              }
-            } else if (saveRes === true || saveRes === undefined) {
-              // Standard timeout fallback for synchronous saves
-              setTimeout(() => {
-                if (!resolved) {
-                  resolved = true;
-                  removeSuccess();
-                  removeError();
-                  resolve(true);
-                }
-              }, 100);
-            }
-          } catch (err) {
-            console.error("Save error:", err);
-            if (!resolved) {
-              resolved = true;
-              removeSuccess();
-              removeError();
-              resolve(false);
-            }
-          }
-        });
-
-        const success = await resultPromise;
-        if (!success) {
-          allSaved = false;
-          break;
-        }
-      }
+      const allSaved = await saveDirtyEntriesSequentially(dirtyEntries, onSaveRefs.current);
 
       if (allSaved) {
         setIsModalOpen(false);
-        if (pendingVisit) {
+
+        if (pendingVisitRef.current) {
           bypassRef.current = true;
-          router.visit(pendingVisit.url, pendingVisit);
+          router.visit(pendingVisitRef.current.url, pendingVisitRef.current);
+          pendingVisitRef.current = null;
         }
       }
-    } finally {
-      setIsSaving(false);
+    } catch (error) {
+      console.error("Unsaved changes save error:", error);
     }
+
+    setIsSaving(false);
   };
 
   return (
-    <UnsavedChangesContext.Provider value={{ setDirty, removeDirty }}>
+    <UnsavedChangesContext.Provider value={contextValue}>
       {children}
 
       {isModalOpen && (
@@ -249,22 +263,18 @@ export function UnsavedChangesProvider({ children }: { children: React.ReactNode
 }
 
 export function useRegisterUnsavedChanges(config: { isDirty: boolean; onSave: () => Promise<boolean> | boolean | void }, id = "default") {
-  const context = useContext(UnsavedChangesContext);
+  const context = use(UnsavedChangesContext);
+
   if (!context) {
     throw new Error("useRegisterUnsavedChanges must be used within an UnsavedChangesProvider");
   }
 
   const { setDirty, removeDirty } = context;
-  const onSaveRef = useRef(config.onSave);
+  setDirty(id, config.isDirty, config.onSave);
 
-  useEffect(() => {
-    onSaveRef.current = config.onSave;
-  }, [config.onSave]);
-
-  useEffect(() => {
-    setDirty(id, config.isDirty, () => onSaveRef.current());
+  useMountEffect(() => {
     return () => {
       removeDirty(id);
     };
-  }, [id, config.isDirty, setDirty, removeDirty]);
+  });
 }

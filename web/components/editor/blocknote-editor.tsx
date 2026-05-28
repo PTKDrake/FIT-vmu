@@ -1,15 +1,15 @@
-import { usePage } from "@inertiajs/react";
+import { vi as blockNoteViDictionary } from "@blocknote/core/locales";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
-import { vi as blockNoteViDictionary } from "@blocknote/core/locales";
 import { vi as blockNoteAiViDictionary } from "@blocknote/xl-ai/locales";
+import { usePage } from "@inertiajs/react";
 import { twMerge } from "tailwind-merge";
 import { useTheme } from "@/hooks/use-theme";
 import type { SharedData } from "@/types/shared";
 import {
   BlockNoteAiControllers,
-  createBlockNoteAiExtension,
 } from "./blocknote-ai";
+import { createBlockNoteAiExtension } from "./blocknote-ai-extension";
 import {
   cloneBlockNoteContent,
   getBlockNoteFormat,
@@ -68,7 +68,7 @@ export function BlockNoteEditor({
     [blockNoteAiEnabled, editorKey],
   );
 
-  function handleChange(): void {
+  function handleEditorChange(): void {
     const blocks = cloneBlockNoteContent(editor.document);
 
     onChange?.({
@@ -98,7 +98,7 @@ export function BlockNoteEditor({
         emojiPicker={isEditable}
         filePanel={isEditable}
         linkToolbar={isEditable}
-        onChange={handleChange}
+        onChange={handleEditorChange}
         sideMenu={isEditable}
         slashMenu={blockNoteAiEnabled ? false : isEditable}
         tableHandles={isEditable}

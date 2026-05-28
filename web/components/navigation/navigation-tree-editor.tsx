@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ArrowTopRightOnSquareIcon,
   CheckIcon,
@@ -10,10 +8,11 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { startTransition, useState } from "react";
+import { startTransition, useRef, useState } from "react";
 import type { Key, ReactNode } from "react";
 import { Collection } from "react-aria-components/Collection";
 import { useDragAndDrop } from "react-aria-components/useDragAndDrop";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, Label } from "@/components/ui/field";
@@ -38,15 +37,14 @@ import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { StickyActionBar } from "@/components/cms/sticky-action-bar";
-import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
-
 import {
   Tree,
   TreeContent,
   TreeDropIndicator,
   TreeItem,
 } from "@/components/ui/tree";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
+
 import {
   collectNavigationParentOptions,
   createEmptyNavigationItem,
@@ -110,13 +108,12 @@ export function NavigationTreeEditor({
   const [selectedItemId, setSelectedItemId] = useState<number | null>(
     initialMenus[0]?.items[0]?.id ?? null,
   );
-  const [draftId, setDraftId] = useState(1000);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [pendingNewItemId, setPendingNewItemId] = useState<number | null>(null);
-  const [editingSnapshot, setEditingSnapshot] =
-    useState<NavigationItemDraft | null>(null);
   const [pendingConfirmation, setPendingConfirmation] =
     useState<PendingConfirmation>(null);
+  const draftIdRef = useRef(1000);
+  const editingSnapshotRef = useRef<NavigationItemDraft | null>(null);
 
   const activeMenu =
     draftMenus.find((menu) => menu.id === activeMenuId) ??
@@ -200,7 +197,7 @@ export function NavigationTreeEditor({
       return;
     }
 
-    const nextDraftId = draftId + 1;
+    const nextDraftId = draftIdRef.current + 1;
     const draftItem = createEmptyNavigationItem(
       nextDraftId,
       activeMenu.id,
@@ -208,7 +205,7 @@ export function NavigationTreeEditor({
     );
 
     startTransition(() => {
-      setDraftId(nextDraftId);
+      draftIdRef.current = nextDraftId;
       setDraftMenus((currentMenus) =>
         currentMenus.map((menu) => {
           if (menu.id !== activeMenu.id) {
@@ -223,7 +220,7 @@ export function NavigationTreeEditor({
       );
       setSelectedItemId(nextDraftId);
       setPendingNewItemId(nextDraftId);
-      setEditingSnapshot(null);
+      editingSnapshotRef.current = null;
       setIsEditorOpen(true);
     });
   }
@@ -316,13 +313,15 @@ export function NavigationTreeEditor({
 
   function handleStartEdit(item: NavigationItemDraft): void {
     setSelectedItemId(item.id);
-    setEditingSnapshot(structuredClone(item));
+    editingSnapshotRef.current = structuredClone(item);
     setIsEditorOpen(true);
   }
 
   function handleCancelEdit(): void {
+    const editingSnapshot = editingSnapshotRef.current;
+
     if (!activeMenu || !editingSnapshot) {
-      setEditingSnapshot(null);
+      editingSnapshotRef.current = null;
       setIsEditorOpen(false);
 
       return;
@@ -335,12 +334,12 @@ export function NavigationTreeEditor({
       ),
     }));
 
-    setEditingSnapshot(null);
+    editingSnapshotRef.current = null;
     setIsEditorOpen(false);
   }
 
   function handleConfirmEdit(): void {
-    setEditingSnapshot(null);
+    editingSnapshotRef.current = null;
     setIsEditorOpen(false);
   }
 
@@ -426,19 +425,18 @@ export function NavigationTreeEditor({
               dragAndDropHooks={dragAndDropHooks}
               defaultExpandedKeys={collectExpandableKeys(activeItems)}
             >
-              {renderTreeItems(activeItems, {
-                onAddChild: (item) => {
+              <NavigationTreeItems
+                items={activeItems}
+                onAddChild={(item) => {
                   setSelectedItemId(item.id);
                   handleAddItem(item.id);
-                },
-                onDelete: (item) => {
+                }}
+                onDelete={(item) => {
                   setSelectedItemId(item.id);
                   handleDeleteItem(item.id);
-                },
-                onEdit: (item) => {
-                  handleStartEdit(item);
-                },
-              })}
+                }}
+                onEdit={handleStartEdit}
+              />
             </Tree>
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
@@ -850,14 +848,19 @@ function NavigationItemEditorModal({
   );
 }
 
-function renderTreeItems(
-  items: NavigationItemDraft[],
-  actions: {
-    onAddChild: (item: NavigationItemDraft) => void;
-    onDelete: (item: NavigationItemDraft) => void;
-    onEdit: (item: NavigationItemDraft) => void;
-  },
-): ReactNode {
+interface NavigationTreeItemsProps {
+  items: NavigationItemDraft[];
+  onAddChild: (item: NavigationItemDraft) => void;
+  onDelete: (item: NavigationItemDraft) => void;
+  onEdit: (item: NavigationItemDraft) => void;
+}
+
+function NavigationTreeItems({
+  items,
+  onAddChild,
+  onDelete,
+  onEdit,
+}: NavigationTreeItemsProps) {
   return (
     <Collection items={items}>
       {(item) => (
@@ -867,25 +870,25 @@ function renderTreeItems(
           className="navigation-tree-editor__item rounded-none border-x-0 border-t-0 first:rounded-t-2xl last:border-b-0 last:rounded-b-2xl"
         >
           <TreeContent>
-            <div className="navigation-tree-editor__row group/navigation-row flex min-w-0 flex-1 items-center gap-2 px-2 py-2">
+            <div className="navigation-tree-editor__row group/navigation-row flex min-w-0 flex-1 items-center gap-2 p-2">
               <IconActionButton
                 label="Thêm mục con"
                 icon={<PlusIcon />}
                 size="sq-xs"
-                onPress={() => actions.onAddChild(item)}
+                onPress={() => onAddChild(item)}
               />
               <IconActionButton
                 label="Chỉnh sửa item"
                 icon={<PencilSquareIcon />}
                 size="sq-xs"
-                onPress={() => actions.onEdit(item)}
+                onPress={() => onEdit(item)}
               />
               <IconActionButton
                 label="Xóa item"
                 icon={<TrashIcon />}
                 intent="danger"
                 size="sq-xs"
-                onPress={() => actions.onDelete(item)}
+                onPress={() => onDelete(item)}
               />
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex min-w-0 items-center gap-2">
@@ -914,7 +917,14 @@ function renderTreeItems(
             </div>
           </TreeContent>
           {item.children.length > 0
-            ? renderTreeItems(item.children, actions)
+            ? (
+              <NavigationTreeItems
+                items={item.children}
+                onAddChild={onAddChild}
+                onDelete={onDelete}
+                onEdit={onEdit}
+              />
+            )
             : null}
         </TreeItem>
       )}

@@ -1,9 +1,9 @@
-import { convertToModelMessages, streamText } from "ai";
 import {
   injectDocumentStateMessages,
   toolDefinitionsToToolSet,
 } from "@blocknote/xl-ai/server";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { convertToModelMessages, streamText } from "ai";
 
 function writeChunk(chunk) {
   process.stdout.write(`data: ${JSON.stringify(chunk)}\n\n`);

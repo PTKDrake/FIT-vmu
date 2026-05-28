@@ -2,15 +2,19 @@ import { Head, useForm } from "@inertiajs/react";
 import type { ReactNode } from "react";
 import { StaffProfileForm } from "@/components/cms/staff-profile-form";
 import type { CmsStaffProfileFormPageProps } from "@/components/cms/types";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
 import { show, update } from "@/routes/cms/staff-profiles";
-import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
+
+const EMPTY_UNITS: NonNullable<CmsStaffProfileFormPageProps["units"]> = [];
+const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> = [];
 
 export default function CmsStaffProfileEditPage({
   profile,
-  units = [],
-  positions = [],
+  units = EMPTY_UNITS,
+  positions = EMPTY_POSITIONS,
 }: CmsStaffProfileFormPageProps) {
+  const profileId = profile?.id ?? 0;
   const { data, setData, post, processing, errors, isDirty } = useForm({
     _method: "patch" as const,
     user_id: profile?.userId ?? 0,
@@ -33,10 +37,6 @@ export default function CmsStaffProfileEditPage({
     }>,
   });
 
-  if (!profile) {
-    return null;
-  }
-
   const handleUpdate = <TKey extends keyof typeof data>(
     key: TKey,
     value: typeof data[TKey],
@@ -45,7 +45,7 @@ export default function CmsStaffProfileEditPage({
   };
 
   const handleSubmit = () => {
-    post(update.url({ staffProfile: profile.id ?? 0 }), {
+    post(update.url({ staffProfile: profileId }), {
       preserveScroll: true,
     });
   };
@@ -55,6 +55,9 @@ export default function CmsStaffProfileEditPage({
     onSave: handleSubmit,
   }, "staff-profile-edit");
 
+  if (!profile) {
+    return null;
+  }
 
   return (
     <>
@@ -64,7 +67,7 @@ export default function CmsStaffProfileEditPage({
         <StaffProfileForm
           title={`Chỉnh sửa hồ sơ: ${profile.fullName}`}
           submitLabel="Lưu thay đổi"
-          cancelHref={show.url({ staffProfile: profile.id ?? 0 })}
+          cancelHref={show.url({ staffProfile: profileId })}
           data={data}
           errors={errors}
           processing={processing}

@@ -10,7 +10,7 @@ import {
 import { Head, Link, router } from "@inertiajs/react";
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import type { ReactNode } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDragAndDrop } from "react-aria-components/useDragAndDrop";
 import {
   DropIndicator as DropIndicatorPrimitive
@@ -21,6 +21,7 @@ import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import type { CmsUnitRow, CmsUnitsPageProps } from "@/components/cms/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,17 +39,24 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { StickyActionBar } from "@/components/cms/sticky-action-bar";
-import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 
 import { SearchField, SearchInput } from "@/components/ui/search-field";
 import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
 import { create, destroy, edit, reorder, show } from "@/routes/cms/units";
 import type { FlashData } from "@/types/shared";
+
+const dateTimeFormatter = new Intl.DateTimeFormat("vi-VN", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+});
 
 export default function CmsUnitsIndexPage({
   can,
@@ -83,21 +91,12 @@ export default function CmsUnitsIndexPage({
       };
     },
   });
-  const visibleUnits = useMemo(
-    () =>
-      unitList.loadingState === "loading" && unitList.items.length === 0
-        ? units
-        : unitList.items,
-    [unitList.items, unitList.loadingState, units],
-  );
-  const displayedUnits = useMemo(
-    () => draftUnits ?? visibleUnits,
-    [draftUnits, visibleUnits],
-  );
-  const unitById = useMemo(
-    () => new Map(displayedUnits.map((unit) => [unit.id, unit])),
-    [displayedUnits],
-  );
+  const visibleUnits =
+    unitList.loadingState === "loading" && unitList.items.length === 0
+      ? units
+      : unitList.items;
+  const displayedUnits = draftUnits ?? visibleUnits;
+  const unitById = new Map(displayedUnits.map((unit) => [unit.id, unit]));
 
   async function syncQuery(nextQuery: Partial<typeof query>): Promise<void> {
     const resolvedQuery = {
@@ -161,7 +160,6 @@ export default function CmsUnitsIndexPage({
     isDirty: draftUnits !== null,
     onSave: handleSaveReorder,
   }, "units-reorder");
-
 
   const { dragAndDropHooks } = useDragAndDrop<CmsUnitRow>({
     getItems: (keys) =>
@@ -485,13 +483,7 @@ function UnitsFlashToast({ message, type }: { message: string; type: FlashData["
 }
 
 function formatDateTime(value: string): string {
-  return new Intl.DateTimeFormat("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
+  return dateTimeFormatter.format(new Date(value));
 }
 
 function UnitTableDropIndicator({

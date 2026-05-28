@@ -3,8 +3,8 @@ import type { PropsWithChildren } from "react";
 import { CmsSidebar } from "@/components/cms/layout/cms-sidebar";
 import { CmsTopbar } from "@/components/cms/layout/cms-topbar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import type { SharedData } from "@/types/shared";
 import { UnsavedChangesProvider } from "@/hooks/use-unsaved-changes";
+import type { SharedData } from "@/types/shared";
 
 export default function CmsLayout({ children }: PropsWithChildren) {
   const page = usePage<SharedData>();
