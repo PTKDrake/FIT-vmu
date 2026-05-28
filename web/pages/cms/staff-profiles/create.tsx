@@ -5,13 +5,14 @@ import type { CmsStaffProfileFormPageProps } from "@/components/cms/types";
 import CmsLayout from "@/layouts/cms-layout";
 import { staffProfiles } from "@/routes/cms";
 import { store } from "@/routes/cms/staff-profiles";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 
 export default function CmsStaffProfileCreatePage({
   users = [],
   units = [],
   positions = [],
 }: CmsStaffProfileFormPageProps) {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, isDirty } = useForm({
     user_id: 0,
     full_name: "",
     slug: "",
@@ -42,6 +43,12 @@ export default function CmsStaffProfileCreatePage({
   const handleSubmit = () => {
     post(store.url());
   };
+
+  useRegisterUnsavedChanges({
+    isDirty,
+    onSave: handleSubmit,
+  }, "staff-profile-create");
+
 
   return (
     <>

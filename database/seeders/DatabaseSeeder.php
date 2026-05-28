@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             MediaSeeder::class,
+            PostCategorySeeder::class,
+            PostSeeder::class,
         ]);
     }
 }

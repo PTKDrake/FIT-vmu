@@ -36,5 +36,17 @@ export default defineConfig({
         alias: {
             "@": fileURLToPath(new URL("./web", import.meta.url)),
         },
+        dedupe: [
+            "@blocknote/core",
+            "@blocknote/react",
+            "@blocknote/shadcn",
+            "@blocknote/xl-ai",
+            "prosemirror-model",
+            "prosemirror-state",
+            "prosemirror-transform",
+            "prosemirror-view",
+            "react",
+            "react-dom",
+        ],
     },
 })

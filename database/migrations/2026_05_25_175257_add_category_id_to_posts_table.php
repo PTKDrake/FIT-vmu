@@ -8,22 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
+        Schema::create('post_post_category', function (Blueprint $table) {
+            $table->foreignId('post_id')
+                ->constrained('posts')
+                ->cascadeOnDelete();
             $table->foreignId('category_id')
-                ->nullable()
-                ->after('id')
                 ->constrained('post_categories')
-                ->nullOnDelete();
+                ->cascadeOnDelete();
+            $table->timestamps();
 
-            $table->index(['category_id', 'status']);
+            $table->primary(['post_id', 'category_id']);
+            $table->index('category_id');
         });
     }
 
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropIndex(['category_id', 'status']);
-            $table->dropConstrainedForeignId('category_id');
-        });
+        Schema::dropIfExists('post_post_category');
     }
 };

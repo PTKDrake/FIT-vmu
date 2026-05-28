@@ -4,13 +4,14 @@ import { StaffProfileForm } from "@/components/cms/staff-profile-form";
 import type { CmsStaffProfileFormPageProps } from "@/components/cms/types";
 import CmsLayout from "@/layouts/cms-layout";
 import { show, update } from "@/routes/cms/staff-profiles";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 
 export default function CmsStaffProfileEditPage({
   profile,
   units = [],
   positions = [],
 }: CmsStaffProfileFormPageProps) {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, isDirty } = useForm({
     _method: "patch" as const,
     user_id: profile?.userId ?? 0,
     full_name: profile?.fullName ?? "",
@@ -48,6 +49,12 @@ export default function CmsStaffProfileEditPage({
       preserveScroll: true,
     });
   };
+
+  useRegisterUnsavedChanges({
+    isDirty,
+    onSave: handleSubmit,
+  }, "staff-profile-edit");
+
 
   return (
     <>

@@ -18,7 +18,7 @@ interface OptionBase {
 }
 
 interface MultipleSelectProps<T extends OptionBase>
-  extends Omit<SelectProps<T, "multiple">, "selectionMode" | "children"> {
+  extends Omit<SelectProps<T, "multiple">, "selectionMode" | "children" | "selectedKey" | "onSelectionChange"> {
   placeholder?: string
   className?: string
   children?: React.ReactNode
@@ -69,7 +69,7 @@ function MultipleSelect<T extends OptionBase>({
       data-slot="control"
       className={cx(fieldStyles(), className)}
       selectionMode="multiple"
-      {...props}
+      {...(props as unknown as SelectProps<T, "multiple">)}
     >
       {before}
       {list && (
@@ -101,6 +101,7 @@ function MultipleSelect<T extends OptionBase>({
               )}
             </SelectValue>
             <Button
+              aria-label="Mở danh sách lựa chọn"
               intent="secondary"
               size="sq-xs"
               className="self-end rounded-[calc(var(--radius-lg)-(--spacing(1)))]"
@@ -127,6 +128,7 @@ function MultipleSelect<T extends OptionBase>({
             <Autocomplete filter={contains}>
               <SearchField
                 autoFocus
+                aria-label="Tìm kiếm lựa chọn"
                 className="rounded-none py-0.5 outline-hidden"
                 value={searchValue}
                 onChange={onSearchChange}

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\StoreMediaController::__invoke
-* @see app/Http/Controllers/Cms/StoreMediaController.php:16
+* @see app/Http/Controllers/Cms/StoreMediaController.php:17
 * @route '/cms/media'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\StoreMediaController::__invoke
-* @see app/Http/Controllers/Cms/StoreMediaController.php:16
+* @see app/Http/Controllers/Cms/StoreMediaController.php:17
 * @route '/cms/media'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\StoreMediaController::__invoke
-* @see app/Http/Controllers/Cms/StoreMediaController.php:16
+* @see app/Http/Controllers/Cms/StoreMediaController.php:17
 * @route '/cms/media'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\StoreMediaController::__invoke
-* @see app/Http/Controllers/Cms/StoreMediaController.php:16
+* @see app/Http/Controllers/Cms/StoreMediaController.php:17
 * @route '/cms/media'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\Cms\StoreMediaController::__invoke
-* @see app/Http/Controllers/Cms/StoreMediaController.php:16
+* @see app/Http/Controllers/Cms/StoreMediaController.php:17
 * @route '/cms/media'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

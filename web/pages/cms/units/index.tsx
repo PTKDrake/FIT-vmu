@@ -38,6 +38,9 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
+
 import { SearchField, SearchInput } from "@/components/ui/search-field";
 import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
@@ -153,6 +156,12 @@ export default function CmsUnitsIndexPage({
       },
     );
   }
+
+  useRegisterUnsavedChanges({
+    isDirty: draftUnits !== null,
+    onSave: handleSaveReorder,
+  }, "units-reorder");
+
 
   const { dragAndDropHooks } = useDragAndDrop<CmsUnitRow>({
     getItems: (keys) =>
@@ -362,34 +371,33 @@ export default function CmsUnitsIndexPage({
       </div>
 
       {draftUnits !== null ? (
-        <div className="sticky bottom-4 z-20 mt-4 px-20">
-          <div className="rounded-2xl border border-border bg-overlay/85 p-3 shadow-lg backdrop-blur-xs">
-            <div className="flex items-center justify-between gap-3">
-              <Text className="text-sm font-medium text-fg">
-                Thay đổi thứ tự hiển thị đơn vị chưa được lưu.
-              </Text>
+        <StickyActionBar>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <Text className="text-sm font-medium text-fg">
+              Thay đổi thứ tự hiển thị đơn vị chưa được lưu.
+            </Text>
 
-              <div className="flex items-center gap-2">
-                <Button
-                  intent="outline"
-                  onPress={handleCancelReorder}
-                >
-                  <XMarkIcon className="size-4" />
-                  Hủy
-                </Button>
-                <Button
-                  intent="primary"
-                  isDisabled={isSavingOrder}
-                  onPress={handleSaveReorder}
-                >
-                  <CheckIcon className="size-4" />
-                  Lưu thay đổi
-                </Button>
-              </div>
+            <div className="flex items-center justify-end gap-2 w-full sm:w-auto shrink-0">
+              <Button
+                intent="outline"
+                onPress={handleCancelReorder}
+              >
+                <XMarkIcon className="size-4" />
+                Hủy
+              </Button>
+              <Button
+                intent="primary"
+                isDisabled={isSavingOrder}
+                onPress={handleSaveReorder}
+              >
+                <CheckIcon className="size-4" />
+                Lưu thay đổi
+              </Button>
             </div>
           </div>
-        </div>
+        </StickyActionBar>
       ) : null}
+
 
       {deleteTarget ? (
         <ModalContent

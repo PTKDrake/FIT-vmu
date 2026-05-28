@@ -1,4 +1,4 @@
-import { Render } from "@measured/puck";
+import { Render } from "@puckeditor/core";
 import { twMerge } from "tailwind-merge";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
 import {

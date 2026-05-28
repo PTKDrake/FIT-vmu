@@ -6,6 +6,7 @@ import type { UnitEditorFormData } from "@/components/cms/unit-editor-form";
 import CmsLayout from "@/layouts/cms-layout";
 import { units as unitsIndex } from "@/routes/cms";
 import { store } from "@/routes/cms/units";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 
 export default function CmsUnitCreatePage({ unit }: CmsUnitFormPageProps) {
   const form = useForm<UnitEditorFormData>({
@@ -16,6 +17,17 @@ export default function CmsUnitCreatePage({ unit }: CmsUnitFormPageProps) {
     slug: unit.slug,
     sort_order: unit.sortOrder,
   });
+
+  const handleSave = () => {
+    form.post(store.url(), {
+      preserveScroll: true,
+    });
+  };
+
+  useRegisterUnsavedChanges({
+    isDirty: form.isDirty,
+    onSave: handleSave,
+  }, "unit-create");
 
   return (
     <>
@@ -29,16 +41,13 @@ export default function CmsUnitCreatePage({ unit }: CmsUnitFormPageProps) {
           processing={form.processing}
           submitLabel="Tạo đơn vị"
           title="Tạo đơn vị mới"
-          onSubmit={() => {
-            form.post(store.url(), {
-              preserveScroll: true,
-            });
-          }}
+          onSubmit={handleSave}
           onUpdate={(key, value) => form.setData(key, value as never)}
         />
       </div>
     </>
   );
 }
+
 
 CmsUnitCreatePage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;

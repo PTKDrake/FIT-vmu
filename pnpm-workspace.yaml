@@ -2,6 +2,7 @@ packages:
   - '.'
 
 allowBuilds:
+  msgpackr-extract: true
   msw: false
   unrs-resolver: true
 

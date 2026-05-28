@@ -1,4 +1,4 @@
-import type { Data } from "@measured/puck";
+import type { Data } from "@puckeditor/core";
 
 export const PUCK_PAGE_CONTENT_FORMAT = "puck_json" as const;
 

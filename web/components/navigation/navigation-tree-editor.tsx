@@ -38,6 +38,9 @@ import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
+
 import {
   Tree,
   TreeContent,
@@ -126,6 +129,20 @@ export function NavigationTreeEditor({
       : findNavigationItem(activeItems, selectedItemId);
   const hasUnsavedChanges =
     JSON.stringify(draftMenus) !== JSON.stringify(savedMenus);
+
+  useRegisterUnsavedChanges({
+    isDirty: hasUnsavedChanges,
+    onSave: () => {
+      const nextMenus = cloneNavigationMenus(draftMenus);
+      startTransition(() => {
+        setSavedMenus(nextMenus);
+        setDraftMenus(cloneNavigationMenus(nextMenus));
+        setIsEditorOpen(false);
+        setPendingConfirmation(null);
+      });
+    },
+  }, "navigation-tree-editor");
+
 
   const { dragAndDropHooks } = useDragAndDrop<NavigationItemDraft>({
     getItems: (keys) =>
@@ -441,35 +458,34 @@ export function NavigationTreeEditor({
         </ScrollArea>
       </div>
 
-      <div className="sticky bottom-4 z-20 mt-4 px-20">
-        <div className="rounded-2xl border border-border bg-overlay/85 p-3 shadow-lg backdrop-blur-xs">
-          <div className="flex items-center justify-between gap-3">
-            <Button intent="secondary" onPress={() => handleAddItem(null)}>
-              <PlusIcon />
-              Thêm item gốc
-            </Button>
+      <StickyActionBar>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Button intent="secondary" onPress={() => handleAddItem(null)} className="w-full sm:w-auto">
+            <PlusIcon />
+            Thêm item gốc
+          </Button>
 
-            <div className="flex items-center gap-2">
-              <Button
-                intent="outline"
-                isDisabled={!hasUnsavedChanges}
-                onPress={handleDiscardDraft}
-              >
-                <XMarkIcon />
-                Hủy
-              </Button>
-              <Button
-                intent="primary"
-                isDisabled={!hasUnsavedChanges}
-                onPress={handleSaveDraft}
-              >
-                <CheckIcon />
-                Lưu
-              </Button>
-            </div>
+          <div className="flex items-center justify-end gap-2 w-full sm:w-auto">
+            <Button
+              intent="outline"
+              isDisabled={!hasUnsavedChanges}
+              onPress={handleDiscardDraft}
+            >
+              <XMarkIcon />
+              Hủy
+            </Button>
+            <Button
+              intent="primary"
+              isDisabled={!hasUnsavedChanges}
+              onPress={handleSaveDraft}
+            >
+              <CheckIcon />
+              Lưu
+            </Button>
           </div>
         </div>
-      </div>
+      </StickyActionBar>
+
 
       <NavigationItemEditorModal
         item={selectedItem}

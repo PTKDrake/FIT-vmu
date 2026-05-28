@@ -16,6 +16,19 @@ use Illuminate\Support\Str;
  */
 class PostFactory extends Factory
 {
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Post $post): void {
+            if ($post->categories()->exists()) {
+                return;
+            }
+
+            $category = PostCategory::factory()->create();
+
+            $post->categories()->sync([$category->getKey()]);
+        });
+    }
+
     /**
      * Define the model's default state.
      *
@@ -28,7 +41,6 @@ class PostFactory extends Factory
         return [
             'title' => $title,
             'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(100, 999),
-            'category_id' => PostCategory::factory(),
             'excerpt' => fake()->optional()->paragraph(),
             'content' => json_encode([
                 [

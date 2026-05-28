@@ -66,6 +66,8 @@ export interface CmsPostTableRow {
   excerpt: string | null;
   id: number;
   publishedAt: string | null;
+  categoryIds: number[];
+  categoryNames: string[];
   slug: string;
   status: "draft" | "pending" | "published" | "rejected";
   title: string;
@@ -73,7 +75,15 @@ export interface CmsPostTableRow {
 }
 
 export interface CmsPostsPageProps extends SharedData {
+  can: {
+    managePosts: boolean;
+    publishPosts: boolean;
+  };
   posts: CmsPaginatedCollection<CmsPostTableRow>;
+  categoryOptions: Array<{
+    label: string;
+    value: string;
+  }>;
 }
 
 export interface CmsPageTableRow {
@@ -295,4 +305,28 @@ export interface CmsStaffProfileShowPageProps extends SharedData {
     }>;
   };
 }
+export interface CmsPostCategoryRow {
+  childrenCount: number;
+  description: string | null;
+  id: number;
+  isActive: boolean;
+  name: string;
+  parentId: number | null;
+  parentName: string | null;
+  postCount: number;
+  slug: string;
+  sortOrder: number;
+  updatedAt: string;
+}
 
+export interface CmsPostCategoriesPageProps extends SharedData {
+  can: {
+    manageCategories: boolean;
+  };
+  categories: CmsPaginatedCollection<CmsPostCategoryRow>;
+  parentOptions: Array<{
+    label: string;
+    parentId: number | null;
+    value: string;
+  }>;
+}

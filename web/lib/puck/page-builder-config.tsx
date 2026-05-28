@@ -1,4 +1,4 @@
-import type { Config } from "@measured/puck";
+import type { Config } from "@puckeditor/core";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";

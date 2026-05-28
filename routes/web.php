@@ -4,6 +4,8 @@ use App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\Position;
+use App\Models\Post;
+use App\Models\PostCategory;
 use App\Models\StaffProfile;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Route;
@@ -19,12 +21,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('dashboard');
 
         Route::get('posts', Controllers\Cms\PostsIndexController::class)
-            ->can('view posts')
+            ->can('viewAny', Post::class)
             ->name('posts');
+        Route::get('posts/create', Controllers\Cms\PostCreatePageController::class)
+            ->can('create', Post::class)
+            ->name('posts.create');
+        Route::get('posts/{post}/edit', Controllers\Cms\PostEditPageController::class)
+            ->can('update', 'post')
+            ->name('posts.edit');
+        Route::post('posts', Controllers\Cms\StorePostController::class)
+            ->can('create', Post::class)
+            ->name('posts.store');
+        Route::patch('posts/{post}', Controllers\Cms\UpdatePostController::class)
+            ->can('update', 'post')
+            ->name('posts.update');
+        Route::patch('posts/{post}/publish', Controllers\Cms\PublishPostController::class)
+            ->can('publish', 'post')
+            ->name('posts.publish');
+        Route::delete('posts/{post}', Controllers\Cms\DeletePostController::class)
+            ->can('delete', 'post')
+            ->name('posts.destroy');
 
-        Route::get('post-categories', fn () => inertia('cms/post-categories/index'))
-            ->can('view posts')
+        Route::get('post-categories', Controllers\Cms\PostCategoriesIndexController::class)
+            ->can('viewAny', PostCategory::class)
             ->name('post-categories');
+        Route::post('post-categories', Controllers\Cms\StorePostCategoryController::class)
+            ->can('create', PostCategory::class)
+            ->name('post-categories.store');
+        Route::patch('post-categories/{post_category}', Controllers\Cms\UpdatePostCategoryController::class)
+            ->can('update', 'post_category')
+            ->name('post-categories.update');
+        Route::delete('post-categories/{post_category}', Controllers\Cms\DeletePostCategoryController::class)
+            ->can('delete', 'post_category')
+            ->name('post-categories.destroy');
 
         Route::get('pages', Controllers\Cms\PagesIndexController::class)
             ->can('viewAny', Page::class)
@@ -73,6 +102,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('media/{media}', Controllers\Cms\DeleteMediaController::class)
             ->can('delete', 'media')
             ->name('media.destroy');
+        Route::post('ai/blocknote', Controllers\Cms\StreamBlockNoteAiController::class)
+            ->can('view admin dashboard')
+            ->name('ai.blocknote');
 
         Route::get('documents', fn () => inertia('cms/documents/index'))
             ->can('view documents')

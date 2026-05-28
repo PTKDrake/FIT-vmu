@@ -5,6 +5,7 @@ import { UnitEditorForm } from "@/components/cms/unit-editor-form";
 import type { UnitEditorFormData } from "@/components/cms/unit-editor-form";
 import CmsLayout from "@/layouts/cms-layout";
 import { show, update } from "@/routes/cms/units";
+import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 
 export default function CmsUnitEditPage({ unit }: CmsUnitFormPageProps) {
   const form = useForm<UnitEditorFormData>({
@@ -15,6 +16,17 @@ export default function CmsUnitEditPage({ unit }: CmsUnitFormPageProps) {
     slug: unit.slug,
     sort_order: unit.sortOrder,
   });
+
+  const handleSave = () => {
+    form.patch(update.url({ unit: unit.id ?? 0 }), {
+      preserveScroll: true,
+    });
+  };
+
+  useRegisterUnsavedChanges({
+    isDirty: form.isDirty,
+    onSave: handleSave,
+  }, "unit-edit");
 
   return (
     <>
@@ -28,16 +40,13 @@ export default function CmsUnitEditPage({ unit }: CmsUnitFormPageProps) {
           processing={form.processing}
           submitLabel="Lưu thay đổi"
           title={`Chỉnh sửa ${unit.name}`}
-          onSubmit={() => {
-            form.patch(update.url({ unit: unit.id ?? 0 }), {
-              preserveScroll: true,
-            });
-          }}
+          onSubmit={handleSave}
           onUpdate={(key, value) => form.setData(key, value as never)}
         />
       </div>
     </>
   );
 }
+
 
 CmsUnitEditPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;

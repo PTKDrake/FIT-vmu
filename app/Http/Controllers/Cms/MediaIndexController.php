@@ -9,6 +9,7 @@ use App\Models\Media;
 use App\Models\User;
 use App\QueryBuilders\CmsMediaQueryBuilder;
 use Carbon\CarbonInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
@@ -29,7 +30,7 @@ final class MediaIndexController extends Controller
     /** @var list<string> */
     private const ALLOWED_TYPES = ['all', 'image', 'video', 'audio'];
 
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request): Response|JsonResponse
     {
         $user = $request->user();
         $search = trim((string) $request->query('search', ''));
@@ -81,7 +82,7 @@ final class MediaIndexController extends Controller
             ->values()
             ->all();
 
-        return inertia('cms/media/index', [
+        $payload = [
             'can' => [
                 'deleteMedia' => $user?->can('deleteAny', Media::class) ?? false,
                 'duplicateMedia' => $user?->can('create', Media::class) ?? false,
@@ -102,7 +103,13 @@ final class MediaIndexController extends Controller
                     'to' => $media->lastItem(),
                 ],
             ],
-        ]);
+        ];
+
+        if ($request->wantsJson()) {
+            return response()->json($payload);
+        }
+
+        return inertia('cms/media/index', $payload);
     }
 
     private function resolveDateFilter(string $date): string

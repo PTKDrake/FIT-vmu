@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\PostCategory;
 use App\QueryBuilders\CmsPostsQueryBuilder;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ final class PostsIndexController extends Controller
     {
         $search = trim((string) $request->query('search', ''));
         $status = $this->resolveStatus((string) $request->query('status', 'all'));
+        $categoryId = $request->query('categoryId') ? (int) $request->query('categoryId') : null;
         $sort = $this->resolveSort((string) $request->query('sort', 'created_at'));
         $direction = $this->resolveDirection((string) $request->query('direction', 'desc'));
         $page = max((int) $request->query('page', 1), 1);
@@ -40,13 +42,14 @@ final class PostsIndexController extends Controller
                 'filter' => array_filter([
                     'search' => $search !== '' ? $search : null,
                     'status' => $status !== 'all' ? $status : null,
+                    'category_id' => $categoryId,
                 ]),
                 'sort' => ($direction === 'desc' ? '-' : '').$sort,
             ]),
         );
 
         $posts = CmsPostsQueryBuilder::make($queryBuilderRequest)
-            ->with('author')
+            ->with(['author', 'categories'])
             ->paginate($perPage, ['*'], 'page', $page);
 
         $rows = $posts->getCollection()
@@ -54,7 +57,22 @@ final class PostsIndexController extends Controller
             ->values()
             ->all();
 
+        $categoryOptions = PostCategory::query()
+            ->select(['id', 'name'])
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get()
+            ->map(fn (PostCategory $cat): array => [
+                'value' => (string) $cat->id,
+                'label' => $cat->name,
+            ])
+            ->all();
+
         return inertia('cms/posts/index', [
+            'can' => [
+                'managePosts' => $request->user()?->can('create', Post::class) ?? false,
+                'publishPosts' => $request->user()?->can('publish posts') ?? false,
+            ],
             'posts' => [
                 'data' => $rows,
                 'meta' => [
@@ -66,6 +84,7 @@ final class PostsIndexController extends Controller
                     'to' => $posts->lastItem(),
                 ],
             ],
+            'categoryOptions' => $categoryOptions,
         ]);
     }
 
@@ -106,6 +125,8 @@ final class PostsIndexController extends Controller
      *     id: int,
      *     title: string,
      *     slug: string,
+     *     categoryIds: list<int>,
+     *     categoryNames: list<string>,
      *     excerpt: ?string,
      *     status: string,
      *     authorName: ?string,
@@ -122,6 +143,8 @@ final class PostsIndexController extends Controller
             'id' => $postId,
             'title' => $post->title,
             'slug' => $post->slug,
+            'categoryIds' => $post->categories->pluck('id')->map(fn (mixed $id): int => (int) $id)->values()->all(),
+            'categoryNames' => $post->categories->pluck('name')->values()->all(),
             'excerpt' => $post->excerpt,
             'status' => $post->status,
             'authorName' => $post->author?->name,

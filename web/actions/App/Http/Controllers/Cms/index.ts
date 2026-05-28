@@ -1,4 +1,14 @@
 import PostsIndexController from './PostsIndexController'
+import PostCreatePageController from './PostCreatePageController'
+import PostEditPageController from './PostEditPageController'
+import StorePostController from './StorePostController'
+import UpdatePostController from './UpdatePostController'
+import PublishPostController from './PublishPostController'
+import DeletePostController from './DeletePostController'
+import PostCategoriesIndexController from './PostCategoriesIndexController'
+import StorePostCategoryController from './StorePostCategoryController'
+import UpdatePostCategoryController from './UpdatePostCategoryController'
+import DeletePostCategoryController from './DeletePostCategoryController'
 import PagesIndexController from './PagesIndexController'
 import StorePageController from './StorePageController'
 import PageEditorController from './PageEditorController'
@@ -11,6 +21,7 @@ import StoreMediaController from './StoreMediaController'
 import RenameMediaController from './RenameMediaController'
 import DuplicateMediaController from './DuplicateMediaController'
 import DeleteMediaController from './DeleteMediaController'
+import StreamBlockNoteAiController from './StreamBlockNoteAiController'
 import StaffProfilesIndexController from './StaffProfilesIndexController'
 import StaffProfileCreatePageController from './StaffProfileCreatePageController'
 import StaffProfileShowPageController from './StaffProfileShowPageController'
@@ -33,6 +44,16 @@ import DeletePositionController from './DeletePositionController'
 
 const Cms = {
     PostsIndexController: Object.assign(PostsIndexController, PostsIndexController),
+    PostCreatePageController: Object.assign(PostCreatePageController, PostCreatePageController),
+    PostEditPageController: Object.assign(PostEditPageController, PostEditPageController),
+    StorePostController: Object.assign(StorePostController, StorePostController),
+    UpdatePostController: Object.assign(UpdatePostController, UpdatePostController),
+    PublishPostController: Object.assign(PublishPostController, PublishPostController),
+    DeletePostController: Object.assign(DeletePostController, DeletePostController),
+    PostCategoriesIndexController: Object.assign(PostCategoriesIndexController, PostCategoriesIndexController),
+    StorePostCategoryController: Object.assign(StorePostCategoryController, StorePostCategoryController),
+    UpdatePostCategoryController: Object.assign(UpdatePostCategoryController, UpdatePostCategoryController),
+    DeletePostCategoryController: Object.assign(DeletePostCategoryController, DeletePostCategoryController),
     PagesIndexController: Object.assign(PagesIndexController, PagesIndexController),
     StorePageController: Object.assign(StorePageController, StorePageController),
     PageEditorController: Object.assign(PageEditorController, PageEditorController),
@@ -45,6 +66,7 @@ const Cms = {
     RenameMediaController: Object.assign(RenameMediaController, RenameMediaController),
     DuplicateMediaController: Object.assign(DuplicateMediaController, DuplicateMediaController),
     DeleteMediaController: Object.assign(DeleteMediaController, DeleteMediaController),
+    StreamBlockNoteAiController: Object.assign(StreamBlockNoteAiController, StreamBlockNoteAiController),
     StaffProfilesIndexController: Object.assign(StaffProfilesIndexController, StaffProfilesIndexController),
     StaffProfileCreatePageController: Object.assign(StaffProfileCreatePageController, StaffProfileCreatePageController),
     StaffProfileShowPageController: Object.assign(StaffProfileShowPageController, StaffProfileShowPageController),

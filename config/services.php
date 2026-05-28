@@ -41,6 +41,13 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
+    'openrouter' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'blocknote_model' => env('OPENROUTER_BLOCKNOTE_MODEL'),
+        'app_name' => env('OPENROUTER_APP_NAME', env('APP_NAME')),
+        'app_url' => env('OPENROUTER_APP_URL', env('APP_URL')),
+    ],
+
     'admin_seed_password' => env('ADMIN_SEED_PASSWORD'),
 
 ];

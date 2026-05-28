@@ -9,7 +9,7 @@ import {
   Puck,
   createUsePuck,
   useGetPuck,
-} from "@measured/puck";
+} from "@puckeditor/core";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";

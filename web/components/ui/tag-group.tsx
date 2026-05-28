@@ -45,7 +45,7 @@ export function Tag({ children, className, ...props }: TagProps) {
         <>
           {children}
           {allowsRemoving && (
-            <Button slot="remove" className="">
+            <Button aria-label="Xóa thẻ đã chọn" slot="remove" className="">
               <XCircleIcon className="-me-1 size-4" />
             </Button>
           )}

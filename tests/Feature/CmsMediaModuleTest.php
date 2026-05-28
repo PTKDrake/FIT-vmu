@@ -134,6 +134,33 @@ test('cms media inertia xhr response keeps collection data under props', functio
     expect($response->json('media'))->toBeNull();
 });
 
+test('cms media json response returns collection data directly for selectors', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $uploader = User::factory()->create([
+        'name' => 'Tran Thi Upload',
+    ]);
+
+    Media::factory()->for($uploader, 'uploadedBy')->create([
+        'original_name' => '01jvselectorasset.jpg',
+        'display_name' => 'selector-fit.jpg',
+        'mime_type' => 'image/jpeg',
+        'path' => 'media/2026/05/01jvselectorasset.jpg',
+    ]);
+
+    $this->actingAs($editor)
+        ->withHeaders([
+            'Accept' => 'application/json',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+        ->get('/cms/media?search=selector-fit&type=image&perPage=24')
+        ->assertOk()
+        ->assertJsonPath('media.data.0.displayName', 'selector-fit.jpg')
+        ->assertJsonPath('media.meta.perPage', 24)
+        ->assertJsonPath('can.uploadMedia', true);
+});
+
 test('authorized users can upload image audio and video media', function () {
     Storage::fake('public');
 

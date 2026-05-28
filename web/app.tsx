@@ -1,6 +1,7 @@
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
-import "@measured/puck/puck.css";
+import "@blocknote/xl-ai/style.css";
+import "@puckeditor/core/puck.css";
 import { createInertiaApp } from "@inertiajs/react";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import type { ComponentType } from "react";
