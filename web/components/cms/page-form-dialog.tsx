@@ -13,7 +13,10 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Textarea } from "@/components/ui/textarea";
-import { createDefaultPuckPageData, serializePuckPageData } from "@/lib/puck/page-builder-data";
+import {
+  createDefaultPuckPageData,
+  serializePuckPageData,
+} from "@/lib/puck/page-builder-data";
 import { store as storePage } from "@/routes/cms/pages";
 
 const defaultPageJson = serializePuckPageData(createDefaultPuckPageData());
@@ -73,92 +76,112 @@ export function PageFormDialog({
   }
 
   return (
-      <ModalContent
-        aria-label={mode === "create" ? "Tạo trang mới" : "Chỉnh sửa trang"}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        size="2xl"
-      >
-        <form onSubmit={submit}>
-          <ModalHeader>
-            <ModalTitle>{mode === "create" ? "Tạo trang mới" : "Chỉnh sửa URL và SEO"}</ModalTitle>
-            <ModalDescription>
-              {mode === "create"
-                ? "Khởi tạo thông tin trang trước, sau đó chuyển sang trình dựng nội dung Puck."
-                : "Cập nhật tiêu đề, đường dẫn và metadata SEO của trang."}
-            </ModalDescription>
-          </ModalHeader>
+    <ModalContent
+      aria-label={mode === "create" ? "Tạo trang mới" : "Chỉnh sửa trang"}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      size="2xl"
+    >
+      <form onSubmit={submit}>
+        <ModalHeader>
+          <ModalTitle>
+            {mode === "create" ? "Tạo trang mới" : "Chỉnh sửa URL và SEO"}
+          </ModalTitle>
+          <ModalDescription>
+            {mode === "create"
+              ? "Khởi tạo thông tin trang trước, sau đó chuyển sang trình dựng nội dung Puck."
+              : "Cập nhật tiêu đề, đường dẫn và metadata SEO của trang."}
+          </ModalDescription>
+        </ModalHeader>
 
-          <ModalBody>
-            <FieldGroup className="space-y-4 pb-2">
-              <div className="space-y-2">
-                <Label htmlFor="page-title">Tiêu đề trang</Label>
-                <Input
-                  id="page-title"
-                  name="title"
-                  value={form.data.title}
-                  onChange={(event) => form.setData("title", event.target.value)}
-                />
-                {form.errors.title ? <FieldError>{form.errors.title}</FieldError> : null}
-              </div>
+        <ModalBody>
+          <FieldGroup className="space-y-4 pb-2">
+            <div className="space-y-2">
+              <Label htmlFor="page-title">Tiêu đề trang</Label>
+              <Input
+                id="page-title"
+                name="title"
+                value={form.data.title}
+                onChange={(event) => form.setData("title", event.target.value)}
+              />
+              {form.errors.title ? (
+                <FieldError>{form.errors.title}</FieldError>
+              ) : null}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="page-slug">Đường dẫn</Label>
-                <Input
-                  id="page-slug"
-                  name="slug"
-                  value={form.data.slug}
-                  onChange={(event) => form.setData("slug", event.target.value)}
-                />
-                {form.errors.slug ? <FieldError>{form.errors.slug}</FieldError> : null}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="page-slug">Đường dẫn</Label>
+              <Input
+                id="page-slug"
+                name="slug"
+                value={form.data.slug}
+                onChange={(event) => form.setData("slug", event.target.value)}
+              />
+              {form.errors.slug ? (
+                <FieldError>{form.errors.slug}</FieldError>
+              ) : null}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="page-excerpt">Mô tả ngắn</Label>
-                <Textarea
-                  id="page-excerpt"
-                  name="excerpt"
-                  value={form.data.excerpt}
-                  onChange={(event) => form.setData("excerpt", event.target.value)}
-                />
-                {form.errors.excerpt ? <FieldError>{form.errors.excerpt}</FieldError> : null}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="page-excerpt">Mô tả ngắn</Label>
+              <Textarea
+                id="page-excerpt"
+                name="excerpt"
+                value={form.data.excerpt}
+                onChange={(event) =>
+                  form.setData("excerpt", event.target.value)
+                }
+              />
+              {form.errors.excerpt ? (
+                <FieldError>{form.errors.excerpt}</FieldError>
+              ) : null}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="page-seo-title">SEO title</Label>
-                <Input
-                  id="page-seo-title"
-                  name="seo_title"
-                  value={form.data.seo_title}
-                  onChange={(event) => form.setData("seo_title", event.target.value)}
-                />
-                {form.errors.seo_title ? <FieldError>{form.errors.seo_title}</FieldError> : null}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="page-seo-title">SEO title</Label>
+              <Input
+                id="page-seo-title"
+                name="seo_title"
+                value={form.data.seo_title}
+                onChange={(event) =>
+                  form.setData("seo_title", event.target.value)
+                }
+              />
+              {form.errors.seo_title ? (
+                <FieldError>{form.errors.seo_title}</FieldError>
+              ) : null}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="page-seo-description">SEO description</Label>
-                <Textarea
-                  id="page-seo-description"
-                  name="seo_description"
-                  value={form.data.seo_description}
-                  onChange={(event) => form.setData("seo_description", event.target.value)}
-                />
-                {form.errors.seo_description ? (
-                  <FieldError>{form.errors.seo_description}</FieldError>
-                ) : null}
-              </div>
-            </FieldGroup>
-          </ModalBody>
+            <div className="space-y-2">
+              <Label htmlFor="page-seo-description">SEO description</Label>
+              <Textarea
+                id="page-seo-description"
+                name="seo_description"
+                value={form.data.seo_description}
+                onChange={(event) =>
+                  form.setData("seo_description", event.target.value)
+                }
+              />
+              {form.errors.seo_description ? (
+                <FieldError>{form.errors.seo_description}</FieldError>
+              ) : null}
+            </div>
+          </FieldGroup>
+        </ModalBody>
 
-          <ModalFooter>
-            <Button intent="outline" onPress={() => onOpenChange(false)} type="button">
-              Hủy
-            </Button>
-            <Button isDisabled={form.processing} type="submit">
-              {mode === "create" ? "Tạo và mở builder" : "Lưu thay đổi"}
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
+        <ModalFooter>
+          <Button
+            intent="outline"
+            onPress={() => onOpenChange(false)}
+            type="button"
+          >
+            Hủy
+          </Button>
+          <Button isDisabled={form.processing} type="submit">
+            {mode === "create" ? "Tạo và mở builder" : "Lưu thay đổi"}
+          </Button>
+        </ModalFooter>
+      </form>
+    </ModalContent>
   );
 }

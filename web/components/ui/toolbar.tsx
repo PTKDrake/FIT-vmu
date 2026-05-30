@@ -1,28 +1,33 @@
-"use client"
+"use client";
 
-import { createContext, use } from "react"
-import { composeRenderProps } from "react-aria-components/composeRenderProps"
-import { Group, type GroupProps } from "react-aria-components/Group"
-import type { SeparatorProps } from "react-aria-components/Separator"
+import { createContext, use } from "react";
+import { composeRenderProps } from "react-aria-components/composeRenderProps";
+import { Group, type GroupProps } from "react-aria-components/Group";
+import type { SeparatorProps } from "react-aria-components/Separator";
 import {
   Toolbar as ToolbarPrimitive,
   type ToolbarProps as ToolbarPrimitiveProps,
-} from "react-aria-components/Toolbar"
-import { twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
-import { Separator } from "./separator"
-import { Toggle, type ToggleProps } from "./toggle"
+} from "react-aria-components/Toolbar";
+import { twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
+import { Separator } from "./separator";
+import { Toggle, type ToggleProps } from "./toggle";
 
 const ToolbarContext = createContext<ToolbarProps>({
   orientation: "horizontal",
   isCircle: false,
-})
+});
 
 interface ToolbarProps extends ToolbarPrimitiveProps {
-  isCircle?: boolean
+  isCircle?: boolean;
 }
 
-const Toolbar = ({ orientation = "horizontal", isCircle, className, ...props }: ToolbarProps) => {
+const Toolbar = ({
+  orientation = "horizontal",
+  isCircle,
+  className,
+  ...props
+}: ToolbarProps) => {
   return (
     <ToolbarContext value={{ orientation, isCircle }}>
       <ToolbarPrimitive
@@ -40,13 +45,20 @@ const Toolbar = ({ orientation = "horizontal", isCircle, className, ...props }: 
         )}
       />
     </ToolbarContext>
-  )
-}
+  );
+};
 
-const ToolbarGroupContext = createContext<{ isDisabled?: boolean; isCircle?: boolean }>({})
+const ToolbarGroupContext = createContext<{
+  isDisabled?: boolean;
+  isCircle?: boolean;
+}>({});
 
 interface ToolbarGroupProps extends GroupProps {}
-const ToolbarGroup = ({ isDisabled, className, ...props }: ToolbarGroupProps) => {
+const ToolbarGroup = ({
+  isDisabled,
+  className,
+  ...props
+}: ToolbarGroupProps) => {
   return (
     <ToolbarGroupContext value={{ isDisabled }}>
       <Group
@@ -59,8 +71,8 @@ const ToolbarGroup = ({ isDisabled, className, ...props }: ToolbarGroupProps) =>
         {props.children}
       </Group>
     </ToolbarGroupContext>
-  )
-}
+  );
+};
 
 interface ToggleItemProps extends ToggleProps {}
 
@@ -73,10 +85,10 @@ const ToolbarItem = ({
   className,
   ...props
 }: ToggleItemProps) => {
-  const context = use(ToolbarGroupContext)
-  const { isCircle: contextCircle } = use(ToolbarContext)
-  const effectiveIsDisabled = isDisabled || context.isDisabled
-  const effectiveIsCircle = isCircle || contextCircle
+  const context = use(ToolbarGroupContext);
+  const { isCircle: contextCircle } = use(ToolbarContext);
+  const effectiveIsDisabled = isDisabled || context.isDisabled;
+  const effectiveIsCircle = isCircle || contextCircle;
   return (
     <Toggle
       intent={intent}
@@ -84,18 +96,21 @@ const ToolbarItem = ({
       ref={ref}
       data-slot="toolbar-item"
       className={cx(
-        effectiveIsCircle ? "rounded-full" : "rounded-[calc(var(--radius-lg)-1px)]",
+        effectiveIsCircle
+          ? "rounded-full"
+          : "rounded-[calc(var(--radius-lg)-1px)]",
         className,
       )}
       isDisabled={effectiveIsDisabled}
       {...props}
     />
-  )
-}
-type ToolbarSeparatorProps = SeparatorProps
+  );
+};
+type ToolbarSeparatorProps = SeparatorProps;
 const ToolbarSeparator = ({ className, ...props }: ToolbarSeparatorProps) => {
-  const { orientation } = use(ToolbarContext)
-  const reverseOrientation = orientation === "vertical" ? "horizontal" : "vertical"
+  const { orientation } = use(ToolbarContext);
+  const reverseOrientation =
+    orientation === "vertical" ? "horizontal" : "vertical";
   return (
     <Separator
       orientation={reverseOrientation}
@@ -105,8 +120,13 @@ const ToolbarSeparator = ({ className, ...props }: ToolbarSeparatorProps) => {
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-export type { ToggleItemProps, ToolbarGroupProps, ToolbarProps, ToolbarSeparatorProps }
-export { Toolbar, ToolbarGroup, ToolbarItem, ToolbarSeparator }
+export type {
+  ToggleItemProps,
+  ToolbarGroupProps,
+  ToolbarProps,
+  ToolbarSeparatorProps,
+};
+export { Toolbar, ToolbarGroup, ToolbarItem, ToolbarSeparator };

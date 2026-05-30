@@ -2,7 +2,14 @@ import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import updatePosition from "@/actions/App/Http/Controllers/Cms/UpdatePositionController";
 import { Button } from "@/components/ui/button";
-import { Description, FieldError, FieldGroup, Fieldset, Legend, Label } from "@/components/ui/field";
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  Fieldset,
+  Legend,
+  Label,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   ModalBody,
@@ -77,29 +84,48 @@ export function PositionFormDialog({
     >
       <form onSubmit={submit}>
         <ModalHeader>
-          <ModalTitle>{mode === "create" ? "Tạo chức vụ mới" : "Cập nhật chức vụ"}</ModalTitle>
+          <ModalTitle>
+            {mode === "create" ? "Tạo chức vụ mới" : "Cập nhật chức vụ"}
+          </ModalTitle>
           <ModalDescription>
-            Khai báo danh mục chức vụ để tái sử dụng cho staff appointments và sắp xếp hiển thị.
+            Khai báo danh mục chức vụ để tái sử dụng cho staff appointments và
+            sắp xếp hiển thị.
           </ModalDescription>
         </ModalHeader>
 
         <ModalBody>
           <Fieldset>
             <Legend>Thông tin chức vụ</Legend>
-            <Text>Danh mục này nên ngắn gọn, ổn định và đủ rõ nghĩa cho cả biên tập viên lẫn người xem public.</Text>
+            <Text>
+              Danh mục này nên ngắn gọn, ổn định và đủ rõ nghĩa cho cả biên tập
+              viên lẫn người xem public.
+            </Text>
 
             <FieldGroup>
-              <TextField isRequired name="name" value={form.data.name} onChange={(value) => form.setData("name", value)}>
+              <TextField
+                isRequired
+                name="name"
+                value={form.data.name}
+                onChange={(value) => form.setData("name", value)}
+              >
                 <Label>Tên chức vụ</Label>
                 <Input placeholder="Ví dụ: Trưởng bộ môn" />
                 <FieldError>{form.errors.name}</FieldError>
               </TextField>
 
-              <TextField isRequired name="slug" value={form.data.slug} onChange={(value) => form.setData("slug", value)}>
+              <TextField
+                isRequired
+                name="slug"
+                value={form.data.slug}
+                onChange={(value) => form.setData("slug", value)}
+              >
                 <Label>Slug</Label>
                 <Input placeholder="truong-bo-mon" />
                 <FieldError>{form.errors.slug}</FieldError>
-                <Description>Dùng để tham chiếu nội bộ và tránh trùng lặp dữ liệu theo tên hiển thị.</Description>
+                <Description>
+                  Dùng để tham chiếu nội bộ và tránh trùng lặp dữ liệu theo tên
+                  hiển thị.
+                </Description>
               </TextField>
 
               <NumberField
@@ -132,7 +158,11 @@ export function PositionFormDialog({
         </ModalBody>
 
         <ModalFooter>
-          <Button intent="outline" onPress={() => onOpenChange(false)} type="button">
+          <Button
+            intent="outline"
+            onPress={() => onOpenChange(false)}
+            type="button"
+          >
             Hủy
           </Button>
           <Button isDisabled={form.processing} type="submit">

@@ -2,7 +2,14 @@ import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
-import { Description, FieldError, FieldGroup, Fieldset, Legend, Label } from "@/components/ui/field";
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  Fieldset,
+  Legend,
+  Label,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   ModalBody,
@@ -13,11 +20,20 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { NumberField, NumberInput } from "@/components/ui/number-field";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
-import { store as storeCategory, update as updateCategory } from "@/routes/cms/post-categories";
+import {
+  store as storeCategory,
+  update as updateCategory,
+} from "@/routes/cms/post-categories";
 
 export interface CategoryFormValues {
   id?: number;
@@ -62,7 +78,8 @@ export function CategoryFormDialog({
 
     const payload = {
       ...form.data,
-      parent_id: form.data.parent_id === null ? null : Number(form.data.parent_id),
+      parent_id:
+        form.data.parent_id === null ? null : Number(form.data.parent_id),
     };
 
     if (mode === "create") {
@@ -82,7 +99,7 @@ export function CategoryFormDialog({
 
   // Filter out self to avoid circular reference
   const filteredOptions = parentOptions.filter(
-    (opt) => mode === "create" || String(initialValues.id) !== opt.value
+    (opt) => mode === "create" || String(initialValues.id) !== opt.value,
   );
 
   if (!isOpen) {
@@ -98,9 +115,14 @@ export function CategoryFormDialog({
     >
       <form onSubmit={submit}>
         <ModalHeader>
-          <ModalTitle>{mode === "create" ? "Tạo danh mục bài viết mới" : "Cập nhật danh mục"}</ModalTitle>
+          <ModalTitle>
+            {mode === "create"
+              ? "Tạo danh mục bài viết mới"
+              : "Cập nhật danh mục"}
+          </ModalTitle>
           <ModalDescription>
-            Tạo hoặc cập nhật danh mục bài viết để phân loại tin tức và hiển thị trên navigation menu.
+            Tạo hoặc cập nhật danh mục bài viết để phân loại tin tức và hiển thị
+            trên navigation menu.
           </ModalDescription>
         </ModalHeader>
 
@@ -108,7 +130,8 @@ export function CategoryFormDialog({
           <Fieldset>
             <Legend>Thông tin danh mục</Legend>
             <Text className="text-sm text-muted-fg">
-              Các danh mục có thể tổ chức dạng cha - con để phân cấp thông tin rõ ràng.
+              Các danh mục có thể tổ chức dạng cha - con để phân cấp thông tin
+              rõ ràng.
             </Text>
 
             <FieldGroup className="space-y-6">
@@ -153,18 +176,24 @@ export function CategoryFormDialog({
                   <Label>Slug</Label>
                   <Input placeholder="dao-tao-chinh-quy" />
                   <FieldError>{form.errors.slug}</FieldError>
-                  <Description>Dùng để hiển thị URL đường dẫn tĩnh.</Description>
+                  <Description>
+                    Dùng để hiển thị URL đường dẫn tĩnh.
+                  </Description>
                 </TextField>
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Select
                   aria-label="Danh mục cha"
-                  selectedKey={form.data.parent_id === null ? "root" : String(form.data.parent_id)}
+                  selectedKey={
+                    form.data.parent_id === null
+                      ? "root"
+                      : String(form.data.parent_id)
+                  }
                   onSelectionChange={(key) => {
                     form.setData(
                       "parent_id",
-                      key === "root" ? null : Number(key)
+                      key === "root" ? null : Number(key),
                     );
                   }}
                 >
@@ -172,10 +201,16 @@ export function CategoryFormDialog({
                   <SelectTrigger />
                   <SelectContent>
                     <SelectItem id="root" textValue="Không có danh mục cha">
-                      <SelectLabel>Không có danh mục cha (Cấp cao nhất)</SelectLabel>
+                      <SelectLabel>
+                        Không có danh mục cha (Cấp cao nhất)
+                      </SelectLabel>
                     </SelectItem>
                     {filteredOptions.map((opt) => (
-                      <SelectItem key={opt.value} id={opt.value} textValue={opt.label}>
+                      <SelectItem
+                        key={opt.value}
+                        id={opt.value}
+                        textValue={opt.label}
+                      >
                         <SelectLabel>{opt.label}</SelectLabel>
                       </SelectItem>
                     ))}
@@ -221,17 +256,26 @@ export function CategoryFormDialog({
                 <BlockNoteEditor
                   content={form.data.description}
                   onChange={(value) => {
-                    form.setData("description", value.isEmpty ? "" : value.json);
+                    form.setData(
+                      "description",
+                      value.isEmpty ? "" : value.json,
+                    );
                   }}
                 />
-                {form.errors.description ? <FieldError>{form.errors.description}</FieldError> : null}
+                {form.errors.description ? (
+                  <FieldError>{form.errors.description}</FieldError>
+                ) : null}
               </div>
             </FieldGroup>
           </Fieldset>
         </ModalBody>
 
         <ModalFooter>
-          <Button intent="outline" onPress={() => onOpenChange(false)} type="button">
+          <Button
+            intent="outline"
+            onPress={() => onOpenChange(false)}
+            type="button"
+          >
             Hủy
           </Button>
           <Button isDisabled={form.processing} type="submit">

@@ -125,6 +125,14 @@ export default [
     },
   },
   {
+    files: ["web/lib/ai/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     ignores: [
       ".agents/**",
       "vendor",

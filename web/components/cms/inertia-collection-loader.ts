@@ -4,7 +4,9 @@ export interface InertiaCollectionRequestQuery {
   [key: string]: string | number | boolean | null | undefined;
 }
 
-export function buildInertiaCollectionUrl(query: InertiaCollectionRequestQuery): string {
+export function buildInertiaCollectionUrl(
+  query: InertiaCollectionRequestQuery,
+): string {
   const url = new URL(window.location.href);
   const params = new URLSearchParams();
 
@@ -27,13 +29,18 @@ function resolveInertiaVersion(): string | null {
   try {
     const page = getInitialPageFromDOM<{ version?: string | null }>("app");
 
-    return typeof page?.version === "string" && page.version !== "" ? page.version : null;
+    return typeof page?.version === "string" && page.version !== ""
+      ? page.version
+      : null;
   } catch {
     return null;
   }
 }
 
-export async function fetchInertiaCollectionPage<Resource extends string, TItem>(
+export async function fetchInertiaCollectionPage<
+  Resource extends string,
+  TItem,
+>(
   resource: Resource,
   query: InertiaCollectionRequestQuery,
   signal: AbortSignal,
@@ -55,7 +62,10 @@ export async function fetchInertiaCollectionPage<Resource extends string, TItem>
   }
 
   const payload = (await response.json()) as {
-    props?: Record<string, { data?: TItem[]; meta?: unknown } | TItem[] | undefined>;
+    props?: Record<
+      string,
+      { data?: TItem[]; meta?: unknown } | TItem[] | undefined
+    >;
   } & Record<string, { data?: TItem[]; meta?: unknown } | TItem[] | undefined>;
   const pagePayload = payload.props ?? payload;
   const page = pagePayload[resource] as

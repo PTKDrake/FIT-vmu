@@ -1,7 +1,14 @@
 import { Link } from "@inertiajs/react";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
-import { Description, FieldError, FieldGroup, Fieldset, Legend, Label } from "@/components/ui/field";
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  Fieldset,
+  Legend,
+  Label,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { NumberField, NumberInput } from "@/components/ui/number-field";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
@@ -51,7 +58,8 @@ export function UnitEditorForm({
       <Fieldset className="rounded-2xl border border-border bg-overlay px-5 py-5">
         <Legend>{title}</Legend>
         <Text>
-          Quản lý thông tin công khai của đơn vị và nội dung BlockNote dùng cho public website.
+          Quản lý thông tin công khai của đơn vị và nội dung BlockNote dùng cho
+          public website.
         </Text>
 
         <FieldGroup>
@@ -76,7 +84,9 @@ export function UnitEditorForm({
               <Label>Slug</Label>
               <Input placeholder="khoa-cong-nghe-thong-tin" />
               <FieldError>{errors.slug}</FieldError>
-              <Description>Dùng cho route nội bộ và các liên kết public.</Description>
+              <Description>
+                Dùng cho route nội bộ và các liên kết public.
+              </Description>
             </TextField>
           </div>
 
@@ -110,7 +120,8 @@ export function UnitEditorForm({
             <div className="space-y-1">
               <Label>Mô tả BlockNote</Label>
               <Text className="text-sm text-muted-fg">
-                Nội dung này được dùng để hiển thị giới thiệu đơn vị trên public website.
+                Nội dung này được dùng để hiển thị giới thiệu đơn vị trên public
+                website.
               </Text>
             </div>
 
@@ -121,12 +132,19 @@ export function UnitEditorForm({
               }}
             />
 
-            {errors.description ? <FieldError>{errors.description}</FieldError> : null}
-            {errors.description_format ? <FieldError>{errors.description_format}</FieldError> : null}
+            {errors.description ? (
+              <FieldError>{errors.description}</FieldError>
+            ) : null}
+            {errors.description_format ? (
+              <FieldError>{errors.description_format}</FieldError>
+            ) : null}
           </div>
         </FieldGroup>
 
-        <div data-slot="control" className="flex flex-wrap items-center justify-end gap-3">
+        <div
+          data-slot="control"
+          className="flex flex-wrap items-center justify-end gap-3"
+        >
           <Link
             href={cancelHref}
             className="inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-bg px-4 text-sm font-medium text-fg transition hover:bg-muted/40"

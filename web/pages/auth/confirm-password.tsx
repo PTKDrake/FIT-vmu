@@ -1,6 +1,6 @@
-import { Form, Head } from "@inertiajs/react"
-import type { ReactNode } from "react"
-import GuestLayout from "@/layouts/guest-layout"
+import { Form, Head } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import GuestLayout from "@/layouts/guest-layout";
 
 export default function ConfirmPasswordPage() {
   return (
@@ -10,7 +10,12 @@ export default function ConfirmPasswordPage() {
         {({ errors, processing }) => (
           <>
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-fg">Password</label>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-fg"
+              >
+                Password
+              </label>
               <input
                 id="password"
                 aria-label="Password"
@@ -18,7 +23,11 @@ export default function ConfirmPasswordPage() {
                 name="password"
                 type="password"
               />
-              {errors.password ? <p className="text-sm text-danger-subtle-fg">{errors.password}</p> : null}
+              {errors.password ? (
+                <p className="text-sm text-danger-subtle-fg">
+                  {errors.password}
+                </p>
+              ) : null}
             </div>
             <button
               type="submit"
@@ -31,7 +40,7 @@ export default function ConfirmPasswordPage() {
         )}
       </Form>
     </>
-  )
+  );
 }
 
 ConfirmPasswordPage.layout = (page: ReactNode) => (
@@ -41,4 +50,4 @@ ConfirmPasswordPage.layout = (page: ReactNode) => (
   >
     {page}
   </GuestLayout>
-)
+);

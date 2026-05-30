@@ -1,8 +1,12 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
-import { type CalendarDate, getLocalTimeZone, today } from "@internationalized/date"
-import { useDateFormatter } from "@react-aria/i18n"
-import { use } from "react"
-import type { CalendarProps as CalendarPrimitiveProps } from "react-aria-components/Calendar"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import {
+  type CalendarDate,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
+import { useDateFormatter } from "@react-aria/i18n";
+import { use } from "react";
+import type { CalendarProps as CalendarPrimitiveProps } from "react-aria-components/Calendar";
 import {
   CalendarCell,
   CalendarGrid,
@@ -11,23 +15,34 @@ import {
   CalendarHeaderCell,
   Calendar as CalendarPrimitive,
   CalendarStateContext,
-} from "react-aria-components/Calendar"
-import { composeRenderProps } from "react-aria-components/composeRenderProps"
-import type { DateValue } from "react-aria-components/DateField"
-import { Heading } from "react-aria-components/Heading"
-import { useLocale } from "react-aria-components/I18nProvider"
-import { RangeCalendarStateContext } from "react-aria-components/RangeCalendar"
-import { twMerge } from "tailwind-merge"
-import { Button } from "./button"
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "./select"
+} from "react-aria-components/Calendar";
+import { composeRenderProps } from "react-aria-components/composeRenderProps";
+import type { DateValue } from "react-aria-components/DateField";
+import { Heading } from "react-aria-components/Heading";
+import { useLocale } from "react-aria-components/I18nProvider";
+import { RangeCalendarStateContext } from "react-aria-components/RangeCalendar";
+import { twMerge } from "tailwind-merge";
+import { Button } from "./button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "./select";
 
-interface CalendarProps<T extends DateValue>
-  extends Omit<CalendarPrimitiveProps<T>, "visibleDuration"> {
-  className?: string
+interface CalendarProps<T extends DateValue> extends Omit<
+  CalendarPrimitiveProps<T>,
+  "visibleDuration"
+> {
+  className?: string;
 }
 
-const Calendar = <T extends DateValue>({ className, ...props }: CalendarProps<T>) => {
-  const now = today(getLocalTimeZone())
+const Calendar = <T extends DateValue>({
+  className,
+  ...props
+}: CalendarProps<T>) => {
+  const now = today(getLocalTimeZone());
 
   return (
     <CalendarPrimitive data-slot="calendar" {...props}>
@@ -38,27 +53,32 @@ const Calendar = <T extends DateValue>({ className, ...props }: CalendarProps<T>
           {(date) => (
             <CalendarCell
               date={date}
-              className={composeRenderProps(className, (className, { isSelected, isDisabled }) =>
-                twMerge(
-                  "relative flex size-11 cursor-default items-center justify-center rounded-lg text-fg tabular-nums outline-hidden hover:bg-secondary-fg/15 sm:size-9 sm:text-sm/6 forced-colors:text-[ButtonText] forced-colors:outline-0",
-                  isSelected &&
-                    "bg-primary pressed:bg-primary text-primary-fg hover:bg-primary/90 data-invalid:bg-danger data-invalid:text-danger-fg forced-colors:bg-[Highlight] forced-colors:text-[Highlight] forced-colors:data-invalid:bg-[Mark]",
-                  isDisabled && "text-muted-fg forced-colors:text-[GrayText]",
-                  date.compare(now) === 0 &&
-                    "after:pointer-events-none after:absolute after:start-1/2 after:bottom-1 after:z-10 after:size-0.75 after:-translate-x-1/2 after:rounded-full after:bg-primary selected:after:bg-primary-fg focus-visible:after:bg-primary-fg",
-                  className,
-                ),
+              className={composeRenderProps(
+                className,
+                (className, { isSelected, isDisabled }) =>
+                  twMerge(
+                    "relative flex size-11 cursor-default items-center justify-center rounded-lg text-fg tabular-nums outline-hidden hover:bg-secondary-fg/15 sm:size-9 sm:text-sm/6 forced-colors:text-[ButtonText] forced-colors:outline-0",
+                    isSelected &&
+                      "bg-primary pressed:bg-primary text-primary-fg hover:bg-primary/90 data-invalid:bg-danger data-invalid:text-danger-fg forced-colors:bg-[Highlight] forced-colors:text-[Highlight] forced-colors:data-invalid:bg-[Mark]",
+                    isDisabled && "text-muted-fg forced-colors:text-[GrayText]",
+                    date.compare(now) === 0 &&
+                      "after:pointer-events-none after:absolute after:start-1/2 after:bottom-1 after:z-10 after:size-0.75 after:-translate-x-1/2 after:rounded-full after:bg-primary selected:after:bg-primary-fg focus-visible:after:bg-primary-fg",
+                    className,
+                  ),
               )}
             />
           )}
         </CalendarGridBody>
       </CalendarGrid>
     </CalendarPrimitive>
-  )
-}
+  );
+};
 
-const CalendarHeader = ({ className, ...props }: React.ComponentProps<"header">) => {
-  const { direction } = useLocale()
+const CalendarHeader = ({
+  className,
+  ...props
+}: React.ComponentProps<"header">) => {
+  const { direction } = useLocale();
   return (
     <header
       data-slot="calendar-header"
@@ -94,33 +114,35 @@ const CalendarHeader = ({ className, ...props }: React.ComponentProps<"header">)
         </Button>
       </div>
     </header>
-  )
-}
+  );
+};
 
 interface CalendarDropdown {
-  id: number
-  date: CalendarDate
-  formatted: string
+  id: number;
+  date: CalendarDate;
+  formatted: string;
 }
 
 const SelectMonth = () => {
-  const calendarState = use(CalendarStateContext)
-  const rangeCalendarState = use(RangeCalendarStateContext)
-  const state = calendarState || rangeCalendarState!
+  const calendarState = use(CalendarStateContext);
+  const rangeCalendarState = use(RangeCalendarStateContext);
+  const state = calendarState || rangeCalendarState!;
   const formatter = useDateFormatter({
     month: "short",
     timeZone: state.timeZone,
-  })
+  });
 
-  const months: CalendarDropdown[] = []
-  const numMonths = state.focusedDate.calendar.getMonthsInYear(state.focusedDate)
+  const months: CalendarDropdown[] = [];
+  const numMonths = state.focusedDate.calendar.getMonthsInYear(
+    state.focusedDate,
+  );
   for (let i = 1; i <= numMonths; i++) {
-    const date = state.focusedDate.set({ month: i })
+    const date = state.focusedDate.set({ month: i });
     months.push({
       id: i,
       date,
       formatted: formatter.format(date.toDate(state.timeZone)),
-    })
+    });
   }
 
   return (
@@ -131,7 +153,7 @@ const SelectMonth = () => {
       value={state.focusedDate.month}
       onChange={(key) => {
         if (typeof key === "number") {
-          state.setFocusedDate(months[key - 1].date)
+          state.setFocusedDate(months[key - 1].date);
         }
       }}
     >
@@ -144,26 +166,26 @@ const SelectMonth = () => {
         )}
       </SelectContent>
     </Select>
-  )
-}
+  );
+};
 
 const SelectYear = () => {
-  const calendarState = use(CalendarStateContext)
-  const rangeCalendarState = use(RangeCalendarStateContext)
-  const state = calendarState || rangeCalendarState!
+  const calendarState = use(CalendarStateContext);
+  const rangeCalendarState = use(RangeCalendarStateContext);
+  const state = calendarState || rangeCalendarState!;
   const formatter = useDateFormatter({
     year: "numeric",
     timeZone: state.timeZone,
-  })
+  });
 
-  const years: CalendarDropdown[] = []
+  const years: CalendarDropdown[] = [];
   for (let i = -20; i <= 20; i++) {
-    const date = state.focusedDate.add({ years: i })
+    const date = state.focusedDate.add({ years: i });
     years.push({
       id: years.length,
       date,
       formatted: formatter.format(date.toDate(state.timeZone)),
-    })
+    });
   }
   return (
     <Select
@@ -171,7 +193,7 @@ const SelectYear = () => {
       value={20}
       onChange={(key) => {
         if (typeof key === "number") {
-          state.setFocusedDate(years[key].date)
+          state.setFocusedDate(years[key].date);
         }
       }}
     >
@@ -184,8 +206,8 @@ const SelectYear = () => {
         )}
       </SelectContent>
     </Select>
-  )
-}
+  );
+};
 
 const CalendarGridHeader = () => {
   return (
@@ -196,8 +218,14 @@ const CalendarGridHeader = () => {
         </CalendarHeaderCell>
       )}
     </CalendarGridHeaderPrimitive>
-  )
-}
+  );
+};
 
-export type { CalendarProps }
-export { Calendar, CalendarGridHeader, CalendarHeader, SelectMonth, SelectYear }
+export type { CalendarProps };
+export {
+  Calendar,
+  CalendarGridHeader,
+  CalendarHeader,
+  SelectMonth,
+  SelectYear,
+};

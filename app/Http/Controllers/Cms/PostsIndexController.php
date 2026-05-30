@@ -29,7 +29,7 @@ final class PostsIndexController extends Controller
     {
         $search = trim((string) $request->query('search', ''));
         $status = $this->resolveStatus((string) $request->query('status', 'all'));
-        $categoryId = $request->query('categoryId') ? (int) $request->query('categoryId') : null;
+        $categoryId = $request->filled('categoryId') ? $request->integer('categoryId') : null;
         $sort = $this->resolveSort((string) $request->query('sort', 'created_at'));
         $direction = $this->resolveDirection((string) $request->query('direction', 'desc'));
         $page = max((int) $request->query('page', 1), 1);
@@ -143,8 +143,17 @@ final class PostsIndexController extends Controller
             'id' => $postId,
             'title' => $post->title,
             'slug' => $post->slug,
-            'categoryIds' => $post->categories->pluck('id')->map(fn (mixed $id): int => (int) $id)->values()->all(),
-            'categoryNames' => $post->categories->pluck('name')->values()->all(),
+            'categoryIds' => array_values(
+                array_map(
+                    static fn (int|string $categoryId): int => (int) $categoryId,
+                    $post->categories->modelKeys(),
+                ),
+            ),
+            'categoryNames' => array_values(
+                $post->categories
+                    ->map(fn (PostCategory $category): string => $category->name)
+                    ->all(),
+            ),
             'excerpt' => $post->excerpt,
             'status' => $post->status,
             'authorName' => $post->author?->name,

@@ -1,30 +1,45 @@
-import { XCircleIcon } from "@heroicons/react/16/solid"
-import { Button } from "react-aria-components/Button"
-import type { TagGroupProps, TagListProps, TagProps } from "react-aria-components/TagGroup"
+import { XCircleIcon } from "@heroicons/react/16/solid";
+import { Button } from "react-aria-components/Button";
+import type {
+  TagGroupProps,
+  TagListProps,
+  TagProps,
+} from "react-aria-components/TagGroup";
 import {
   Tag as PrimitiveTag,
   TagGroup as PrimitiveTagGroup,
   TagList as PrimitiveTagList,
-} from "react-aria-components/TagGroup"
-import { twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
+} from "react-aria-components/TagGroup";
+import { twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
 
 export function TagGroup({ className, ...props }: TagGroupProps) {
   return (
     <PrimitiveTagGroup
       data-slot="control"
-      className={twMerge("flex flex-col gap-y-1 *:data-[slot=label]:font-medium", className)}
+      className={twMerge(
+        "flex flex-col gap-y-1 *:data-[slot=label]:font-medium",
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
-export function TagList<T extends object>({ className, ...props }: TagListProps<T>) {
-  return <PrimitiveTagList className={cx("flex flex-wrap gap-1", className)} {...props} />
+export function TagList<T extends object>({
+  className,
+  ...props
+}: TagListProps<T>) {
+  return (
+    <PrimitiveTagList
+      className={cx("flex flex-wrap gap-1", className)}
+      {...props}
+    />
+  );
 }
 
 export function Tag({ children, className, ...props }: TagProps) {
-  const textValue = typeof children === "string" ? children : undefined
+  const textValue = typeof children === "string" ? children : undefined;
 
   return (
     <PrimitiveTag
@@ -52,5 +67,5 @@ export function Tag({ children, className, ...props }: TagProps) {
         </>
       )}
     </PrimitiveTag>
-  )
+  );
 }

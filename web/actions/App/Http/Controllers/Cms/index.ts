@@ -10,8 +10,11 @@ import StorePostCategoryController from './StorePostCategoryController'
 import UpdatePostCategoryController from './UpdatePostCategoryController'
 import DeletePostCategoryController from './DeletePostCategoryController'
 import PagesIndexController from './PagesIndexController'
+import PageCreateController from './PageCreateController'
 import StorePageController from './StorePageController'
 import PageEditorController from './PageEditorController'
+import PageBuilderController from './PageBuilderController'
+import PageShowController from './PageShowController'
 import UpdatePageMetadataController from './UpdatePageMetadataController'
 import UpdatePageContentController from './UpdatePageContentController'
 import ClonePageController from './ClonePageController'
@@ -55,8 +58,11 @@ const Cms = {
     UpdatePostCategoryController: Object.assign(UpdatePostCategoryController, UpdatePostCategoryController),
     DeletePostCategoryController: Object.assign(DeletePostCategoryController, DeletePostCategoryController),
     PagesIndexController: Object.assign(PagesIndexController, PagesIndexController),
+    PageCreateController: Object.assign(PageCreateController, PageCreateController),
     StorePageController: Object.assign(StorePageController, StorePageController),
     PageEditorController: Object.assign(PageEditorController, PageEditorController),
+    PageBuilderController: Object.assign(PageBuilderController, PageBuilderController),
+    PageShowController: Object.assign(PageShowController, PageShowController),
     UpdatePageMetadataController: Object.assign(UpdatePageMetadataController, UpdatePageMetadataController),
     UpdatePageContentController: Object.assign(UpdatePageContentController, UpdatePageContentController),
     ClonePageController: Object.assign(ClonePageController, ClonePageController),

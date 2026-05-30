@@ -1,17 +1,17 @@
-import { Form, Head, Link, usePage } from "@inertiajs/react"
-import type { ReactNode } from "react"
-import { create as loginCreate } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController"
-import { redirect as googleRedirect } from "@/actions/App/Http/Controllers/Auth/GoogleOAuthController"
-import { store as registerStore } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController"
-import GuestLayout from "@/layouts/guest-layout"
-import type { SharedData } from "@/types/shared"
+import { Form, Head, Link, usePage } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import { create as loginCreate } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
+import { redirect as googleRedirect } from "@/actions/App/Http/Controllers/Auth/GoogleOAuthController";
+import { store as registerStore } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController";
+import GuestLayout from "@/layouts/guest-layout";
+import type { SharedData } from "@/types/shared";
 
 interface RegisterFieldDefinition {
-  helper: string | null
-  label: string
-  name: "email" | "name" | "password" | "password_confirmation"
-  placeholder?: string
-  type: "email" | "password" | "text"
+  helper: string | null;
+  label: string;
+  name: "email" | "name" | "password" | "password_confirmation";
+  placeholder?: string;
+  type: "email" | "password" | "text";
 }
 
 const registerFields: RegisterFieldDefinition[] = [
@@ -27,7 +27,8 @@ const registerFields: RegisterFieldDefinition[] = [
     label: "Email",
     type: "email",
     placeholder: "m@example.com",
-    helper: "We'll use this to contact you. We will not share your email with anyone else.",
+    helper:
+      "We'll use this to contact you. We will not share your email with anyone else.",
   },
   {
     name: "password",
@@ -41,14 +42,14 @@ const registerFields: RegisterFieldDefinition[] = [
     type: "password",
     helper: "Please confirm your password.",
   },
-]
+];
 
 export default function RegisterPage() {
   const {
     auth: {
       social: { googleEnabled },
     },
-  } = usePage<SharedData>().props
+  } = usePage<SharedData>().props;
 
   return (
     <>
@@ -56,26 +57,33 @@ export default function RegisterPage() {
       <Form {...registerStore.form()} className="space-y-6">
         {({ errors, processing }) => (
           <>
-            {registerFields.map(({ name, label, type, placeholder, helper }) => (
-              <div key={name} className="space-y-2.5">
-                <label htmlFor={name} className="block text-sm font-medium text-fg">
-                  {label}
-                </label>
-                <input
-                  id={name}
-                  aria-label={label}
-                  className="h-11 w-full rounded-xl border border-input bg-bg px-4 text-sm text-fg shadow-sm transition placeholder:text-muted-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
-                  name={name}
-                  type={type}
-                  placeholder={type === "password" ? undefined : placeholder}
-                />
-                {errors[name as keyof typeof errors] ? (
-                  <p className="text-sm text-danger-subtle-fg">{errors[name as keyof typeof errors]}</p>
-                ) : helper ? (
-                  <p className="text-sm leading-6 text-muted-fg">{helper}</p>
-                ) : null}
-              </div>
-            ))}
+            {registerFields.map(
+              ({ name, label, type, placeholder, helper }) => (
+                <div key={name} className="space-y-2.5">
+                  <label
+                    htmlFor={name}
+                    className="block text-sm font-medium text-fg"
+                  >
+                    {label}
+                  </label>
+                  <input
+                    id={name}
+                    aria-label={label}
+                    className="h-11 w-full rounded-xl border border-input bg-bg px-4 text-sm text-fg shadow-sm transition placeholder:text-muted-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
+                    name={name}
+                    type={type}
+                    placeholder={type === "password" ? undefined : placeholder}
+                  />
+                  {errors[name as keyof typeof errors] ? (
+                    <p className="text-sm text-danger-subtle-fg">
+                      {errors[name as keyof typeof errors]}
+                    </p>
+                  ) : helper ? (
+                    <p className="text-sm leading-6 text-muted-fg">{helper}</p>
+                  ) : null}
+                </div>
+              ),
+            )}
             <button
               type="submit"
               className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-fg shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
@@ -88,7 +96,9 @@ export default function RegisterPage() {
               <>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <span className="text-sm text-muted-fg">Or continue with</span>
+                  <span className="text-sm text-muted-fg">
+                    Or continue with
+                  </span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -104,7 +114,10 @@ export default function RegisterPage() {
 
             <p className="text-center text-sm text-muted-fg">
               Already have an account?{" "}
-              <Link href={loginCreate.url()} className="font-medium text-fg underline-offset-4 hover:underline">
+              <Link
+                href={loginCreate.url()}
+                className="font-medium text-fg underline-offset-4 hover:underline"
+              >
                 Sign in
               </Link>
             </p>
@@ -112,7 +125,7 @@ export default function RegisterPage() {
         )}
       </Form>
     </>
-  )
+  );
 }
 
 RegisterPage.layout = (page: ReactNode) => (
@@ -122,7 +135,7 @@ RegisterPage.layout = (page: ReactNode) => (
   >
     {page}
   </GuestLayout>
-)
+);
 
 function GoogleMark() {
   return (
@@ -144,5 +157,5 @@ function GoogleMark() {
         fill="#EA4335"
       />
     </svg>
-  )
+  );
 }

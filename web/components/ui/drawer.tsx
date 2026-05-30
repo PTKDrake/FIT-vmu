@@ -1,32 +1,43 @@
-import { AnimatePresence, motion } from "motion/react"
-import { use } from "react"
-import { Button as ButtonPrimitive } from "react-aria-components/Button"
-import type { DialogProps, DialogTriggerProps } from "react-aria-components/Dialog"
-import { Dialog, DialogTrigger, OverlayTriggerStateContext } from "react-aria-components/Dialog"
-import { Heading, type HeadingProps } from "react-aria-components/Heading"
+import { AnimatePresence, motion } from "motion/react";
+import { use } from "react";
+import { Button as ButtonPrimitive } from "react-aria-components/Button";
+import type {
+  DialogProps,
+  DialogTriggerProps,
+} from "react-aria-components/Dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  OverlayTriggerStateContext,
+} from "react-aria-components/Dialog";
+import { Heading, type HeadingProps } from "react-aria-components/Heading";
 import {
   ModalOverlay,
   type ModalOverlayProps,
   Modal as ModalPrimitive,
-} from "react-aria-components/Modal"
-import { Text, type TextProps } from "react-aria-components/Text"
-import { twJoin, twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
-import { Button, type ButtonProps } from "./button"
+} from "react-aria-components/Modal";
+import { Text, type TextProps } from "react-aria-components/Text";
+import { twJoin, twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
+import { Button, type ButtonProps } from "./button";
 
-const DrawerRoot = motion.create(ModalPrimitive)
-const DrawerOverlay = motion.create(ModalOverlay)
+const DrawerRoot = motion.create(ModalPrimitive);
+const DrawerOverlay = motion.create(ModalOverlay);
 
-const Drawer = (props: DialogTriggerProps) => <DialogTrigger {...props} />
+const Drawer = (props: DialogTriggerProps) => <DialogTrigger {...props} />;
 
 interface DrawerContentProps
-  extends Omit<ModalOverlayProps, "className" | "children" | "isDismissable">,
-    Pick<DialogProps, "aria-label" | "aria-labelledby" | "role" | "children" | "className"> {
-  isFloat?: boolean
-  className?: string
-  overlay?: Pick<ModalOverlayProps, "className">
-  side?: "top" | "bottom" | "left" | "right"
-  notch?: boolean
+  extends
+    Omit<ModalOverlayProps, "className" | "children" | "isDismissable">,
+    Pick<
+      DialogProps,
+      "aria-label" | "aria-labelledby" | "role" | "children" | "className"
+    > {
+  isFloat?: boolean;
+  className?: string;
+  overlay?: Pick<ModalOverlayProps, "className">;
+  side?: "top" | "bottom" | "left" | "right";
+  notch?: boolean;
 }
 
 const DrawerContent = ({
@@ -38,9 +49,9 @@ const DrawerContent = ({
   overlay,
   ...props
 }: DrawerContentProps) => {
-  const state = use(OverlayTriggerStateContext)!
-  const isOpen = props.isOpen ?? state?.isOpen ?? false
-  const onOpenChange = props.onOpenChange ?? state?.setOpen
+  const state = use(OverlayTriggerStateContext)!;
+  const isOpen = props.isOpen ?? state?.isOpen ?? false;
+  const onOpenChange = props.onOpenChange ?? state?.setOpen;
 
   return (
     <AnimatePresence>
@@ -73,20 +84,28 @@ const DrawerContent = ({
               className={twJoin(
                 "fixed max-h-full touch-none overflow-hidden bg-bg align-middle text-fg ring ring-input will-change-transform",
                 side === "top" &&
-                  (isFloat ? "inset-x-2 top-2 rounded-lg" : "inset-x-0 top-0 rounded-b-2xl"),
+                  (isFloat
+                    ? "inset-x-2 top-2 rounded-lg"
+                    : "inset-x-0 top-0 rounded-b-2xl"),
                 side === "right" &&
                   [
                     "w-full max-w-xs overflow-y-auto",
                     "**:[[slot=header]]:text-start",
-                    isFloat ? "inset-y-2 right-2 rounded-lg" : "inset-y-0 right-0 h-auto",
+                    isFloat
+                      ? "inset-y-2 right-2 rounded-lg"
+                      : "inset-y-0 right-0 h-auto",
                   ].join(" "),
                 side === "bottom" &&
-                  (isFloat ? "inset-x-2 bottom-2 rounded-lg" : "inset-x-0 bottom-0 rounded-t-2xl"),
+                  (isFloat
+                    ? "inset-x-2 bottom-2 rounded-lg"
+                    : "inset-x-0 bottom-0 rounded-t-2xl"),
                 side === "left" &&
                   [
                     "w-full max-w-xs overflow-y-auto",
                     "**:[[slot=header]]:text-start",
-                    isFloat ? "inset-y-2 left-2 rounded-lg" : "inset-y-0 left-0 h-auto",
+                    isFloat
+                      ? "inset-y-2 left-2 rounded-lg"
+                      : "inset-y-0 left-0 h-auto",
                   ].join(" "),
                 className,
               )}
@@ -113,17 +132,23 @@ const DrawerContent = ({
               }}
               transition={{ duration: 0.15, ease: "easeInOut" }}
               onDragEnd={(_, { offset, velocity }) => {
-                if (side === "bottom" && (velocity.y > 150 || offset.y > screen.height * 0.25)) {
-                  state.close()
+                if (
+                  side === "bottom" &&
+                  (velocity.y > 150 || offset.y > screen.height * 0.25)
+                ) {
+                  state.close();
                 }
-                if (side === "top" && (velocity.y < -150 || offset.y < screen.height * 0.25)) {
-                  state.close()
+                if (
+                  side === "top" &&
+                  (velocity.y < -150 || offset.y < screen.height * 0.25)
+                ) {
+                  state.close();
                 }
                 if (side === "left" && velocity.x < -150) {
-                  state.close()
+                  state.close();
                 }
                 if (side === "right" && velocity.x > 150) {
-                  state.close()
+                  state.close();
                 }
               }}
               dragElastic={{
@@ -157,28 +182,45 @@ const DrawerContent = ({
         </DrawerOverlay>
       )}
     </AnimatePresence>
-  )
-}
+  );
+};
 
-const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
+const DrawerHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       slot="header"
-      className={twMerge("flex flex-col p-4 text-center sm:text-start", className)}
+      className={twMerge(
+        "flex flex-col p-4 text-center sm:text-start",
+        className,
+      )}
       {...props}
     />
-  )
-}
+  );
+};
 
 const DrawerTitle = ({ className, ...props }: HeadingProps) => (
-  <Heading slot="title" className={twMerge("font-semibold text-lg/8", className)} {...props} />
-)
+  <Heading
+    slot="title"
+    className={twMerge("font-semibold text-lg/8", className)}
+    {...props}
+  />
+);
 
 const DrawerDescription = ({ className, ...props }: TextProps) => (
-  <Text slot="description" className={twMerge("text-muted-fg text-sm", className)} {...props} />
-)
+  <Text
+    slot="description"
+    className={twMerge("text-muted-fg text-sm", className)}
+    {...props}
+  />
+);
 
-const DrawerBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DrawerBody = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     slot="body"
     className={twMerge(
@@ -187,9 +229,12 @@ const DrawerBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement
     )}
     {...props}
   />
-)
+);
 
-const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
+const DrawerFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       slot="footer"
@@ -199,16 +244,29 @@ const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-const DrawerClose = ({ className, intent = "outline", ref, ...props }: ButtonProps) => {
-  return <Button slot="close" className={className} ref={ref} intent={intent} {...props} />
-}
+const DrawerClose = ({
+  className,
+  intent = "outline",
+  ref,
+  ...props
+}: ButtonProps) => {
+  return (
+    <Button
+      slot="close"
+      className={className}
+      ref={ref}
+      intent={intent}
+      {...props}
+    />
+  );
+};
 
-const DrawerTrigger = ButtonPrimitive
+const DrawerTrigger = ButtonPrimitive;
 
-export type { DrawerContentProps }
+export type { DrawerContentProps };
 export {
   Drawer,
   DrawerBody,
@@ -219,4 +277,4 @@ export {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-}
+};

@@ -1,13 +1,16 @@
-import { Form, Head } from "@inertiajs/react"
-import type { ReactNode } from "react"
-import GuestLayout from "@/layouts/guest-layout"
+import { Form, Head } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import GuestLayout from "@/layouts/guest-layout";
 
 interface ResetPasswordPageProps {
-  email: string
-  token: string
+  email: string;
+  token: string;
 }
 
-export default function ResetPasswordPage({ email, token }: ResetPasswordPageProps) {
+export default function ResetPasswordPage({
+  email,
+  token,
+}: ResetPasswordPageProps) {
   return (
     <>
       <Head title="Reset Password" />
@@ -16,7 +19,12 @@ export default function ResetPasswordPage({ email, token }: ResetPasswordPagePro
           <>
             <input name="token" type="hidden" value={token} />
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-fg">Email</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-fg"
+              >
+                Email
+              </label>
               <input
                 id="email"
                 aria-label="Email"
@@ -25,10 +33,17 @@ export default function ResetPasswordPage({ email, token }: ResetPasswordPagePro
                 type="email"
                 defaultValue={email}
               />
-              {errors.email ? <p className="text-sm text-danger-subtle-fg">{errors.email}</p> : null}
+              {errors.email ? (
+                <p className="text-sm text-danger-subtle-fg">{errors.email}</p>
+              ) : null}
             </div>
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-fg">Password</label>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-fg"
+              >
+                Password
+              </label>
               <input
                 id="password"
                 aria-label="Password"
@@ -36,10 +51,17 @@ export default function ResetPasswordPage({ email, token }: ResetPasswordPagePro
                 name="password"
                 type="password"
               />
-              {errors.password ? <p className="text-sm text-danger-subtle-fg">{errors.password}</p> : null}
+              {errors.password ? (
+                <p className="text-sm text-danger-subtle-fg">
+                  {errors.password}
+                </p>
+              ) : null}
             </div>
             <div className="space-y-2">
-              <label htmlFor="password_confirmation" className="block text-sm font-medium text-fg">
+              <label
+                htmlFor="password_confirmation"
+                className="block text-sm font-medium text-fg"
+              >
                 Confirm Password
               </label>
               <input
@@ -61,7 +83,7 @@ export default function ResetPasswordPage({ email, token }: ResetPasswordPagePro
         )}
       </Form>
     </>
-  )
+  );
 }
 
 ResetPasswordPage.layout = (page: ReactNode) => (
@@ -71,4 +93,4 @@ ResetPasswordPage.layout = (page: ReactNode) => (
   >
     {page}
   </GuestLayout>
-)
+);

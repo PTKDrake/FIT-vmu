@@ -1,4 +1,8 @@
-import { Line, LineChart as LineChartPrimitive, type LineProps } from "recharts"
+import {
+  Line,
+  LineChart as LineChartPrimitive,
+  type LineProps,
+} from "recharts";
 import {
   type BaseChartProps,
   CartesianGrid,
@@ -9,19 +13,27 @@ import {
   ChartTooltipContent,
   XAxis,
   YAxis,
-} from "./chart"
-import { DEFAULT_COLORS, constructCategoryColors, getColorValue, valueToPercent } from "./chart.utils"
+} from "./chart";
+import {
+  DEFAULT_COLORS,
+  constructCategoryColors,
+  getColorValue,
+  valueToPercent,
+} from "./chart.utils";
 
-const EMPTY_LINE_CHART_DATA: BaseChartProps["data"] = []
+const EMPTY_LINE_CHART_DATA: BaseChartProps["data"] = [];
 
 function defaultLineValueFormatter(value: number): string {
-  return value.toString()
+  return value.toString();
 }
 
 export interface LineChartProps extends BaseChartProps {
-  connectNulls?: boolean
-  lineProps?: LineProps
-  chartProps?: Omit<React.ComponentProps<typeof LineChartPrimitive>, "data" | "stackOffset">
+  connectNulls?: boolean;
+  lineProps?: LineProps;
+  chartProps?: Omit<
+    React.ComponentProps<typeof LineChartPrimitive>,
+    "data" | "stackOffset"
+  >;
 }
 
 export function LineChart({
@@ -58,16 +70,16 @@ export function LineChart({
   lineProps,
   ...props
 }: LineChartProps) {
-  const configKeys = Object.keys(config)
-  const categoryColors = constructCategoryColors(configKeys, colors)
-  const configEntries = Object.entries(config)
+  const configKeys = Object.keys(config);
+  const categoryColors = constructCategoryColors(configKeys, colors);
+  const configEntries = Object.entries(config);
 
   return (
     <Chart config={config} data={data} dataKey={dataKey} {...props}>
       {({ onLegendSelect, selectedLegend }) => (
         <LineChartPrimitive
           onClick={() => {
-            onLegendSelect(null)
+            onLegendSelect(null);
           }}
           data={data}
           margin={{
@@ -94,7 +106,9 @@ export function LineChart({
 
           {legend && (
             <ChartLegend
-              content={typeof legend === "boolean" ? <ChartLegendContent /> : legend}
+              content={
+                typeof legend === "boolean" ? <ChartLegendContent /> : legend
+              }
               {...legendProps}
             />
           )}
@@ -102,7 +116,11 @@ export function LineChart({
           {tooltip && (
             <ChartTooltip
               content={
-                typeof tooltip === "boolean" ? <ChartTooltipContent accessibilityLayer /> : tooltip
+                typeof tooltip === "boolean" ? (
+                  <ChartTooltipContent accessibilityLayer />
+                ) : (
+                  tooltip
+                )
               }
               {...tooltipProps}
             />
@@ -110,8 +128,11 @@ export function LineChart({
 
           {!children
             ? configEntries.map(([category, values]) => {
-                const strokeOpacity = selectedLegend && selectedLegend !== category ? 0.1 : 1
-                const color = getColorValue(values.color || categoryColors.get(category))
+                const strokeOpacity =
+                  selectedLegend && selectedLegend !== category ? 0.1 : 1;
+                const color = getColorValue(
+                  values.color || categoryColors.get(category),
+                );
 
                 return (
                   <Line
@@ -133,11 +154,11 @@ export function LineChart({
                     connectNulls={connectNulls}
                     {...lineProps}
                   />
-                )
+                );
               })
             : children}
         </LineChartPrimitive>
       )}
     </Chart>
-  )
+  );
 }

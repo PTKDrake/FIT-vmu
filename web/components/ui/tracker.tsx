@@ -1,14 +1,14 @@
-import { useState } from "react"
-import { Pressable } from "react-aria-components/Pressable"
-import { twJoin, twMerge } from "tailwind-merge"
-import { Tooltip, TooltipContent } from "./tooltip"
+import { useState } from "react";
+import { Pressable } from "react-aria-components/Pressable";
+import { twJoin, twMerge } from "tailwind-merge";
+import { Tooltip, TooltipContent } from "./tooltip";
 
 interface TrackerBlockProps {
-  key?: string | number
-  color?: string
-  tooltip?: string
-  defaultBackgroundColor?: string
-  disabledTooltip?: boolean
+  key?: string | number;
+  color?: string;
+  tooltip?: string;
+  defaultBackgroundColor?: string;
+  disabledTooltip?: boolean;
 }
 
 const Block = ({
@@ -17,7 +17,7 @@ const Block = ({
   disabledTooltip,
   defaultBackgroundColor = "bg-secondary",
 }: TrackerBlockProps) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return disabledTooltip ? (
     <div className="size-full overflow-hidden px-[0.5px] transition first:rounded-s-sm first:ps-0 last:rounded-e-sm last:pe-0 sm:px-px">
@@ -52,14 +52,15 @@ const Block = ({
         {tooltip}
       </TooltipContent>
     </Tooltip>
-  )
-}
+  );
+};
 
 interface TrackerProps
-  extends React.ComponentProps<"div">,
+  extends
+    React.ComponentProps<"div">,
     Pick<TrackerBlockProps, "disabledTooltip"> {
-  data: TrackerBlockProps[]
-  defaultBackgroundColor?: string
+  data: TrackerBlockProps[];
+  defaultBackgroundColor?: string;
 }
 
 const Tracker = ({
@@ -70,12 +71,20 @@ const Tracker = ({
   ...props
 }: TrackerProps) => {
   return (
-    <div ref={ref} className={twMerge("group flex h-8 w-full items-center", className)} {...props}>
+    <div
+      ref={ref}
+      className={twMerge("group flex h-8 w-full items-center", className)}
+      {...props}
+    >
       {data.map((props, index) => (
-        <Block disabledTooltip={disabledTooltip} key={props.key ?? index} {...props} />
+        <Block
+          disabledTooltip={disabledTooltip}
+          key={props.key ?? index}
+          {...props}
+        />
       ))}
     </div>
-  )
-}
+  );
+};
 
-export { Tracker, type TrackerBlockProps }
+export { Tracker, type TrackerBlockProps };

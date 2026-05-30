@@ -23,10 +23,13 @@ export default function CmsUnitEditPage({ unit }: CmsUnitFormPageProps) {
     });
   };
 
-  useRegisterUnsavedChanges({
-    isDirty: form.isDirty,
-    onSave: handleSave,
-  }, "unit-edit");
+  useRegisterUnsavedChanges(
+    {
+      isDirty: form.isDirty,
+      onSave: handleSave,
+    },
+    "unit-edit",
+  );
 
   return (
     <>
@@ -47,6 +50,5 @@ export default function CmsUnitEditPage({ unit }: CmsUnitFormPageProps) {
     </>
   );
 }
-
 
 CmsUnitEditPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;

@@ -1,4 +1,9 @@
-import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
+import {
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryStates,
+} from "nuqs";
 import { useMemo, useRef, useState } from "react";
 import { useAsyncList } from "react-stately";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
@@ -86,7 +91,9 @@ export function useCmsTableQueryState<TItem extends object>({
     const resolvedQuery = {
       ...queryRef.current,
       ...nextQuery,
-      page: options.page ?? (options.resetPage ? 1 : nextQuery.page ?? queryRef.current.page),
+      page:
+        options.page ??
+        (options.resetPage ? 1 : (nextQuery.page ?? queryRef.current.page)),
     };
 
     queryRef.current = resolvedQuery;

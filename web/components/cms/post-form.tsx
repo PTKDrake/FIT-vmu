@@ -13,7 +13,11 @@ import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
 import { Description, FieldError, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { MultipleSelect, MultipleSelectContent, MultipleSelectItem } from "@/components/ui/multiple-select";
+import {
+  MultipleSelect,
+  MultipleSelectContent,
+  MultipleSelectItem,
+} from "@/components/ui/multiple-select";
 import { TextField } from "@/components/ui/text-field";
 import { Textarea } from "@/components/ui/textarea";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -65,20 +69,24 @@ export function PostForm({
     status: initialValues.status,
   });
 
-  function triggerSubmitWithStatus(status: "draft" | "pending" | "published"): void {
+  function triggerSubmitWithStatus(
+    status: "draft" | "pending" | "published",
+  ): void {
     form.setData("status", status);
     setTimeout(() => {
       document.getElementById("post-form-submit-btn")?.click();
     }, 50);
   }
 
-  useRegisterUnsavedChanges({
-    isDirty: form.isDirty,
-    onSave: () => {
-      triggerSubmitWithStatus(form.data.status);
+  useRegisterUnsavedChanges(
+    {
+      isDirty: form.isDirty,
+      onSave: () => {
+        triggerSubmitWithStatus(form.data.status);
+      },
     },
-  }, "post-form");
-
+    "post-form",
+  );
 
   // Esc listener to exit fullscreen mode using useMountEffect
   useMountEffect(() => {
@@ -98,10 +106,11 @@ export function PostForm({
   }
 
   const multipleSelectOptions = useMemo(
-    () => categories.map((category) => ({
-      id: String(category.value),
-      name: category.label,
-    })),
+    () =>
+      categories.map((category) => ({
+        id: String(category.value),
+        name: category.label,
+      })),
     [categories],
   );
   const selectedCategoryValues = useMemo(
@@ -110,7 +119,10 @@ export function PostForm({
   );
 
   return (
-    <form onSubmit={handleSubmit} className="border border/60 rounded-2xl p-4 bg-overlay relative min-h-[85vh] flex flex-col justify-between w-full">
+    <form
+      onSubmit={handleSubmit}
+      className="border border/60 rounded-2xl p-4 bg-overlay relative min-h-[85vh] flex flex-col justify-between w-full"
+    >
       {/* Hidden native submit button to route form submit action */}
       <button id="post-form-submit-btn" type="submit" className="hidden" />
 
@@ -165,7 +177,6 @@ export function PostForm({
             </Button>
           </div>
 
-
           <div className="flex-1 min-h-[450px] flex flex-col">
             <BlockNoteEditor
               className="min-h-[450px]"
@@ -174,13 +185,14 @@ export function PostForm({
                 form.setData("content", value.isEmpty ? "" : value.json);
               }}
             />
-            {form.errors.content ? <FieldError className="mt-2">{form.errors.content}</FieldError> : null}
+            {form.errors.content ? (
+              <FieldError className="mt-2">{form.errors.content}</FieldError>
+            ) : null}
           </div>
         </div>
 
         {/* Column 3: Sidebar Controls (1/3 width) - styled as highly distinct card */}
         <div className="lg:col-span-1 bg-muted/20 p-8 shadow-xs space-y-4">
-
           {/* Slug Field */}
           <TextField
             isRequired
@@ -188,7 +200,9 @@ export function PostForm({
             value={form.data.slug}
             onChange={(value) => form.setData("slug", value)}
           >
-            <Label className="font-semibold text-fg text-sm">Đườn dẫn liên kết</Label>
+            <Label className="font-semibold text-fg text-sm">
+              Đườn dẫn liên kết
+            </Label>
             <Input placeholder="tieu-de-cau-chuyen" />
             <FieldError>{form.errors.slug}</FieldError>
             <Description>Đường dẫn hiển thị trên thanh địa chỉ.</Description>
@@ -202,11 +216,15 @@ export function PostForm({
               onChange={(keys) => {
                 form.setData(
                   "category_ids",
-                  keys.map((key) => Number(key)).filter((value) => Number.isInteger(value)),
+                  keys
+                    .map((key) => Number(key))
+                    .filter((value) => Number.isInteger(value)),
                 );
               }}
             >
-              <Label className="font-semibold text-fg text-sm">Chuyên mục bài viết</Label>
+              <Label className="font-semibold text-fg text-sm">
+                Chuyên mục bài viết
+              </Label>
               <MultipleSelectContent items={multipleSelectOptions}>
                 {(item) => (
                   <MultipleSelectItem id={item.id} textValue={item.name}>
@@ -227,12 +245,15 @@ export function PostForm({
           />
 
           {/* Excerpt Field */}
-          <TextField name="excerpt" value={form.data.excerpt} onChange={(value) => form.setData("excerpt", value)}>
-            <Label className="font-semibold text-fg text-sm">Tóm tắt ngắn (Excerpt)</Label>
-            <Textarea
-              placeholder="Nhập mô tả tóm tắt ngắn..."
-              rows={4}
-            />
+          <TextField
+            name="excerpt"
+            value={form.data.excerpt}
+            onChange={(value) => form.setData("excerpt", value)}
+          >
+            <Label className="font-semibold text-fg text-sm">
+              Tóm tắt ngắn (Excerpt)
+            </Label>
+            <Textarea placeholder="Nhập mô tả tóm tắt ngắn..." rows={4} />
             <FieldError>{form.errors.excerpt}</FieldError>
           </TextField>
         </div>
@@ -276,7 +297,6 @@ export function PostForm({
         </div>
       </StickyActionBar>
 
-
       {/* Distraction-Free Fullscreen Editor Overlay */}
       {isFullscreen ? (
         <div
@@ -288,7 +308,9 @@ export function PostForm({
             <div className="flex items-center justify-between border-b border-border/50 pb-4 mb-4">
               <div className="flex items-center gap-2 text-muted-fg">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-mono tracking-wider uppercase">Chế độ viết tập trung (Distraction-Free)</span>
+                <span className="text-[10px] font-mono tracking-wider uppercase">
+                  Chế độ viết tập trung (Distraction-Free)
+                </span>
               </div>
               <Button
                 intent="outline"

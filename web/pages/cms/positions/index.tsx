@@ -11,18 +11,16 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CmsDataTable } from "@/components/cms/cms-data-table";
-import { PositionFormDialog  } from "@/components/cms/position-form-dialog";
-import type {PositionFormValues} from "@/components/cms/position-form-dialog";
-import type { CmsPositionRow, CmsPositionsPageProps } from "@/components/cms/types";
+import { PositionFormDialog } from "@/components/cms/position-form-dialog";
+import type { PositionFormValues } from "@/components/cms/position-form-dialog";
+import type {
+  CmsPositionRow,
+  CmsPositionsPageProps,
+} from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -60,10 +58,16 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   minute: "2-digit",
 });
 
-export default function CmsPositionsPage({ can, flash, positions }: CmsPositionsPageProps) {
+export default function CmsPositionsPage({
+  can,
+  flash,
+  positions,
+}: CmsPositionsPageProps) {
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [activePosition, setActivePosition] = useState<PositionFormValues>(emptyPositionFormValues);
+  const [activePosition, setActivePosition] = useState<PositionFormValues>(
+    emptyPositionFormValues,
+  );
   const [deleteTarget, setDeleteTarget] = useState<CmsPositionRow | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -89,11 +93,15 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
       }),
       positionColumnHelper.accessor("sortOrder", {
         header: "Thứ tự",
-        cell: ({ getValue }) => <Text className="font-medium text-fg">{getValue()}</Text>,
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()}</Text>
+        ),
       }),
       positionColumnHelper.accessor("appointmentCount", {
         header: "Đang dùng",
-        cell: ({ getValue }) => <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>,
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
+        ),
       }),
       positionColumnHelper.accessor("isActive", {
         header: "Trạng thái",
@@ -136,7 +144,10 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
                   <PencilSquareIcon />
                   Chỉnh sửa
                 </MenuItem>
-                <MenuItem intent="danger" onAction={() => setDeleteTarget(row.original)}>
+                <MenuItem
+                  intent="danger"
+                  onAction={() => setDeleteTarget(row.original)}
+                >
                   <TrashIcon />
                   Xóa chức vụ
                 </MenuItem>
@@ -165,7 +176,11 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
     <>
       <Head title="Chức vụ" />
       {flash?.message ? (
-        <PositionsFlashToast key={`${flash.type}:${flash.message}`} message={flash.message} type={flash.type} />
+        <PositionsFlashToast
+          key={`${flash.type}:${flash.message}`}
+          message={flash.message}
+          type={flash.type}
+        />
       ) : null}
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -184,7 +199,9 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}
           onSearchChange={(value) => tableQueryState.setSearch(value)}
-          onSortingChange={(column, direction) => tableQueryState.setSorting(column, direction)}
+          onSortingChange={(column, direction) =>
+            tableQueryState.setSorting(column, direction)
+          }
           primaryAction={
             can.managePositions ? (
               <Button
@@ -231,13 +248,16 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
           <ModalHeader>
             <ModalTitle>Xóa chức vụ</ModalTitle>
             <ModalDescription>
-              Bạn sắp xóa <strong>{deleteTarget.name}</strong>. Hãy chắc chắn rằng không còn cần giữ các bổ nhiệm đang tham chiếu đến chức vụ này.
+              Bạn sắp xóa <strong>{deleteTarget.name}</strong>. Hãy chắc chắn
+              rằng không còn cần giữ các bổ nhiệm đang tham chiếu đến chức vụ
+              này.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
-                Việc xóa danh mục chức vụ có thể ảnh hưởng đến dữ liệu staff appointments đã tồn tại.
+                Việc xóa danh mục chức vụ có thể ảnh hưởng đến dữ liệu staff
+                appointments đã tồn tại.
               </Text>
             </div>
           </ModalBody>
@@ -245,7 +265,11 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
             <Button intent="outline" onPress={() => setDeleteTarget(null)}>
               Hủy
             </Button>
-            <Button intent="danger" isDisabled={isDeleting} onPress={deletePosition}>
+            <Button
+              intent="danger"
+              isDisabled={isDeleting}
+              onPress={deletePosition}
+            >
               Xác nhận xóa
             </Button>
           </ModalFooter>
@@ -257,7 +281,13 @@ export default function CmsPositionsPage({ can, flash, positions }: CmsPositions
 
 CmsPositionsPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;
 
-function PositionsFlashToast({ message, type }: { message: string; type: FlashData["type"] }) {
+function PositionsFlashToast({
+  message,
+  type,
+}: {
+  message: string;
+  type: FlashData["type"];
+}) {
   useMountEffect(() => {
     switch (type) {
       case "error":

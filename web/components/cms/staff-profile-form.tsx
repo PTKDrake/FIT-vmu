@@ -4,10 +4,28 @@ import { useState } from "react";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ComboBox, ComboBoxInput, ComboBoxContent, ComboBoxItem } from "@/components/ui/combo-box";
-import { Description, FieldError, FieldGroup, Fieldset, Legend, Label } from "@/components/ui/field";
+import {
+  ComboBox,
+  ComboBoxInput,
+  ComboBoxContent,
+  ComboBoxItem,
+} from "@/components/ui/combo-box";
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  Fieldset,
+  Legend,
+  Label,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
@@ -98,7 +116,11 @@ export function StaffProfileForm({
     onUpdate("appointments", nextAppts);
   };
 
-  const handleUpdateAppointment = (index: number, field: string, value: any) => {
+  const handleUpdateAppointment = (
+    index: number,
+    field: string,
+    value: any,
+  ) => {
     const nextAppts = appointments.map((appt: any, i: number) => {
       if (i === index) {
         return { ...appt, [field]: value };
@@ -119,7 +141,8 @@ export function StaffProfileForm({
       <Fieldset className="rounded-2xl border border-border bg-overlay px-5 py-5">
         <Legend>{title}</Legend>
         <Text>
-          Thông tin chi tiết cán bộ giảng viên sẽ được hiển thị công khai hoặc nội bộ theo phân quyền.
+          Thông tin chi tiết cán bộ giảng viên sẽ được hiển thị công khai hoặc
+          nội bộ theo phân quyền.
         </Text>
 
         <FieldGroup>
@@ -142,11 +165,18 @@ export function StaffProfileForm({
                 </ComboBoxContent>
               </ComboBox>
               <FieldError>{errors.user_id}</FieldError>
-              <Description>Mỗi người dùng chỉ được có tối đa một hồ sơ cán bộ.</Description>
+              <Description>
+                Mỗi người dùng chỉ được có tối đa một hồ sơ cán bộ.
+              </Description>
             </div>
           ) : (
-            <div data-slot="control" className="rounded-xl border border-border bg-muted/20 px-4 py-3">
-              <Text className="text-sm text-muted-fg font-medium">Tài khoản liên kết:</Text>
+            <div
+              data-slot="control"
+              className="rounded-xl border border-border bg-muted/20 px-4 py-3"
+            >
+              <Text className="text-sm text-muted-fg font-medium">
+                Tài khoản liên kết:
+              </Text>
               <Text className="text-sm font-semibold text-fg mt-1">
                 {data.email || "Đã liên kết"}
               </Text>
@@ -174,7 +204,9 @@ export function StaffProfileForm({
               <Label>Slug</Label>
               <Input placeholder="ts-nguyen-van-a" />
               <FieldError>{errors.slug}</FieldError>
-              <Description>Dùng cho đường dẫn URL giới thiệu cá nhân.</Description>
+              <Description>
+                Dùng cho đường dẫn URL giới thiệu cá nhân.
+              </Description>
             </TextField>
           </div>
 
@@ -205,12 +237,18 @@ export function StaffProfileForm({
               <Label className="self-center">Ảnh đại diện</Label>
               <Avatar
                 src={imagePreview || avatarUrl || undefined}
-                initials={data.full_name ? data.full_name.substring(0, 2).toUpperCase() : "SP"}
+                initials={
+                  data.full_name
+                    ? data.full_name.substring(0, 2).toUpperCase()
+                    : "SP"
+                }
                 className="size-24 rounded-full border border-border shadow-xs"
               />
             </div>
             <div data-slot="control" className="space-y-2">
-              <Label htmlFor="avatar-file-input">Tải ảnh đại diện mới lên</Label>
+              <Label htmlFor="avatar-file-input">
+                Tải ảnh đại diện mới lên
+              </Label>
               <input
                 id="avatar-file-input"
                 type="file"
@@ -218,9 +256,15 @@ export function StaffProfileForm({
                 onChange={handleFileChange}
                 className="block w-full text-sm text-muted-fg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-border file:text-sm file:font-semibold file:bg-bg file:text-fg hover:file:bg-muted/40 cursor-pointer"
               />
-              <Description>Định dạng JPG, PNG hoặc WEBP. Tối đa 2MB.</Description>
-              {errors.avatar_file ? <FieldError>{errors.avatar_file}</FieldError> : null}
-              {errors.avatar_id ? <FieldError>{errors.avatar_id}</FieldError> : null}
+              <Description>
+                Định dạng JPG, PNG hoặc WEBP. Tối đa 2MB.
+              </Description>
+              {errors.avatar_file ? (
+                <FieldError>{errors.avatar_file}</FieldError>
+              ) : null}
+              {errors.avatar_id ? (
+                <FieldError>{errors.avatar_id}</FieldError>
+              ) : null}
             </div>
           </div>
 
@@ -236,12 +280,19 @@ export function StaffProfileForm({
           </div>
 
           {/* Appointments / Positions assignment section */}
-          <div data-slot="control" className="space-y-4 border-t border-border pt-4">
+          <div
+            data-slot="control"
+            className="space-y-4 border-t border-border pt-4"
+          >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <Label className="text-base font-semibold">Quyết định bổ nhiệm & Chức vụ</Label>
+                <Label className="text-base font-semibold">
+                  Quyết định bổ nhiệm & Chức vụ
+                </Label>
                 <Description>
-                  Thiết lập các chức vụ của cán bộ tại các đơn vị (Ví dụ: Trưởng bộ môn HTTT, Phó trưởng khoa CNTT). Một cán bộ có thể đảm nhiệm nhiều chức vụ trong các khoảng thời gian khác nhau.
+                  Thiết lập các chức vụ của cán bộ tại các đơn vị (Ví dụ: Trưởng
+                  bộ môn HTTT, Phó trưởng khoa CNTT). Một cán bộ có thể đảm
+                  nhiệm nhiều chức vụ trong các khoảng thời gian khác nhau.
                 </Description>
               </div>
               <Button
@@ -256,13 +307,20 @@ export function StaffProfileForm({
             </div>
 
             {errors.appointments ? (
-              <div className="text-danger text-sm font-medium">{errors.appointments}</div>
+              <div className="text-danger text-sm font-medium">
+                {errors.appointments}
+              </div>
             ) : null}
 
             {appointments.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border bg-muted/10 p-6 text-center">
-                <Text className="text-muted-fg font-medium">Chưa phân công chức vụ nào cho cán bộ này.</Text>
-                <Text className="text-xs text-muted-fg mt-1">Các thông tin bổ nhiệm sẽ hiển thị trên lý lịch cán bộ công khai.</Text>
+                <Text className="text-muted-fg font-medium">
+                  Chưa phân công chức vụ nào cho cán bộ này.
+                </Text>
+                <Text className="text-xs text-muted-fg mt-1">
+                  Các thông tin bổ nhiệm sẽ hiển thị trên lý lịch cán bộ công
+                  khai.
+                </Text>
               </div>
             ) : (
               <div className="space-y-4">
@@ -282,23 +340,39 @@ export function StaffProfileForm({
 
                     <div className="grid gap-4 pr-10 lg:grid-cols-[1.2fr_1fr_180px_180px]">
                       <div className="space-y-1">
-                        <Label className="text-xs font-semibold">Đơn vị / Phòng ban</Label>
+                        <Label className="text-xs font-semibold">
+                          Đơn vị / Phòng ban
+                        </Label>
                         <Select
                           isRequired
-                          selectedKey={appt.unit_id ? String(appt.unit_id) : undefined}
-                          onSelectionChange={(key) => handleUpdateAppointment(index, "unit_id", Number(key))}
+                          selectedKey={
+                            appt.unit_id ? String(appt.unit_id) : undefined
+                          }
+                          onSelectionChange={(key) =>
+                            handleUpdateAppointment(
+                              index,
+                              "unit_id",
+                              Number(key),
+                            )
+                          }
                         >
                           <SelectTrigger />
                           <SelectContent>
                             {units.map((u: any) => (
-                              <SelectItem key={u.id} id={String(u.id)} textValue={u.name}>
+                              <SelectItem
+                                key={u.id}
+                                id={String(u.id)}
+                                textValue={u.name}
+                              >
                                 <SelectLabel>{u.name}</SelectLabel>
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                         {errors[`appointments.${index}.unit_id`] ? (
-                          <div className="text-danger text-xs mt-1">{errors[`appointments.${index}.unit_id`]}</div>
+                          <div className="text-danger text-xs mt-1">
+                            {errors[`appointments.${index}.unit_id`]}
+                          </div>
                         ) : null}
                       </div>
 
@@ -306,45 +380,87 @@ export function StaffProfileForm({
                         <Label className="text-xs font-semibold">Chức vụ</Label>
                         <Select
                           isRequired
-                          selectedKey={appt.position_id ? String(appt.position_id) : undefined}
-                          onSelectionChange={(key) => handleUpdateAppointment(index, "position_id", Number(key))}
+                          selectedKey={
+                            appt.position_id
+                              ? String(appt.position_id)
+                              : undefined
+                          }
+                          onSelectionChange={(key) =>
+                            handleUpdateAppointment(
+                              index,
+                              "position_id",
+                              Number(key),
+                            )
+                          }
                         >
                           <SelectTrigger />
                           <SelectContent>
                             {positions.map((p: any) => (
-                              <SelectItem key={p.id} id={String(p.id)} textValue={p.name}>
+                              <SelectItem
+                                key={p.id}
+                                id={String(p.id)}
+                                textValue={p.name}
+                              >
                                 <SelectLabel>{p.name}</SelectLabel>
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                         {errors[`appointments.${index}.position_id`] ? (
-                          <div className="text-danger text-xs mt-1">{errors[`appointments.${index}.position_id`]}</div>
+                          <div className="text-danger text-xs mt-1">
+                            {errors[`appointments.${index}.position_id`]}
+                          </div>
                         ) : null}
                       </div>
 
                       <div className="space-y-1">
-                        <Label className="text-xs font-semibold">Từ ngày (Bắt đầu)</Label>
+                        <Label className="text-xs font-semibold">
+                          Từ ngày (Bắt đầu)
+                        </Label>
                         <Input
                           type="date"
                           required
-                          value={appt.start_date ? appt.start_date.substring(0, 10) : ""}
-                          onChange={(e) => handleUpdateAppointment(index, "start_date", e.target.value)}
+                          value={
+                            appt.start_date
+                              ? appt.start_date.substring(0, 10)
+                              : ""
+                          }
+                          onChange={(e) =>
+                            handleUpdateAppointment(
+                              index,
+                              "start_date",
+                              e.target.value,
+                            )
+                          }
                         />
                         {errors[`appointments.${index}.start_date`] ? (
-                          <div className="text-danger text-xs mt-1">{errors[`appointments.${index}.start_date`]}</div>
+                          <div className="text-danger text-xs mt-1">
+                            {errors[`appointments.${index}.start_date`]}
+                          </div>
                         ) : null}
                       </div>
 
                       <div className="space-y-1">
-                        <Label className="text-xs font-semibold">Đến ngày (Kết thúc)</Label>
+                        <Label className="text-xs font-semibold">
+                          Đến ngày (Kết thúc)
+                        </Label>
                         <Input
                           type="date"
-                          value={appt.end_date ? appt.end_date.substring(0, 10) : ""}
-                          onChange={(e) => handleUpdateAppointment(index, "end_date", e.target.value || null)}
+                          value={
+                            appt.end_date ? appt.end_date.substring(0, 10) : ""
+                          }
+                          onChange={(e) =>
+                            handleUpdateAppointment(
+                              index,
+                              "end_date",
+                              e.target.value || null,
+                            )
+                          }
                         />
                         {errors[`appointments.${index}.end_date`] ? (
-                          <div className="text-danger text-xs mt-1">{errors[`appointments.${index}.end_date`]}</div>
+                          <div className="text-danger text-xs mt-1">
+                            {errors[`appointments.${index}.end_date`]}
+                          </div>
                         ) : null}
                       </div>
                     </div>
@@ -353,12 +469,18 @@ export function StaffProfileForm({
                       <TextField
                         name={`appointments.${index}.note`}
                         value={appt.note || ""}
-                        onChange={(value) => handleUpdateAppointment(index, "note", value)}
+                        onChange={(value) =>
+                          handleUpdateAppointment(index, "note", value)
+                        }
                       >
-                        <Label className="text-xs font-semibold">Ghi chú / Quyết định số</Label>
+                        <Label className="text-xs font-semibold">
+                          Ghi chú / Quyết định số
+                        </Label>
                         <Input placeholder="Ví dụ: Quyết định bổ nhiệm số 123/QĐ-ĐHHP ngày 01/01/2024" />
                         {errors[`appointments.${index}.note`] ? (
-                          <FieldError>{errors[`appointments.${index}.note`]}</FieldError>
+                          <FieldError>
+                            {errors[`appointments.${index}.note`]}
+                          </FieldError>
                         ) : null}
                       </TextField>
                     </div>
@@ -368,11 +490,15 @@ export function StaffProfileForm({
             )}
           </div>
 
-          <div data-slot="control" className="space-y-3 border-t border-border pt-4">
+          <div
+            data-slot="control"
+            className="space-y-3 border-t border-border pt-4"
+          >
             <div className="space-y-1">
               <Label>Tiểu sử, quá trình đào tạo & nghiên cứu khoa học</Label>
               <Description>
-                Nội dung BlockNote mô tả chi tiết lý lịch khoa học của cán bộ giảng viên.
+                Nội dung BlockNote mô tả chi tiết lý lịch khoa học của cán bộ
+                giảng viên.
               </Description>
             </div>
 
@@ -384,11 +510,16 @@ export function StaffProfileForm({
             />
 
             {errors.bio ? <FieldError>{errors.bio}</FieldError> : null}
-            {errors.bio_format ? <FieldError>{errors.bio_format}</FieldError> : null}
+            {errors.bio_format ? (
+              <FieldError>{errors.bio_format}</FieldError>
+            ) : null}
           </div>
         </FieldGroup>
 
-        <div data-slot="control" className="flex flex-wrap items-center justify-end gap-3 border-t border-border pt-4">
+        <div
+          data-slot="control"
+          className="flex flex-wrap items-center justify-end gap-3 border-t border-border pt-4"
+        >
           <Link
             href={cancelHref}
             className="inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-bg px-4 text-sm font-medium text-fg transition hover:bg-muted/40"

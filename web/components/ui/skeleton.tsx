@@ -1,10 +1,15 @@
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
 
 export interface SkeletonProps extends React.ComponentProps<"div"> {
-  isLoading?: boolean
+  isLoading?: boolean;
 }
 
-export function Skeleton({ ref, isLoading = false, className, ...props }: SkeletonProps) {
+export function Skeleton({
+  ref,
+  isLoading = false,
+  className,
+  ...props
+}: SkeletonProps) {
   return (
     <div
       data-slot="skeleton"
@@ -23,5 +28,5 @@ export function Skeleton({ ref, isLoading = false, className, ...props }: Skelet
       )}
       {...props}
     />
-  )
+  );
 }

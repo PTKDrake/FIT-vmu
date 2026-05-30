@@ -35,6 +35,6 @@ final class StorePageController extends Controller
             $validated,
         );
 
-        return to_route('cms.pages.edit', $page);
+        return to_route('cms.pages.builder', $page);
     }
 }

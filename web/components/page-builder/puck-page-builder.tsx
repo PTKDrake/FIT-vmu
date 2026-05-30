@@ -1,15 +1,10 @@
-
 import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
-import {
-  Puck,
-  createUsePuck,
-  useGetPuck,
-} from "@puckeditor/core";
+import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -19,11 +14,12 @@ import {
   getPuckPageContentFormat,
   isEmptyPuckPageData,
   parsePuckPageData,
-  serializePuckPageData
-
-
+  serializePuckPageData,
 } from "@/lib/puck/page-builder-data";
-import type { VmuFitPageBuilderData, VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
+import type {
+  VmuFitPageBuilderData,
+  VmuFitPageBuilderValue,
+} from "@/lib/puck/page-builder-data";
 
 const usePageBuilderPuck = createUsePuck<typeof vmuFitPageBuilderConfig>();
 
@@ -66,15 +62,55 @@ export function PuckPageBuilder({
   useMountEffect(() => {
     const syncTheme = () => {
       const isDark = document.documentElement.classList.contains("dark");
-      const iframe = document.querySelector(".vmu-puck-page-builder iframe") as HTMLIFrameElement | null;
+      const iframe = document.querySelector(
+        ".vmu-puck-page-builder iframe",
+      ) as HTMLIFrameElement | null;
 
       if (iframe && iframe.contentDocument) {
         const iframeHtml = iframe.contentDocument.documentElement;
+        const iframeHead = iframe.contentDocument.head;
 
         if (iframeHtml) {
           if (iframeHtml.classList.contains("dark") !== isDark) {
             iframeHtml.classList.toggle("dark", isDark);
             iframeHtml.style.colorScheme = isDark ? "dark" : "light";
+          }
+        }
+
+        // Programmatically inject Google Sans fonts and override CSS variable
+        if (iframeHead) {
+          if (!iframeHead.querySelector('link[href*="fonts.googleapis.com"]')) {
+            const preconnect1 = iframe.contentDocument.createElement("link");
+            preconnect1.rel = "preconnect";
+            preconnect1.href = "https://fonts.googleapis.com";
+            iframeHead.appendChild(preconnect1);
+
+            const preconnect2 = iframe.contentDocument.createElement("link");
+            preconnect2.rel = "preconnect";
+            preconnect2.href = "https://fonts.gstatic.com";
+            preconnect2.crossOrigin = "anonymous";
+            iframeHead.appendChild(preconnect2);
+
+            const fontLink = iframe.contentDocument.createElement("link");
+            fontLink.rel = "stylesheet";
+            fontLink.href =
+              "https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap";
+            iframeHead.appendChild(fontLink);
+          }
+
+          if (!iframeHead.querySelector("#puck-iframe-font-override")) {
+            const fontOverride = iframe.contentDocument.createElement("style");
+            fontOverride.id = "puck-iframe-font-override";
+            fontOverride.innerHTML = `
+              :root {
+                --font-sans: "Google Sans", "Inter", ui-sans-serif, system-ui, sans-serif !important;
+                --font-display: "Google Sans", "Inter", ui-sans-serif, system-ui, sans-serif !important;
+              }
+              body, html, .puck-preview {
+                font-family: "Google Sans", "Inter", ui-sans-serif, system-ui, sans-serif !important;
+              }
+            `;
+            iframeHead.appendChild(fontOverride);
           }
         }
       }
@@ -209,8 +245,6 @@ function PuckPageBuilderHeaderActions({
         <ArrowUturnRightIcon className="size-4" />
       </Button>
 
-
-
       <Button
         isDisabled={!canSave || isSaving}
         onPress={() => {
@@ -228,6 +262,29 @@ function PuckPageBuilderHeaderActions({
 }
 
 const puckBuilderStyles = `
+.vmu-puck-page-builder,
+.vmu-puck-page-builder button,
+.vmu-puck-page-builder input,
+.vmu-puck-page-builder select,
+.vmu-puck-page-builder textarea,
+.vmu-puck-page-builder div,
+.vmu-puck-page-builder p,
+.vmu-puck-page-builder h1,
+.vmu-puck-page-builder h2,
+.vmu-puck-page-builder h3,
+.vmu-puck-page-builder h4,
+.vmu-puck-page-builder span,
+.vmu-puck-page-builder label,
+.vmu-puck-page-builder a {
+  font-family: "Google Sans", var(--font-sans), sans-serif !important;
+}
+
+.vmu-puck-page-builder {
+  --puck-color-brand: var(--primary, oklch(0.685 0.169 237.323));
+  --puck-color-brand-active: var(--primary, oklch(0.685 0.169 237.323));
+  --puck-color-brand-hover: var(--primary, oklch(0.685 0.169 237.323));
+}
+
 .vmu-puck-page-builder [data-puck-entry] {
   min-height: 100%;
 }

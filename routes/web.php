@@ -58,12 +58,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pages', Controllers\Cms\PagesIndexController::class)
             ->can('viewAny', Page::class)
             ->name('pages');
+        Route::get('pages/create', Controllers\Cms\PageCreateController::class)
+            ->can('create', Page::class)
+            ->name('pages.create');
         Route::post('pages', Controllers\Cms\StorePageController::class)
             ->can('create', Page::class)
             ->name('pages.store');
         Route::get('pages/{page}/edit', Controllers\Cms\PageEditorController::class)
             ->can('update', 'page')
             ->name('pages.edit');
+        Route::get('pages/{page}/builder', Controllers\Cms\PageBuilderController::class)
+            ->can('update', 'page')
+            ->name('pages.builder');
+        Route::get('pages/{page}/show', Controllers\Cms\PageShowController::class)
+            ->can('view', 'page')
+            ->name('pages.show');
         Route::patch('pages/{page}/metadata', Controllers\Cms\UpdatePageMetadataController::class)
             ->can('update', 'page')
             ->name('pages.metadata.update');

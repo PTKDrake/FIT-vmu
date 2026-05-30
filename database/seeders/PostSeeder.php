@@ -8,6 +8,7 @@ use App\Models\Media;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -110,14 +111,20 @@ class PostSeeder extends Seeder
             ->all();
 
         foreach (self::POSTS as $index => $postData) {
-            $categoryIds = PostCategory::query()
+            /** @var Collection<int, PostCategory> $categories */
+            $categories = PostCategory::query()
                 ->whereIn('slug', $postData['category_slugs'])
                 ->orderBy('id')
-                ->pluck('id')
-                ->map(fn (mixed $id): int => (int) $id)
-                ->all();
+                ->get();
 
-            if ($categoryIds === [] || count($categoryIds) !== count($postData['category_slugs'])) {
+            $categoryIds = array_values(
+                array_map(
+                    static fn (int|string $categoryId): int => (int) $categoryId,
+                    $categories->modelKeys(),
+                ),
+            );
+
+            if ($categoryIds === [] || $categories->count() !== count($postData['category_slugs'])) {
                 continue;
             }
 
@@ -158,7 +165,7 @@ class PostSeeder extends Seeder
             ],
         );
 
-        if (method_exists($author, 'assignRole') && ! $author->hasRole('editor')) {
+        if (! $author->hasRole('editor')) {
             $author->assignRole('editor');
         }
 

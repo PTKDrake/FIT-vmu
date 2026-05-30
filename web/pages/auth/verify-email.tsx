@@ -1,9 +1,9 @@
-import { Form, Head } from "@inertiajs/react"
-import type { ReactNode } from "react"
-import GuestLayout from "@/layouts/guest-layout"
+import { Form, Head } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import GuestLayout from "@/layouts/guest-layout";
 
 interface VerifyEmailPageProps {
-  status?: string
+  status?: string;
 }
 
 export default function VerifyEmailPage({ status }: VerifyEmailPageProps) {
@@ -17,7 +17,8 @@ export default function VerifyEmailPage({ status }: VerifyEmailPageProps) {
       ) : null}
       <div className="space-y-4">
         <p className="text-sm text-muted-fg">
-          Thanks for signing up. Before getting started, verify your email address by clicking the link we just emailed to you.
+          Thanks for signing up. Before getting started, verify your email
+          address by clicking the link we just emailed to you.
         </p>
         <Form method="post" action="/email/verification-notification">
           {({ processing }) => (
@@ -32,7 +33,7 @@ export default function VerifyEmailPage({ status }: VerifyEmailPageProps) {
         </Form>
       </div>
     </>
-  )
+  );
 }
 
 VerifyEmailPage.layout = (page: ReactNode) => (
@@ -42,4 +43,4 @@ VerifyEmailPage.layout = (page: ReactNode) => (
   >
     {page}
   </GuestLayout>
-)
+);

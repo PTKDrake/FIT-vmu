@@ -18,7 +18,8 @@ export function CmsPagePlaceholder({
         <div className="px-5 py-6">
           <div className="rounded-xl border border-border bg-muted/35 px-4 py-5">
             <Text className="text-sm text-muted-fg">
-              Nội dung cho mục này sẽ được cập nhật theo cùng giao diện quản trị.
+              Nội dung cho mục này sẽ được cập nhật theo cùng giao diện quản
+              trị.
             </Text>
           </div>
         </div>

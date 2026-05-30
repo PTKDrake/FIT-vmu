@@ -6,22 +6,25 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Head, Link, router } from "@inertiajs/react";
-import { parseAsString, parseAsStringLiteral, useQueryStates, parseAsInteger } from "nuqs";
+import {
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryStates,
+  parseAsInteger,
+} from "nuqs";
 import type { ReactNode } from "react";
 import { useMemo, useRef, useState } from "react";
 import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
-import type { CmsStaffProfileRow, CmsStaffProfilesPageProps } from "@/components/cms/types";
+import type {
+  CmsStaffProfileRow,
+  CmsStaffProfilesPageProps,
+} from "@/components/cms/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -31,8 +34,21 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
@@ -44,14 +60,18 @@ export default function CmsStaffProfilesPage({
   flash,
   profiles,
 }: CmsStaffProfilesPageProps) {
-  const [deleteTarget, setDeleteTarget] = useState<CmsStaffProfileRow | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<CmsStaffProfileRow | null>(
+    null,
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const [profilesMeta, setProfilesMeta] = useState(profiles.meta);
 
   const [query, setQuery] = useQueryStates(
     {
       search: parseAsString.withDefault(""),
-      status: parseAsStringLiteral(["all", "public", "private"]).withDefault("all"),
+      status: parseAsStringLiteral(["all", "public", "private"]).withDefault(
+        "all",
+      ),
       sort: parseAsString.withDefault("created_at"),
       direction: parseAsStringLiteral(["asc", "desc"]).withDefault("desc"),
       page: parseAsInteger.withDefault(1),
@@ -68,7 +88,11 @@ export default function CmsStaffProfilesPage({
   const queryRef = useRef(query);
   const profilesList = useAsyncList<CmsStaffProfileRow>({
     async load({ signal }) {
-      const { items, meta } = await fetchInertiaCollectionPage("profiles", queryRef.current, signal);
+      const { items, meta } = await fetchInertiaCollectionPage(
+        "profiles",
+        queryRef.current,
+        signal,
+      );
 
       if (meta) {
         setProfilesMeta(meta as unknown as typeof profiles.meta);
@@ -119,7 +143,11 @@ export default function CmsStaffProfilesPage({
     <>
       <Head title="Hồ sơ cán bộ" />
       {flash?.message ? (
-        <ProfilesFlashToast key={`${flash.type}:${flash.message}`} message={flash.message} type={flash.type} />
+        <ProfilesFlashToast
+          key={`${flash.type}:${flash.message}`}
+          message={flash.message}
+          type={flash.type}
+        />
       ) : null}
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -129,7 +157,8 @@ export default function CmsStaffProfilesPage({
               <div className="space-y-2">
                 <p className="text-lg font-semibold text-fg">Hồ sơ cán bộ</p>
                 <p className="max-w-3xl text-sm text-muted-fg">
-                  Quản lý thông tin cán bộ, giảng viên khoa CNTT, hiển thị avatar, thông tin liên hệ và trạng thái công khai.
+                  Quản lý thông tin cán bộ, giảng viên khoa CNTT, hiển thị
+                  avatar, thông tin liên hệ và trạng thái công khai.
                 </p>
               </div>
 
@@ -165,7 +194,10 @@ export default function CmsStaffProfilesPage({
               selectedKey={query.status}
               onSelectionChange={(key) => {
                 if (key !== null) {
-                  void syncQuery({ status: key as typeof query.status, page: 1 });
+                  void syncQuery({
+                    status: key as typeof query.status,
+                    page: 1,
+                  });
                 }
               }}
             >
@@ -185,10 +217,7 @@ export default function CmsStaffProfilesPage({
           </div>
 
           <div className="overflow-hidden border-t border-border">
-            <Table
-              aria-label="Danh sách hồ sơ cán bộ"
-              className="bg-bg"
-            >
+            <Table aria-label="Danh sách hồ sơ cán bộ" className="bg-bg">
               <TableHeader>
                 <TableColumn id="fullName" isRowHeader>
                   Cán bộ
@@ -215,12 +244,18 @@ export default function CmsStaffProfilesPage({
                 )}
               >
                 {(profile) => (
-                  <TableRow key={profile.id} id={profile.id} textValue={profile.fullName}>
+                  <TableRow
+                    key={profile.id}
+                    id={profile.id}
+                    textValue={profile.fullName}
+                  >
                     <TableCell>
                       <div className="flex items-center gap-3 py-1">
                         <Avatar
                           src={profile.avatarUrl ?? undefined}
-                          initials={profile.fullName.substring(0, 2).toUpperCase()}
+                          initials={profile.fullName
+                            .substring(0, 2)
+                            .toUpperCase()}
                           className="size-9 rounded-full border border-border"
                           aria-label={`Ảnh đại diện của ${profile.fullName}`}
                         />
@@ -238,13 +273,20 @@ export default function CmsStaffProfilesPage({
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Text className="text-sm text-fg">{profile.email ?? "Chưa thiết lập"}</Text>
+                      <Text className="text-sm text-fg">
+                        {profile.email ?? "Chưa thiết lập"}
+                      </Text>
                     </TableCell>
                     <TableCell>
-                      <Text className="text-sm text-fg">{profile.phone ?? "Chưa thiết lập"}</Text>
+                      <Text className="text-sm text-fg">
+                        {profile.phone ?? "Chưa thiết lập"}
+                      </Text>
                     </TableCell>
                     <TableCell>
-                      <Badge intent={profile.isPublic ? "success" : "secondary"} isCircle={false}>
+                      <Badge
+                        intent={profile.isPublic ? "success" : "secondary"}
+                        isCircle={false}
+                      >
                         {profile.isPublic ? "Công khai" : "Ẩn / Nội bộ"}
                       </Badge>
                     </TableCell>
@@ -258,16 +300,23 @@ export default function CmsStaffProfilesPage({
                           <EllipsisHorizontalIcon className="size-5" />
                         </MenuTrigger>
                         <MenuContent placement="bottom right">
-                          <MenuItem href={show.url({ staffProfile: profile.id })}>
+                          <MenuItem
+                            href={show.url({ staffProfile: profile.id })}
+                          >
                             <EyeIcon />
                             Xem chi tiết
                           </MenuItem>
-                          <MenuItem href={edit.url({ staffProfile: profile.id })}>
+                          <MenuItem
+                            href={edit.url({ staffProfile: profile.id })}
+                          >
                             <PencilSquareIcon />
                             Chỉnh sửa
                           </MenuItem>
                           {can.deleteStaffProfile ? (
-                            <MenuItem intent="danger" onAction={() => setDeleteTarget(profile)}>
+                            <MenuItem
+                              intent="danger"
+                              onAction={() => setDeleteTarget(profile)}
+                            >
                               <TrashIcon />
                               Xóa hồ sơ
                             </MenuItem>
@@ -283,21 +332,26 @@ export default function CmsStaffProfilesPage({
 
           <div className="flex items-center justify-between border-t border-border px-5 py-4">
             <Text className="text-sm text-muted-fg">
-              Hiển thị {profilesMeta.from ?? 0}-{profilesMeta.to ?? 0} trên {profilesMeta.total} hồ sơ
+              Hiển thị {profilesMeta.from ?? 0}-{profilesMeta.to ?? 0} trên{" "}
+              {profilesMeta.total} hồ sơ
             </Text>
 
             <div className="flex items-center gap-2">
               <Button
                 intent="secondary"
                 isDisabled={profilesMeta.currentPage <= 1}
-                onPress={() => void syncQuery({ page: profilesMeta.currentPage - 1 })}
+                onPress={() =>
+                  void syncQuery({ page: profilesMeta.currentPage - 1 })
+                }
               >
                 Trước
               </Button>
               <Button
                 intent="secondary"
                 isDisabled={profilesMeta.currentPage >= profilesMeta.lastPage}
-                onPress={() => void syncQuery({ page: profilesMeta.currentPage + 1 })}
+                onPress={() =>
+                  void syncQuery({ page: profilesMeta.currentPage + 1 })
+                }
               >
                 Sau
               </Button>
@@ -320,13 +374,16 @@ export default function CmsStaffProfilesPage({
           <ModalHeader>
             <ModalTitle>Xóa hồ sơ cán bộ</ModalTitle>
             <ModalDescription>
-              Bạn sắp xóa hồ sơ của <strong>{deleteTarget.fullName}</strong>. Thao tác này sẽ gỡ thông tin cán bộ khỏi hệ thống, nhưng KHÔNG xóa tài khoản người dùng tương ứng.
+              Bạn sắp xóa hồ sơ của <strong>{deleteTarget.fullName}</strong>.
+              Thao tác này sẽ gỡ thông tin cán bộ khỏi hệ thống, nhưng KHÔNG xóa
+              tài khoản người dùng tương ứng.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
-                Hãy kiểm tra lại dữ liệu phân công công tác hoặc lịch sử trước khi xóa.
+                Hãy kiểm tra lại dữ liệu phân công công tác hoặc lịch sử trước
+                khi xóa.
               </Text>
             </div>
           </ModalBody>
@@ -334,7 +391,11 @@ export default function CmsStaffProfilesPage({
             <Button intent="outline" onPress={() => setDeleteTarget(null)}>
               Hủy
             </Button>
-            <Button intent="danger" isDisabled={isDeleting} onPress={deleteProfile}>
+            <Button
+              intent="danger"
+              isDisabled={isDeleting}
+              onPress={deleteProfile}
+            >
               Xác nhận xóa
             </Button>
           </ModalFooter>
@@ -344,9 +405,17 @@ export default function CmsStaffProfilesPage({
   );
 }
 
-CmsStaffProfilesPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;
+CmsStaffProfilesPage.layout = (page: ReactNode) => (
+  <CmsLayout>{page}</CmsLayout>
+);
 
-function ProfilesFlashToast({ message, type }: { message: string; type: FlashData["type"] }) {
+function ProfilesFlashToast({
+  message,
+  type,
+}: {
+  message: string;
+  type: FlashData["type"];
+}) {
   useMountEffect(() => {
     switch (type) {
       case "error":

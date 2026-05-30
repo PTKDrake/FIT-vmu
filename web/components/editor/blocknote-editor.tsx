@@ -6,9 +6,7 @@ import { usePage } from "@inertiajs/react";
 import { twMerge } from "tailwind-merge";
 import { useTheme } from "@/hooks/use-theme";
 import type { SharedData } from "@/types/shared";
-import {
-  BlockNoteAiControllers,
-} from "./blocknote-ai";
+import { BlockNoteAiControllers } from "./blocknote-ai";
 import { createBlockNoteAiExtension } from "./blocknote-ai-extension";
 import {
   cloneBlockNoteContent,
