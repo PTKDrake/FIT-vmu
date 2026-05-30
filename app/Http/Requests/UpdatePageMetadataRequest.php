@@ -23,9 +23,12 @@ class UpdatePageMetadataRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if (empty($this->slug) && ! empty($this->title)) {
+        $title = trim($this->string('title')->toString());
+        $slug = trim($this->string('slug')->toString());
+
+        if ($slug === '' && $title !== '') {
             $this->merge([
-                'slug' => Str::slug($this->title),
+                'slug' => Str::slug($title),
             ]);
         }
     }

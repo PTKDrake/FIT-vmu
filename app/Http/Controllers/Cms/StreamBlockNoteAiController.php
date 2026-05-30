@@ -17,12 +17,22 @@ class StreamBlockNoteAiController extends Controller
     {
         $apiKey = config('services.openrouter.api_key');
         $model = config('services.openrouter.blocknote_model');
+        $appName = config('services.openrouter.app_name', config('app.name'));
+        $appUrl = config('services.openrouter.app_url', config('app.url'));
         $scriptPath = base_path('web/lib/ai/blocknote-server.mjs');
 
         if (! is_string($apiKey) || $apiKey === '' || ! is_string($model) || $model === '') {
             return response('BlockNote AI is not configured.', 503, [
                 'Content-Type' => 'text/plain; charset=UTF-8',
             ]);
+        }
+
+        if (! is_string($appName)) {
+            $appName = '';
+        }
+
+        if (! is_string($appUrl)) {
+            $appUrl = '';
         }
 
         if (! is_file($scriptPath)) {
@@ -40,15 +50,15 @@ class StreamBlockNoteAiController extends Controller
             'trigger',
         ]);
 
-        return response()->stream(function () use ($apiKey, $model, $payload, $scriptPath): void {
+        return response()->stream(function () use ($apiKey, $model, $payload, $scriptPath, $appName, $appUrl): void {
             $process = new Process(
                 ['node', $scriptPath],
                 base_path(),
                 [
                     'OPENROUTER_API_KEY' => $apiKey,
                     'OPENROUTER_BLOCKNOTE_MODEL' => $model,
-                    'OPENROUTER_APP_NAME' => (string) config('services.openrouter.app_name', config('app.name')),
-                    'OPENROUTER_APP_URL' => (string) config('services.openrouter.app_url', config('app.url')),
+                    'OPENROUTER_APP_NAME' => $appName,
+                    'OPENROUTER_APP_URL' => $appUrl,
                 ],
                 json_encode($payload, JSON_THROW_ON_ERROR),
                 120,
