@@ -22,7 +22,10 @@ jobs:
         run: |
           mkdir -p ~/.config/rclone
           printf '%s' "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
-
+      - name: Test rclone config in GitHub Actions
+        run: |
+          rclone listremotes
+          rclone lsd gdrive:/VMUFit --max-depth 1
       - name: Prepare selected files
         shell: bash
         run: |
