@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import { createContext, use, useCallback, useState } from "react";
+import { createContext, use, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { cx } from "@/lib/primitive";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -68,35 +68,32 @@ const Carousel = ({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const onSelect = useCallback((api: CarouselApi) => {
+  function onSelect(api: CarouselApi): void {
     if (!api) {
       return;
     }
 
     setCanScrollPrev(api.canScrollPrev());
     setCanScrollNext(api.canScrollNext());
-  }, []);
+  }
 
-  const scrollPrev = useCallback(() => {
+  function scrollPrev(): void {
     api?.scrollPrev();
-  }, [api]);
+  }
 
-  const scrollNext = useCallback(() => {
+  function scrollNext(): void {
     api?.scrollNext();
-  }, [api]);
+  }
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        scrollPrev();
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        scrollNext();
-      }
-    },
-    [scrollPrev, scrollNext],
-  );
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      scrollPrev();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      scrollNext();
+    }
+  }
 
   useMountEffect(() => {
     if (!api) {

@@ -8,7 +8,7 @@ import { Head, router } from "@inertiajs/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { CmsDataTable } from "@/components/cms/cms-data-table";
 import { PositionFormDialog } from "@/components/cms/position-form-dialog";
@@ -80,84 +80,81 @@ export default function CmsPositionsPage({
     resourceKey: "positions",
   });
 
-  const columns = useMemo<Array<ColumnDef<CmsPositionRow, any>>>(
-    () => [
-      positionColumnHelper.accessor("name", {
-        header: "Chức vụ",
-        cell: ({ row }) => (
-          <div className="space-y-1">
-            <Text className="font-medium text-fg">{row.original.name}</Text>
-            <Text className="text-sm text-muted-fg">{row.original.slug}</Text>
-          </div>
-        ),
-      }),
-      positionColumnHelper.accessor("sortOrder", {
-        header: "Thứ tự",
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()}</Text>
-        ),
-      }),
-      positionColumnHelper.accessor("appointmentCount", {
-        header: "Đang dùng",
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
-        ),
-      }),
-      positionColumnHelper.accessor("isActive", {
-        header: "Trạng thái",
-        cell: ({ getValue }) => (
-          <Badge intent={getValue() ? "success" : "secondary"} isCircle={false}>
-            {getValue() ? "Đang hoạt động" : "Đang ẩn"}
-          </Badge>
-        ),
-      }),
-      positionColumnHelper.accessor("updatedAt", {
-        header: "Cập nhật",
-        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-      }),
-      positionColumnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) =>
-          can.managePositions ? (
-            <Menu>
-              <MenuTrigger
-                aria-label={`Tác vụ cho ${row.original.name}`}
-                className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+  const columns: Array<ColumnDef<CmsPositionRow, any>> = [
+    positionColumnHelper.accessor("name", {
+      header: "Chức vụ",
+      cell: ({ row }) => (
+        <div className="space-y-1">
+          <Text className="font-medium text-fg">{row.original.name}</Text>
+          <Text className="text-sm text-muted-fg">{row.original.slug}</Text>
+        </div>
+      ),
+    }),
+    positionColumnHelper.accessor("sortOrder", {
+      header: "Thứ tự",
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()}</Text>
+      ),
+    }),
+    positionColumnHelper.accessor("appointmentCount", {
+      header: "Đang dùng",
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
+      ),
+    }),
+    positionColumnHelper.accessor("isActive", {
+      header: "Trạng thái",
+      cell: ({ getValue }) => (
+        <Badge intent={getValue() ? "success" : "secondary"} isCircle={false}>
+          {getValue() ? "Đang hoạt động" : "Đang ẩn"}
+        </Badge>
+      ),
+    }),
+    positionColumnHelper.accessor("updatedAt", {
+      header: "Cập nhật",
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+    }),
+    positionColumnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) =>
+        can.managePositions ? (
+          <Menu>
+            <MenuTrigger
+              aria-label={`Tác vụ cho ${row.original.name}`}
+              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+            >
+              <EllipsisHorizontalIcon className="size-5" />
+            </MenuTrigger>
+            <MenuContent placement="bottom right">
+              <MenuItem
+                onAction={() => {
+                  setDialogMode("edit");
+                  setActivePosition({
+                    id: row.original.id,
+                    is_active: row.original.isActive,
+                    name: row.original.name,
+                    slug: row.original.slug,
+                    sort_order: row.original.sortOrder,
+                  });
+                  setDialogOpen(true);
+                }}
               >
-                <EllipsisHorizontalIcon className="size-5" />
-              </MenuTrigger>
-              <MenuContent placement="bottom right">
-                <MenuItem
-                  onAction={() => {
-                    setDialogMode("edit");
-                    setActivePosition({
-                      id: row.original.id,
-                      is_active: row.original.isActive,
-                      name: row.original.name,
-                      slug: row.original.slug,
-                      sort_order: row.original.sortOrder,
-                    });
-                    setDialogOpen(true);
-                  }}
-                >
-                  <PencilSquareIcon />
-                  Chỉnh sửa
-                </MenuItem>
-                <MenuItem
-                  intent="danger"
-                  onAction={() => setDeleteTarget(row.original)}
-                >
-                  <TrashIcon />
-                  Xóa chức vụ
-                </MenuItem>
-              </MenuContent>
-            </Menu>
-          ) : null,
-      }),
-    ],
-    [can.managePositions],
-  );
+                <PencilSquareIcon />
+                Chỉnh sửa
+              </MenuItem>
+              <MenuItem
+                intent="danger"
+                onAction={() => setDeleteTarget(row.original)}
+              >
+                <TrashIcon />
+                Xóa chức vụ
+              </MenuItem>
+            </MenuContent>
+          </Menu>
+        ) : null,
+    }),
+  ];
 
   function deletePosition(): void {
     if (!deleteTarget) {

@@ -11,7 +11,6 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnDef, SortingState, Updater } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
 import type {
   CmsTablePaginationMeta,
   CmsTableSortDirection,
@@ -95,16 +94,14 @@ export function CmsDataTable<TData extends object>({
 }: CmsDataTableProps<TData>) {
   "use no memo";
 
-  const sorting = useMemo<SortingState>(
-    () => [
-      {
-        desc: sort.direction === "desc",
-        id: sort.column,
-      },
-    ],
-    [sort.column, sort.direction],
-  );
+  const sorting: SortingState = [
+    {
+      desc: sort.direction === "desc",
+      id: sort.column,
+    },
+  ];
 
+  // react-doctor-disable-next-line react-hooks-js/incompatible-library
   const table = useReactTable({
     columns,
     data,

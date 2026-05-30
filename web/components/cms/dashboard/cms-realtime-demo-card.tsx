@@ -94,19 +94,25 @@ export function CmsRealtimeDemoCard() {
       const payload = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(payload.message ?? "Không thể gửi realtime ping.");
+        const message = payload.message ?? "Không thể gửi realtime ping.";
+
+        toast.error(message);
+        setRequestMessage(message);
+        setIsSubmitting(false);
+
+        return;
       }
 
       setRequestMessage(
         payload.message ?? "Realtime ping đã được đưa vào hàng đợi.",
       );
+      setIsSubmitting(false);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Không thể gửi realtime ping.";
 
       toast.error(message);
       setRequestMessage(message);
-    } finally {
       setIsSubmitting(false);
     }
   }

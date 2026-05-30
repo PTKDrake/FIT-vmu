@@ -423,7 +423,7 @@ publish.form = publishForm
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 export const destroy = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -438,7 +438,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 destroy.url = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -471,7 +471,7 @@ destroy.url = (args: { post: number | { id: number } } | [post: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 destroy.delete = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -481,7 +481,7 @@ destroy.delete = (args: { post: number | { id: number } } | [post: number | { id
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 const destroyForm = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -496,7 +496,7 @@ const destroyForm = (args: { post: number | { id: number } } | [post: number | {
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 destroyForm.delete = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

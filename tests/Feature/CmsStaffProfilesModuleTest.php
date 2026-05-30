@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\CmsContentChanged;
 use App\Models\Media;
 use App\Models\Position;
 use App\Models\StaffProfile;
@@ -7,6 +8,7 @@ use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -106,6 +108,8 @@ test('cms staff profiles index renders with pagination and search filters', func
 });
 
 test('admin/editor can access staff profile create page and persist new profile', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
@@ -159,9 +163,13 @@ test('admin/editor can access staff profile create page and persist new profile'
         ->and($profile->appointments->first()->unit_id)->toBe($unit1->id)
         ->and($profile->appointments->first()->position_id)->toBe($position1->id)
         ->and($profile->appointments->first()->note)->toBe('Quyết định số 456');
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
 });
 
 test('user can update their own profile and upload a new avatar', function () {
+    Event::fake([CmsContentChanged::class]);
+
     Storage::fake('public');
 
     $staffUser = User::factory()->create();
@@ -217,6 +225,8 @@ test('user can update their own profile and upload a new avatar', function () {
     $media = Media::find($profile->avatar_id);
     expect($media)->not->toBeNull();
     Storage::disk('public')->assertExists($media->path);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
 });
 
 test('staff user cannot update other staff member profiles', function () {
@@ -244,6 +254,8 @@ test('staff user cannot update other staff member profiles', function () {
 });
 
 test('admin can delete a staff profile', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
@@ -256,6 +268,8 @@ test('admin can delete a staff profile', function () {
     $this->assertDatabaseMissing('staff_profiles', [
         'id' => $profile->id,
     ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
 });
 
 function blockNoteJsonTest(string $text): string

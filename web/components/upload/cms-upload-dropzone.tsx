@@ -7,7 +7,7 @@ import {
   TableCellsIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import type { Accept, FileRejection } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
@@ -56,14 +56,10 @@ export function CmsUploadDropzone({
 }: CmsUploadDropzoneProps) {
   const [rejections, setRejections] = useState<FileRejection[]>([]);
 
-  const acceptSummary = useMemo(
-    () =>
-      Object.values(accept)
-        .flat()
-        .map((extension) => extension.replace(".", "").toUpperCase())
-        .join(", "),
-    [accept],
-  );
+  const acceptSummary = Object.values(accept)
+    .flat()
+    .map((extension) => extension.replace(".", "").toUpperCase())
+    .join(", ");
 
   const {
     getInputProps,

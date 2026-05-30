@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 export const reorder = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -16,7 +16,7 @@ reorder.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 reorder.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ reorder.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 reorder.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -35,7 +35,7 @@ reorder.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 const reorderForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -50,7 +50,7 @@ const reorderForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 reorderForm.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -504,7 +504,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 export const destroy = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -519,7 +519,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 destroy.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -552,7 +552,7 @@ destroy.url = (args: { unit: number | { id: number } } | [unit: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 destroy.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -562,7 +562,7 @@ destroy.delete = (args: { unit: number | { id: number } } | [unit: number | { id
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 const destroyForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -577,7 +577,7 @@ const destroyForm = (args: { unit: number | { id: number } } | [unit: number | {
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 destroyForm.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

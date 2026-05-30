@@ -6,7 +6,7 @@ import {
   TrashIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -83,106 +83,112 @@ export function MediaSelector({
   }
 
   // Load existing media items from library
-  const loadLibrary = useCallback(
-    async (search: string = "", pageNumber: number = 1) => {
-      setLoadingLibrary(true);
-      setCurrentPage(pageNumber);
+  async function loadLibrary(
+    search: string = "",
+    pageNumber: number = 1,
+  ): Promise<void> {
+    setLoadingLibrary(true);
+    setCurrentPage(pageNumber);
 
-      try {
-        const url = new URL(cmsRoutes.media.url(), window.location.origin);
-        url.searchParams.set("type", "image");
-        url.searchParams.set("perPage", "24");
-        url.searchParams.set("page", String(pageNumber));
+    try {
+      const url = new URL(cmsRoutes.media.url(), window.location.origin);
+      url.searchParams.set("type", "image");
+      url.searchParams.set("perPage", "24");
+      url.searchParams.set("page", String(pageNumber));
 
-        if (search) {
-          url.searchParams.set("search", search);
-        }
-
-        const response = await fetch(url.toString(), {
-          credentials: "same-origin",
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-            Accept: "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Không thể kết nối tới thư viện media.");
-        }
-
-        const data = await response.json();
-        // Extract paginated items from Inertia response props.media.data
-        const rawItems = data.props?.media?.data ?? data.media?.data ?? [];
-        const meta = data.props?.media?.meta ?? data.media?.meta ?? null;
-
-        const formattedItems = rawItems.map((item: any) => ({
-          id: item.id,
-          displayName: item.displayName || item.display_name || "Chưa đặt tên",
-          previewUrl:
-            item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
-          mimeType: item.mimeType || item.mime_type || "image/jpeg",
-        }));
-
-        setLibraryItems(formattedItems);
-
-        if (meta) {
-          setLastPage(meta.lastPage || 1);
-        }
-      } catch (err: any) {
-        console.error(err);
-        toast.error("Không thể tải danh sách ảnh từ thư viện.");
-      } finally {
-        setLoadingLibrary(false);
+      if (search) {
+        url.searchParams.set("search", search);
       }
-    },
-    [],
-  );
 
-  const handleUpload = useCallback(
-    async (files: File[]) => {
-      if (files.length === 0) {
+      const response = await fetch(url.toString(), {
+        credentials: "same-origin",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        toast.error("Không thể tải danh sách ảnh từ thư viện.");
+        setLoadingLibrary(false);
+
         return;
       }
 
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("files[]", files[0]);
+      const data = await response.json();
+      // Extract paginated items from Inertia response props.media.data
+      const rawItems = data.props?.media?.data ?? data.media?.data ?? [];
+      const meta = data.props?.media?.meta ?? data.media?.meta ?? null;
 
-      try {
-        const response = await fetch(cmsRoutes.media.store.url(), {
-          method: "POST",
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-            Accept: "application/json",
-          },
-          body: formData,
-        });
+      const formattedItems = rawItems.map((item: any) => ({
+        id: item.id,
+        displayName: item.displayName || item.display_name || "Chưa đặt tên",
+        previewUrl:
+          item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
+        mimeType: item.mimeType || item.mime_type || "image/jpeg",
+      }));
 
-        if (!response.ok) {
-          throw new Error("Không thể tải tập tin lên máy chủ.");
-        }
+      setLibraryItems(formattedItems);
 
-        const data = await response.json();
-
-        if (data.success && data.media && data.media.length > 0) {
-          const uploadedMedia = data.media[0];
-          onChange(uploadedMedia.id);
-          setLocalPreviewUrl(uploadedMedia.preview_url);
-          setLocalDisplayName(uploadedMedia.display_name);
-          toast.success(`Đã tải lên và áp dụng ảnh thành công.`);
-          setIsModalOpen(false); // Close modal on success
-        } else {
-          throw new Error("Định dạng phản hồi không hợp lệ.");
-        }
-      } catch (err: any) {
-        console.error(err);
-        toast.error(err.message || "Tải lên thất bại. Vui lòng thử lại.");
-      } finally {
-        setUploading(false);
+      if (meta) {
+        setLastPage(meta.lastPage || 1);
       }
-    },
-    [onChange],
-  );
+      setLoadingLibrary(false);
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Không thể tải danh sách ảnh từ thư viện.");
+      setLoadingLibrary(false);
+    }
+  }
+
+  async function handleUpload(files: File[]): Promise<void> {
+    if (files.length === 0) {
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("files[]", files[0]);
+
+    try {
+      const response = await fetch(cmsRoutes.media.store.url(), {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          Accept: "application/json",
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        toast.error("Không thể tải tập tin lên máy chủ.");
+        setUploading(false);
+
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.media && data.media.length > 0) {
+        const uploadedMedia = data.media[0];
+        onChange(uploadedMedia.id);
+        setLocalPreviewUrl(uploadedMedia.preview_url);
+        setLocalDisplayName(uploadedMedia.display_name);
+        toast.success("Đã tải lên và áp dụng ảnh thành công.");
+        setIsModalOpen(false);
+        setUploading(false);
+
+        return;
+      }
+
+      toast.error("Định dạng phản hồi không hợp lệ.");
+      setUploading(false);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || "Tải lên thất bại. Vui lòng thử lại.");
+      setUploading(false);
+    }
+  }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {

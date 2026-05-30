@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const DeleteStaffProfileController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -16,7 +16,7 @@ DeleteStaffProfileController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 DeleteStaffProfileController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ DeleteStaffProfileController.url = (args: { staffProfile: number | { id: number 
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 DeleteStaffProfileController.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -59,7 +59,7 @@ DeleteStaffProfileController.delete = (args: { staffProfile: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const DeleteStaffProfileControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const DeleteStaffProfileControllerForm = (args: { staffProfile: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 DeleteStaffProfileControllerForm.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

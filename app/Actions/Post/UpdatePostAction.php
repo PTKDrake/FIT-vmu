@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Post;
 
+use App\Events\CmsContentChanged;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 
@@ -36,6 +37,8 @@ class UpdatePostAction
             ]);
 
             $post->categories()->sync($attributes['category_ids'] ?? []);
+
+            event(CmsContentChanged::forPost($post, 'updated', 'Đã cập nhật bài viết.'));
 
             return $post->refresh();
         });

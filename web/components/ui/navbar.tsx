@@ -3,9 +3,7 @@ import { LayoutGroup, motion } from "motion/react";
 import {
   createContext,
   use,
-  useCallback,
   useId,
-  useMemo,
   useState,
 } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
@@ -50,32 +48,27 @@ const NavbarProvider = ({
   const [openInternal, setOpenInternal] = useState(defaultOpen);
   const open = openProp ?? openInternal;
 
-  const setOpen = useCallback(
-    (value: boolean | ((value: boolean) => boolean)) => {
-      if (setOpenProp) {
-        return setOpenProp?.(typeof value === "function" ? value(open) : value);
-      }
+  function setOpen(value: boolean | ((value: boolean) => boolean)): void {
+    if (setOpenProp) {
+      setOpenProp(typeof value === "function" ? value(open) : value);
 
-      setOpenInternal(value);
-    },
-    [setOpenProp, open],
-  );
+      return;
+    }
 
-  const toggleNavbar = useCallback(() => {
-    setOpen((open) => !open);
-  }, [setOpen]);
+    setOpenInternal(value);
+  }
+
+  function toggleNavbar(): void {
+    setOpen((currentOpen) => !currentOpen);
+  }
 
   const isMobile = useIsMobile();
-
-  const contextValue = useMemo<NavbarContextProps>(
-    () => ({
-      open,
-      setOpen,
-      isMobile: isMobile ?? false,
-      toggleNavbar,
-    }),
-    [open, setOpen, isMobile, toggleNavbar],
-  );
+  const contextValue: NavbarContextProps = {
+    open,
+    setOpen,
+    isMobile: isMobile ?? false,
+    toggleNavbar,
+  };
 
   if (isMobile === undefined) {
     return null;

@@ -1,9 +1,11 @@
 <?php
 
+use App\Events\CmsContentChanged;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
@@ -93,6 +95,8 @@ test('cms post edit page normalizes nullable fields for form inputs', function (
 });
 
 test('cms post can be created by managers', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $editor = User::factory()->create();
     $editor->assignRole('editor');
 
@@ -123,9 +127,18 @@ test('cms post can be created by managers', function () {
         'post_id' => Post::query()->where('slug', 'bai-viet-moi-tinh')->value('id'),
         'category_id' => $category->id,
     ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'created'
+            && $event->title === 'Bài viết mới tinh';
+    });
 });
 
 test('cms post can be updated by managers', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $editor = User::factory()->create();
     $editor->assignRole('editor');
 
@@ -157,9 +170,18 @@ test('cms post can be updated by managers', function () {
         'post_id' => $post->id,
         'category_id' => $category->id,
     ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'updated'
+            && $event->title === 'Tiêu đề cập nhật';
+    });
 });
 
 test('cms post status can be updated/published by authorized publishers', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $editor = User::factory()->create();
     $editor->assignRole('editor');
 
@@ -176,13 +198,23 @@ test('cms post status can be updated/published by authorized publishers', functi
         'status' => 'published',
     ]);
     expect($post->fresh()->published_at)->not->toBeNull();
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'published'
+            && $event->status === 'published';
+    });
 });
 
 test('cms post can be deleted by managers', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $editor = User::factory()->create();
     $editor->assignRole('editor');
 
     $post = Post::factory()->create();
+    $deletedPostTitle = $post->title;
 
     $this->actingAs($editor)
         ->delete("/cms/posts/{$post->id}")
@@ -191,4 +223,11 @@ test('cms post can be deleted by managers', function () {
     $this->assertDatabaseMissing('posts', [
         'id' => $post->id,
     ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event) use ($deletedPostTitle): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'deleted'
+            && $event->title === $deletedPostTitle;
+    });
 });

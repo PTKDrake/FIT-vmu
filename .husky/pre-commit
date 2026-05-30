@@ -25,33 +25,4 @@ stage_wayfinder_outputs() {
 
 stage_wayfinder_outputs
 
-# react-doctor hook start
-react_doctor_scan_staged_files() {
-  if [ -x "./node_modules/.bin/react-doctor" ]; then
-    "./node_modules/.bin/react-doctor" --staged --fail-on none
-    return
-  fi
-
-  if command -v react-doctor >/dev/null 2>&1; then
-    react-doctor --staged --fail-on none
-    return
-  fi
-
-  if command -v pnpm >/dev/null 2>&1; then
-    pnpm dlx react-doctor@latest --staged --fail-on none
-    return
-  fi
-
-  if command -v npx >/dev/null 2>&1; then
-    npx --yes react-doctor@latest --staged --fail-on none
-    return
-  fi
-
-  printf '%s\n' "react-doctor: command not found; skipping staged scan."
-}
-
-printf '%s\n' "react-doctor: scanning staged files (non-blocking)."
-if ! react_doctor_scan_staged_files; then
-  printf '%s\n' "react-doctor: staged scan failed; commit will continue."
-fi
-# react-doctor hook end
+pnpm exec lint-staged

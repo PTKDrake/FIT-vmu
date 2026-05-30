@@ -9,11 +9,17 @@ import {
   ModalFooter,
 } from "@/components/ui/modal";
 import { useMountEffect } from "@/hooks/use-mount-effect";
+import { shouldInterceptUnsavedAnchorNavigation } from "@/hooks/unsaved-navigation";
 
 type UnsavedChangesState = {
   isDirty: boolean;
   onSave: () => Promise<boolean> | boolean | void;
 };
+
+type PendingNavigation =
+  | { kind: "history-back" }
+  | { kind: "href"; href: string }
+  | { kind: "inertia"; visit: any };
 
 type UnsavedChangesContextType = {
   setDirty: (
@@ -147,7 +153,7 @@ export function UnsavedChangesProvider({
     Record<string, () => Promise<boolean> | boolean | void>
   >({});
   const isAnyDirtyRef = useRef(false);
-  const pendingVisitRef = useRef<any>(null);
+  const pendingNavigationRef = useRef<PendingNavigation | null>(null);
   const [contextValue] = useState<UnsavedChangesContextType>(() => ({
     setDirty(id, isDirty, onSave) {
       onSaveRefs.current[id] = onSave;
@@ -173,9 +179,18 @@ export function UnsavedChangesProvider({
         return;
       }
 
+      const visitMethod = String(event.detail.visit.method ?? "get").toLowerCase();
+
+      if (visitMethod !== "get") {
+        return;
+      }
+
       if (isAnyDirtyRef.current) {
         event.preventDefault();
-        pendingVisitRef.current = event.detail.visit;
+        pendingNavigationRef.current = {
+          kind: "inertia",
+          visit: event.detail.visit,
+        };
         setIsModalOpen(true);
       }
     });
@@ -186,15 +201,84 @@ export function UnsavedChangesProvider({
   });
 
   useMountEffect(() => {
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (bypassRef.current || !isAnyDirtyRef.current) {
+        return;
+      }
+
+      const target = event.target;
+
+      if (!(target instanceof Element)) {
+        return;
+      }
+
+      const anchor = target.closest("a[href]");
+
+      if (!(anchor instanceof HTMLAnchorElement)) {
+        return;
+      }
+
+      const shouldIntercept = shouldInterceptUnsavedAnchorNavigation({
+        altKey: event.altKey,
+        button: event.button,
+        ctrlKey: event.ctrlKey,
+        currentUrl: window.location.href,
+        defaultPrevented: event.defaultPrevented,
+        download: anchor.hasAttribute("download"),
+        href: anchor.href,
+        metaKey: event.metaKey,
+        shiftKey: event.shiftKey,
+        target: anchor.getAttribute("target"),
+      });
+
+      if (!shouldIntercept) {
+        return;
+      }
+
+      event.preventDefault();
+      pendingNavigationRef.current = {
+        kind: "href",
+        href: anchor.href,
+      };
+      setIsModalOpen(true);
+    };
+
+    const handlePopState = () => {
+      if (bypassRef.current) {
+        bypassRef.current = false;
+
+        return;
+      }
+
+      if (!isAnyDirtyRef.current) {
+        return;
+      }
+
+      window.history.forward();
+      pendingNavigationRef.current = {
+        kind: "history-back",
+      };
+      setIsModalOpen(true);
+    };
+
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (bypassRef.current || !isAnyDirtyRef.current) {
+        return;
+      }
+
       if (isAnyDirtyRef.current) {
         e.preventDefault();
         e.returnValue = "Bạn có thay đổi chưa lưu. Bạn có chắc muốn rời đi?";
       }
     };
+
+    document.addEventListener("click", handleDocumentClick, true);
+    window.addEventListener("popstate", handlePopState);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      document.removeEventListener("click", handleDocumentClick, true);
+      window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   });
@@ -202,17 +286,39 @@ export function UnsavedChangesProvider({
   // Actions
   const handleCancel = () => {
     setIsModalOpen(false);
-    pendingVisitRef.current = null;
+    pendingNavigationRef.current = null;
+  };
+
+  const continuePendingNavigation = () => {
+    const pendingNavigation = pendingNavigationRef.current;
+
+    if (!pendingNavigation) {
+      return;
+    }
+
+    bypassRef.current = true;
+
+    if (pendingNavigation.kind === "history-back") {
+      pendingNavigationRef.current = null;
+      window.history.back();
+
+      return;
+    }
+
+    if (pendingNavigation.kind === "href") {
+      pendingNavigationRef.current = null;
+      router.visit(pendingNavigation.href);
+
+      return;
+    }
+
+    pendingNavigationRef.current = null;
+    router.visit(pendingNavigation.visit.url, pendingNavigation.visit);
   };
 
   const handleDiscard = () => {
     setIsModalOpen(false);
-
-    if (pendingVisitRef.current) {
-      bypassRef.current = true;
-      router.visit(pendingVisitRef.current.url, pendingVisitRef.current);
-      pendingVisitRef.current = null;
-    }
+    continuePendingNavigation();
   };
 
   const handleSave = async () => {
@@ -229,12 +335,7 @@ export function UnsavedChangesProvider({
 
       if (allSaved) {
         setIsModalOpen(false);
-
-        if (pendingVisitRef.current) {
-          bypassRef.current = true;
-          router.visit(pendingVisitRef.current.url, pendingVisitRef.current);
-          pendingVisitRef.current = null;
-        }
+        continuePendingNavigation();
       }
     } catch (error) {
       console.error("Unsaved changes save error:", error);

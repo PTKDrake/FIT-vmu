@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useForm, Link } from "@inertiajs/react";
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
@@ -105,18 +105,11 @@ export function PostForm({
     onSubmit(form.data, form);
   }
 
-  const multipleSelectOptions = useMemo(
-    () =>
-      categories.map((category) => ({
-        id: String(category.value),
-        name: category.label,
-      })),
-    [categories],
-  );
-  const selectedCategoryValues = useMemo(
-    () => form.data.category_ids.map((id) => String(id)),
-    [form.data.category_ids],
-  );
+  const multipleSelectOptions = categories.map((category) => ({
+    id: String(category.value),
+    name: category.label,
+  }));
+  const selectedCategoryValues = form.data.category_ids.map((id) => String(id));
 
   return (
     <form

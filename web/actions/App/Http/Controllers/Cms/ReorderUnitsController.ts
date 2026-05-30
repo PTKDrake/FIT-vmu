@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 const ReorderUnitsController = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -16,7 +16,7 @@ ReorderUnitsController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 ReorderUnitsController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ ReorderUnitsController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 ReorderUnitsController.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -35,7 +35,7 @@ ReorderUnitsController.patch = (options?: RouteQueryOptions): RouteDefinition<'p
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 const ReorderUnitsControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -50,7 +50,7 @@ const ReorderUnitsControllerForm = (options?: RouteQueryOptions): RouteFormDefin
 
 /**
 * @see \App\Http\Controllers\Cms\ReorderUnitsController::__invoke
-* @see app/Http/Controllers/Cms/ReorderUnitsController.php:14
+* @see app/Http/Controllers/Cms/ReorderUnitsController.php:15
 * @route '/cms/units/reorder'
 */
 ReorderUnitsControllerForm.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

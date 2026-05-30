@@ -1,10 +1,12 @@
 <?php
 
+use App\Events\CmsContentChanged;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Position;
 use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -110,6 +112,8 @@ test('cms units inertia xhr response keeps collection data under props', functio
 });
 
 test('admin can access unit create and edit pages and persist changes', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
@@ -153,9 +157,13 @@ test('admin can access unit create and edit pages and persist changes', function
 
     expect($unit->refresh()->name)->toBe('Bộ môn Dữ liệu và AI biển')
         ->and($unit->is_active)->toBeFalse();
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 2);
 });
 
 test('admin can reorder units from the cms index page', function () {
+    Event::fake([CmsContentChanged::class]);
+
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
@@ -199,6 +207,30 @@ test('admin can reorder units from the cms index page', function () {
     expect($thirdUnit->refresh()->sort_order)->toBe(1)
         ->and($firstUnit->refresh()->sort_order)->toBe(2)
         ->and($secondUnit->refresh()->sort_order)->toBe(3);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+});
+
+test('admin can delete a unit and broadcast the change', function () {
+    Event::fake([CmsContentChanged::class]);
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $unit = Unit::factory()->create([
+        'name' => 'Khoa Công nghệ hàng hải',
+        'slug' => 'khoa-cong-nghe-hang-hai',
+    ]);
+
+    $this->actingAs($admin)
+        ->delete("/cms/units/{$unit->getKey()}")
+        ->assertRedirect('/cms/units');
+
+    $this->assertDatabaseMissing('units', [
+        'id' => $unit->getKey(),
+    ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
 });
 
 test('positions module is separated and admin can manage positions on its own page', function () {

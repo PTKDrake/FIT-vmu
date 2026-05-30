@@ -24,7 +24,7 @@ import {
   useQueryStates,
 } from "nuqs";
 import type { ReactNode } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import type { FileRejection } from "react-dropzone";
 import { useAsyncList } from "react-stately";
@@ -206,13 +206,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
       };
     },
   });
-  const visibleMedia = useMemo(
-    () =>
-      mediaList.loadingState === "loading" && mediaList.items.length === 0
-        ? media.data
-        : mediaList.items,
-    [media.data, mediaList.items, mediaList.loadingState],
-  );
+  const visibleMedia =
+    mediaList.loadingState === "loading" && mediaList.items.length === 0
+      ? media.data
+      : mediaList.items;
   const deleteTargetMedia =
     visibleMedia.find((item) => item.id === deleteTargetMediaId) ?? null;
   const selectedMedia =
@@ -245,16 +242,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
     },
   });
 
-  const uploaderOptions = useMemo(
-    () => [
-      {
-        id: 0,
-        name: "Mọi người tải lên",
-      },
-      ...media.filters.uploaders,
-    ],
-    [media.filters.uploaders],
-  );
+  const uploaderOptions = [
+    {
+      id: 0,
+      name: "Mọi người tải lên",
+    },
+    ...media.filters.uploaders,
+  ];
 
   async function syncQuery(
     nextQuery: Partial<typeof query>,

@@ -4,9 +4,7 @@ import {
   createContext,
   type ReactElement,
   use,
-  useCallback,
   useId,
-  useMemo,
   useState,
 } from "react";
 import { ToggleButton } from "react-aria-components/ToggleButton";
@@ -191,24 +189,21 @@ const Chart = ({
 
   const [selectedLegend, setSelectedLegend] = useState<string | null>(null);
 
-  const onLegendSelect = useCallback((legendItem: string | null) => {
+  function onLegendSelect(legendItem: string | null): void {
     setSelectedLegend(legendItem);
-  }, []);
+  }
 
   const _data = data ?? EMPTY_DATA;
   const _dataKey = dataKey ?? "value";
 
-  const value = useMemo(
-    () => ({
-      config,
-      selectedLegend,
-      onLegendSelect,
-      data: _data,
-      dataKey: _dataKey,
-      layout,
-    }),
-    [config, selectedLegend, onLegendSelect, _data, _dataKey, layout],
-  );
+  const value: ChartContextProps = {
+    config,
+    selectedLegend,
+    onLegendSelect,
+    data: _data,
+    dataKey: _dataKey,
+    layout,
+  };
 
   return (
     <ChartContext value={value}>
@@ -438,44 +433,28 @@ const ChartTooltipContent = <TValue extends ValueType, TName extends NameType>({
   }) => {
   const { config } = useChart();
 
-  const tooltipLabel = useMemo(() => {
-    if (hideLabel || !payload?.length) {
-      return null;
-    }
+  let tooltipLabel: React.ReactNode = null;
 
+  if (!hideLabel && payload?.length) {
     const [item] = payload;
 
-    if (!item) {
-      return null;
+    if (item) {
+      const key = `${labelKey || item.dataKey || item.name || "value"}`;
+      const itemConfig = getPayloadConfigFromPayload(config, item, key);
+      const value =
+        !labelKey && typeof label === "string"
+          ? config[label as keyof typeof config]?.label || label
+          : itemConfig?.label;
+
+      if (labelFormatter) {
+        tooltipLabel = (
+          <div className={labelClassName}>{labelFormatter(value, payload)}</div>
+        );
+      } else if (value) {
+        tooltipLabel = <div className={labelClassName}>{value}</div>;
+      }
     }
-
-    const key = `${labelKey || item.dataKey || item.name || "value"}`;
-    const itemConfig = getPayloadConfigFromPayload(config, item, key);
-    const value =
-      !labelKey && typeof label === "string"
-        ? config[label as keyof typeof config]?.label || label
-        : itemConfig?.label;
-
-    if (labelFormatter) {
-      return (
-        <div className={labelClassName}>{labelFormatter(value, payload)}</div>
-      );
-    }
-
-    if (!value) {
-      return null;
-    }
-
-    return <div className={labelClassName}>{value}</div>;
-  }, [
-    label,
-    labelFormatter,
-    payload,
-    hideLabel,
-    labelClassName,
-    config,
-    labelKey,
-  ]);
+  }
 
   if (!payload?.length) {
     return null;

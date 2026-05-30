@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Unit;
 
+use App\Events\CmsContentChanged;
 use App\Models\Unit;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +23,7 @@ class CreateUnitAction
     public function __invoke(array $attributes): Unit
     {
         return DB::transaction(function () use ($attributes): Unit {
-            return Unit::query()->create([
+            $unit = Unit::query()->create([
                 'name' => $attributes['name'],
                 'slug' => $attributes['slug'],
                 'description' => blank($attributes['description'] ?? null) ? null : $attributes['description'],
@@ -30,6 +31,18 @@ class CreateUnitAction
                 'sort_order' => $attributes['sort_order'],
                 'is_active' => $attributes['is_active'],
             ]);
+
+            event(new CmsContentChanged(
+                resource: 'units',
+                recordId: (int) $unit->getKey(),
+                title: $unit->name,
+                status: $unit->is_active ? 'active' : 'inactive',
+                action: 'created',
+                message: 'Đã tạo đơn vị mới.',
+                updatedAt: $unit->updated_at?->toIso8601String() ?? now()->toIso8601String(),
+            ));
+
+            return $unit;
         });
     }
 }

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 const DeletePostController = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -16,7 +16,7 @@ DeletePostController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 DeletePostController.url = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ DeletePostController.url = (args: { post: number | { id: number } } | [post: num
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 DeletePostController.delete = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -59,7 +59,7 @@ DeletePostController.delete = (args: { post: number | { id: number } } | [post: 
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 const DeletePostControllerForm = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const DeletePostControllerForm = (args: { post: number | { id: number } } | [pos
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePostController::__invoke
-* @see app/Http/Controllers/Cms/DeletePostController.php:13
+* @see app/Http/Controllers/Cms/DeletePostController.php:14
 * @route '/cms/posts/{post}'
 */
 DeletePostControllerForm.delete = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

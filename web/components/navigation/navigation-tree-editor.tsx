@@ -305,6 +305,7 @@ export function NavigationTreeEditor({
       return;
     }
 
+    // react-doctor-disable-next-line react-hooks-js/todo
     handleCancelEdit();
   }
 

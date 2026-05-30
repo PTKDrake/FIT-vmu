@@ -4,8 +4,6 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
   createContext,
   use,
-  useCallback,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -95,30 +93,27 @@ const SidebarProvider = ({
 
   const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
   const open = openProp ?? internalOpenState;
-  const setOpen = useCallback(
-    (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === "function" ? value(open) : value;
+  function setOpen(value: boolean | ((value: boolean) => boolean)): void {
+    const openState = typeof value === "function" ? value(open) : value;
 
-      if (setOpenProp) {
-        setOpenProp(openState);
-      } else {
-        setInternalOpenState(openState);
-      }
+    if (setOpenProp) {
+      setOpenProp(openState);
+    } else {
+      setInternalOpenState(openState);
+    }
 
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-    },
-    [setOpenProp, open],
-  );
+    document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+  }
 
   const isMobile = useIsMobile();
 
-  const toggleSidebar = useCallback(() => {
+  function toggleSidebar(): void {
     if (isMobile) {
       setOpenMobile((prev) => !prev);
     } else {
       setOpen((prev) => !prev);
     }
-  }, [isMobile, setOpen]);
+  }
 
   useMountEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -144,18 +139,15 @@ const SidebarProvider = ({
 
   const state = open ? "expanded" : "collapsed";
 
-  const contextValue = useMemo<SidebarContextProps>(
-    () => ({
-      state,
-      open,
-      setOpen,
-      isMobile,
-      isOpenOnMobile: openMobile,
-      setIsOpenOnMobile: setOpenMobile,
-      toggleSidebar,
-    }),
-    [state, open, setOpen, isMobile, openMobile, toggleSidebar],
-  );
+  const contextValue: SidebarContextProps = {
+    state,
+    open,
+    setOpen,
+    isMobile,
+    isOpenOnMobile: openMobile,
+    setIsOpenOnMobile: setOpenMobile,
+    toggleSidebar,
+  };
 
   if (isMobile === undefined) {
     return null;

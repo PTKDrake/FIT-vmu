@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, isValidElement, useMemo, useRef } from "react";
+import { Children, isValidElement, useRef } from "react";
 import { Autocomplete, useFilter } from "react-aria-components/Autocomplete";
 import { ListBox } from "react-aria-components/ListBox";
 import {
@@ -59,27 +59,18 @@ function MultipleSelect<T extends OptionBase>({
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const { contains } = useFilter({ sensitivity: "base" });
 
-  const { before, after, list } = useMemo(() => {
-    const arr = Children.toArray(children);
-    const idx = arr.findIndex(
-      (c) =>
-        isValidElement(c) &&
-        (c.type as any)?.displayName === "MultipleSelectContent",
-    );
-    if (idx === -1) {
-      return {
-        before: arr,
-        after: [],
-        list: null as null | MultipleSelectContentProps<T>,
-      };
-    }
-    const el = arr[idx] as React.ReactElement<MultipleSelectContentProps<T>>;
-    return {
-      before: arr.slice(0, idx),
-      after: arr.slice(idx + 1),
-      list: el.props,
-    };
-  }, [children]);
+  const arr = Children.toArray(children);
+  const idx = arr.findIndex(
+    (child) =>
+      isValidElement(child) &&
+      (child.type as any)?.displayName === "MultipleSelectContent",
+  );
+  const list =
+    idx === -1
+      ? null
+      : (arr[idx] as React.ReactElement<MultipleSelectContentProps<T>>).props;
+  const before = idx === -1 ? arr : arr.slice(0, idx);
+  const after = idx === -1 ? [] : arr.slice(idx + 1);
 
   return (
     <Select

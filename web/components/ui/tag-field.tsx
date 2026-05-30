@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { Key, Selection } from "react-aria-components/TagGroup";
 import type { TextFieldProps } from "react-aria-components/TextField";
 import { twMerge } from "tailwind-merge";
@@ -52,11 +52,8 @@ export function TagField({
   const applySelection = (next: Selection) =>
     (onChange ?? setInternalSelection)(next as Selection);
 
-  const list = useMemo(() => {
-    return selection === "all"
-      ? []
-      : Array.from(selection).map((v) => String(v));
-  }, [selection]);
+  const list =
+    selection === "all" ? [] : Array.from(selection).map((value) => String(value));
 
   const isInvalid = Boolean(isRequired && list.length === 0 && touched);
   const errorText = requiredMessage ?? "At least one item is required";

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Page;
 
+use App\Events\CmsContentChanged;
 use App\Models\Page;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +23,8 @@ class UpdatePageContentAction
                 'content' => $attributes['content'],
                 'content_format' => $attributes['content_format'],
             ]);
+
+            event(CmsContentChanged::forPage($page, 'content-updated', 'Đã cập nhật nội dung trang.'));
 
             return $page->fresh(['author']) ?? $page;
         });

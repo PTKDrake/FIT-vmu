@@ -204,7 +204,7 @@ Triển khai units, positions, staff_appointments theo VMUFit.md. Tạo migratio
 Checklist:
 
 - [ ] Tạo migration `post_categories`.
-- [ ] Tạo migration hoặc cập nhật `posts` có `category_id`.
+- [ ] Tạo migration hoặc cập nhật `posts` + pivot `post_post_category` để hỗ trợ nhiều chuyên mục cho một bài viết.
 - [ ] Tạo migration `pages` dùng `content_format` mặc định `puck_json`.
 - [ ] Tạo migration `navigation_menus`.
 - [ ] Tạo migration `navigation_items` có `parent_id`, `type`, `linkable_type`, `linkable_id`, `url`, `sort_order`.
@@ -214,7 +214,7 @@ Checklist:
 Prompt mẫu:
 
 ```text
-Triển khai post_categories, posts có category_id, pages và navigation theo VMUFit.md. Pages lưu Puck JSON, posts lưu BlockNote JSON. Navigation hỗ trợ parent-child và polymorphic link tới post_category/page/post hoặc custom_url.
+Triển khai post_categories, posts với quan hệ nhiều-nhiều category qua pivot, pages và navigation theo VMUFit.md. Pages lưu Puck JSON, posts lưu BlockNote JSON. Navigation hỗ trợ parent-child và polymorphic link tới post_category/page/post hoặc custom_url.
 ```
 
 #### Task 2.4 - Documents, Document Rows và Media
@@ -272,7 +272,8 @@ Checklist:
 - [ ] Tạo policy cho posts.
 - [ ] Check bằng `$user->can(...)`.
 - [ ] Tạo request validate create/update/publish nếu cần.
-- [ ] Validate `category_id` nếu post gắn category.
+- [ ] Validate `category_ids` và pivot category nếu post gắn chuyên mục.
+- [ ] Tách rõ request lưu bài (`draft|pending`, hoặc `published` nếu có quyền) với request duyệt bài (`published|rejected`).
 - [ ] Không check bằng `$user->hasRole('admin')` trong policy.
 
 Prompt mẫu:
@@ -510,9 +511,12 @@ Checklist:
 Checklist:
 
 - [ ] CRUD posts.
-- [ ] Gắn `category_id` cho post.
+- [ ] Gắn nhiều `category_ids` cho post qua pivot `post_post_category`.
 - [ ] Draft/pending/published/rejected.
 - [ ] Publish permission riêng.
+- [ ] Editor lưu bản nháp hoặc gửi duyệt bằng `pending`.
+- [ ] User có quyền `publish posts` có thể publish trực tiếp trong form khi cần.
+- [ ] Có action/endpoint duyệt riêng để chuyển `pending -> published|rejected`.
 - [ ] Thumbnail qua media.
 - [ ] Content dùng BlockNote JSON.
 - [ ] Public page chỉ hiển thị bài published.
@@ -567,6 +571,22 @@ Prompt mẫu:
 Triển khai import Excel cá nhân hóa cho documents theo VMUFit.md. Logic import đặt trong action/service riêng, không viết trong controller. Parse row theo student_code, lưu data JSON và row_index. Sinh viên chỉ xem dữ liệu theo student_code của chính mình.
 ```
 
+#### Task 5.10 - Hardening luồng duyệt bài viết
+
+Checklist:
+
+- [ ] Chỉ cho phép duyệt/từ chối các bài đang ở trạng thái `pending`.
+- [ ] Bổ sung metadata người duyệt và thời điểm duyệt/từ chối nếu nghiệp vụ cần theo dõi.
+- [ ] Bổ sung lý do từ chối để editor có thể chỉnh sửa và gửi lại.
+- [ ] Làm rõ transition `draft -> pending -> published|rejected`, và đường quay lại từ `rejected`.
+- [ ] Bổ sung test cho transition bất hợp lệ và authorization của endpoint duyệt.
+
+Prompt mẫu:
+
+```text
+Hardening luồng duyệt bài viết trong CMS. Giữ CRUD posts hiện tại, nhưng siết state transition để chỉ bài pending mới được duyệt/từ chối, bổ sung metadata reviewer và rejection reason nếu cần, đồng thời cập nhật test cho các transition và quyền publish.
+```
+
 ### 1.7. Phase 6 - Public website MVP
 
 Mục tiêu:
@@ -598,6 +618,7 @@ Checklist:
 - [ ] Test import Excel.
 - [ ] Test page publish/render bằng Puck JSON.
 - [ ] Test category filter cho posts.
+- [ ] Test riêng cho luồng duyệt bài viết: submit review, approve, reject, invalid transition.
 - [ ] Test navigation tree và linkable target.
 - [ ] Test user không có quyền không truy cập được route quản trị.
 - [ ] Test public chỉ thấy dữ liệu published/public.

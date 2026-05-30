@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\StaffProfile;
 
+use App\Events\CmsContentChanged;
 use App\Models\StaffProfile;
 use Illuminate\Support\Facades\DB;
 
@@ -55,6 +56,16 @@ class CreateStaffProfileAction
                     ]);
                 }
             }
+
+            event(new CmsContentChanged(
+                resource: 'staff-profiles',
+                recordId: (int) $profile->getKey(),
+                title: $profile->full_name,
+                status: $profile->is_public ? 'published' : 'draft',
+                action: 'created',
+                message: 'Đã tạo hồ sơ cán bộ mới.',
+                updatedAt: $profile->updated_at?->toIso8601String() ?? now()->toIso8601String(),
+            ));
 
             return $profile;
         });

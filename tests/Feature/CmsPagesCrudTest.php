@@ -1,12 +1,15 @@
 <?php
 
+use App\Events\CmsContentChanged;
 use App\Models\Page;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('cms pages create edit clone and delete flows persist page data', function () {
     $this->seed(RoleAndPermissionSeeder::class);
+    Event::fake([CmsContentChanged::class]);
 
     $editor = User::factory()->create();
     $editor->assignRole('editor');
@@ -111,4 +114,11 @@ test('cms pages create edit clone and delete flows persist page data', function 
     $this->assertDatabaseMissing('pages', [
         'id' => $page->getKey(),
     ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 5);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'pages'
+            && $event->action === 'content-updated'
+            && $event->title === 'Trang gioi thieu moi';
+    });
 });

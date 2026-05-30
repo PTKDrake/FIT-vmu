@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\StaffProfile;
 
+use App\Events\CmsContentChanged;
 use App\Models\StaffProfile;
 use Illuminate\Support\Facades\DB;
 
@@ -66,6 +67,16 @@ class UpdateStaffProfileAction
             } else {
                 $staffProfile->appointments()->delete();
             }
+
+            event(new CmsContentChanged(
+                resource: 'staff-profiles',
+                recordId: (int) $staffProfile->getKey(),
+                title: $staffProfile->full_name,
+                status: $staffProfile->is_public ? 'published' : 'draft',
+                action: 'updated',
+                message: 'Đã cập nhật hồ sơ cán bộ.',
+                updatedAt: $staffProfile->updated_at?->toIso8601String() ?? now()->toIso8601String(),
+            ));
 
             return $staffProfile->refresh();
         });

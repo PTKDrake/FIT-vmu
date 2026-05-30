@@ -535,7 +535,7 @@ clone.form = cloneForm
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePageController::__invoke
-* @see app/Http/Controllers/Cms/DeletePageController.php:14
+* @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
 export const destroy = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -550,7 +550,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePageController::__invoke
-* @see app/Http/Controllers/Cms/DeletePageController.php:14
+* @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
 destroy.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -583,7 +583,7 @@ destroy.url = (args: { page: number | { id: number } } | [page: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePageController::__invoke
-* @see app/Http/Controllers/Cms/DeletePageController.php:14
+* @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
 destroy.delete = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -593,7 +593,7 @@ destroy.delete = (args: { page: number | { id: number } } | [page: number | { id
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePageController::__invoke
-* @see app/Http/Controllers/Cms/DeletePageController.php:14
+* @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
 const destroyForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -608,7 +608,7 @@ const destroyForm = (args: { page: number | { id: number } } | [page: number | {
 
 /**
 * @see \App\Http\Controllers\Cms\DeletePageController::__invoke
-* @see app/Http/Controllers/Cms/DeletePageController.php:14
+* @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
 destroyForm.delete = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

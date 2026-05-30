@@ -71,7 +71,7 @@ jobs:
 
             for item in "${matches[@]}"; do
               if [ -e "$item" ]; then
-                rsync -aR "$item" "$EXPORT_DIR/"
+                rsync -aRL "$item" "$EXPORT_DIR/"
               fi
             done
           done < ".gdsync"
@@ -89,4 +89,5 @@ jobs:
 
           rclone sync "$EXPORT_DIR" "${RCLONE_REMOTE}:/${GDRIVE_TARGET}/${{ github.event.repository.name }}" \
             --drive-skip-gdocs \
-            --progress
+            -P \
+            --stats-one-line

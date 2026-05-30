@@ -438,7 +438,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 export const destroy = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -453,7 +453,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 destroy.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -486,7 +486,7 @@ destroy.url = (args: { staffProfile: number | { id: number } } | [staffProfile: 
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 destroy.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -496,7 +496,7 @@ destroy.delete = (args: { staffProfile: number | { id: number } } | [staffProfil
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 const destroyForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -511,7 +511,7 @@ const destroyForm = (args: { staffProfile: number | { id: number } } | [staffPro
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteStaffProfileController::__invoke
-* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:14
+* @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
 destroyForm.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

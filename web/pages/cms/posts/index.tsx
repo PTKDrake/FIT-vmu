@@ -10,7 +10,7 @@ import { Head, Link, router } from "@inertiajs/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { CmsDataTable } from "@/components/cms/cms-data-table";
 import type {
@@ -37,6 +37,7 @@ import {
   SelectLabel,
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import postsRoutes from "@/routes/cms/posts";
@@ -72,6 +73,11 @@ export default function CmsPostsPage({
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
+  useCmsContentRealtime("posts", (payload) => {
+    toast.info(payload.message);
+    router.reload({ only: ["posts"] });
+  });
+
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: posts.meta.perPage,
     defaultSortColumn: "created_at",
@@ -80,9 +86,8 @@ export default function CmsPostsPage({
     resourceKey: "posts",
   });
 
-  const columns = useMemo<Array<ColumnDef<CmsPostTableRow, any>>>(
-    () => [
-      columnHelper.accessor("title", {
+  const columns: Array<ColumnDef<CmsPostTableRow, any>> = [
+    columnHelper.accessor("title", {
         header: "Bài viết",
         cell: ({ row }) => (
           <div className="space-y-1">
@@ -211,9 +216,7 @@ export default function CmsPostsPage({
           );
         },
       }),
-    ],
-    [can.managePosts, can.publishPosts],
-  );
+  ];
 
   function handlePublishStatus(
     postId: number,

@@ -13,7 +13,7 @@ import {
   parseAsInteger,
 } from "nuqs";
 import type { ReactNode } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
@@ -50,6 +50,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import { create, destroy, edit, show } from "@/routes/cms/staff-profiles";
@@ -85,6 +86,11 @@ export default function CmsStaffProfilesPage({
     },
   );
 
+  useCmsContentRealtime("staff-profiles", (payload) => {
+    toast.info(payload.message);
+    router.reload({ only: ["profiles"] });
+  });
+
   const queryRef = useRef(query);
   const profilesList = useAsyncList<CmsStaffProfileRow>({
     async load({ signal }) {
@@ -104,13 +110,10 @@ export default function CmsStaffProfilesPage({
     },
   });
 
-  const visibleProfiles = useMemo(
-    () =>
-      profilesList.loadingState === "loading" && profilesList.items.length === 0
-        ? profiles.data
-        : profilesList.items,
-    [profilesList.items, profilesList.loadingState, profiles.data],
-  );
+  const visibleProfiles =
+    profilesList.loadingState === "loading" && profilesList.items.length === 0
+      ? profiles.data
+      : profilesList.items;
 
   async function syncQuery(nextQuery: Partial<typeof query>): Promise<void> {
     const resolvedQuery = {

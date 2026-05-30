@@ -49,6 +49,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
@@ -89,6 +90,11 @@ export default function CmsUnitsIndexPage({
 
   const canReorder =
     can.manageUnits && query.search === "" && query.status === "all";
+  useCmsContentRealtime("units", (payload) => {
+    toast.info(payload.message);
+    router.reload({ only: ["units"] });
+  });
+
   const queryRef = useRef(query);
   const unitList = useAsyncList<CmsUnitRow>({
     async load({ signal }) {

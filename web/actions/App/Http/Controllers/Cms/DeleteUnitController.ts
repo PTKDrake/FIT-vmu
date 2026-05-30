@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 const DeleteUnitController = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -16,7 +16,7 @@ DeleteUnitController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 DeleteUnitController.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ DeleteUnitController.url = (args: { unit: number | { id: number } } | [unit: num
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 DeleteUnitController.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -59,7 +59,7 @@ DeleteUnitController.delete = (args: { unit: number | { id: number } } | [unit: 
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 const DeleteUnitControllerForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const DeleteUnitControllerForm = (args: { unit: number | { id: number } } | [uni
 
 /**
 * @see \App\Http\Controllers\Cms\DeleteUnitController::__invoke
-* @see app/Http/Controllers/Cms/DeleteUnitController.php:13
+* @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
 DeleteUnitControllerForm.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
