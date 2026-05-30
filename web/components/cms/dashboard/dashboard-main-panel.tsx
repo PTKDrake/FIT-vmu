@@ -1,3 +1,4 @@
+import { CmsRealtimeDemoCard } from "@/components/cms/dashboard/cms-realtime-demo-card";
 import type { DashboardOverview } from "@/components/cms/types";
 import { Badge } from "@/components/ui/badge";
 import { Text } from "@/components/ui/text";
@@ -107,6 +108,8 @@ export function DashboardMainPanel({
         </div>
 
         <div className="space-y-4">
+          <CmsRealtimeDemoCard />
+
           <div className="rounded-xl border border-border bg-muted/40 p-4">
             <p className="font-medium text-fg">Không gian làm việc</p>
             <div className="mt-4 space-y-3">

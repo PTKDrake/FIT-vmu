@@ -1,4 +1,6 @@
 <laravel-boost-guidelines>
+> Project context: Reverb/Echo broadcasting is already installed, `composer run dev` runs `reverb:start`, and the CMS dashboard includes a realtime demo via `POST /cms/realtime/ping`.
+
 === foundation rules ===
 
 # Laravel Boost Guidelines

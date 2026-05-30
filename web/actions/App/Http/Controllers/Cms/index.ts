@@ -1,3 +1,4 @@
+import PingCmsRealtimeController from './PingCmsRealtimeController'
 import PostsIndexController from './PostsIndexController'
 import PostCreatePageController from './PostCreatePageController'
 import PostEditPageController from './PostEditPageController'
@@ -46,6 +47,7 @@ import UpdatePositionController from './UpdatePositionController'
 import DeletePositionController from './DeletePositionController'
 
 const Cms = {
+    PingCmsRealtimeController: Object.assign(PingCmsRealtimeController, PingCmsRealtimeController),
     PostsIndexController: Object.assign(PostsIndexController, PostsIndexController),
     PostCreatePageController: Object.assign(PostCreatePageController, PostCreatePageController),
     PostEditPageController: Object.assign(PostEditPageController, PostEditPageController),

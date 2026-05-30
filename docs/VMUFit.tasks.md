@@ -427,6 +427,26 @@ Prompt mẫu:
 Tạo foundation UI cho navigation tree theo VMUFit.md. Navigation item hỗ trợ parent-child, reorder, và link tới custom_url/post_category/page/post. UI chỉ phục vụ trải nghiệm; backend vẫn validate toàn bộ.
 ```
 
+#### Task 4.7 - Reverb realtime CMS demo
+
+Checklist:
+
+- [x] Cài `laravel/reverb` và `pusher/pusher-php-server`.
+- [x] Cập nhật `.env.example` với nhóm biến Reverb/Broadcasting cần thiết.
+- [x] Tạo `web/lib/echo.ts` dùng `laravel-echo` + `pusher-js`.
+- [x] Import Echo ở entry point frontend một lần.
+- [x] Tạo event broadcast private channel `cms-user.{userId}`.
+- [x] Tạo route `POST /cms/realtime/ping` chỉ dành cho user đã login, verified và có quyền `view admin dashboard`.
+- [x] Thêm widget “Test realtime” trong CMS dashboard.
+- [x] Bổ sung test backend cho route và channel authorization.
+- [x] Cập nhật `composer run dev` để chạy thêm `reverb:start`.
+
+Prompt mẫu:
+
+```text
+Triển khai Reverb theo hướng tối thiểu nhưng production-aware cho VMUFit. Cài backend broadcasting/Reverb, cấu hình env, tạo Echo setup frontend, thêm một demo realtime an toàn trong CMS dashboard và kiểm thử route/channel authorization. Không hard-code secret và không tạo permission mới nếu permission đã tồn tại.
+```
+
 ### 1.6. Phase 5 - Module nội dung chính
 
 Mục tiêu:

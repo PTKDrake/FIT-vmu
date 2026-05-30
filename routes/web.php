@@ -19,6 +19,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', Controllers\DashboardController::class)
             ->can('view admin dashboard')
             ->name('dashboard');
+        Route::post('realtime/ping', Controllers\Cms\PingCmsRealtimeController::class)
+            ->can('view admin dashboard')
+            ->name('realtime.ping');
 
         Route::get('posts', Controllers\Cms\PostsIndexController::class)
             ->can('viewAny', Post::class)
