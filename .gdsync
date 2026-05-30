@@ -1,4 +1,4 @@
-.agents/skills/**
+.agents/skills/
 AGENTS.md
 docs/tasks.md
 docs/VMUFit.md
