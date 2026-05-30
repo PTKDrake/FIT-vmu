@@ -11,31 +11,35 @@ jobs:
   sync:
     runs-on: ubuntu-latest
 
+    env:
+      RCLONE_REMOTE: gdrive
+      GDRIVE_TARGET: VMUFit
+      EXPORT_DIR: .gdrive-export
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup rclone
         uses: AnimMouse/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
 
-      - name: Configure rclone
-        run: |
-          mkdir -p ~/.config/rclone
-          printf '%s' "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
-      - name: Test rclone config in GitHub Actions
-        run: |
-          echo "Config path:"
-          rclone config file
-          echo "Remote list:"
-          rclone listremotes
-          echo "Config sections:"
-          grep '^\[.*\]$' ~/.config/rclone/rclone.conf || true
-      - name: Prepare selected files
+      - name: Test rclone config
         shell: bash
         run: |
           set -euo pipefail
 
-          EXPORT_DIR=".gdrive-export"
+          echo "Available remotes:"
+          rclone listremotes
+
+          echo "Test Google Drive target:"
+          rclone lsd "${RCLONE_REMOTE}:/${GDRIVE_TARGET}" --max-depth 1
+
+      - name: Prepare selected files
+        shell: bash
+        run: |
+          set -euo pipefail
 
           rm -rf "$EXPORT_DIR"
           mkdir -p "$EXPORT_DIR"
@@ -77,8 +81,11 @@ jobs:
           echo "Prepared files:"
           find "$EXPORT_DIR" -type f | sort
 
-      - name: Upload to Google Drive
+      - name: Sync to Google Drive
+        shell: bash
         run: |
-          rclone sync .gdrive-export gdrive:/VMUFit/${{ github.event.repository.name }} \
+          set -euo pipefail
+
+          rclone sync "$EXPORT_DIR" "${RCLONE_REMOTE}:/${GDRIVE_TARGET}/${{ github.event.repository.name }}" \
             --drive-skip-gdocs \
             --progress
