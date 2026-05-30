@@ -29,6 +29,7 @@ jobs:
           set -euo pipefail
 
           EXPORT_DIR=".gdrive-export"
+
           rm -rf "$EXPORT_DIR"
           mkdir -p "$EXPORT_DIR"
 
@@ -37,21 +38,20 @@ jobs:
             exit 1
           fi
 
+          shopt -s globstar nullglob dotglob
+
           while IFS= read -r pattern || [ -n "$pattern" ]; do
-            # trim
+            # Trim leading/trailing spaces
             pattern="${pattern#"${pattern%%[![:space:]]*}"}"
             pattern="${pattern%"${pattern##*[![:space:]]}"}"
 
-            # skip empty lines and comments
+            # Skip empty lines and comments
             [ -z "$pattern" ] && continue
             [[ "$pattern" == \#* ]] && continue
 
             echo "Including: $pattern"
 
-            # Copy matching files while preserving folder structure
-            shopt -s globstar nullglob dotglob
             matches=( $pattern )
-            shopt -u globstar nullglob dotglob
 
             if [ ${#matches[@]} -eq 0 ]; then
               echo "No matches for: $pattern"
@@ -59,15 +59,16 @@ jobs:
             fi
 
             for item in "${matches[@]}"; do
-              if [ -f "$item" ]; then
-                mkdir -p "$EXPORT_DIR/$(dirname "$item")"
-                cp -a "$item" "$EXPORT_DIR/$item"
-              elif [ -d "$item" ]; then
-                mkdir -p "$EXPORT_DIR/$item"
-                cp -a "$item"/. "$EXPORT_DIR/$item/"
+              if [ -e "$item" ]; then
+                rsync -aR "$item" "$EXPORT_DIR/"
               fi
             done
           done < ".gdsync"
+
+          shopt -u globstar nullglob dotglob
+
+          echo "Prepared files:"
+          find "$EXPORT_DIR" -type f | sort
 
       - name: Upload to Google Drive
         run: |
