@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/20/solid"
-import { Button } from "react-aria-components/Button"
-import type { InputProps } from "react-aria-components/Input"
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { Button } from "react-aria-components/Button";
+import type { InputProps } from "react-aria-components/Input";
 import {
   SearchField as SearchFieldPrimitive,
   type SearchFieldProps,
-} from "react-aria-components/SearchField"
-import { twJoin } from "tailwind-merge"
-import { fieldStyles } from "@/components/ui/field.styles"
-import { cx } from "@/lib/primitive"
-import { Input, InputGroup } from "./input"
+} from "react-aria-components/SearchField";
+import { twJoin } from "tailwind-merge";
+import { fieldStyles } from "@/components/ui/field.styles";
+import { cx } from "@/lib/primitive";
+import { Input, InputGroup } from "./input";
 
 export function SearchField({ className, ...props }: SearchFieldProps) {
   return (
@@ -18,9 +18,12 @@ export function SearchField({ className, ...props }: SearchFieldProps) {
       data-slot="control"
       {...props}
       aria-label={props["aria-label"] ?? "Search"}
-      className={cx(fieldStyles({ className: "group/search-field" }), className)}
+      className={cx(
+        fieldStyles({ className: "group/search-field" }),
+        className,
+      )}
     />
-  )
+  );
 }
 
 export function SearchInput(props: InputProps) {
@@ -38,5 +41,5 @@ export function SearchInput(props: InputProps) {
         <XMarkIcon className="size-5 sm:size-4" />
       </Button>
     </InputGroup>
-  )
+  );
 }

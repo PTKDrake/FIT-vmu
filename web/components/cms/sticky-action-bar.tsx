@@ -12,7 +12,7 @@ export function StickyActionBar({ children, className }: StickyActionBarProps) {
       <div
         className={twMerge(
           "w-full lg:w-1/3 rounded-2xl border border-border bg-overlay/85 p-3 shadow-lg backdrop-blur-md transition-all duration-300",
-          className
+          className,
         )}
       >
         {children}

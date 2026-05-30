@@ -1,19 +1,25 @@
-"use client"
+"use client";
 
-import { Button } from "react-aria-components/Button"
-import type { GridListItemProps, GridListProps } from "react-aria-components/GridList"
+import { Button } from "react-aria-components/Button";
+import type {
+  GridListItemProps,
+  GridListProps,
+} from "react-aria-components/GridList";
 import {
   GridListHeader as GridListHeaderPrimitive,
   GridListItem as GridListItemPrimitive,
   GridList as GridListPrimitive,
   GridListSection as GridListSectionPrimitive,
-} from "react-aria-components/GridList"
-import { Text, type TextProps } from "react-aria-components/Text"
-import { twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
-import { Checkbox } from "./checkbox"
+} from "react-aria-components/GridList";
+import { Text, type TextProps } from "react-aria-components/Text";
+import { twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
+import { Checkbox } from "./checkbox";
 
-const GridList = <T extends object>({ className, ...props }: GridListProps<T>) => (
+const GridList = <T extends object>({
+  className,
+  ...props
+}: GridListProps<T>) => (
   <GridListPrimitive
     data-slot="grid-list"
     className={cx(
@@ -22,7 +28,7 @@ const GridList = <T extends object>({ className, ...props }: GridListProps<T>) =
     )}
     {...props}
   />
-)
+);
 
 const GridListSection = <T extends object>({
   className,
@@ -34,8 +40,8 @@ const GridListSection = <T extends object>({
       className={twMerge("divide-y", className)}
       {...props}
     />
-  )
-}
+  );
+};
 
 const GridListHeader = ({
   className,
@@ -47,11 +53,11 @@ const GridListHeader = ({
       className={twMerge("px-3 py-2.5 font-semibold text-sm/6", className)}
       {...props}
     />
-  )
-}
+  );
+};
 
 const GridListItem = ({ className, children, ...props }: GridListItemProps) => {
-  const textValue = typeof children === "string" ? children : undefined
+  const textValue = typeof children === "string" ? children : undefined;
   return (
     <GridListItemPrimitive
       textValue={textValue}
@@ -105,55 +111,82 @@ const GridListItem = ({ className, children, ...props }: GridListItemProps) => {
             </Button>
           )}
 
-          {values.selectionMode === "multiple" && values.selectionBehavior === "toggle" && (
-            <Checkbox
-              className="[--indicator-mt:0] *:gap-x-0 sm:[--indicator-mt:0]"
-              slot="selection"
-            />
-          )}
+          {values.selectionMode === "multiple" &&
+            values.selectionBehavior === "toggle" && (
+              <Checkbox
+                className="[--indicator-mt:0] *:gap-x-0 sm:[--indicator-mt:0]"
+                slot="selection"
+              />
+            )}
           {typeof children === "function" ? children(values) : children}
         </>
       )}
     </GridListItemPrimitive>
-  )
-}
+  );
+};
 
-const GridListEmptyState = ({ ref, className, ...props }: React.ComponentProps<"div">) => (
+const GridListEmptyState = ({
+  ref,
+  className,
+  ...props
+}: React.ComponentProps<"div">) => (
   <div ref={ref} className={twMerge("p-6", className)} {...props} />
-)
+);
 
-const GridListSpacer = ({ className, ref, ...props }: React.ComponentProps<"div">) => {
-  return <div ref={ref} aria-hidden className={twMerge("-ms-4 flex-1", className)} {...props} />
-}
-
-const GridListStart = ({ className, ref, ...props }: React.ComponentProps<"div">) => {
+const GridListSpacer = ({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<"div">) => {
   return (
     <div
       ref={ref}
-      className={twMerge("relative flex items-center gap-x-2.5 sm:gap-x-3", className)}
+      aria-hidden
+      className={twMerge("-ms-4 flex-1", className)}
       {...props}
     />
-  )
-}
+  );
+};
+
+const GridListStart = ({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<"div">) => {
+  return (
+    <div
+      ref={ref}
+      className={twMerge(
+        "relative flex items-center gap-x-2.5 sm:gap-x-3",
+        className,
+      )}
+      {...props}
+    />
+  );
+};
 
 interface GridListTextProps extends TextProps {
-  ref?: React.Ref<HTMLDivElement>
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const GridListLabel = ({ className, ref, ...props }: GridListTextProps) => (
   <Text ref={ref} className={twMerge("font-medium", className)} {...props} />
-)
+);
 
-const GridListDescription = ({ className, ref, ...props }: GridListTextProps) => (
+const GridListDescription = ({
+  className,
+  ref,
+  ...props
+}: GridListTextProps) => (
   <Text
     slot="description"
     ref={ref}
     className={twMerge("font-normal text-muted-fg text-sm", className)}
     {...props}
   />
-)
+);
 
-export type { GridListItemProps, GridListProps }
+export type { GridListItemProps, GridListProps };
 export {
   GridList,
   GridListDescription,
@@ -164,4 +197,4 @@ export {
   GridListSection,
   GridListSpacer,
   GridListStart,
-}
+};

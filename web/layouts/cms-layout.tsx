@@ -21,4 +21,3 @@ export default function CmsLayout({ children }: PropsWithChildren) {
     </UnsavedChangesProvider>
   );
 }
-

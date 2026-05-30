@@ -7,7 +7,8 @@ import CmsLayout from "@/layouts/cms-layout";
 import { show, update } from "@/routes/cms/staff-profiles";
 
 const EMPTY_UNITS: NonNullable<CmsStaffProfileFormPageProps["units"]> = [];
-const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> = [];
+const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> =
+  [];
 
 export default function CmsStaffProfileEditPage({
   profile,
@@ -27,19 +28,21 @@ export default function CmsStaffProfileEditPage({
     is_public: profile?.isPublic ?? false,
     avatar_id: profile?.avatarId ?? null,
     avatar_file: null as File | null,
-    appointments: profile?.appointments ?? [] as Array<{
-      id?: number;
-      unit_id: number;
-      position_id: number;
-      start_date: string;
-      end_date?: string | null;
-      note?: string | null;
-    }>,
+    appointments:
+      profile?.appointments ??
+      ([] as Array<{
+        id?: number;
+        unit_id: number;
+        position_id: number;
+        start_date: string;
+        end_date?: string | null;
+        note?: string | null;
+      }>),
   });
 
   const handleUpdate = <TKey extends keyof typeof data>(
     key: TKey,
-    value: typeof data[TKey],
+    value: (typeof data)[TKey],
   ) => {
     setData(key, value as never);
   };
@@ -50,10 +53,13 @@ export default function CmsStaffProfileEditPage({
     });
   };
 
-  useRegisterUnsavedChanges({
-    isDirty,
-    onSave: handleSubmit,
-  }, "staff-profile-edit");
+  useRegisterUnsavedChanges(
+    {
+      isDirty,
+      onSave: handleSubmit,
+    },
+    "staff-profile-edit",
+  );
 
   if (!profile) {
     return null;

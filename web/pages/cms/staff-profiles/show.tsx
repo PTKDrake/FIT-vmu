@@ -14,7 +14,14 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
 import CmsLayout from "@/layouts/cms-layout";
 import { staffProfiles } from "@/routes/cms";
@@ -52,11 +59,18 @@ export default function CmsStaffProfileShowPage({
                   aria-label={`Avatar của ${profile.fullName}`}
                 />
 
-                <h2 className="mt-4 text-lg font-bold text-fg">{profile.fullName}</h2>
-                <Text className="text-xs text-muted-fg mt-1">Slug: {profile.slug}</Text>
+                <h2 className="mt-4 text-lg font-bold text-fg">
+                  {profile.fullName}
+                </h2>
+                <Text className="text-xs text-muted-fg mt-1">
+                  Slug: {profile.slug}
+                </Text>
 
                 <div className="mt-4 flex items-center gap-2">
-                  <Badge intent={profile.isPublic ? "success" : "secondary"} isCircle={false}>
+                  <Badge
+                    intent={profile.isPublic ? "success" : "secondary"}
+                    isCircle={false}
+                  >
                     {profile.isPublic ? "Công khai" : "Ẩn / Nội bộ"}
                   </Badge>
                 </div>
@@ -65,14 +79,18 @@ export default function CmsStaffProfileShowPage({
 
             <Card className="border-border bg-overlay shadow-none">
               <CardHeader>
-                <CardTitle className="text-sm font-semibold">Thông tin liên hệ</CardTitle>
+                <CardTitle className="text-sm font-semibold">
+                  Thông tin liên hệ
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-3">
                   <EnvelopeIcon className="mt-0.5 size-4 text-muted-fg shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs text-muted-fg">Email liên hệ</p>
-                    <p className="text-sm font-medium text-fg truncate">{profile.email ?? "Chưa thiết lập"}</p>
+                    <p className="text-sm font-medium text-fg truncate">
+                      {profile.email ?? "Chưa thiết lập"}
+                    </p>
                   </div>
                 </div>
 
@@ -80,7 +98,9 @@ export default function CmsStaffProfileShowPage({
                   <PhoneIcon className="mt-0.5 size-4 text-muted-fg shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs text-muted-fg">Số điện thoại</p>
-                    <p className="text-sm font-medium text-fg">{profile.phone ?? "Chưa thiết lập"}</p>
+                    <p className="text-sm font-medium text-fg">
+                      {profile.phone ?? "Chưa thiết lập"}
+                    </p>
                   </div>
                 </div>
 
@@ -88,7 +108,9 @@ export default function CmsStaffProfileShowPage({
                   <UserIcon className="mt-0.5 size-4 text-muted-fg shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs text-muted-fg">Liên kết tài khoản</p>
-                    <p className="text-sm font-medium text-fg truncate">{profile.userName} ({profile.userEmail})</p>
+                    <p className="text-sm font-medium text-fg truncate">
+                      {profile.userName} ({profile.userEmail})
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -115,29 +137,52 @@ export default function CmsStaffProfileShowPage({
                     items={profile.appointments}
                     renderEmptyState={() => (
                       <div className="p-6 text-center">
-                        <Text className="font-medium text-fg">Chưa có quyết định bổ nhiệm nào.</Text>
-                        <Text className="mt-1 text-sm text-muted-fg">Các bổ nhiệm sẽ hiển thị tại đây khi được thêm bởi Ban giám hiệu hoặc phòng Nhân sự.</Text>
+                        <Text className="font-medium text-fg">
+                          Chưa có quyết định bổ nhiệm nào.
+                        </Text>
+                        <Text className="mt-1 text-sm text-muted-fg">
+                          Các bổ nhiệm sẽ hiển thị tại đây khi được thêm bởi Ban
+                          giám hiệu hoặc phòng Nhân sự.
+                        </Text>
                       </div>
                     )}
                   >
                     {(appt) => (
-                      <TableRow key={appt.id} id={appt.id} textValue={appt.unitName ?? "Đơn vị"}>
+                      <TableRow
+                        key={appt.id}
+                        id={appt.id}
+                        textValue={appt.unitName ?? "Đơn vị"}
+                      >
                         <TableCell>
-                          <Text className="font-medium text-fg">{appt.unitName ?? "N/A"}</Text>
+                          <Text className="font-medium text-fg">
+                            {appt.unitName ?? "N/A"}
+                          </Text>
                         </TableCell>
                         <TableCell>
-                          <Badge intent="info" isCircle={false}>{appt.positionName ?? "Thành viên"}</Badge>
+                          <Badge intent="info" isCircle={false}>
+                            {appt.positionName ?? "Thành viên"}
+                          </Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1 text-sm text-fg">
                             <CalendarIcon className="size-4 text-muted-fg" />
-                            <span>{appt.startDate ? formatOnlyDate(appt.startDate) : "N/A"}</span>
+                            <span>
+                              {appt.startDate
+                                ? formatOnlyDate(appt.startDate)
+                                : "N/A"}
+                            </span>
                             <span className="text-muted-fg">đến</span>
-                            <span>{appt.endDate ? formatOnlyDate(appt.endDate) : "Hiện tại"}</span>
+                            <span>
+                              {appt.endDate
+                                ? formatOnlyDate(appt.endDate)
+                                : "Hiện tại"}
+                            </span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Text className="text-sm text-muted-fg max-w-[200px] truncate">{appt.note ?? "-"}</Text>
+                          <Text className="text-sm text-muted-fg max-w-[200px] truncate">
+                            {appt.note ?? "-"}
+                          </Text>
                         </TableCell>
                       </TableRow>
                     )}
@@ -152,11 +197,19 @@ export default function CmsStaffProfileShowPage({
               </CardHeader>
               <CardContent>
                 {profile.bio ? (
-                  <BlockNoteReadonly content={profile.bio} editorKey={profile.id} />
+                  <BlockNoteReadonly
+                    content={profile.bio}
+                    editorKey={profile.id}
+                  />
                 ) : (
                   <div className="rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center">
-                    <Text className="font-medium text-fg">Chưa thiết lập tiểu sử cán bộ.</Text>
-                    <Text className="mt-1 text-sm text-muted-fg">Hãy bổ sung tiểu sử để giới thiệu đầy đủ về cán bộ công khai trên Cổng thông tin.</Text>
+                    <Text className="font-medium text-fg">
+                      Chưa thiết lập tiểu sử cán bộ.
+                    </Text>
+                    <Text className="mt-1 text-sm text-muted-fg">
+                      Hãy bổ sung tiểu sử để giới thiệu đầy đủ về cán bộ công
+                      khai trên Cổng thông tin.
+                    </Text>
                   </div>
                 )}
               </CardContent>
@@ -168,7 +221,9 @@ export default function CmsStaffProfileShowPage({
   );
 }
 
-CmsStaffProfileShowPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;
+CmsStaffProfileShowPage.layout = (page: ReactNode) => (
+  <CmsLayout>{page}</CmsLayout>
+);
 
 function formatOnlyDate(value: string): string {
   return new Intl.DateTimeFormat("vi-VN", {

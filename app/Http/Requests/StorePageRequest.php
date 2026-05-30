@@ -8,6 +8,7 @@ use App\Models\Media;
 use App\Models\Page;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class StorePageRequest extends FormRequest
@@ -15,6 +16,15 @@ class StorePageRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()?->can('create', Page::class) ?? false;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if (empty($this->slug) && ! empty($this->title)) {
+            $this->merge([
+                'slug' => Str::slug($this->title),
+            ]);
+        }
     }
 
     /**

@@ -89,7 +89,12 @@ export function CmsSidebarFooter({
           <MenuSubMenu>
             <MenuItem>
               <PaintBrushIcon />
-              Giao diện: {theme === "light" ? "Sáng" : theme === "dark" ? "Tối" : "Hệ thống"}
+              Giao diện:{" "}
+              {theme === "light"
+                ? "Sáng"
+                : theme === "dark"
+                  ? "Tối"
+                  : "Hệ thống"}
             </MenuItem>
             <MenuContent placement="right top">
               <MenuItem onAction={() => updateTheme("light")}>

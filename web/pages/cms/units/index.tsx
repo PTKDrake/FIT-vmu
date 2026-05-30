@@ -12,11 +12,8 @@ import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
 import { useDragAndDrop } from "react-aria-components/useDragAndDrop";
-import {
-  DropIndicator as DropIndicatorPrimitive
-  
-} from "react-aria-components/useDragAndDrop";
-import type {DropIndicatorProps} from "react-aria-components/useDragAndDrop";
+import { DropIndicator as DropIndicatorPrimitive } from "react-aria-components/useDragAndDrop";
+import type { DropIndicatorProps } from "react-aria-components/useDragAndDrop";
 import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -25,12 +22,7 @@ import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import type { CmsUnitRow, CmsUnitsPageProps } from "@/components/cms/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -41,8 +33,21 @@ import {
 } from "@/components/ui/modal";
 
 import { SearchField, SearchInput } from "@/components/ui/search-field";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
@@ -70,7 +75,9 @@ export default function CmsUnitsIndexPage({
   const [query, setQuery] = useQueryStates(
     {
       search: parseAsString.withDefault(""),
-      status: parseAsStringLiteral(["all", "active", "inactive"]).withDefault("all"),
+      status: parseAsStringLiteral(["all", "active", "inactive"]).withDefault(
+        "all",
+      ),
     },
     {
       clearOnDefault: true,
@@ -80,11 +87,16 @@ export default function CmsUnitsIndexPage({
     },
   );
 
-  const canReorder = can.manageUnits && query.search === "" && query.status === "all";
+  const canReorder =
+    can.manageUnits && query.search === "" && query.status === "all";
   const queryRef = useRef(query);
   const unitList = useAsyncList<CmsUnitRow>({
     async load({ signal }) {
-      const { items } = await fetchInertiaCollectionPage("units", queryRef.current, signal);
+      const { items } = await fetchInertiaCollectionPage(
+        "units",
+        queryRef.current,
+        signal,
+      );
 
       return {
         items: items as CmsUnitRow[],
@@ -156,10 +168,13 @@ export default function CmsUnitsIndexPage({
     );
   }
 
-  useRegisterUnsavedChanges({
-    isDirty: draftUnits !== null,
-    onSave: handleSaveReorder,
-  }, "units-reorder");
+  useRegisterUnsavedChanges(
+    {
+      isDirty: draftUnits !== null,
+      onSave: handleSaveReorder,
+    },
+    "units-reorder",
+  );
 
   const { dragAndDropHooks } = useDragAndDrop<CmsUnitRow>({
     getItems: (keys) =>
@@ -170,7 +185,11 @@ export default function CmsUnitsIndexPage({
           "text/plain": unit.name,
         })),
     onMove: (event) => {
-      if (!canReorder || !("key" in event.target) || !("dropPosition" in event.target)) {
+      if (
+        !canReorder ||
+        !("key" in event.target) ||
+        !("dropPosition" in event.target)
+      ) {
         return;
       }
 
@@ -181,7 +200,12 @@ export default function CmsUnitsIndexPage({
       }
 
       const targetUnitId = Number(event.target.key);
-      const nextUnits = moveUnit(displayedUnits, movedUnitId, targetUnitId, event.target.dropPosition);
+      const nextUnits = moveUnit(
+        displayedUnits,
+        movedUnitId,
+        targetUnitId,
+        event.target.dropPosition,
+      );
 
       if (nextUnits.length === 0) {
         return;
@@ -198,7 +222,11 @@ export default function CmsUnitsIndexPage({
     <>
       <Head title="Đơn vị" />
       {flash?.message ? (
-        <UnitsFlashToast key={`${flash.type}:${flash.message}`} message={flash.message} type={flash.type} />
+        <UnitsFlashToast
+          key={`${flash.type}:${flash.message}`}
+          message={flash.message}
+          type={flash.type}
+        />
       ) : null}
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -208,11 +236,14 @@ export default function CmsUnitsIndexPage({
               <div className="space-y-2">
                 <p className="text-lg font-semibold text-fg">Đơn vị</p>
                 <p className="max-w-3xl text-sm text-muted-fg">
-                  Bảng đơn vị phẳng, kéo để đổi thứ tự hiển thị, mở từng dòng để xem chi tiết hoặc chỉnh sửa.
+                  Bảng đơn vị phẳng, kéo để đổi thứ tự hiển thị, mở từng dòng để
+                  xem chi tiết hoặc chỉnh sửa.
                 </p>
                 <Text className="text-sm text-muted-fg">
                   {canReorder
-                    ? (isSavingOrder ? "Đang cập nhật thứ tự đơn vị..." : "Kéo thả để thay đổi thứ tự hiển thị.")
+                    ? isSavingOrder
+                      ? "Đang cập nhật thứ tự đơn vị..."
+                      : "Kéo thả để thay đổi thứ tự hiển thị."
                     : "Drag & drop tạm tắt khi đang lọc để tránh xáo trộn thứ tự đang xem."}
                 </Text>
               </div>
@@ -294,11 +325,15 @@ export default function CmsUnitsIndexPage({
                       Không có đơn vị phù hợp với bộ lọc hiện tại.
                     </Text>
                     <Text className="mt-2 text-sm text-muted-fg">
-                      Hãy đổi bộ lọc hoặc tạo một đơn vị mới để bắt đầu quản lý danh sách.
+                      Hãy đổi bộ lọc hoặc tạo một đơn vị mới để bắt đầu quản lý
+                      danh sách.
                     </Text>
                     {can.manageUnits ? (
                       <div className="mt-5">
-                        <Button intent="secondary" onPress={() => router.visit(create.url())}>
+                        <Button
+                          intent="secondary"
+                          onPress={() => router.visit(create.url())}
+                        >
                           <PlusIcon />
                           Tạo đơn vị
                         </Button>
@@ -317,7 +352,10 @@ export default function CmsUnitsIndexPage({
                         >
                           {unit.name}
                         </Link>
-                        <Badge intent={unit.isActive ? "success" : "secondary"} isCircle={false}>
+                        <Badge
+                          intent={unit.isActive ? "success" : "secondary"}
+                          isCircle={false}
+                        >
                           {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
                         </Badge>
                       </div>
@@ -326,12 +364,17 @@ export default function CmsUnitsIndexPage({
                       <Text className="text-sm text-fg">{unit.slug}</Text>
                     </TableCell>
                     <TableCell>
-                      <Badge intent={unit.isActive ? "success" : "secondary"} isCircle={false}>
+                      <Badge
+                        intent={unit.isActive ? "success" : "secondary"}
+                        isCircle={false}
+                      >
                         {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Text className="font-medium text-fg">{unit.sortOrder}</Text>
+                      <Text className="font-medium text-fg">
+                        {unit.sortOrder}
+                      </Text>
                     </TableCell>
                     <TableCell>{formatDateTime(unit.updatedAt)}</TableCell>
                     <TableCell className="text-end">
@@ -352,7 +395,10 @@ export default function CmsUnitsIndexPage({
                               <PencilSquareIcon />
                               Chỉnh sửa
                             </MenuItem>
-                            <MenuItem intent="danger" onAction={() => setDeleteTarget(unit)}>
+                            <MenuItem
+                              intent="danger"
+                              onAction={() => setDeleteTarget(unit)}
+                            >
                               <TrashIcon />
                               Xóa đơn vị
                             </MenuItem>
@@ -376,10 +422,7 @@ export default function CmsUnitsIndexPage({
             </Text>
 
             <div className="flex items-center justify-end gap-2 w-full sm:w-auto shrink-0">
-              <Button
-                intent="outline"
-                onPress={handleCancelReorder}
-              >
+              <Button intent="outline" onPress={handleCancelReorder}>
                 <XMarkIcon className="size-4" />
                 Hủy
               </Button>
@@ -396,7 +439,6 @@ export default function CmsUnitsIndexPage({
         </StickyActionBar>
       ) : null}
 
-
       {deleteTarget ? (
         <ModalContent
           aria-label="Xác nhận xóa đơn vị"
@@ -411,7 +453,8 @@ export default function CmsUnitsIndexPage({
           <ModalHeader>
             <ModalTitle>Xóa đơn vị</ModalTitle>
             <ModalDescription>
-              Bạn sắp xóa <strong>{deleteTarget.name}</strong>. Thao tác này sẽ xóa dữ liệu đơn vị khỏi hệ thống.
+              Bạn sắp xóa <strong>{deleteTarget.name}</strong>. Thao tác này sẽ
+              xóa dữ liệu đơn vị khỏi hệ thống.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
@@ -425,7 +468,11 @@ export default function CmsUnitsIndexPage({
             <Button intent="outline" onPress={() => setDeleteTarget(null)}>
               Hủy
             </Button>
-            <Button intent="danger" isDisabled={isDeleting} onPress={deleteUnit}>
+            <Button
+              intent="danger"
+              isDisabled={isDeleting}
+              onPress={deleteUnit}
+            >
               Xác nhận xóa
             </Button>
           </ModalFooter>
@@ -453,15 +500,23 @@ function moveUnit(
   const nextUnits = [...units];
   const [movedUnit] = nextUnits.splice(movedIndex, 1);
 
-  const adjustedTargetIndex = movedIndex < targetIndex ? targetIndex - 1 : targetIndex;
-  const insertIndex = dropPosition === "after" ? adjustedTargetIndex + 1 : adjustedTargetIndex;
+  const adjustedTargetIndex =
+    movedIndex < targetIndex ? targetIndex - 1 : targetIndex;
+  const insertIndex =
+    dropPosition === "after" ? adjustedTargetIndex + 1 : adjustedTargetIndex;
 
   nextUnits.splice(insertIndex, 0, movedUnit);
 
   return nextUnits;
 }
 
-function UnitsFlashToast({ message, type }: { message: string; type: FlashData["type"] }) {
+function UnitsFlashToast({
+  message,
+  type,
+}: {
+  message: string;
+  type: FlashData["type"];
+}) {
   useMountEffect(() => {
     switch (type) {
       case "error":

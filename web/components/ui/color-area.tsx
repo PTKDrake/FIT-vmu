@@ -1,9 +1,9 @@
 import {
   ColorArea as ColorAreaPrimitive,
   type ColorAreaProps,
-} from "react-aria-components/ColorArea"
-import { cx } from "@/lib/primitive"
-import { ColorThumb } from "./color-thumb"
+} from "react-aria-components/ColorArea";
+import { cx } from "@/lib/primitive";
+import { ColorThumb } from "./color-thumb";
 
 export function ColorArea({ className, ...props }: ColorAreaProps) {
   return (
@@ -21,5 +21,5 @@ export function ColorArea({ className, ...props }: ColorAreaProps) {
     >
       <ColorThumb />
     </ColorAreaPrimitive>
-  )
+  );
 }

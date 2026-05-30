@@ -1,25 +1,25 @@
-import { Button } from "react-aria-components/Button"
-import { twJoin, twMerge } from "tailwind-merge"
-import { Link } from "./link"
+import { Button } from "react-aria-components/Button";
+import { twJoin, twMerge } from "tailwind-merge";
+import { Link } from "./link";
 
-const EMPTY_BAR_LIST_DATA: Array<Bar<unknown>> = []
+const EMPTY_BAR_LIST_DATA: Array<Bar<unknown>> = [];
 
 function defaultBarListValueFormatter(value: number): string {
-  return value.toString()
+  return value.toString();
 }
 
 type Bar<T> = T & {
-  key?: string
-  href?: string
-  value: number
-  name: string
-}
+  key?: string;
+  href?: string;
+  value: number;
+  name: string;
+};
 
 interface BarListProps<T = unknown> extends React.ComponentProps<"div"> {
-  data: Bar<T>[]
-  valueFormatter?: (value: number) => string
-  onValueChange?: (payload: Bar<T>) => void
-  sortOrder?: "ascending" | "descending" | "none"
+  data: Bar<T>[];
+  valueFormatter?: (value: number) => string;
+  onValueChange?: (payload: Bar<T>) => void;
+  sortOrder?: "ascending" | "descending" | "none";
 }
 
 /** @deprecated Use Leaderboard component instead */
@@ -32,29 +32,35 @@ export function BarList<T>({
   ref,
   ...props
 }: BarListProps<T>) {
-  const Component = onValueChange ? Button : "div"
+  const Component = onValueChange ? Button : "div";
   const sortedData =
     sortOrder === "none"
       ? data
       : data.toSorted((a, b) => {
-          return sortOrder === "ascending" ? a.value - b.value : b.value - a.value
-        })
+          return sortOrder === "ascending"
+            ? a.value - b.value
+            : b.value - a.value;
+        });
 
-  const maxValue = Math.max(...sortedData.map((item) => item.value), 0)
+  const maxValue = Math.max(...sortedData.map((item) => item.value), 0);
   const widths = sortedData.map((item) =>
     item.value === 0 ? 0 : Math.max((item.value / maxValue) * 100, 2),
-  )
+  );
 
-  const rowHeight = "h-8"
+  const rowHeight = "h-8";
 
   return (
-    <div ref={ref} className={twMerge("flex justify-between space-x-6", className)} {...props}>
+    <div
+      ref={ref}
+      className={twMerge("flex justify-between space-x-6", className)}
+      {...props}
+    >
       <div className="relative w-full space-y-1.5">
         {sortedData.map((item, index) => (
           <Component
             key={item.key ?? item.name}
             onClick={() => {
-              onValueChange?.(item)
+              onValueChange?.(item);
             }}
             className={twJoin(
               "group w-full rounded-sm",
@@ -66,7 +72,9 @@ export function BarList<T>({
               className={twJoin(
                 "flex items-center rounded-sm bg-primary/30",
                 rowHeight,
-                onValueChange ? "group-hover:bg-primary/40 dark:group-hover:bg-primary/40" : "",
+                onValueChange
+                  ? "group-hover:bg-primary/40 dark:group-hover:bg-primary/40"
+                  : "",
                 index === sortedData.length - 1 && "mb-0",
               )}
               style={{ width: `${widths[index]}%` }}
@@ -113,5 +121,5 @@ export function BarList<T>({
         ))}
       </div>
     </div>
-  )
+  );
 }

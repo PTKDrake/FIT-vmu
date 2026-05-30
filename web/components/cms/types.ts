@@ -211,7 +211,10 @@ export interface CmsPageEditorPageProps extends SharedData {
   page: {
     content: string | null;
     contentFormat: "puck_json";
+    excerpt: string | null;
     id: number;
+    seoDescription: string | null;
+    seoTitle: string | null;
     slug: string;
     status: "draft" | "pending" | "published" | "rejected";
     title: string;

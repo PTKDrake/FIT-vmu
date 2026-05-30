@@ -20,12 +20,7 @@ import type {
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -34,7 +29,13 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectLabel } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
@@ -59,8 +60,15 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   minute: "2-digit",
 });
 
-export default function CmsPostsPage({ can, flash, posts, categoryOptions }: CmsPostsPageProps) {
-  const [deleteTarget, setDeleteTarget] = useState<CmsPostTableRow | null>(null);
+export default function CmsPostsPage({
+  can,
+  flash,
+  posts,
+  categoryOptions,
+}: CmsPostsPageProps) {
+  const [deleteTarget, setDeleteTarget] = useState<CmsPostTableRow | null>(
+    null,
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
@@ -135,7 +143,10 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
         id: "actions",
         header: "",
         cell: ({ row }) => {
-          const showApproval = can.publishPosts && (row.original.status === "pending" || row.original.status === "draft");
+          const showApproval =
+            can.publishPosts &&
+            (row.original.status === "pending" ||
+              row.original.status === "draft");
           const showManage = can.managePosts;
 
           if (!showManage && !showApproval) {
@@ -154,7 +165,9 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
                 {showManage ? (
                   <MenuItem
                     onAction={() => {
-                      router.visit(postsRoutes.edit.url({ post: row.original.id }));
+                      router.visit(
+                        postsRoutes.edit.url({ post: row.original.id }),
+                      );
                     }}
                   >
                     <PencilSquareIcon />
@@ -185,7 +198,10 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
                 ) : null}
 
                 {showManage ? (
-                  <MenuItem intent="danger" onAction={() => setDeleteTarget(row.original)}>
+                  <MenuItem
+                    intent="danger"
+                    onAction={() => setDeleteTarget(row.original)}
+                  >
                     <TrashIcon />
                     Xóa bài viết
                   </MenuItem>
@@ -199,14 +215,21 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
     [can.managePosts, can.publishPosts],
   );
 
-  function handlePublishStatus(postId: number, status: "published" | "rejected"): void {
+  function handlePublishStatus(
+    postId: number,
+    status: "published" | "rejected",
+  ): void {
     setIsPublishing(true);
-    router.patch(postsRoutes.publish.url({ post: postId }), {
-      status,
-    }, {
-      onFinish: () => setIsPublishing(false),
-      preserveScroll: true,
-    });
+    router.patch(
+      postsRoutes.publish.url({ post: postId }),
+      {
+        status,
+      },
+      {
+        onFinish: () => setIsPublishing(false),
+        preserveScroll: true,
+      },
+    );
   }
 
   function deletePost(): void {
@@ -226,7 +249,11 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
     <>
       <Head title="Bài viết" />
       {flash?.message ? (
-        <PostsFlashToast key={`${flash.type}:${flash.message}`} message={flash.message} type={flash.type} />
+        <PostsFlashToast
+          key={`${flash.type}:${flash.message}`}
+          message={flash.message}
+          type={flash.type}
+        />
       ) : null}
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -245,7 +272,9 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}
           onSearchChange={(value) => tableQueryState.setSearch(value)}
-          onSortingChange={(column, direction) => tableQueryState.setSorting(column, direction)}
+          onSortingChange={(column, direction) =>
+            tableQueryState.setSorting(column, direction)
+          }
           primaryAction={
             <div className="flex items-center gap-3">
               <Select
@@ -256,7 +285,9 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
                     : String(tableQueryState.query.categoryId)
                 }
                 onSelectionChange={(key) => {
-                  void tableQueryState.setCategoryId(key === "all" ? null : Number(key));
+                  void tableQueryState.setCategoryId(
+                    key === "all" ? null : Number(key),
+                  );
                 }}
               >
                 <SelectTrigger className="w-48 text-start" />
@@ -265,7 +296,11 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
                     <SelectLabel>Tất cả chuyên mục</SelectLabel>
                   </SelectItem>
                   {categoryOptions.map((opt) => (
-                    <SelectItem key={opt.value} id={opt.value} textValue={opt.label}>
+                    <SelectItem
+                      key={opt.value}
+                      id={opt.value}
+                      textValue={opt.label}
+                    >
                       <SelectLabel>{opt.label}</SelectLabel>
                     </SelectItem>
                   ))}
@@ -307,13 +342,15 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
           <ModalHeader>
             <ModalTitle>Xóa bài viết</ModalTitle>
             <ModalDescription>
-              Bạn sắp xóa bài viết <strong>{deleteTarget.title}</strong>. Hành động này không thể phục hồi lại.
+              Bạn sắp xóa bài viết <strong>{deleteTarget.title}</strong>. Hành
+              động này không thể phục hồi lại.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
-                Sau khi xóa, mọi liên kết đến bài viết này từ navigation menu hoặc trang công khai sẽ bị hỏng.
+                Sau khi xóa, mọi liên kết đến bài viết này từ navigation menu
+                hoặc trang công khai sẽ bị hỏng.
               </Text>
             </div>
           </ModalBody>
@@ -321,7 +358,11 @@ export default function CmsPostsPage({ can, flash, posts, categoryOptions }: Cms
             <Button intent="outline" onPress={() => setDeleteTarget(null)}>
               Hủy
             </Button>
-            <Button intent="danger" isDisabled={isDeleting} onPress={deletePost}>
+            <Button
+              intent="danger"
+              isDisabled={isDeleting}
+              onPress={deletePost}
+            >
               Xác nhận xóa
             </Button>
           </ModalFooter>
@@ -355,7 +396,13 @@ const statusLabelMap = {
   rejected: "Bị từ chối",
 } as const;
 
-function PostsFlashToast({ message, type }: { message: string; type: FlashData["type"] }) {
+function PostsFlashToast({
+  message,
+  type,
+}: {
+  message: string;
+  type: FlashData["type"];
+}) {
   useMountEffect(() => {
     switch (type) {
       case "error":

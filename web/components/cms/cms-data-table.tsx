@@ -7,7 +7,7 @@ import {
   flexRender,
   functionalUpdate,
   getCoreRowModel,
-  useReactTable
+  useReactTable,
 } from "@tanstack/react-table";
 import type { ColumnDef, SortingState, Updater } from "@tanstack/react-table";
 import type { ReactNode } from "react";
@@ -17,7 +17,10 @@ import type {
   CmsTableSortDirection,
 } from "@/components/cms/types";
 import { Button } from "@/components/ui/button";
-import { NativeSelect, NativeSelectContent } from "@/components/ui/native-select";
+import {
+  NativeSelect,
+  NativeSelectContent,
+} from "@/components/ui/native-select";
 import {
   Pagination,
   PaginationFirst,
@@ -90,6 +93,8 @@ export function CmsDataTable<TData extends object>({
   sort,
   title,
 }: CmsDataTableProps<TData>) {
+  "use no memo";
+
   const sorting = useMemo<SortingState>(
     () => [
       {
@@ -120,10 +125,7 @@ export function CmsDataTable<TData extends object>({
         return;
       }
 
-      void onSortingChange(
-        nextColumn.id,
-        nextColumn.desc ? "desc" : "asc",
-      );
+      void onSortingChange(nextColumn.id, nextColumn.desc ? "desc" : "asc");
     },
   });
 
@@ -265,9 +267,7 @@ export function CmsDataTable<TData extends object>({
                       <p className="text-lg font-semibold text-fg">
                         {emptyTitle}
                       </p>
-                      <Text className="text-muted-fg">
-                        {emptyDescription}
-                      </Text>
+                      <Text className="text-muted-fg">{emptyDescription}</Text>
                     </div>
                   </td>
                 </tr>
@@ -302,29 +302,32 @@ export function CmsDataTable<TData extends object>({
                   void onPageChange(Math.max(meta.currentPage - 1, 1));
                 }}
               />
-              {buildPaginationItems(meta.currentPage, meta.lastPage).map((item, index) =>
-                item === "ellipsis" ? (
-                  <li
-                    key={`${meta.currentPage}-${item}-${index}`}
-                    className="px-2 py-2 text-sm text-muted-fg"
-                  >
-                    ...
-                  </li>
-                ) : (
-                  <PaginationItem
-                    key={item}
-                    isCurrent={item === meta.currentPage}
-                    onPress={() => {
-                      void onPageChange(item);
-                    }}
-                  >
-                    {item}
-                  </PaginationItem>
-                ),
+              {buildPaginationItems(meta.currentPage, meta.lastPage).map(
+                (item, index) =>
+                  item === "ellipsis" ? (
+                    <li
+                      key={`${meta.currentPage}-${item}-${index}`}
+                      className="px-2 py-2 text-sm text-muted-fg"
+                    >
+                      ...
+                    </li>
+                  ) : (
+                    <PaginationItem
+                      key={item}
+                      isCurrent={item === meta.currentPage}
+                      onPress={() => {
+                        void onPageChange(item);
+                      }}
+                    >
+                      {item}
+                    </PaginationItem>
+                  ),
               )}
               <PaginationNext
                 onPress={() => {
-                  void onPageChange(Math.min(meta.currentPage + 1, meta.lastPage));
+                  void onPageChange(
+                    Math.min(meta.currentPage + 1, meta.lastPage),
+                  );
                 }}
               />
             </PaginationList>
@@ -335,11 +338,7 @@ export function CmsDataTable<TData extends object>({
   );
 }
 
-function SortIndicator({
-  direction,
-}: {
-  direction: false | "asc" | "desc";
-}) {
+function SortIndicator({ direction }: { direction: false | "asc" | "desc" }) {
   if (direction === "asc") {
     return <ArrowLongUpIcon className="size-4 text-fg" />;
   }

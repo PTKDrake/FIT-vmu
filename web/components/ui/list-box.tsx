@@ -1,25 +1,28 @@
-import { CheckIcon } from "@heroicons/react/20/solid"
-import { composeRenderProps } from "react-aria-components/composeRenderProps"
+import { CheckIcon } from "@heroicons/react/20/solid";
+import { composeRenderProps } from "react-aria-components/composeRenderProps";
 import type {
   ListBoxItemProps,
   ListBoxProps,
   ListBoxSectionProps,
-} from "react-aria-components/ListBox"
+} from "react-aria-components/ListBox";
 import {
   ListBoxItem as ListBoxItemPrimitive,
   ListBox as ListBoxPrimitive,
-} from "react-aria-components/ListBox"
-import { twJoin, twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
+} from "react-aria-components/ListBox";
+import { twJoin, twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
 import {
   DropdownDescription,
   DropdownLabel,
   DropdownSection,
   type DropdownSectionProps,
-} from "./dropdown"
-import { dropdownItemStyles } from "./dropdown.styles"
+} from "./dropdown";
+import { dropdownItemStyles } from "./dropdown.styles";
 
-const ListBox = <T extends object>({ className, ...props }: ListBoxProps<T>) => (
+const ListBox = <T extends object>({
+  className,
+  ...props
+}: ListBoxProps<T>) => (
   <ListBoxPrimitive
     {...props}
     data-slot="list-box"
@@ -28,10 +31,14 @@ const ListBox = <T extends object>({ className, ...props }: ListBoxProps<T>) => 
       className,
     )}
   />
-)
+);
 
-const ListBoxItem = <T extends object>({ children, className, ...props }: ListBoxItemProps<T>) => {
-  const textValue = typeof children === "string" ? children : undefined
+const ListBoxItem = <T extends object>({
+  children,
+  className,
+  ...props
+}: ListBoxItemProps<T>) => {
+  const textValue = typeof children === "string" ? children : undefined;
   return (
     <ListBoxItemPrimitive
       textValue={textValue}
@@ -51,7 +58,7 @@ const ListBoxItem = <T extends object>({ children, className, ...props }: ListBo
       {...props}
     >
       {(renderProps) => {
-        const { allowsDragging, isSelected } = renderProps
+        const { allowsDragging, isSelected } = renderProps;
 
         return (
           <>
@@ -103,23 +110,35 @@ const ListBoxItem = <T extends object>({ children, className, ...props }: ListBo
               children
             )}
           </>
-        )
+        );
       }}
     </ListBoxItemPrimitive>
-  )
-}
+  );
+};
 
-const ListBoxSection = <T extends object>({ className, ...props }: DropdownSectionProps<T>) => {
+const ListBoxSection = <T extends object>({
+  className,
+  ...props
+}: DropdownSectionProps<T>) => {
   return (
     <DropdownSection
-      className={twMerge("gap-y-1 *:data-[slot=list-box-item]:last:-mb-1.5", className)}
+      className={twMerge(
+        "gap-y-1 *:data-[slot=list-box-item]:last:-mb-1.5",
+        className,
+      )}
       {...props}
     />
-  )
-}
+  );
+};
 
-const ListBoxLabel = DropdownLabel
-const ListBoxDescription = DropdownDescription
+const ListBoxLabel = DropdownLabel;
+const ListBoxDescription = DropdownDescription;
 
-export type { ListBoxItemProps, ListBoxSectionProps }
-export { ListBox, ListBoxDescription, ListBoxItem, ListBoxLabel, ListBoxSection }
+export type { ListBoxItemProps, ListBoxSectionProps };
+export {
+  ListBox,
+  ListBoxDescription,
+  ListBoxItem,
+  ListBoxLabel,
+  ListBoxSection,
+};

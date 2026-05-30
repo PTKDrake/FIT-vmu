@@ -2,6 +2,87 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 import metadata from './metadata'
 import content from './content'
 /**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+create.definition = {
+    methods: ["get","head"],
+    url: '/cms/pages/create',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageCreateController::__invoke
+* @see app/Http/Controllers/Cms/PageCreateController.php:12
+* @route '/cms/pages/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
 * @see \App\Http\Controllers\Cms\StorePageController::__invoke
 * @see app/Http/Controllers/Cms/StorePageController.php:15
 * @route '/cms/pages'
@@ -161,6 +242,216 @@ editForm.head = (args: { page: number | { id: number } } | [page: number | { id:
 })
 
 edit.form = editForm
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+export const builder = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: builder.url(args, options),
+    method: 'get',
+})
+
+builder.definition = {
+    methods: ["get","head"],
+    url: '/cms/pages/{page}/builder',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+builder.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { page: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { page: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            page: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        page: typeof args.page === 'object'
+        ? args.page.id
+        : args.page,
+    }
+
+    return builder.definition.url
+            .replace('{page}', parsedArgs.page.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+builder.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: builder.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+builder.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: builder.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+const builderForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: builder.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+builderForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: builder.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
+* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @route '/cms/pages/{page}/builder'
+*/
+builderForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: builder.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+builder.form = builderForm
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+export const show = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+show.definition = {
+    methods: ["get","head"],
+    url: '/cms/pages/{page}/show',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+show.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { page: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { page: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            page: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        page: typeof args.page === 'object'
+        ? args.page.id
+        : args.page,
+    }
+
+    return show.definition.url
+            .replace('{page}', parsedArgs.page.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+show.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+show.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: show.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+const showForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+showForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PageShowController::__invoke
+* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @route '/cms/pages/{page}/show'
+*/
+showForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
 
 /**
 * @see \App\Http\Controllers\Cms\ClonePageController::__invoke
@@ -333,8 +624,11 @@ destroyForm.delete = (args: { page: number | { id: number } } | [page: number | 
 destroy.form = destroyForm
 
 const pages = {
+    create: Object.assign(create, create),
     store: Object.assign(store, store),
     edit: Object.assign(edit, edit),
+    builder: Object.assign(builder, builder),
+    show: Object.assign(show, show),
     metadata: Object.assign(metadata, metadata),
     content: Object.assign(content, content),
     clone: Object.assign(clone, clone),

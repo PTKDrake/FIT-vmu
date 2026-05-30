@@ -17,7 +17,12 @@ import {
   MinusIcon,
 } from "@heroicons/react/24/outline";
 import { Head, router, useForm } from "@inertiajs/react";
-import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
+import {
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryStates,
+} from "nuqs";
 import type { ReactNode } from "react";
 import { useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -30,16 +35,22 @@ import type { CmsMediaPageProps, CmsMediaRow } from "@/components/cms/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ComboBox, ComboBoxContent, ComboBoxInput, ComboBoxItem, ComboBoxLabel } from "@/components/ui/combo-box";
-import { DropZone } from "@/components/ui/drop-zone";
-import { FieldError, FieldGroup, Fieldset, Legend } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
+  ComboBox,
+  ComboBoxContent,
+  ComboBoxInput,
+  ComboBoxItem,
+  ComboBoxLabel,
+} from "@/components/ui/combo-box";
+import { DropZone } from "@/components/ui/drop-zone";
+import {
+  FieldError,
+  FieldGroup,
+  Fieldset,
+  Legend,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -64,7 +75,13 @@ import {
 } from "@/components/ui/progress-bar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Code, Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -114,23 +131,40 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isDeletingMedia, setIsDeletingMedia] = useState(false);
-  const [deleteTargetMediaId, setDeleteTargetMediaId] = useState<number | null>(null);
-  const [renameTargetMediaId, setRenameTargetMediaId] = useState<number | null>(null);
+  const [deleteTargetMediaId, setDeleteTargetMediaId] = useState<number | null>(
+    null,
+  );
+  const [renameTargetMediaId, setRenameTargetMediaId] = useState<number | null>(
+    null,
+  );
   const [selectedMediaId, setSelectedMediaId] = useState<number | null>(null);
   const [previewScale, setPreviewScale] = useState(1);
   const [clientRejections, setClientRejections] = useState<FileRejection[]>([]);
 
   const [query, setQuery] = useQueryStates(
     {
-      date: parseAsStringLiteral(["all", "today", "7d", "30d", "365d"]).withDefault("all"),
+      date: parseAsStringLiteral([
+        "all",
+        "today",
+        "7d",
+        "30d",
+        "365d",
+      ]).withDefault("all"),
       direction: parseAsStringLiteral(["asc", "desc"]).withDefault("desc"),
       page: parseAsInteger.withDefault(1),
       perPage: parseAsInteger.withDefault(media.meta.perPage),
       search: parseAsString.withDefault(""),
-      sort: parseAsStringLiteral(["created_at", "display_name", "size"]).withDefault(
+      sort: parseAsStringLiteral([
         "created_at",
-      ),
-      type: parseAsStringLiteral(["all", "image", "video", "audio"]).withDefault("all"),
+        "display_name",
+        "size",
+      ]).withDefault("created_at"),
+      type: parseAsStringLiteral([
+        "all",
+        "image",
+        "video",
+        "audio",
+      ]).withDefault("all"),
       uploadedBy: parseAsInteger.withDefault(0),
       view: parseAsStringLiteral(["grid", "table"]).withDefault("grid"),
     },
@@ -157,7 +191,11 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
   const mediaList = useAsyncList<CmsMediaRow>({
     async load({ signal }) {
-      const { items, meta } = await fetchInertiaCollectionPage("media", queryRef.current, signal);
+      const { items, meta } = await fetchInertiaCollectionPage(
+        "media",
+        queryRef.current,
+        signal,
+      );
 
       if (meta && typeof meta === "object") {
         setMediaMeta(meta as unknown as typeof media.meta);
@@ -175,9 +213,12 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
         : mediaList.items,
     [media.data, mediaList.items, mediaList.loadingState],
   );
-  const deleteTargetMedia = visibleMedia.find((item) => item.id === deleteTargetMediaId) ?? null;
-  const selectedMedia = visibleMedia.find((item) => item.id === selectedMediaId) ?? null;
-  const renameTargetMedia = visibleMedia.find((item) => item.id === renameTargetMediaId) ?? null;
+  const deleteTargetMedia =
+    visibleMedia.find((item) => item.id === deleteTargetMediaId) ?? null;
+  const selectedMedia =
+    visibleMedia.find((item) => item.id === selectedMediaId) ?? null;
+  const renameTargetMedia =
+    visibleMedia.find((item) => item.id === renameTargetMediaId) ?? null;
 
   const canDeleteMedia = can.deleteMedia;
   const canDuplicateMedia = can.duplicateMedia;
@@ -385,9 +426,12 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <div className="border-b border-border px-5 py-4">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-2">
-                <p className="text-lg font-semibold text-fg">Media Management</p>
+                <p className="text-lg font-semibold text-fg">
+                  Media Management
+                </p>
                 <p className="max-w-3xl text-sm text-muted-fg">
-                  Quản lý ảnh, video và âm thanh dùng trong CMS từ một thư viện chung.
+                  Quản lý ảnh, video và âm thanh dùng trong CMS từ một thư viện
+                  chung.
                 </p>
               </div>
 
@@ -416,7 +460,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 </div>
 
                 {canUploadMedia ? (
-                  <Button onPress={() => setIsUploadOpen(true)}>Tải media lên</Button>
+                  <Button onPress={() => setIsUploadOpen(true)}>
+                    Tải media lên
+                  </Button>
                 ) : null}
               </div>
             </div>
@@ -442,7 +488,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               selectedKey={query.type}
               onSelectionChange={(key) => {
                 if (key !== null) {
-                  void syncQuery({ type: key as typeof query.type }, { resetPage: true });
+                  void syncQuery(
+                    { type: key as typeof query.type },
+                    { resetPage: true },
+                  );
                 }
               }}
             >
@@ -462,14 +511,20 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 selectedKey={String(query.uploadedBy)}
                 onSelectionChange={(key) => {
                   if (key !== null) {
-                    void syncQuery({ uploadedBy: Number(key) }, { resetPage: true });
+                    void syncQuery(
+                      { uploadedBy: Number(key) },
+                      { resetPage: true },
+                    );
                   }
                 }}
               >
                 <ComboBoxInput placeholder="Lọc theo người tải lên" />
                 <ComboBoxContent items={uploaderOptions}>
                   {(option) => (
-                    <ComboBoxItem id={String(option.id)} textValue={option.name}>
+                    <ComboBoxItem
+                      id={String(option.id)}
+                      textValue={option.name}
+                    >
                       <ComboBoxLabel>{option.name}</ComboBoxLabel>
                     </ComboBoxItem>
                   )}
@@ -481,7 +536,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 selectedKey={String(query.uploadedBy)}
                 onSelectionChange={(key) => {
                   if (key !== null) {
-                    void syncQuery({ uploadedBy: Number(key) }, { resetPage: true });
+                    void syncQuery(
+                      { uploadedBy: Number(key) },
+                      { resetPage: true },
+                    );
                   }
                 }}
               >
@@ -501,7 +559,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               selectedKey={query.date}
               onSelectionChange={(key) => {
                 if (key !== null) {
-                  void syncQuery({ date: key as typeof query.date }, { resetPage: true });
+                  void syncQuery(
+                    { date: key as typeof query.date },
+                    { resetPage: true },
+                  );
                 }
               }}
             >
@@ -519,7 +580,8 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <div className="space-y-4 px-5 py-4">
             <div className="flex items-center justify-between gap-3">
               <Text className="text-sm text-muted-fg">
-                {mediaMeta.total} media{mediaList.isLoading ? " · đang làm mới" : ""}
+                {mediaMeta.total} media
+                {mediaList.isLoading ? " · đang làm mới" : ""}
               </Text>
 
               <Select
@@ -528,14 +590,21 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 selectedKey={String(mediaMeta.perPage)}
                 onSelectionChange={(key) => {
                   if (key !== null) {
-                    void syncQuery({ perPage: Number(key) }, { resetPage: true });
+                    void syncQuery(
+                      { perPage: Number(key) },
+                      { resetPage: true },
+                    );
                   }
                 }}
               >
                 <SelectTrigger />
                 <SelectContent>
                   {[12, 24, 48].map((option) => (
-                    <SelectItem key={option} id={String(option)} textValue={`${option} mục / trang`}>
+                    <SelectItem
+                      key={option}
+                      id={String(option)}
+                      textValue={`${option} mục / trang`}
+                    >
                       <SelectLabel>{option} mục / trang</SelectLabel>
                     </SelectItem>
                   ))}
@@ -578,13 +647,18 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     <div className="pointer-events-none relative z-0 space-y-3 p-4 text-left">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 space-y-1">
-                          <p className="truncate font-medium text-fg">{item.displayName}</p>
+                          <p className="truncate font-medium text-fg">
+                            {item.displayName}
+                          </p>
                           <Text className="truncate text-sm text-muted-fg">
                             {item.mimeType} · {formatDateTime(item.uploadedAt)}
                           </Text>
                         </div>
 
-                        <Badge intent={kindIntentMap[item.kind]} isCircle={false}>
+                        <Badge
+                          intent={kindIntentMap[item.kind]}
+                          isCircle={false}
+                        >
                           {kindLabelMap[item.kind]}
                         </Badge>
                       </div>
@@ -592,7 +666,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex min-w-0 items-center gap-2">
                           <Avatar
-                            alt={item.uploader?.name ?? "Không rõ người tải lên"}
+                            alt={
+                              item.uploader?.name ?? "Không rõ người tải lên"
+                            }
                             initials={getInitials(item.uploader?.name ?? "NA")}
                             size="sm"
                           />
@@ -601,7 +677,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                           </Text>
                         </div>
 
-                        <Text className="text-sm text-muted-fg">{formatBytes(item.size)}</Text>
+                        <Text className="text-sm text-muted-fg">
+                          {formatBytes(item.size)}
+                        </Text>
                       </div>
                     </div>
                   </div>
@@ -647,10 +725,16 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                         <td className="px-4 py-4 align-top first:pl-5 last:pr-5">
                           <div className="flex items-start gap-3">
                             <div className="size-14 shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
-                              <MediaPreview media={item} className="size-full" mode="compact" />
+                              <MediaPreview
+                                media={item}
+                                className="size-full"
+                                mode="compact"
+                              />
                             </div>
                             <div className="min-w-0 space-y-1">
-                              <p className="truncate font-medium text-fg">{item.displayName}</p>
+                              <p className="truncate font-medium text-fg">
+                                {item.displayName}
+                              </p>
                               <Text className="truncate text-sm text-muted-fg">
                                 {item.mimeType}
                               </Text>
@@ -658,7 +742,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                           </div>
                         </td>
                         <td className="px-4 py-4 align-top text-sm text-fg first:pl-5 last:pr-5">
-                          <Badge intent={kindIntentMap[item.kind]} isCircle={false}>
+                          <Badge
+                            intent={kindIntentMap[item.kind]}
+                            isCircle={false}
+                          >
                             {kindLabelMap[item.kind]}
                           </Badge>
                         </td>
@@ -696,14 +783,16 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               <div className="rounded-2xl border border-dashed border-border bg-muted/10 px-6 py-12 text-center">
                 <p className="font-medium text-fg">Chưa có media phù hợp</p>
                 <Text className="mt-2 text-muted-fg">
-                  Thử đổi bộ lọc hoặc tải thêm ảnh, video, âm thanh vào thư viện.
+                  Thử đổi bộ lọc hoặc tải thêm ảnh, video, âm thanh vào thư
+                  viện.
                 </Text>
               </div>
             ) : null}
 
             <div className="flex flex-col gap-3 border-t border-border pt-4 md:flex-row md:items-center md:justify-between">
               <Text className="text-sm text-muted-fg">
-                Hiển thị {mediaMeta.from ?? 0}-{mediaMeta.to ?? 0} trên {mediaMeta.total} media
+                Hiển thị {mediaMeta.from ?? 0}-{mediaMeta.to ?? 0} trên{" "}
+                {mediaMeta.total} media
               </Text>
 
               <Pagination>
@@ -717,7 +806,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                   <PaginationPrevious
                     isDisabled={mediaMeta.currentPage <= 1}
                     onPress={() => {
-                      void syncQuery({ page: Math.max(mediaMeta.currentPage - 1, 1) });
+                      void syncQuery({
+                        page: Math.max(mediaMeta.currentPage - 1, 1),
+                      });
                     }}
                   />
                   <PaginationItem>
@@ -727,7 +818,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     isDisabled={mediaMeta.currentPage >= mediaMeta.lastPage}
                     onPress={() => {
                       void syncQuery({
-                        page: Math.min(mediaMeta.currentPage + 1, mediaMeta.lastPage),
+                        page: Math.min(
+                          mediaMeta.currentPage + 1,
+                          mediaMeta.lastPage,
+                        ),
                       });
                     }}
                   />
@@ -748,7 +842,8 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <ModalHeader>
             <ModalTitle>Tải media lên</ModalTitle>
             <ModalDescription>
-              Chỉ nhận ảnh, video và âm thanh dùng trong CMS. Không dùng thư viện này cho tài liệu hoặc Excel.
+              Chỉ nhận ảnh, video và âm thanh dùng trong CMS. Không dùng thư
+              viện này cho tài liệu hoặc Excel.
             </ModalDescription>
           </ModalHeader>
 
@@ -756,9 +851,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             <Fieldset>
               <Legend>Dropzone media</Legend>
               <Text>
-                Hỗ trợ <Code>JPG</Code>, <Code>PNG</Code>, <Code>WEBP</Code>, <Code>GIF</Code>,{" "}
-                <Code>MP4</Code>, <Code>WEBM</Code>, <Code>MOV</Code>, <Code>MP3</Code>,{" "}
-                <Code>WAV</Code>, <Code>M4A</Code>, <Code>OGG</Code>. Tối đa 20 MB mỗi tệp.
+                Hỗ trợ <Code>JPG</Code>, <Code>PNG</Code>, <Code>WEBP</Code>,{" "}
+                <Code>GIF</Code>, <Code>MP4</Code>, <Code>WEBM</Code>,{" "}
+                <Code>MOV</Code>, <Code>MP3</Code>, <Code>WAV</Code>,{" "}
+                <Code>M4A</Code>, <Code>OGG</Code>. Tối đa 20 MB mỗi tệp.
               </Text>
 
               <FieldGroup className="pb-2">
@@ -767,9 +863,15 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     className={twMerge(
                       "rounded-2xl border border-dashed p-6 transition-colors",
                       "bg-muted/20 hover:bg-muted/30",
-                      isDragActive ? "border-info-subtle-fg bg-info-subtle/35" : "",
-                      isDragAccept ? "border-success-subtle-fg bg-success-subtle/30" : "",
-                      isDragReject ? "border-danger-subtle-fg bg-danger-subtle/25" : "",
+                      isDragActive
+                        ? "border-info-subtle-fg bg-info-subtle/35"
+                        : "",
+                      isDragAccept
+                        ? "border-success-subtle-fg bg-success-subtle/30"
+                        : "",
+                      isDragReject
+                        ? "border-danger-subtle-fg bg-danger-subtle/25"
+                        : "",
                     )}
                   >
                     <input {...getInputProps()} />
@@ -777,10 +879,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div className="space-y-2">
                         <Strong className="text-fg">
-                          {isDragActive ? "Thả tệp vào đây" : "Kéo thả media hoặc chọn từ máy"}
+                          {isDragActive
+                            ? "Thả tệp vào đây"
+                            : "Kéo thả media hoặc chọn từ máy"}
                         </Strong>
                         <Text className="text-sm text-muted-fg">
-                          Tải nhiều media trong một lượt để bổ sung nhanh cho thư viện.
+                          Tải nhiều media trong một lượt để bổ sung nhanh cho
+                          thư viện.
                         </Text>
                       </div>
 
@@ -822,8 +927,12 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                           className="flex items-center justify-between gap-3 rounded-xl border border-border bg-bg px-3 py-2"
                         >
                           <div className="min-w-0 space-y-1">
-                            <p className="truncate font-medium text-fg">{file.name}</p>
-                            <Text className="text-sm text-muted-fg">{formatBytes(file.size)}</Text>
+                            <p className="truncate font-medium text-fg">
+                              {file.name}
+                            </p>
+                            <Text className="text-sm text-muted-fg">
+                              {formatBytes(file.size)}
+                            </Text>
                           </div>
 
                           <Button
@@ -833,7 +942,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                             onPress={() => {
                               uploadForm.setData(
                                 "files",
-                                uploadForm.data.files.filter((_, currentIndex) => currentIndex !== index),
+                                uploadForm.data.files.filter(
+                                  (_, currentIndex) => currentIndex !== index,
+                                ),
                               );
                             }}
                           >
@@ -854,13 +965,21 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     data-slot="control"
                     className="rounded-2xl border border-danger-subtle-fg/30 bg-danger-subtle/20 px-4 py-4"
                   >
-                    <Strong className="text-fg">Tệp bị từ chối ở frontend</Strong>
+                    <Strong className="text-fg">
+                      Tệp bị từ chối ở frontend
+                    </Strong>
                     <div className="mt-3 space-y-2">
                       {clientRejections.map(({ errors, file }) => (
-                        <div key={`${file.name}-${file.lastModified}`} className="space-y-1">
+                        <div
+                          key={`${file.name}-${file.lastModified}`}
+                          className="space-y-1"
+                        >
                           <p className="font-medium text-fg">{file.name}</p>
                           {errors.map((error) => (
-                            <Text key={error.code} className="text-sm text-danger-subtle-fg">
+                            <Text
+                              key={error.code}
+                              className="text-sm text-danger-subtle-fg"
+                            >
                               {mapDropzoneError(error.message)}
                             </Text>
                           ))}
@@ -882,7 +1001,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               Hủy
             </Button>
             <Button
-              isDisabled={uploadForm.data.files.length === 0 || uploadForm.processing}
+              isDisabled={
+                uploadForm.data.files.length === 0 || uploadForm.processing
+              }
               onPress={submitUpload}
             >
               Tải lên
@@ -905,7 +1026,8 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <ModalHeader>
             <ModalTitle>Đổi tên media</ModalTitle>
             <ModalDescription>
-              Chỉ thay đổi tên hiển thị. Đuôi tệp <Code>.{renameTargetMedia.extension}</Code> sẽ được giữ nguyên.
+              Chỉ thay đổi tên hiển thị. Đuôi tệp{" "}
+              <Code>.{renameTargetMedia.extension}</Code> sẽ được giữ nguyên.
             </ModalDescription>
           </ModalHeader>
 
@@ -922,7 +1044,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     }}
                   />
                 </TextField>
-                {renameForm.errors.name ? <FieldError>{renameForm.errors.name}</FieldError> : null}
+                {renameForm.errors.name ? (
+                  <FieldError>{renameForm.errors.name}</FieldError>
+                ) : null}
               </FieldGroup>
             </Fieldset>
           </ModalBody>
@@ -932,7 +1056,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               Hủy
             </Button>
             <Button
-              isDisabled={renameForm.processing || renameForm.data.name.trim() === ""}
+              isDisabled={
+                renameForm.processing || renameForm.data.name.trim() === ""
+              }
               onPress={submitRename}
             >
               Lưu tên mới
@@ -968,7 +1094,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     <XMarkIcon />
                   </Button>
                   <div className="flex min-w-0 items-center gap-3">
-                    <MediaKindIcon kind={selectedMedia.kind} className="size-7" />
+                    <MediaKindIcon
+                      kind={selectedMedia.kind}
+                      className="size-7"
+                    />
 
                     <div className="min-w-0">
                       {canRenameMedia ? (
@@ -998,7 +1127,11 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     >
                       <MinusIcon />
                     </Button>
-                    <Button intent="outline" size="sm" onPress={() => setPreviewScale(1)}>
+                    <Button
+                      intent="outline"
+                      size="sm"
+                      onPress={() => setPreviewScale(1)}
+                    >
                       <MagnifyingGlassMinusIcon />
                     </Button>
                     <Button
@@ -1010,10 +1143,18 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     >
                       <PlusIcon />
                     </Button>
-                    <Button intent="outline" size="sm" onPress={downloadSelectedMedia}>
+                    <Button
+                      intent="outline"
+                      size="sm"
+                      onPress={downloadSelectedMedia}
+                    >
                       <ArrowDownTrayIcon />
                     </Button>
-                    <Button intent="outline" size="sm" onPress={openSelectedMedia}>
+                    <Button
+                      intent="outline"
+                      size="sm"
+                      onPress={openSelectedMedia}
+                    >
                       <ArrowTopRightOnSquareIcon />
                     </Button>
                     <MediaActionsMenu
@@ -1044,7 +1185,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               <aside className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-border/70 bg-overlay/95 shadow-xl">
                 <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
                   <p className="font-medium text-fg">Thông tin chi tiết</p>
-                  <Badge intent={kindIntentMap[selectedMedia.kind]} isCircle={false}>
+                  <Badge
+                    intent={kindIntentMap[selectedMedia.kind]}
+                    isCircle={false}
+                  >
                     {kindLabelMap[selectedMedia.kind]}
                   </Badge>
                 </div>
@@ -1053,31 +1197,68 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                   <div className="space-y-6 p-5">
                     <section className="space-y-3">
                       <div className="space-y-2 rounded-2xl border border-border bg-bg px-4 py-4">
-                        <MetadataRow label="Tên media" value={selectedMedia.displayName} />
-                        <MetadataRow label="Loại" value={kindLabelMap[selectedMedia.kind]} />
-                        <MetadataRow label="MIME type" value={selectedMedia.mimeType} />
-                        <MetadataRow label="Đuôi tệp" value={selectedMedia.extension.toUpperCase()} />
-                        <MetadataRow label="Kích thước" value={formatBytes(selectedMedia.size)} />
-                        <MetadataRow label="Bộ nhớ đã dùng" value={formatBytes(selectedMedia.size)} />
-                        <MetadataRow label="Kích thước xem" value={formatPercent(previewScale)} />
+                        <MetadataRow
+                          label="Tên media"
+                          value={selectedMedia.displayName}
+                        />
+                        <MetadataRow
+                          label="Loại"
+                          value={kindLabelMap[selectedMedia.kind]}
+                        />
+                        <MetadataRow
+                          label="MIME type"
+                          value={selectedMedia.mimeType}
+                        />
+                        <MetadataRow
+                          label="Đuôi tệp"
+                          value={selectedMedia.extension.toUpperCase()}
+                        />
+                        <MetadataRow
+                          label="Kích thước"
+                          value={formatBytes(selectedMedia.size)}
+                        />
+                        <MetadataRow
+                          label="Bộ nhớ đã dùng"
+                          value={formatBytes(selectedMedia.size)}
+                        />
+                        <MetadataRow
+                          label="Kích thước xem"
+                          value={formatPercent(previewScale)}
+                        />
                         <MetadataRow
                           label="Người tải lên"
                           value={selectedMedia.uploader?.name ?? "Không rõ"}
                         />
-                        <MetadataRow label="Ngày tải lên" value={formatDateTime(selectedMedia.uploadedAt)} />
+                        <MetadataRow
+                          label="Ngày tải lên"
+                          value={formatDateTime(selectedMedia.uploadedAt)}
+                        />
                       </div>
                     </section>
 
                     <section className="space-y-3">
                       <p className="font-medium text-fg">Mức độ sử dụng</p>
                       <div className="grid gap-3 rounded-2xl border border-border bg-bg p-4">
-                        <UsageStat label="Bài viết" value={selectedMedia.usage.posts} />
-                        <UsageStat label="Trang" value={selectedMedia.usage.pages} />
-                        <UsageStat label="Tài liệu" value={selectedMedia.usage.documents} />
-                        <UsageStat label="Hồ sơ cán bộ" value={selectedMedia.usage.staffProfiles} />
+                        <UsageStat
+                          label="Bài viết"
+                          value={selectedMedia.usage.posts}
+                        />
+                        <UsageStat
+                          label="Trang"
+                          value={selectedMedia.usage.pages}
+                        />
+                        <UsageStat
+                          label="Tài liệu"
+                          value={selectedMedia.usage.documents}
+                        />
+                        <UsageStat
+                          label="Hồ sơ cán bộ"
+                          value={selectedMedia.usage.staffProfiles}
+                        />
                       </div>
                       <Text className="text-sm text-muted-fg">
-                        Tổng số nơi đang dùng media này: {selectedMedia.usage.total}.
+                        Tổng số nơi đang dùng media này:{" "}
+                        {selectedMedia.usage.total}.
                       </Text>
                     </section>
                   </div>
@@ -1105,26 +1286,34 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <ModalHeader>
             <ModalTitle>Xóa media này?</ModalTitle>
             <ModalDescription>
-              Hành động này sẽ xóa tệp đã lưu khỏi thư viện media. Bạn chỉ nên tiếp tục khi chắc chắn media này không còn cần dùng.
+              Hành động này sẽ xóa tệp đã lưu khỏi thư viện media. Bạn chỉ nên
+              tiếp tục khi chắc chắn media này không còn cần dùng.
             </ModalDescription>
           </ModalHeader>
 
           <ModalBody>
             <div className="rounded-2xl border border-border bg-muted/15 px-4 py-4">
-              <Text className="font-medium text-fg">{deleteTargetMedia.displayName}</Text>
+              <Text className="font-medium text-fg">
+                {deleteTargetMedia.displayName}
+              </Text>
               <Text className="mt-1 text-sm text-muted-fg">
-                {kindLabelMap[deleteTargetMedia.kind]} · {formatBytes(deleteTargetMedia.size)}
+                {kindLabelMap[deleteTargetMedia.kind]} ·{" "}
+                {formatBytes(deleteTargetMedia.size)}
               </Text>
               {deleteTargetMedia.usage.total > 0 ? (
                 <Text className="mt-3 text-sm text-warning-subtle-fg">
-                  Media này đang được dùng ở {deleteTargetMedia.usage.total} nơi nên hiện chưa thể xóa.
+                  Media này đang được dùng ở {deleteTargetMedia.usage.total} nơi
+                  nên hiện chưa thể xóa.
                 </Text>
               ) : null}
             </div>
           </ModalBody>
 
           <ModalFooter>
-            <Button intent="outline" onPress={() => setIsDeleteConfirmOpen(false)}>
+            <Button
+              intent="outline"
+              onPress={() => setIsDeleteConfirmOpen(false)}
+            >
               Hủy
             </Button>
             <Button
@@ -1250,7 +1439,11 @@ function MediaPreview({
           className,
         )}
         src={media.previewUrl}
-        style={isViewer ? { transform: `scale(${scale})`, transformOrigin: "center center" } : undefined}
+        style={
+          isViewer
+            ? { transform: `scale(${scale})`, transformOrigin: "center center" }
+            : undefined
+        }
       />
     );
   }
@@ -1258,7 +1451,12 @@ function MediaPreview({
   if (media.kind === "video") {
     if (mode === "compact") {
       return (
-        <div className={twMerge("flex size-full items-center justify-center bg-muted/20", className)}>
+        <div
+          className={twMerge(
+            "flex size-full items-center justify-center bg-muted/20",
+            className,
+          )}
+        >
           <div className="rounded-full border border-border bg-bg p-2 text-fg">
             <VideoCameraIcon className="size-5" />
           </div>
@@ -1277,7 +1475,11 @@ function MediaPreview({
         controls={isViewer}
         preload="metadata"
         src={media.previewUrl}
-        style={isViewer ? { transform: `scale(${scale})`, transformOrigin: "center center" } : undefined}
+        style={
+          isViewer
+            ? { transform: `scale(${scale})`, transformOrigin: "center center" }
+            : undefined
+        }
       >
         <track kind="captions" label="Không có phụ đề" src="" srcLang="vi" />
       </video>
@@ -1286,7 +1488,12 @@ function MediaPreview({
 
   if (mode === "compact") {
     return (
-      <div className={twMerge("flex size-full items-center justify-center bg-muted/20", className)}>
+      <div
+        className={twMerge(
+          "flex size-full items-center justify-center bg-muted/20",
+          className,
+        )}
+      >
         <div className="rounded-full border border-border bg-bg p-2 text-fg">
           <MusicalNoteIcon className="size-5" />
         </div>
@@ -1295,11 +1502,21 @@ function MediaPreview({
   }
 
   return (
-    <div className={twMerge("flex size-full flex-col items-center justify-center gap-3", className)}>
+    <div
+      className={twMerge(
+        "flex size-full flex-col items-center justify-center gap-3",
+        className,
+      )}
+    >
       <div className="rounded-full border border-border bg-bg p-3 text-fg">
         <MusicalNoteIcon className="size-6" />
       </div>
-      <audio className="w-[85%] max-w-xl" controls preload="metadata" src={media.previewUrl}>
+      <audio
+        className="w-[85%] max-w-xl"
+        controls
+        preload="metadata"
+        src={media.previewUrl}
+      >
         <track kind="captions" label="Không có phụ đề" src="" srcLang="vi" />
       </audio>
     </div>

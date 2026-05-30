@@ -1,31 +1,43 @@
 import {
   EllipsisHorizontalIcon,
+  EyeIcon,
   PencilSquareIcon,
   PlusIcon,
   Squares2X2Icon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Head, router } from "@inertiajs/react";
-import { createColumnHelper  } from "@tanstack/react-table";
-import type {ColumnDef} from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { CmsDataTable } from "@/components/cms/cms-data-table";
-import { PageFormDialog  } from "@/components/cms/page-form-dialog";
-import type {PageFormValues} from "@/components/cms/page-form-dialog";
-import type { CmsPageTableRow, CmsPagesPageProps } from "@/components/cms/types";
+import type { PageFormValues } from "@/components/cms/page-form-dialog";
+import type {
+  CmsPageTableRow,
+  CmsPagesPageProps,
+} from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@/components/ui/menu";
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
 import CmsLayout from "@/layouts/cms-layout";
-import { clone, destroy, edit } from "@/routes/cms/pages";
+import {
+  clone,
+  destroy,
+  edit,
+  create,
+  builder,
+  show,
+} from "@/routes/cms/pages";
 
 const columnHelper = createColumnHelper<CmsPageTableRow>();
 
@@ -43,18 +55,11 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   year: "numeric",
 });
 
-const emptyPageFormValues: PageFormValues = {
-  excerpt: "",
-  seo_description: "",
-  seo_title: "",
-  slug: "",
-  title: "",
-};
-
 export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
-  const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [activePage, setActivePage] = useState<PageFormValues>(emptyPageFormValues);
+  const [deleteTarget, setDeleteTarget] = useState<CmsPageTableRow | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: pages.meta.perPage,
@@ -131,30 +136,25 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
               <EllipsisHorizontalIcon className="size-5" />
             </MenuTrigger>
             <MenuContent placement="bottom right">
-              <MenuItem href={edit.url({ page: row.original.id })}>
+              <MenuItem href={builder.url({ page: row.original.id })}>
                 <Squares2X2Icon />
                 Mở trình dựng
               </MenuItem>
-              <MenuItem
-                onAction={() => {
-                  setDialogMode("edit");
-                  setActivePage({
-                    excerpt: row.original.excerpt ?? "",
-                    id: row.original.id,
-                    seo_description: row.original.seoDescription ?? "",
-                    seo_title: row.original.seoTitle ?? "",
-                    slug: row.original.slug,
-                    title: row.original.title,
-                  });
-                  setDialogOpen(true);
-                }}
-              >
+              <MenuItem href={edit.url({ page: row.original.id })}>
                 <PencilSquareIcon />
                 Sửa URL và SEO
               </MenuItem>
+              <MenuItem href={show.url({ page: row.original.id })}>
+                <EyeIcon />
+                Xem trang (Preview)
+              </MenuItem>
               <MenuItem
                 onAction={() => {
-                  router.post(clone.url({ page: row.original.id }), {}, { preserveScroll: true });
+                  router.post(
+                    clone.url({ page: row.original.id }),
+                    {},
+                    { preserveScroll: true },
+                  );
                 }}
               >
                 <PlusIcon />
@@ -162,15 +162,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
               </MenuItem>
               <MenuItem
                 intent="danger"
-                onAction={() => {
-                  if (!window.confirm(`Xóa trang "${row.original.title}"?`)) {
-                    return;
-                  }
-
-                  router.delete(destroy.url({ page: row.original.id }), {
-                    preserveScroll: true,
-                  });
-                }}
+                onAction={() => setDeleteTarget(row.original)}
               >
                 <TrashIcon />
                 Xóa trang
@@ -183,9 +175,58 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
     [],
   );
 
+  function deletePage(): void {
+    if (!deleteTarget) {
+      return;
+    }
+
+    setIsDeleting(true);
+    router.delete(destroy.url({ page: deleteTarget.id }), {
+      onFinish: () => setIsDeleting(false),
+      onSuccess: () => setDeleteTarget(null),
+      preserveScroll: true,
+    });
+  }
+
   return (
     <>
       <Head title="Trang" />
+      {deleteTarget ? (
+        <ModalContent
+          aria-label="Xác nhận xóa trang"
+          isOpen={deleteTarget !== null}
+          role="alertdialog"
+          size="md"
+          onOpenChange={(isOpen) => {
+            if (!isOpen && !isDeleting) {
+              setDeleteTarget(null);
+            }
+          }}
+        >
+          <ModalHeader>
+            <ModalTitle>Xóa trang</ModalTitle>
+            <ModalDescription>
+              {`Bạn có chắc muốn xóa trang "${deleteTarget.title}"? Hành động này không thể hoàn tác.`}
+            </ModalDescription>
+          </ModalHeader>
+          <ModalFooter>
+            <Button
+              intent="outline"
+              isDisabled={isDeleting}
+              onPress={() => setDeleteTarget(null)}
+            >
+              Hủy
+            </Button>
+            <Button
+              intent="danger"
+              isDisabled={isDeleting}
+              onPress={deletePage}
+            >
+              {isDeleting ? "Đang xóa..." : "Xóa trang"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      ) : null}
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <CmsDataTable
           columns={columns}
@@ -206,13 +247,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
             tableQueryState.setSorting(column, direction)
           }
           primaryAction={
-            <Button
-              onPress={() => {
-                setDialogMode("create");
-                setActivePage(emptyPageFormValues);
-                setDialogOpen(true);
-              }}
-            >
+            <Button onPress={() => router.visit(create())}>
               <PlusIcon />
               Tạo trang
             </Button>
@@ -226,14 +261,6 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
           title="Trang"
         />
       </div>
-
-      <PageFormDialog
-        key={`${dialogMode}-${activePage.id ?? "new"}`}
-        initialValues={activePage}
-        isOpen={dialogOpen}
-        mode={dialogMode}
-        onOpenChange={setDialogOpen}
-      />
     </>
   );
 }

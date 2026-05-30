@@ -16,7 +16,11 @@ type UnsavedChangesState = {
 };
 
 type UnsavedChangesContextType = {
-  setDirty: (id: string, isDirty: boolean, onSave: () => Promise<boolean> | boolean | void) => void;
+  setDirty: (
+    id: string,
+    isDirty: boolean,
+    onSave: () => Promise<boolean> | boolean | void,
+  ) => void;
   removeDirty: (id: string) => void;
 };
 
@@ -125,27 +129,39 @@ async function saveDirtyEntriesSequentially(
   return saveDirtyEntriesSequentially(dirtyEntries, onSaveRef, index + 1);
 }
 
-const UnsavedChangesContext = createContext<UnsavedChangesContextType | null>(null);
+const UnsavedChangesContext = createContext<UnsavedChangesContextType | null>(
+  null,
+);
 
-export function UnsavedChangesProvider({ children }: { children: React.ReactNode }) {
+export function UnsavedChangesProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const bypassRef = useRef(false);
   const dirtyStatesRef = useRef<Record<string, UnsavedChangesState>>({});
-  const onSaveRefs = useRef<Record<string, () => Promise<boolean> | boolean | void>>({});
+  const onSaveRefs = useRef<
+    Record<string, () => Promise<boolean> | boolean | void>
+  >({});
   const isAnyDirtyRef = useRef(false);
   const pendingVisitRef = useRef<any>(null);
   const [contextValue] = useState<UnsavedChangesContextType>(() => ({
     setDirty(id, isDirty, onSave) {
       onSaveRefs.current[id] = onSave;
       dirtyStatesRef.current[id] = { isDirty, onSave };
-      isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some((state) => state.isDirty);
+      isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some(
+        (state) => state.isDirty,
+      );
     },
     removeDirty(id) {
       delete onSaveRefs.current[id];
       delete dirtyStatesRef.current[id];
-      isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some((state) => state.isDirty);
+      isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some(
+        (state) => state.isDirty,
+      );
     },
   }));
 
@@ -201,10 +217,15 @@ export function UnsavedChangesProvider({ children }: { children: React.ReactNode
 
   const handleSave = async () => {
     setIsSaving(true);
-    const dirtyEntries = Object.entries(dirtyStatesRef.current).filter(([_, state]) => state.isDirty);
+    const dirtyEntries = Object.entries(dirtyStatesRef.current).filter(
+      ([_, state]) => state.isDirty,
+    );
 
     try {
-      const allSaved = await saveDirtyEntriesSequentially(dirtyEntries, onSaveRefs.current);
+      const allSaved = await saveDirtyEntriesSequentially(
+        dirtyEntries,
+        onSaveRefs.current,
+      );
 
       if (allSaved) {
         setIsModalOpen(false);
@@ -240,18 +261,31 @@ export function UnsavedChangesProvider({ children }: { children: React.ReactNode
           <ModalHeader>
             <ModalTitle>Bạn có thay đổi chưa lưu</ModalTitle>
             <ModalDescription>
-              Bạn đã thực hiện các thay đổi trên trang này. Bạn có muốn lưu lại trước khi rời đi không?
+              Bạn đã thực hiện các thay đổi trên trang này. Bạn có muốn lưu lại
+              trước khi rời đi không?
             </ModalDescription>
           </ModalHeader>
           <ModalFooter className="flex-row-reverse sm:flex-row justify-end gap-2">
             <div className="flex items-center gap-2">
-              <Button intent="outline" onPress={handleCancel} isDisabled={isSaving}>
+              <Button
+                intent="outline"
+                onPress={handleCancel}
+                isDisabled={isSaving}
+              >
                 Hủy
               </Button>
-              <Button intent="secondary" onPress={handleDiscard} isDisabled={isSaving}>
+              <Button
+                intent="secondary"
+                onPress={handleDiscard}
+                isDisabled={isSaving}
+              >
                 Không lưu
               </Button>
-              <Button intent="primary" onPress={handleSave} isDisabled={isSaving}>
+              <Button
+                intent="primary"
+                onPress={handleSave}
+                isDisabled={isSaving}
+              >
                 Lưu
               </Button>
             </div>
@@ -262,11 +296,16 @@ export function UnsavedChangesProvider({ children }: { children: React.ReactNode
   );
 }
 
-export function useRegisterUnsavedChanges(config: { isDirty: boolean; onSave: () => Promise<boolean> | boolean | void }, id = "default") {
+export function useRegisterUnsavedChanges(
+  config: { isDirty: boolean; onSave: () => Promise<boolean> | boolean | void },
+  id = "default",
+) {
   const context = use(UnsavedChangesContext);
 
   if (!context) {
-    throw new Error("useRegisterUnsavedChanges must be used within an UnsavedChangesProvider");
+    throw new Error(
+      "useRegisterUnsavedChanges must be used within an UnsavedChangesProvider",
+    );
   }
 
   const { setDirty, removeDirty } = context;

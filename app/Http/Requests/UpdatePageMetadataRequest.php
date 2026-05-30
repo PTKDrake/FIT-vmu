@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 use App\Models\Page;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class UpdatePageMetadataRequest extends FormRequest
@@ -18,6 +19,15 @@ class UpdatePageMetadataRequest extends FormRequest
         return $page instanceof Page
             ? $this->user()?->can('update', $page) ?? false
             : false;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if (empty($this->slug) && ! empty($this->title)) {
+            $this->merge([
+                'slug' => Str::slug($this->title),
+            ]);
+        }
     }
 
     /** @return array<string, ValidationRule|array<mixed>|string> */

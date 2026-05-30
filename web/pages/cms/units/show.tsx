@@ -27,7 +27,10 @@ export default function CmsUnitShowPage({ can, unit }: CmsUnitShowPageProps) {
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge intent={unit.isActive ? "success" : "secondary"} isCircle={false}>
+                <Badge
+                  intent={unit.isActive ? "success" : "secondary"}
+                  isCircle={false}
+                >
                   {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
                 </Badge>
               </div>
@@ -66,7 +69,8 @@ export default function CmsUnitShowPage({ can, unit }: CmsUnitShowPageProps) {
             <div className="space-y-2 pb-4">
               <p className="text-lg font-semibold text-fg">Mô tả đơn vị</p>
               <p className="text-sm text-muted-fg">
-                Nội dung readonly được render trực tiếp từ BlockNote JSON đang lưu trong hệ thống.
+                Nội dung readonly được render trực tiếp từ BlockNote JSON đang
+                lưu trong hệ thống.
               </p>
             </div>
 
@@ -78,8 +82,14 @@ export default function CmsUnitShowPage({ can, unit }: CmsUnitShowPageProps) {
               <p className="text-lg font-semibold text-fg">Thông tin nhanh</p>
               <div className="mt-4 space-y-3">
                 <UnitMeta label="Thứ tự" value={String(unit.sortOrder)} />
-                <UnitMeta label="Nhân sự gắn kết" value={`${unit.appointmentCount}`} />
-                <UnitMeta label="Cập nhật" value={dateFormatter.format(new Date(unit.updatedAt))} />
+                <UnitMeta
+                  label="Nhân sự gắn kết"
+                  value={`${unit.appointmentCount}`}
+                />
+                <UnitMeta
+                  label="Cập nhật"
+                  value={dateFormatter.format(new Date(unit.updatedAt))}
+                />
               </div>
             </div>
           </div>

@@ -1,15 +1,15 @@
-import { Link, usePage } from "@inertiajs/react"
-import type { PropsWithChildren } from "react"
+import { Link, usePage } from "@inertiajs/react";
+import type { PropsWithChildren } from "react";
 
 const links = [
   { href: "/settings/profile", label: "Profile" },
   { href: "/settings/password", label: "Password" },
   { href: "/settings/appearance", label: "Appearance" },
   { href: "/settings/delete-account", label: "Delete Account" },
-]
+];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
-  const page = usePage()
+  const page = usePage();
 
   return (
     <div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
@@ -19,7 +19,9 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             key={link.href}
             href={link.href}
             className={`block rounded-md px-3 py-2 text-sm transition-colors ${
-              page.url === link.href ? "bg-primary text-primary-fg" : "bg-muted text-muted-fg hover:text-fg"
+              page.url === link.href
+                ? "bg-primary text-primary-fg"
+                : "bg-muted text-muted-fg hover:text-fg"
             }`}
           >
             {link.label}
@@ -28,5 +30,5 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
       </aside>
       <div>{children}</div>
     </div>
-  )
+  );
 }

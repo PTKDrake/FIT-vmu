@@ -30,10 +30,7 @@ export function CmsTopbar({ currentUrl }: { currentUrl: string }) {
     } else {
       // 1. Identify specific entity name from props if available
       const entityName =
-        props.profile?.fullName ||
-        props.unit?.name ||
-        props.page?.title ||
-        "";
+        props.profile?.fullName || props.unit?.name || props.page?.title || "";
 
       // 2. Identify the action / subpage
       if (normalizedUrl.endsWith("/create")) {
@@ -82,4 +79,3 @@ export function CmsTopbar({ currentUrl }: { currentUrl: string }) {
     </SidebarNav>
   );
 }
-

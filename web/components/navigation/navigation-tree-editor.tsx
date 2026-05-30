@@ -102,8 +102,8 @@ export function NavigationTreeEditor({
   );
   const [activeMenuId, setActiveMenuId] = useState(
     initialMenus.find((menu) => menu.id === initialMenuId)?.id ??
-    initialMenus[0]?.id ??
-    0,
+      initialMenus[0]?.id ??
+      0,
   );
   const [selectedItemId, setSelectedItemId] = useState<number | null>(
     initialMenus[0]?.items[0]?.id ?? null,
@@ -127,19 +127,21 @@ export function NavigationTreeEditor({
   const hasUnsavedChanges =
     JSON.stringify(draftMenus) !== JSON.stringify(savedMenus);
 
-  useRegisterUnsavedChanges({
-    isDirty: hasUnsavedChanges,
-    onSave: () => {
-      const nextMenus = cloneNavigationMenus(draftMenus);
-      startTransition(() => {
-        setSavedMenus(nextMenus);
-        setDraftMenus(cloneNavigationMenus(nextMenus));
-        setIsEditorOpen(false);
-        setPendingConfirmation(null);
-      });
+  useRegisterUnsavedChanges(
+    {
+      isDirty: hasUnsavedChanges,
+      onSave: () => {
+        const nextMenus = cloneNavigationMenus(draftMenus);
+        startTransition(() => {
+          setSavedMenus(nextMenus);
+          setDraftMenus(cloneNavigationMenus(nextMenus));
+          setIsEditorOpen(false);
+          setPendingConfirmation(null);
+        });
+      },
     },
-  }, "navigation-tree-editor");
-
+    "navigation-tree-editor",
+  );
 
   const { dragAndDropHooks } = useDragAndDrop<NavigationItemDraft>({
     getItems: (keys) =>
@@ -413,10 +415,7 @@ export function NavigationTreeEditor({
   return (
     <div className="navigation-tree-editor flex min-h-0 flex-1 flex-col px-4 pt-0">
       <div className="min-h-0 flex-1 rounded-2xl border border-border bg-bg">
-        <ScrollArea
-          className="h-full"
-          orientation="vertical"
-        >
+        <ScrollArea className="h-full" orientation="vertical">
           {activeItems.length > 0 ? (
             <Tree
               aria-label="Cây navigation item"
@@ -458,7 +457,11 @@ export function NavigationTreeEditor({
 
       <StickyActionBar>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Button intent="secondary" onPress={() => handleAddItem(null)} className="w-full sm:w-auto">
+          <Button
+            intent="secondary"
+            onPress={() => handleAddItem(null)}
+            className="w-full sm:w-auto"
+          >
             <PlusIcon />
             Thêm item gốc
           </Button>
@@ -483,7 +486,6 @@ export function NavigationTreeEditor({
           </div>
         </div>
       </StickyActionBar>
-
 
       <NavigationItemEditorModal
         item={selectedItem}
@@ -557,26 +559,26 @@ function NavigationConfirmModal({
   const config =
     confirmation.kind === "delete"
       ? {
-        confirmIntent: "danger" as const,
-        confirmLabel: "Xóa",
-        description: "Item navigation này sẽ bị xóa khỏi cây hiện tại.",
-        title: "Xác nhận xóa item",
-      }
+          confirmIntent: "danger" as const,
+          confirmLabel: "Xóa",
+          description: "Item navigation này sẽ bị xóa khỏi cây hiện tại.",
+          title: "Xác nhận xóa item",
+        }
       : confirmation.kind === "discard"
         ? {
-          confirmIntent: "outline" as const,
-          confirmLabel: "Hủy thay đổi",
-          description:
-            "Toàn bộ thay đổi chưa lưu của navigation này sẽ bị bỏ.",
-          title: "Xác nhận hủy thay đổi",
-        }
+            confirmIntent: "outline" as const,
+            confirmLabel: "Hủy thay đổi",
+            description:
+              "Toàn bộ thay đổi chưa lưu của navigation này sẽ bị bỏ.",
+            title: "Xác nhận hủy thay đổi",
+          }
         : {
-          confirmIntent: "primary" as const,
-          confirmLabel: "Lưu",
-          description:
-            "Các thay đổi hiện tại sẽ được lưu vào bản nháp navigation.",
-          title: "Xác nhận lưu thay đổi",
-        };
+            confirmIntent: "primary" as const,
+            confirmLabel: "Lưu",
+            description:
+              "Các thay đổi hiện tại sẽ được lưu vào bản nháp navigation.",
+            title: "Xác nhận lưu thay đổi",
+          };
 
   return (
     <ModalContent
@@ -916,16 +918,14 @@ function NavigationTreeItems({
               ) : null}
             </div>
           </TreeContent>
-          {item.children.length > 0
-            ? (
-              <NavigationTreeItems
-                items={item.children}
-                onAddChild={onAddChild}
-                onDelete={onDelete}
-                onEdit={onEdit}
-              />
-            )
-            : null}
+          {item.children.length > 0 ? (
+            <NavigationTreeItems
+              items={item.children}
+              onAddChild={onAddChild}
+              onDelete={onDelete}
+              onEdit={onEdit}
+            />
+          ) : null}
         </TreeItem>
       )}
     </Collection>

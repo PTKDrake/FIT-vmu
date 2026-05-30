@@ -9,7 +9,8 @@ import { store } from "@/routes/cms/staff-profiles";
 
 const EMPTY_USERS: NonNullable<CmsStaffProfileFormPageProps["users"]> = [];
 const EMPTY_UNITS: NonNullable<CmsStaffProfileFormPageProps["units"]> = [];
-const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> = [];
+const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> =
+  [];
 
 export default function CmsStaffProfileCreatePage({
   users = EMPTY_USERS,
@@ -39,7 +40,7 @@ export default function CmsStaffProfileCreatePage({
 
   const handleUpdate = <TKey extends keyof typeof data>(
     key: TKey,
-    value: typeof data[TKey],
+    value: (typeof data)[TKey],
   ) => {
     setData(key, value as never);
   };
@@ -48,10 +49,13 @@ export default function CmsStaffProfileCreatePage({
     post(store.url());
   };
 
-  useRegisterUnsavedChanges({
-    isDirty,
-    onSave: handleSubmit,
-  }, "staff-profile-create");
+  useRegisterUnsavedChanges(
+    {
+      isDirty,
+      onSave: handleSubmit,
+    },
+    "staff-profile-create",
+  );
 
   return (
     <>

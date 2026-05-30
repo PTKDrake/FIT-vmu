@@ -24,10 +24,13 @@ export default function CmsUnitCreatePage({ unit }: CmsUnitFormPageProps) {
     });
   };
 
-  useRegisterUnsavedChanges({
-    isDirty: form.isDirty,
-    onSave: handleSave,
-  }, "unit-create");
+  useRegisterUnsavedChanges(
+    {
+      isDirty: form.isDirty,
+      onSave: handleSave,
+    },
+    "unit-create",
+  );
 
   return (
     <>
@@ -48,6 +51,5 @@ export default function CmsUnitCreatePage({ unit }: CmsUnitFormPageProps) {
     </>
   );
 }
-
 
 CmsUnitCreatePage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;

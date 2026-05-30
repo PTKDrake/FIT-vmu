@@ -57,8 +57,12 @@ export function MediaSelector({
   error,
 }: MediaSelectorProps) {
   const [uploading, setUploading] = useState(false);
-  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(initialPreviewUrl ?? null);
-  const [localDisplayName, setLocalDisplayName] = useState<string | null>(initialDisplayName ?? null);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(
+    initialPreviewUrl ?? null,
+  );
+  const [localDisplayName, setLocalDisplayName] = useState<string | null>(
+    initialDisplayName ?? null,
+  );
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,99 +83,106 @@ export function MediaSelector({
   }
 
   // Load existing media items from library
-  const loadLibrary = useCallback(async (search: string = "", pageNumber: number = 1) => {
-    setLoadingLibrary(true);
-    setCurrentPage(pageNumber);
+  const loadLibrary = useCallback(
+    async (search: string = "", pageNumber: number = 1) => {
+      setLoadingLibrary(true);
+      setCurrentPage(pageNumber);
 
-    try {
-      const url = new URL(cmsRoutes.media.url(), window.location.origin);
-      url.searchParams.set("type", "image");
-      url.searchParams.set("perPage", "24");
-      url.searchParams.set("page", String(pageNumber));
+      try {
+        const url = new URL(cmsRoutes.media.url(), window.location.origin);
+        url.searchParams.set("type", "image");
+        url.searchParams.set("perPage", "24");
+        url.searchParams.set("page", String(pageNumber));
 
-      if (search) {
-        url.searchParams.set("search", search);
+        if (search) {
+          url.searchParams.set("search", search);
+        }
+
+        const response = await fetch(url.toString(), {
+          credentials: "same-origin",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Không thể kết nối tới thư viện media.");
+        }
+
+        const data = await response.json();
+        // Extract paginated items from Inertia response props.media.data
+        const rawItems = data.props?.media?.data ?? data.media?.data ?? [];
+        const meta = data.props?.media?.meta ?? data.media?.meta ?? null;
+
+        const formattedItems = rawItems.map((item: any) => ({
+          id: item.id,
+          displayName: item.displayName || item.display_name || "Chưa đặt tên",
+          previewUrl:
+            item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
+          mimeType: item.mimeType || item.mime_type || "image/jpeg",
+        }));
+
+        setLibraryItems(formattedItems);
+
+        if (meta) {
+          setLastPage(meta.lastPage || 1);
+        }
+      } catch (err: any) {
+        console.error(err);
+        toast.error("Không thể tải danh sách ảnh từ thư viện.");
+      } finally {
+        setLoadingLibrary(false);
+      }
+    },
+    [],
+  );
+
+  const handleUpload = useCallback(
+    async (files: File[]) => {
+      if (files.length === 0) {
+        return;
       }
 
-      const response = await fetch(url.toString(), {
-        credentials: "same-origin",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          "Accept": "application/json",
-        },
-      });
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("files[]", files[0]);
 
-      if (!response.ok) {
-        throw new Error("Không thể kết nối tới thư viện media.");
+      try {
+        const response = await fetch(cmsRoutes.media.store.url(), {
+          method: "POST",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Accept: "application/json",
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Không thể tải tập tin lên máy chủ.");
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.media && data.media.length > 0) {
+          const uploadedMedia = data.media[0];
+          onChange(uploadedMedia.id);
+          setLocalPreviewUrl(uploadedMedia.preview_url);
+          setLocalDisplayName(uploadedMedia.display_name);
+          toast.success(`Đã tải lên và áp dụng ảnh thành công.`);
+          setIsModalOpen(false); // Close modal on success
+        } else {
+          throw new Error("Định dạng phản hồi không hợp lệ.");
+        }
+      } catch (err: any) {
+        console.error(err);
+        toast.error(err.message || "Tải lên thất bại. Vui lòng thử lại.");
+      } finally {
+        setUploading(false);
       }
-
-      const data = await response.json();
-      // Extract paginated items from Inertia response props.media.data
-      const rawItems = data.props?.media?.data ?? data.media?.data ?? [];
-      const meta = data.props?.media?.meta ?? data.media?.meta ?? null;
-
-      const formattedItems = rawItems.map((item: any) => ({
-        id: item.id,
-        displayName: item.displayName || item.display_name || "Chưa đặt tên",
-        previewUrl: item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
-        mimeType: item.mimeType || item.mime_type || "image/jpeg",
-      }));
-
-      setLibraryItems(formattedItems);
-
-      if (meta) {
-        setLastPage(meta.lastPage || 1);
-      }
-    } catch (err: any) {
-      console.error(err);
-      toast.error("Không thể tải danh sách ảnh từ thư viện.");
-    } finally {
-      setLoadingLibrary(false);
-    }
-  }, []);
-
-  const handleUpload = useCallback(async (files: File[]) => {
-    if (files.length === 0) {
-      return;
-    }
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("files[]", files[0]);
-
-    try {
-      const response = await fetch(cmsRoutes.media.store.url(), {
-        method: "POST",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          "Accept": "application/json",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Không thể tải tập tin lên máy chủ.");
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.media && data.media.length > 0) {
-        const uploadedMedia = data.media[0];
-        onChange(uploadedMedia.id);
-        setLocalPreviewUrl(uploadedMedia.preview_url);
-        setLocalDisplayName(uploadedMedia.display_name);
-        toast.success(`Đã tải lên và áp dụng ảnh thành công.`);
-        setIsModalOpen(false); // Close modal on success
-      } else {
-        throw new Error("Định dạng phản hồi không hợp lệ.");
-      }
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || "Tải lên thất bại. Vui lòng thử lại.");
-    } finally {
-      setUploading(false);
-    }
-  }, [onChange]);
+    },
+    [onChange],
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -206,9 +217,13 @@ export function MediaSelector({
     setIsModalOpen(true);
   };
 
-  const currentPreview = localPreviewUrl || (value ? `/storage/media/${value}` : null);
+  const currentPreview =
+    localPreviewUrl || (value ? `/storage/media/${value}` : null);
 
-  const getCleanDisplayName = (url: string | null, name: string | null): string => {
+  const getCleanDisplayName = (
+    url: string | null,
+    name: string | null,
+  ): string => {
     if (name) {
       return name;
     }
@@ -227,7 +242,10 @@ export function MediaSelector({
     return decodeURIComponent(filename);
   };
 
-  const buildPaginationPages = (currentPageNum: number, lastPageNum: number) => {
+  const buildPaginationPages = (
+    currentPageNum: number,
+    lastPageNum: number,
+  ) => {
     const pages: { type: "page" | "gap"; page: number }[] = [];
     const range = 1;
 
@@ -320,8 +338,12 @@ export function MediaSelector({
               <PhotoIcon className="size-5 text-muted-fg" />
             </div>
             <div className="space-y-1 mt-3">
-              <p className="text-sm font-medium text-fg">Chọn ảnh đại diện bài viết</p>
-              <p className="text-xs text-muted-fg">Nhấp để mở thư viện ảnh hoặc tải lên tệp mới</p>
+              <p className="text-sm font-medium text-fg">
+                Chọn ảnh đại diện bài viết
+              </p>
+              <p className="text-xs text-muted-fg">
+                Nhấp để mở thư viện ảnh hoặc tải lên tệp mới
+              </p>
             </div>
           </div>
         </button>
@@ -336,214 +358,244 @@ export function MediaSelector({
         onOpenChange={setIsModalOpen}
         size="4xl"
       >
-          {({ close }) => (
-            <>
-              <ModalHeader>
-                <ModalTitle>Quản lý & Chọn ảnh đại diện</ModalTitle>
-              </ModalHeader>
-              <ModalBody className="space-y-6">
-                {/* Tab Navigation */}
-                <div className="flex border-b border-border/60">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveTab("library");
-                      void loadLibrary(searchQuery, 1);
-                    }}
-                    className={`px-4 py-2 text-sm font-semibold border-b-2 transition cursor-pointer ${activeTab === "library"
+        {({ close }) => (
+          <>
+            <ModalHeader>
+              <ModalTitle>Quản lý & Chọn ảnh đại diện</ModalTitle>
+            </ModalHeader>
+            <ModalBody className="space-y-6">
+              {/* Tab Navigation */}
+              <div className="flex border-b border-border/60">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab("library");
+                    void loadLibrary(searchQuery, 1);
+                  }}
+                  className={`px-4 py-2 text-sm font-semibold border-b-2 transition cursor-pointer ${
+                    activeTab === "library"
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-fg hover:text-fg"
-                      }`}
-                  >
-                    Thư viện ảnh
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("upload")}
-                    className={`px-4 py-2 text-sm font-semibold border-b-2 transition cursor-pointer ${activeTab === "upload"
+                  }`}
+                >
+                  Thư viện ảnh
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("upload")}
+                  className={`px-4 py-2 text-sm font-semibold border-b-2 transition cursor-pointer ${
+                    activeTab === "upload"
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-fg hover:text-fg"
-                      }`}
-                  >
-                    Tải ảnh mới lên
-                  </button>
-                </div>
+                  }`}
+                >
+                  Tải ảnh mới lên
+                </button>
+              </div>
 
-                {/* TAB CONTENT 1: Media Library Grid */}
-                {activeTab === "library" && (
-                  <div className="space-y-4">
-                    {/* Search Bar */}
-                    <div className="flex gap-2 items-center">
-                      <SearchField
-                        value={searchQuery}
-                        onChange={setSearchQuery}
-                        className="flex-1"
-                        aria-label="Tìm kiếm ảnh theo tên..."
-                      >
-                        <SearchInput
-                          placeholder="Tìm kiếm ảnh theo tên..."
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              void loadLibrary(searchQuery, 1);
-                            }
-                          }}
+              {/* TAB CONTENT 1: Media Library Grid */}
+              {activeTab === "library" && (
+                <div className="space-y-4">
+                  {/* Search Bar */}
+                  <div className="flex gap-2 items-center">
+                    <SearchField
+                      value={searchQuery}
+                      onChange={setSearchQuery}
+                      className="flex-1"
+                      aria-label="Tìm kiếm ảnh theo tên..."
+                    >
+                      <SearchInput
+                        placeholder="Tìm kiếm ảnh theo tên..."
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            void loadLibrary(searchQuery, 1);
+                          }
+                        }}
+                      />
+                    </SearchField>
+                    <Button
+                      intent="outline"
+                      size="sm"
+                      className="h-9 shrink-0"
+                      onPress={() => void loadLibrary(searchQuery, 1)}
+                    >
+                      Tìm kiếm
+                    </Button>
+                  </div>
+
+                  {/* Grid Area */}
+                  {loadingLibrary ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="aspect-square rounded-lg bg-muted/30 animate-pulse border border-border/40"
                         />
-                      </SearchField>
+                      ))}
+                    </div>
+                  ) : libraryItems.length === 0 ? (
+                    <div className="text-center py-12 space-y-3">
+                      <PhotoIcon className="size-12 text-muted-fg/40 mx-auto" />
+                      <p className="text-sm font-semibold text-fg">
+                        Không tìm thấy hình ảnh nào
+                      </p>
+                      <p className="text-xs text-muted-fg">
+                        Thư viện trống hoặc từ khóa tìm kiếm không khớp.
+                      </p>
                       <Button
                         intent="outline"
-                        size="sm"
-                        className="h-9 shrink-0"
-                        onPress={() => void loadLibrary(searchQuery, 1)}
+                        size="xs"
+                        onPress={() => setActiveTab("upload")}
                       >
-                        Tìm kiếm
+                        Tải ảnh mới lên ngay
                       </Button>
                     </div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[350px] overflow-y-auto pr-1">
+                        {libraryItems.map((item) => {
+                          const isCurrent = value === item.id;
 
-                    {/* Grid Area */}
-                    {loadingLibrary ? (
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8">
-                        {[...Array(8)].map((_, i) => (
-                          <div
-                            key={i}
-                            className="aspect-square rounded-lg bg-muted/30 animate-pulse border border-border/40"
-                          />
-                        ))}
-                      </div>
-                    ) : libraryItems.length === 0 ? (
-                      <div className="text-center py-12 space-y-3">
-                        <PhotoIcon className="size-12 text-muted-fg/40 mx-auto" />
-                        <p className="text-sm font-semibold text-fg">Không tìm thấy hình ảnh nào</p>
-                        <p className="text-xs text-muted-fg">Thư viện trống hoặc từ khóa tìm kiếm không khớp.</p>
-                        <Button
-                          intent="outline"
-                          size="xs"
-                          onPress={() => setActiveTab("upload")}
-                        >
-                          Tải ảnh mới lên ngay
-                        </Button>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[350px] overflow-y-auto pr-1">
-                          {libraryItems.map((item) => {
-                            const isCurrent = value === item.id;
-
-                            return (
-                              <button
-                                key={item.id}
-                                type="button"
-                                onClick={() => handleSelectFromLibrary(item)}
-                                className={`group aspect-square rounded-lg border overflow-hidden bg-muted/10 transition cursor-pointer relative text-left p-0 ${isCurrent
+                          return (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => handleSelectFromLibrary(item)}
+                              className={`group aspect-square rounded-lg border overflow-hidden bg-muted/10 transition cursor-pointer relative text-left p-0 ${
+                                isCurrent
                                   ? "border-primary ring-2 ring-primary/20"
                                   : "border-border hover:border-muted-fg/40"
-                                  }`}
-                              >
-                                <img
-                                  src={item.previewUrl}
-                                  alt={item.displayName}
-                                  className="w-full h-full object-cover group-hover:scale-103 transition duration-200"
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).src =
-                                      "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=80";
-                                  }}
-                                />
-                                <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-xs p-1.5 text-[10px] text-white truncate text-center transition-opacity duration-200">
-                                  {item.displayName}
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
+                              }`}
+                            >
+                              <img
+                                src={item.previewUrl}
+                                alt={item.displayName}
+                                className="w-full h-full object-cover group-hover:scale-103 transition duration-200"
+                                loading="lazy"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src =
+                                    "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=80";
+                                }}
+                              />
+                              <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-xs p-1.5 text-[10px] text-white truncate text-center transition-opacity duration-200">
+                                {item.displayName}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                        {/* Pagination Area */}
-                        {lastPage > 1 && (
-                          <div className="flex justify-center border-t border-border/60 pt-4">
-                            <Pagination>
-                              <PaginationList aria-label="Điều hướng phân trang">
-                                <PaginationPrevious
-                                  onPress={() => {
-                                    if (currentPage > 1) {
-                                      void loadLibrary(searchQuery, currentPage - 1);
-                                    }
-                                  }}
-                                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                                />
-                                {buildPaginationPages(currentPage, lastPage).map((item, index) =>
+                      {/* Pagination Area */}
+                      {lastPage > 1 && (
+                        <div className="flex justify-center border-t border-border/60 pt-4">
+                          <Pagination>
+                            <PaginationList aria-label="Điều hướng phân trang">
+                              <PaginationPrevious
+                                onPress={() => {
+                                  if (currentPage > 1) {
+                                    void loadLibrary(
+                                      searchQuery,
+                                      currentPage - 1,
+                                    );
+                                  }
+                                }}
+                                className={
+                                  currentPage === 1
+                                    ? "pointer-events-none opacity-50"
+                                    : "cursor-pointer"
+                                }
+                              />
+                              {buildPaginationPages(currentPage, lastPage).map(
+                                (item, index) =>
                                   item.type === "page" ? (
                                     <PaginationItem
                                       key={index}
                                       isCurrent={item.page === currentPage}
-                                      onPress={() => void loadLibrary(searchQuery, item.page)}
+                                      onPress={() =>
+                                        void loadLibrary(searchQuery, item.page)
+                                      }
                                       className="cursor-pointer"
                                     >
                                       {item.page}
                                     </PaginationItem>
                                   ) : (
                                     <PaginationGap key={index} />
-                                  )
-                                )}
-                                <PaginationNext
-                                  onPress={() => {
-                                    if (currentPage < lastPage) {
-                                      void loadLibrary(searchQuery, currentPage + 1);
-                                    }
-                                  }}
-                                  className={currentPage === lastPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                                />
-                              </PaginationList>
-                            </Pagination>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                )}
+                                  ),
+                              )}
+                              <PaginationNext
+                                onPress={() => {
+                                  if (currentPage < lastPage) {
+                                    void loadLibrary(
+                                      searchQuery,
+                                      currentPage + 1,
+                                    );
+                                  }
+                                }}
+                                className={
+                                  currentPage === lastPage
+                                    ? "pointer-events-none opacity-50"
+                                    : "cursor-pointer"
+                                }
+                              />
+                            </PaginationList>
+                          </Pagination>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
 
-                {/* TAB CONTENT 2: Upload Files Dropzone */}
-                {activeTab === "upload" && (
-                  <div
-                    {...getRootProps()}
-                    className={`flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-xl cursor-pointer transition ${isDragActive
+              {/* TAB CONTENT 2: Upload Files Dropzone */}
+              {activeTab === "upload" && (
+                <div
+                  {...getRootProps()}
+                  className={`flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-xl cursor-pointer transition ${
+                    isDragActive
                       ? "bg-primary/5 border-primary"
                       : "border-border hover:bg-muted/5 hover:border-muted-fg/40"
-                      }`}
-                  >
-                    <input {...getInputProps()} />
-                    {uploading ? (
-                      <div className="space-y-3 py-4 flex flex-col items-center text-center">
-                        <ArrowPathIcon className="size-10 text-primary animate-spin" />
-                        <p className="text-sm font-semibold text-fg">Đang tải tệp tin lên máy chủ...</p>
-                        <span className="text-xs text-muted-fg">
-                          Hình ảnh sẽ tự động được chọn sau khi tải lên thành công
-                        </span>
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  {uploading ? (
+                    <div className="space-y-3 py-4 flex flex-col items-center text-center">
+                      <ArrowPathIcon className="size-10 text-primary animate-spin" />
+                      <p className="text-sm font-semibold text-fg">
+                        Đang tải tệp tin lên máy chủ...
+                      </p>
+                      <span className="text-xs text-muted-fg">
+                        Hình ảnh sẽ tự động được chọn sau khi tải lên thành công
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 text-center">
+                      <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-muted/40 border border-border/80 transition">
+                        <ArrowUpTrayIcon className="size-6 text-muted-fg" />
                       </div>
-                    ) : (
-                      <div className="space-y-4 text-center">
-                        <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-muted/40 border border-border/80 transition">
-                          <ArrowUpTrayIcon className="size-6 text-muted-fg" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm font-semibold text-fg">
-                            {isDragActive ? "Thả ảnh vào đây..." : "Tải ảnh từ máy tính của bạn"}
-                          </p>
-                          <p className="text-xs text-muted-fg">
-                            Kéo thả ảnh vào đây, hoặc click để duyệt tìm tệp tin (JPG, PNG, WEBP, GIF dưới 20MB)
-                          </p>
-                        </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold text-fg">
+                          {isDragActive
+                            ? "Thả ảnh vào đây..."
+                            : "Tải ảnh từ máy tính của bạn"}
+                        </p>
+                        <p className="text-xs text-muted-fg">
+                          Kéo thả ảnh vào đây, hoặc click để duyệt tìm tệp tin
+                          (JPG, PNG, WEBP, GIF dưới 20MB)
+                        </p>
                       </div>
-                    )}
-                  </div>
-                )}
-              </ModalBody>
-              <ModalFooter className="flex justify-end items-center">
-                <Button intent="outline" size="sm" onPress={close}>
-                  Đóng
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+                    </div>
+                  )}
+                </div>
+              )}
+            </ModalBody>
+            <ModalFooter className="flex justify-end items-center">
+              <Button intent="outline" size="sm" onPress={close}>
+                Đóng
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
 
       {/* Confirmation Dialog */}
       <ModalContent
@@ -553,32 +605,33 @@ export function MediaSelector({
         role="alertdialog"
         size="sm"
       >
-          {({ close }) => (
-            <>
-              <ModalHeader>
-                <ModalTitle>Xác nhận xóa ảnh đại diện</ModalTitle>
-                <ModalDescription>
-                  Bạn có chắc chắn muốn gỡ bỏ ảnh đại diện hiện tại không? Hành động này không thể hoàn tác.
-                </ModalDescription>
-              </ModalHeader>
-              <ModalFooter className="flex gap-2 justify-end">
-                <Button intent="outline" size="sm" onPress={close}>
-                  Hủy bỏ
-                </Button>
-                <Button
-                  intent="danger"
-                  size="sm"
-                  onPress={() => {
-                    handleRemove();
-                    close();
-                  }}
-                >
-                  Xác nhận xóa
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+        {({ close }) => (
+          <>
+            <ModalHeader>
+              <ModalTitle>Xác nhận xóa ảnh đại diện</ModalTitle>
+              <ModalDescription>
+                Bạn có chắc chắn muốn gỡ bỏ ảnh đại diện hiện tại không? Hành
+                động này không thể hoàn tác.
+              </ModalDescription>
+            </ModalHeader>
+            <ModalFooter className="flex gap-2 justify-end">
+              <Button intent="outline" size="sm" onPress={close}>
+                Hủy bỏ
+              </Button>
+              <Button
+                intent="danger"
+                size="sm"
+                onPress={() => {
+                  handleRemove();
+                  close();
+                }}
+              >
+                Xác nhận xóa
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
     </div>
   );
 }
