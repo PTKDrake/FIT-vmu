@@ -24,8 +24,12 @@ jobs:
           printf '%s' "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
       - name: Test rclone config in GitHub Actions
         run: |
+          echo "Config path:"
+          rclone config file
+          echo "Remote list:"
           rclone listremotes
-          rclone lsd gdrive:/VMUFit --max-depth 1
+          echo "Config sections:"
+          grep '^\[.*\]$' ~/.config/rclone/rclone.conf || true
       - name: Prepare selected files
         shell: bash
         run: |
