@@ -466,7 +466,9 @@ Thứ tự đề xuất:
 7. Navigation.
 8. Documents thường.
 9. Documents Excel cá nhân hóa.
-10. Public website render pages/navigation.
+10. User management.
+11. Role/permission management.
+12. Public website render pages/navigation.
 
 #### Task 5.1 - Media module
 
@@ -587,6 +589,44 @@ Prompt mẫu:
 Hardening luồng duyệt bài viết trong CMS. Giữ CRUD posts hiện tại, nhưng siết state transition để chỉ bài pending mới được duyệt/từ chối, bổ sung metadata reviewer và rejection reason nếu cần, đồng thời cập nhật test cho các transition và quyền publish.
 ```
 
+#### Task 5.11 - User management module
+
+Checklist:
+
+- [ ] Có trang danh sách user trong CMS.
+- [ ] Có filter cơ bản theo tên, email, trạng thái, role.
+- [ ] Có form tạo user nội bộ nếu nghiệp vụ cần.
+- [ ] Có form cập nhật thông tin user cơ bản.
+- [ ] Có cơ chế gán hoặc bỏ role cho user.
+- [ ] Không cho sửa quyền bằng cách ghi trực tiếp vào bảng trung gian ngoài flow chuẩn của Spatie.
+- [ ] Có guard không cho người không đủ quyền tự nâng quyền bản thân.
+- [ ] Có test cho list/create/update/assign role và authorization chính.
+
+Prompt mẫu:
+
+```text
+Triển khai module quản lý user trong CMS cho VMUFit. Module cần có list/filter, create/update thông tin cơ bản và gán role cho user bằng API/flow chuẩn của spatie/laravel-permission. Không thêm users.role hay hardcode quyền ở frontend. Bổ sung test cho authorization và các thao tác quản trị chính.
+```
+
+#### Task 5.12 - Role và permission management module
+
+Checklist:
+
+- [ ] Có trang xem danh sách roles và permissions hiện có.
+- [ ] Có thể tạo hoặc cập nhật role nếu dự án cho phép quản trị động.
+- [ ] Có UI gán permission cho từng role.
+- [ ] Hiển thị rõ permission đang được dùng bởi role nào.
+- [ ] Flush permission cache đúng lúc sau khi cập nhật mapping.
+- [ ] Chặn sửa hoặc xóa các role hệ thống nhạy cảm nếu nghiệp vụ yêu cầu.
+- [ ] Không thay thế policy/gate bằng logic UI.
+- [ ] Có test cho sync permission, authorization và các guard quan trọng.
+
+Prompt mẫu:
+
+```text
+Triển khai module quản lý role và permission trong CMS cho VMUFit. Cho phép xem role/permission hiện có và cập nhật mapping role -> permission qua flow chuẩn của spatie/laravel-permission, đồng thời flush permission cache đúng cách và bảo vệ các role hệ thống nhạy cảm. Viết test cho authorization và permission sync.
+```
+
 ### 1.7. Phase 6 - Public website MVP
 
 Mục tiêu:
@@ -654,11 +694,11 @@ Mỗi task phải được tracking theo mẫu sau:
 
 ## Task board
 
-| ID | Phase | Task | Status | Owner | Branch | PR | Files touched | Test commands | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0.1 | Setup | Backend packages | todo |  | feature/setup-backend-packages |  | composer.json, composer.lock | composer test |  |
-| 0.2 | Setup | Frontend packages | todo |  | feature/setup-frontend-packages |  | package.json, pnpm-lock.yaml | pnpm lint, pnpm typecheck | BlockNote + Puck + form/table/query/upload/date packages |
-| 1.1 | Auth | Configure Spatie permission | todo |  | feature/auth-spatie-config |  | app/Models/User.php, config/permission.php | php artisan test |  |
+| ID  | Phase | Task                        | Status | Owner | Branch                          | PR  | Files touched                              | Test commands             | Notes                                                    |
+| --- | ----- | --------------------------- | ------ | ----- | ------------------------------- | --- | ------------------------------------------ | ------------------------- | -------------------------------------------------------- |
+| 0.1 | Setup | Backend packages            | todo   |       | feature/setup-backend-packages  |     | composer.json, composer.lock               | composer test             |                                                          |
+| 0.2 | Setup | Frontend packages           | todo   |       | feature/setup-frontend-packages |     | package.json, pnpm-lock.yaml               | pnpm lint, pnpm typecheck | BlockNote + Puck + form/table/query/upload/date packages |
+| 1.1 | Auth  | Configure Spatie permission | todo   |       | feature/auth-spatie-config      |     | app/Models/User.php, config/permission.php | php artisan test          |                                                          |
 ```
 
 ### 17.1. Definition of Ready
@@ -828,24 +868,30 @@ Mỗi PR nên có mô tả:
 
 ```markdown
 ## Summary
+
 - ...
 
 ## Scope
+
 - ...
 
 ## Files changed
+
 - ...
 
 ## Verification
+
 - [ ] php artisan test
 - [ ] ./vendor/bin/pint --test
 - [ ] pnpm lint
 - [ ] pnpm typecheck
 
 ## Screenshots
+
 Nếu có UI thì thêm ảnh.
 
 ## Notes / Risks
+
 - ...
 ```
 
