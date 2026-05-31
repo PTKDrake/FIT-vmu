@@ -20,14 +20,10 @@ final class DeleteStaffProfileController extends Controller
 
         $staffProfile->delete();
 
-        event(new CmsContentChanged(
-            resource: 'staff-profiles',
-            recordId: (int) $staffProfile->getKey(),
-            title: $staffProfile->full_name,
-            status: $staffProfile->is_public ? 'published' : 'draft',
+        event(CmsContentChanged::forStaffProfile(
+            staffProfile: $staffProfile,
             action: 'deleted',
             message: 'Đã xóa hồ sơ cán bộ.',
-            updatedAt: $staffProfile->updated_at?->toIso8601String() ?? now()->toIso8601String(),
         ));
 
         flash('Đã xóa hồ sơ cán bộ.');

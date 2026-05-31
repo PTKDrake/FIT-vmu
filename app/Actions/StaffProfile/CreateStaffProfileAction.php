@@ -57,14 +57,10 @@ class CreateStaffProfileAction
                 }
             }
 
-            event(new CmsContentChanged(
-                resource: 'staff-profiles',
-                recordId: (int) $profile->getKey(),
-                title: $profile->full_name,
-                status: $profile->is_public ? 'published' : 'draft',
+            event(CmsContentChanged::forStaffProfile(
+                staffProfile: $profile,
                 action: 'created',
                 message: 'Đã tạo hồ sơ cán bộ mới.',
-                updatedAt: $profile->updated_at?->toIso8601String() ?? now()->toIso8601String(),
             ));
 
             return $profile;

@@ -32,14 +32,10 @@ class UpdateUnitAction
                 'is_active' => $attributes['is_active'],
             ]);
 
-            event(new CmsContentChanged(
-                resource: 'units',
-                recordId: (int) $unit->getKey(),
-                title: $unit->name,
-                status: $unit->is_active ? 'active' : 'inactive',
+            event(CmsContentChanged::forUnit(
+                unit: $unit,
                 action: 'updated',
                 message: 'Đã cập nhật đơn vị.',
-                updatedAt: $unit->updated_at?->toIso8601String() ?? now()->toIso8601String(),
             ));
 
             return $unit->refresh();

@@ -55,9 +55,10 @@ class UpdateStaffProfileAction
                         'note' => blank($appt['note'] ?? null) ? null : $appt['note'],
                     ];
 
-                    if (! empty($appt['id'])) {
-                        $existingIds[] = (int) $appt['id'];
-                        $staffProfile->appointments()->where('id', $appt['id'])->update($appointmentData);
+                    if (isset($appt['id'])) {
+                        $appointmentId = $appt['id'];
+                        $existingIds[] = $appointmentId;
+                        $staffProfile->appointments()->where('id', $appointmentId)->update($appointmentData);
                     } else {
                         $newAppt = $staffProfile->appointments()->create($appointmentData);
                         $existingIds[] = $newAppt->id;
@@ -68,14 +69,10 @@ class UpdateStaffProfileAction
                 $staffProfile->appointments()->delete();
             }
 
-            event(new CmsContentChanged(
-                resource: 'staff-profiles',
-                recordId: (int) $staffProfile->getKey(),
-                title: $staffProfile->full_name,
-                status: $staffProfile->is_public ? 'published' : 'draft',
+            event(CmsContentChanged::forStaffProfile(
+                staffProfile: $staffProfile,
                 action: 'updated',
                 message: 'Đã cập nhật hồ sơ cán bộ.',
-                updatedAt: $staffProfile->updated_at?->toIso8601String() ?? now()->toIso8601String(),
             ));
 
             return $staffProfile->refresh();

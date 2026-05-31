@@ -15,14 +15,10 @@ final class DeleteUnitController extends Controller
     {
         $unit->delete();
 
-        event(new CmsContentChanged(
-            resource: 'units',
-            recordId: (int) $unit->getKey(),
-            title: $unit->name,
-            status: $unit->is_active ? 'active' : 'inactive',
+        event(CmsContentChanged::forUnit(
+            unit: $unit,
             action: 'deleted',
             message: 'Đã xóa đơn vị.',
-            updatedAt: $unit->updated_at?->toIso8601String() ?? now()->toIso8601String(),
         ));
 
         flash('Đã xóa đơn vị.');
