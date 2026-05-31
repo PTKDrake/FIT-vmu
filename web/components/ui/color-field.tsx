@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import {
   ColorField as ColorFieldPrimitive,
   type ColorFieldProps,
-} from "react-aria-components/ColorField"
-import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field.styles"
+} from "react-aria-components/ColorField";
+import { cx } from "@/lib/primitive";
+import { fieldStyles } from "./field.styles";
 
 export function ColorField({ className, ...props }: ColorFieldProps) {
   return (
@@ -15,5 +15,5 @@ export function ColorField({ className, ...props }: ColorFieldProps) {
       data-slot="control"
       className={cx(fieldStyles(), className)}
     />
-  )
+  );
 }

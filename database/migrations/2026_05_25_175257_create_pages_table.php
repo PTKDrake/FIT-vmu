@@ -13,6 +13,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
+            $table->string('seo_title')->nullable();
+            $table->text('seo_description')->nullable();
             $table->longText('content')->nullable();
             $table->string('content_format', 50)->default('puck_json');
             $table->foreignId('thumbnail_id')

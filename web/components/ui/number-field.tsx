@@ -1,22 +1,26 @@
-import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid"
-import { Button, type ButtonProps } from "react-aria-components/Button"
-import type { InputProps as PrimitiveInputProps } from "react-aria-components/Input"
+import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { Button, type ButtonProps } from "react-aria-components/Button";
+import type { InputProps as PrimitiveInputProps } from "react-aria-components/Input";
 import {
   NumberField as NumberFieldPrimitive,
   type NumberFieldProps,
-} from "react-aria-components/NumberField"
-import { Input, InputGroup } from "@/components/ui/input"
-import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field.styles"
+} from "react-aria-components/NumberField";
+import { Input, InputGroup } from "@/components/ui/input";
+import { cx } from "@/lib/primitive";
+import { fieldStyles } from "./field.styles";
 
 const NumberField = ({ className, ...props }: NumberFieldProps) => {
   return (
-    <NumberFieldPrimitive {...props} data-slot="control" className={cx(fieldStyles(), className)} />
-  )
-}
+    <NumberFieldPrimitive
+      {...props}
+      data-slot="control"
+      className={cx(fieldStyles(), className)}
+    />
+  );
+};
 
 interface InputProps extends PrimitiveInputProps {
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: React.RefObject<HTMLInputElement>;
 }
 
 function NumberInput({ className, ...props }: InputProps) {
@@ -33,12 +37,12 @@ function NumberInput({ className, ...props }: InputProps) {
         </div>
       </div>
     </InputGroup>
-  )
+  );
 }
 
 interface StepperButtonProps extends ButtonProps {
-  slot: "increment" | "decrement"
-  className?: string
+  slot: "increment" | "decrement";
+  className?: string;
 }
 
 const StepperButton = ({ slot, className, ...props }: StepperButtonProps) => {
@@ -60,8 +64,8 @@ const StepperButton = ({ slot, className, ...props }: StepperButtonProps) => {
         <MinusIcon data-slot="stepper-icon" />
       )}
     </Button>
-  )
-}
+  );
+};
 
-export type { NumberFieldProps }
-export { NumberField, NumberInput }
+export type { NumberFieldProps };
+export { NumberField, NumberInput };

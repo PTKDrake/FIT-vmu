@@ -43,6 +43,10 @@ class HandleInertiaRequests extends Middleware
                         && filled(config('services.google.redirect')),
                 ],
             ],
+            'features' => [
+                'blocknoteAiEnabled' => filled(config('services.openrouter.api_key'))
+                    && filled(config('services.openrouter.blocknote_model')),
+            ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => fn () => [
                 'message' => $request->session()->get('message'),

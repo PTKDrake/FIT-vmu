@@ -32,7 +32,6 @@ class UnitFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
-            'type' => fake()->randomElement(['board', 'department', 'other']),
             'description' => json_encode([
                 [
                     'id' => (string) Str::uuid(),

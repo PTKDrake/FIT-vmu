@@ -2,7 +2,8 @@
     "agents": [
         "claude_code",
         "codex",
-        "cursor"
+        "cursor",
+        "gemini"
     ],
     "cloud": false,
     "guidelines": true,
@@ -14,6 +15,7 @@
     ],
     "sail": false,
     "skills": [
+        "ai-sdk-development",
         "laravel-best-practices",
         "socialite-development",
         "wayfinder-development",
@@ -21,6 +23,9 @@
         "inertia-react-development",
         "tailwindcss-development",
         "laravel-permission-development",
-        "laravel-query-builder"
+        "laravel-query-builder",
+        "laravel-brainstorming",
+        "php-mcp-server-generator",
+        "spatie-laravel-php"
     ]
 }

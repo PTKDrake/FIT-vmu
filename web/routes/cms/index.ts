@@ -1,6 +1,15 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import realtime from './realtime'
+import postsD8dc7a from './posts'
+import postCategories09c74a from './post-categories'
 import pagesAf6a29 from './pages'
 import navigation2b63fc from './navigation'
+import media30b75d from './media'
+import ai from './ai'
+import staffProfilesB92b14 from './staff-profiles'
+import unitsD09b1b from './units'
+import positions7be47e from './positions'
+import users48860f from './users'
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
 * @see app/Http/Controllers/DashboardController.php:16
@@ -84,7 +93,7 @@ dashboard.form = dashboardForm
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 export const posts = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -99,7 +108,7 @@ posts.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 posts.url = (options?: RouteQueryOptions) => {
@@ -108,7 +117,7 @@ posts.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 posts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -118,7 +127,7 @@ posts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 posts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -128,7 +137,7 @@ posts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 const postsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -138,7 +147,7 @@ const postsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 postsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -148,7 +157,7 @@ postsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 postsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -164,7 +173,8 @@ postsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 posts.form = postsForm
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 export const postCategories = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -178,7 +188,8 @@ postCategories.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 postCategories.url = (options?: RouteQueryOptions) => {
@@ -186,7 +197,8 @@ postCategories.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 postCategories.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -195,7 +207,8 @@ postCategories.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 postCategories.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -204,7 +217,8 @@ postCategories.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 })
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 const postCategoriesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -213,7 +227,8 @@ const postCategoriesForm = (options?: RouteQueryOptions): RouteFormDefinition<'g
 })
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 postCategoriesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -222,7 +237,8 @@ postCategoriesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get
 })
 
 /**
-* @see routes/web.php:22
+* @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
 * @route '/cms/post-categories'
 */
 postCategoriesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -400,7 +416,8 @@ navigationForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 navigation.form = navigationForm
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 export const media = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -414,7 +431,8 @@ media.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 media.url = (options?: RouteQueryOptions) => {
@@ -422,7 +440,8 @@ media.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 media.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -431,7 +450,8 @@ media.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 media.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -440,7 +460,8 @@ media.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 const mediaForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -449,7 +470,8 @@ const mediaForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 mediaForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -458,7 +480,8 @@ mediaForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:56
+* @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
+* @see app/Http/Controllers/Cms/MediaIndexController.php:33
 * @route '/cms/media'
 */
 mediaForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -474,7 +497,7 @@ mediaForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 media.form = mediaForm
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 export const documents = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -488,7 +511,7 @@ documents.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 documents.url = (options?: RouteQueryOptions) => {
@@ -496,7 +519,7 @@ documents.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -505,7 +528,7 @@ documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -514,7 +537,7 @@ documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -523,7 +546,7 @@ const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 })
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -532,7 +555,7 @@ documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 })
 
 /**
-* @see routes/web.php:60
+* @see routes/web.php:121
 * @route '/cms/documents'
 */
 documentsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -548,7 +571,8 @@ documentsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 documents.form = documentsForm
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 export const staffProfiles = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -562,7 +586,8 @@ staffProfiles.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfiles.url = (options?: RouteQueryOptions) => {
@@ -570,7 +595,8 @@ staffProfiles.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfiles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -579,7 +605,8 @@ staffProfiles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfiles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -588,7 +615,8 @@ staffProfiles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 })
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 const staffProfilesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -597,7 +625,8 @@ const staffProfilesForm = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 })
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfilesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -606,7 +635,8 @@ staffProfilesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 })
 
 /**
-* @see routes/web.php:64
+* @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
+* @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
 */
 staffProfilesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -622,7 +652,8 @@ staffProfilesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get
 staffProfiles.form = staffProfilesForm
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 export const units = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -636,7 +667,8 @@ units.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 units.url = (options?: RouteQueryOptions) => {
@@ -644,7 +676,8 @@ units.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 units.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -653,7 +686,8 @@ units.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 units.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -662,7 +696,8 @@ units.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 const unitsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -671,7 +706,8 @@ const unitsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 unitsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -680,7 +716,8 @@ unitsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:68
+* @see \App\Http\Controllers\Cms\UnitsIndexController::__invoke
+* @see app/Http/Controllers/Cms/UnitsIndexController.php:15
 * @route '/cms/units'
 */
 unitsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -696,7 +733,89 @@ unitsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 units.form = unitsForm
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+export const positions = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: positions.url(options),
+    method: 'get',
+})
+
+positions.definition = {
+    methods: ["get","head"],
+    url: '/cms/positions',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+positions.url = (options?: RouteQueryOptions) => {
+    return positions.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+positions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: positions.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+positions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: positions.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+const positionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: positions.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+positionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: positions.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\PositionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/PositionsIndexController.php:27
+* @route '/cms/positions'
+*/
+positionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: positions.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+positions.form = positionsForm
+
+/**
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 export const users = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -710,7 +829,8 @@ users.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 users.url = (options?: RouteQueryOptions) => {
@@ -718,7 +838,8 @@ users.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 users.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -727,7 +848,8 @@ users.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 users.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -736,7 +858,8 @@ users.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 const usersForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -745,7 +868,8 @@ const usersForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 usersForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -754,7 +878,8 @@ usersForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:72
+* @see \App\Http\Controllers\Cms\UsersIndexController::__invoke
+* @see app/Http/Controllers/Cms/UsersIndexController.php:28
 * @route '/cms/users'
 */
 usersForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -770,7 +895,7 @@ usersForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 users.form = usersForm
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 export const rolesPermissions = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -784,7 +909,7 @@ rolesPermissions.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.url = (options?: RouteQueryOptions) => {
@@ -792,7 +917,7 @@ rolesPermissions.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -801,7 +926,7 @@ rolesPermissions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 })
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -810,7 +935,7 @@ rolesPermissions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
 })
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 const rolesPermissionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -819,7 +944,7 @@ const rolesPermissionsForm = (options?: RouteQueryOptions): RouteFormDefinition<
 })
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 rolesPermissionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -828,7 +953,7 @@ rolesPermissionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'g
 })
 
 /**
-* @see routes/web.php:76
+* @see routes/web.php:200
 * @route '/cms/roles-permissions'
 */
 rolesPermissionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -845,15 +970,18 @@ rolesPermissions.form = rolesPermissionsForm
 
 const cms = {
     dashboard: Object.assign(dashboard, dashboard),
-    posts: Object.assign(posts, posts),
-    postCategories: Object.assign(postCategories, postCategories),
+    realtime: Object.assign(realtime, realtime),
+    posts: Object.assign(posts, postsD8dc7a),
+    postCategories: Object.assign(postCategories, postCategories09c74a),
     pages: Object.assign(pages, pagesAf6a29),
     navigation: Object.assign(navigation, navigation2b63fc),
-    media: Object.assign(media, media),
+    media: Object.assign(media, media30b75d),
+    ai: Object.assign(ai, ai),
     documents: Object.assign(documents, documents),
-    staffProfiles: Object.assign(staffProfiles, staffProfiles),
-    units: Object.assign(units, units),
-    users: Object.assign(users, users),
+    staffProfiles: Object.assign(staffProfiles, staffProfilesB92b14),
+    units: Object.assign(units, unitsD09b1b),
+    positions: Object.assign(positions, positions7be47e),
+    users: Object.assign(users, users48860f),
     rolesPermissions: Object.assign(rolesPermissions, rolesPermissions),
 }
 

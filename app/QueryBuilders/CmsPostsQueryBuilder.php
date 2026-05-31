@@ -21,6 +21,7 @@ final class CmsPostsQueryBuilder
                 AllowedFilter::callback('search', self::searchFilter(...)),
                 AllowedFilter::exact('status'),
                 AllowedFilter::exact('author_id'),
+                AllowedFilter::callback('category_id', self::categoryFilter(...)),
             )
             ->allowedSorts(
                 'title',
@@ -54,6 +55,18 @@ final class CmsPostsQueryBuilder
                 ->where('title', 'like', "%{$searchTerm}%")
                 ->orWhere('slug', 'like', "%{$searchTerm}%")
                 ->orWhere('excerpt', 'like', "%{$searchTerm}%");
+        });
+    }
+
+    /** @param Builder<Post> $query */
+    private static function categoryFilter(Builder $query, mixed $value): void
+    {
+        if (! is_scalar($value) || ! is_numeric($value)) {
+            return;
+        }
+
+        $query->whereHas('categories', function (Builder $categoryQuery) use ($value): void {
+            $categoryQuery->whereKey((int) $value);
         });
     }
 }

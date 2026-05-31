@@ -29,7 +29,8 @@ export const uploadPresets = {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         [".docx"],
     },
-    description: "Tài liệu chuẩn để đính kèm bài viết, trang hoặc hồ sơ nội bộ.",
+    description:
+      "Tài liệu chuẩn để đính kèm bài viết, trang hoặc hồ sơ nội bộ.",
     helperText: "Cho phép PDF, DOC, DOCX. Tối đa 10 MB, tối đa 3 tệp.",
     maxFiles: 3,
     maxSize: 10 * 1024 * 1024,
@@ -42,7 +43,8 @@ export const uploadPresets = {
         ".xlsx",
       ],
     },
-    description: "Dùng cho import dữ liệu hoặc tài liệu cá nhân hóa theo mã sinh viên.",
+    description:
+      "Dùng cho import dữ liệu hoặc tài liệu cá nhân hóa theo mã sinh viên.",
     helperText: "Cho phép XLS, XLSX. Tối đa 15 MB, tối đa 2 tệp.",
     maxFiles: 2,
     maxSize: 15 * 1024 * 1024,
@@ -61,4 +63,3 @@ export const uploadPresets = {
     title: "Thumbnail",
   },
 } satisfies Record<string, UploadPreset>;
-

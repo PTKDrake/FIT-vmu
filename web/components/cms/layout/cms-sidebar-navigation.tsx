@@ -36,7 +36,11 @@ export function CmsSidebarNavigation({ currentUrl }: { currentUrl: string }) {
           }
 
           const isExpanded =
-            group.items?.some((item) => item.href === normalizedUrl) ?? false;
+            group.items?.some(
+              (item) =>
+                item.href === normalizedUrl ||
+                normalizedUrl.startsWith(`${item.href}/`),
+            ) ?? false;
 
           return (
             <SidebarDisclosureGroup key={group.title}>
@@ -50,7 +54,10 @@ export function CmsSidebarNavigation({ currentUrl }: { currentUrl: string }) {
                     <SidebarItem
                       key={item.href}
                       href={item.href}
-                      isCurrent={normalizedUrl === item.href}
+                      isCurrent={
+                        normalizedUrl === item.href ||
+                        normalizedUrl.startsWith(`${item.href}/`)
+                      }
                     >
                       <ChevronRightIcon className="size-4" />
                       <SidebarLabel>{item.title}</SidebarLabel>

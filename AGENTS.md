@@ -1,4 +1,6 @@
 <laravel-boost-guidelines>
+> Project context: Reverb/Echo broadcasting is already installed, `composer run dev` runs `reverb:start`, and the CMS dashboard includes a realtime demo via `POST /cms/realtime/ping`.
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
@@ -11,6 +13,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 - php - 8.5
 - inertiajs/inertia-laravel (INERTIA_LARAVEL) - v3
+- laravel/ai (AI) - v0
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v4
@@ -40,12 +43,12 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
-- All user-facing Vietnamese text shown on the web UI must use full Vietnamese diacritics. Prefer building the UI fully in Vietnamese unless there is a clear product reason to keep specific terms in another language.
+- Treat `web/components/ui` as a protected shared UI layer. Do not edit files in that directory unless the change is truly necessary to complete the task and cannot be solved by composing or extending code elsewhere.
+- If a change in `web/components/ui` appears necessary, stop and ask the user to confirm before editing unless the user has explicitly requested changes in that directory.
 
 ## Verification Scripts
 
 - Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
-- Any backend/PHP code change must finish with the relevant automated tests passing and `./composerw analyse` passing before finalizing.
 
 ## Application Structure & Architecture
 
@@ -55,20 +58,6 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 ## Frontend Bundling
 
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `pnpm run build`, `pnpm run dev`, or `composer run dev`. Ask them.
-- Any frontend-related change must finish with both `pnpm check` passing.
-- Do not edit files inside `web/components/ui` unless the user explicitly asks for it.
-- If a requested frontend change appears to require edits inside `web/components/ui`, stop, warn the user, and ask for confirmation before changing that directory.
-
-## Frontend Content Quality
-
-- Every frontend block must earn its space by helping the user complete a task, understand real data, or make a decision.
-- Do not add filler copy, placeholder explanations, implementation notes, or decorative sections that do not improve the real workflow.
-- Do not render technical notes in the UI such as `Dữ liệu phân trang từ backend qua Inertia`, `UI này chỉ hỗ trợ trải nghiệm biên tập ở frontend`, or similar backend/frontend responsibility reminders unless the user explicitly asks for that documentation in the interface.
-- Do not add low-value metric cards, item counters, summary badges, or stat blocks unless they drive a real user action or answer an important operational question.
-- Prefer showing the real primary content first. If a page mainly exists to manage a list, form, editor, or workflow, prioritize that content instead of surrounding it with generic overview blocks.
-- Empty states, helper text, and loading states must be concise and useful. They should guide the next action, not explain implementation details.
-- Keep validation and security responsibility in backend code, tests, and developer documentation. Do not surface those reminders in normal UI copy unless the user has a direct reason to see them.
-- When adding page descriptions or support text, make them domain-specific, short, and actionable. Avoid generic sentences that could fit any screen.
 
 ## Documentation Files
 
@@ -114,7 +103,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
 - Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
-    - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
+  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
 === php rules ===
 

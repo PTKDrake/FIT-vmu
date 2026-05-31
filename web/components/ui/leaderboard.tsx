@@ -1,18 +1,30 @@
-import { Label, type LabelProps } from "react-aria-components/Label"
-import { ProgressBar, type ProgressBarProps } from "react-aria-components/ProgressBar"
-import { twJoin, twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
+import { Label, type LabelProps } from "react-aria-components/Label";
+import {
+  ProgressBar,
+  type ProgressBarProps,
+} from "react-aria-components/ProgressBar";
+import { twJoin, twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
 
-export function Leaderboard({ className, ...props }: React.ComponentProps<"div">) {
+export function Leaderboard({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
-      className={twMerge("flex flex-col gap-y-(--leaderboard-gutter,--spacing(4))", className)}
+      className={twMerge(
+        "flex flex-col gap-y-(--leaderboard-gutter,--spacing(4))",
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
-export function LeaderboardHeader({ className, ...props }: React.ComponentProps<"div">) {
+export function LeaderboardHeader({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="leaderboard-header"
@@ -22,20 +34,26 @@ export function LeaderboardHeader({ className, ...props }: React.ComponentProps<
       )}
       {...props}
     />
-  )
+  );
 }
 
-export function LeaderboardTitle({ className, ...props }: React.ComponentProps<"div">) {
+export function LeaderboardTitle({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="leaderboard-title"
       className={twMerge("text-balance font-semibold text-base/6", className)}
       {...props}
     />
-  )
+  );
 }
 
-export function LeaderboardAction({ className, ...props }: React.ComponentProps<"div">) {
+export function LeaderboardAction({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="leaderboard-action"
@@ -45,21 +63,24 @@ export function LeaderboardAction({ className, ...props }: React.ComponentProps<
       )}
       {...props}
     />
-  )
+  );
 }
 
-export function LeaderboardContent({ className, ...props }: React.ComponentProps<"ul">) {
+export function LeaderboardContent({
+  className,
+  ...props
+}: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="leaderboard-content"
       className={twMerge("flex max-h-96 list-none flex-col gap-y-1", className)}
       {...props}
     />
-  )
+  );
 }
 
 interface LeaderboardItemProps extends ProgressBarProps {
-  onAction?: () => void
+  onAction?: () => void;
 }
 
 export function LeaderboardItem({
@@ -97,7 +118,7 @@ export function LeaderboardItem({
         )}
       </ProgressBar>
     </li>
-  )
+  );
 }
 
 export function LeaderboardStart({ className, ...props }: LabelProps) {
@@ -107,11 +128,18 @@ export function LeaderboardStart({ className, ...props }: LabelProps) {
       className={twMerge("flex items-center gap-x-2", className)}
       {...props}
     />
-  )
+  );
 }
 
-export function LeaderboardEnd({ className, ...props }: React.ComponentProps<"div">) {
+export function LeaderboardEnd({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div data-slot="leaderboard-start" className={twMerge("tabular-nums", className)} {...props} />
-  )
+    <div
+      data-slot="leaderboard-start"
+      className={twMerge("tabular-nums", className)}
+      {...props}
+    />
+  );
 }

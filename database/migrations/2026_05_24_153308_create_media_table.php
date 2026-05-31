@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('disk');
             $table->string('path')->unique();
-            $table->string('original_name');
+            $table->string('original_name')->unique();
+            $table->string('display_name')->index();
             $table->string('mime_type');
             $table->unsignedBigInteger('size');
             $table->foreignId('uploaded_by')

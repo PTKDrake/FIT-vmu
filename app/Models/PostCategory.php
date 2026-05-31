@@ -8,6 +8,7 @@ use Database\Factories\PostCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PostCategory extends Model
@@ -65,10 +66,11 @@ class PostCategory extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    /** @return HasMany<Post, $this> */
-    public function posts(): HasMany
+    /** @return BelongsToMany<Post, $this> */
+    public function posts(): BelongsToMany
     {
-        return $this->hasMany(Post::class, 'category_id');
+        return $this->belongsToMany(Post::class)
+            ->withTimestamps();
     }
 
     /** @return HasMany<NavigationItem, $this> */

@@ -8,6 +8,7 @@ use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
@@ -23,7 +24,6 @@ class Post extends Model
     protected $fillable = [
         'title',
         'slug',
-        'category_id',
         'excerpt',
         'content',
         'content_format',
@@ -61,10 +61,11 @@ class Post extends Model
         return $this->belongsTo(Media::class, 'thumbnail_id');
     }
 
-    /** @return BelongsTo<PostCategory, $this> */
-    public function category(): BelongsTo
+    /** @return BelongsToMany<PostCategory, $this> */
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(PostCategory::class, 'category_id');
+        return $this->belongsToMany(PostCategory::class)
+            ->withTimestamps();
     }
 
     /** @return BelongsTo<User, $this> */

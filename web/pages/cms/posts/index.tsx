@@ -1,16 +1,44 @@
-import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
-import { Head } from "@inertiajs/react";
+import {
+  EllipsisHorizontalIcon,
+  PencilSquareIcon,
+  PlusIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
+import { Head, Link, router } from "@inertiajs/react";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  CmsDataTable,
+  DataTableBadge,
+  DataTableActions,
+} from "@/components/cms/cms-data-table";
 import type {
   CmsPostTableRow,
   CmsPostsPageProps,
 } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
+import {
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { t } from "@/lib/i18n";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
+import postsRoutes from "@/routes/cms/posts";
+import type { FlashData } from "@/types/shared";
 
 const columnHelper = createColumnHelper<CmsPostTableRow>();
 
@@ -26,27 +54,77 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
 });
 
-export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
+export default function CmsPostsPage({
+  can,
+  flash,
+  posts,
+  categoryOptions,
+}: CmsPostsPageProps) {
+  const [deleteTarget, setDeleteTarget] = useState<CmsPostTableRow | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  useCmsContentRealtime("posts", (payload) => {
+    toast.info(payload.message);
+    router.reload({ only: ["posts"] });
+  });
+
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: posts.meta.perPage,
     defaultSortColumn: "created_at",
-    only: ["posts"],
+    initialItems: posts.data,
+    initialMeta: posts.meta,
+    resourceKey: "posts",
   });
 
-  const columns = useMemo<Array<ColumnDef<CmsPostTableRow, any>>>(
-    () => [
+  const columns: Array<ColumnDef<CmsPostTableRow, any>> = [
       columnHelper.accessor("title", {
         header: "Bài viết",
         cell: ({ row }) => (
           <div className="space-y-1">
             <p className="font-medium text-fg">{row.original.title}</p>
-            <Text className="line-clamp-2 text-sm text-muted-fg">
-              {row.original.excerpt ?? `Slug: ${row.original.slug}`}
+            <Text className="text-xs text-muted-fg font-mono block">
+              {row.original.slug}
             </Text>
+            {row.original.excerpt ? (
+              <Text className="line-clamp-2 text-sm text-muted-fg mt-1">
+                {row.original.excerpt}
+              </Text>
+            ) : null}
           </div>
         ),
+      }),
+      columnHelper.accessor("categoryNames", {
+        id: "categories",
+        header: "Chuyên mục",
+        enableSorting: false,
+        cell: ({ getValue }) => {
+          const categoryNames = getValue() as string[];
+
+          if (categoryNames.length === 0) {
+            return (
+              <span className="text-xs text-muted-fg italic">
+                {t("Chưa phân loại")}
+              </span>
+            );
+          }
+
+          return (
+            <div className="flex flex-wrap gap-1 max-w-[180px]">
+              {categoryNames.map((categoryName) => (
+                <DataTableBadge key={categoryName} intent="info">
+                  {categoryName}
+                </DataTableBadge>
+              ))}
+            </div>
+          );
+        },
       }),
       columnHelper.accessor("status", {
         header: "Trạng thái",
@@ -54,56 +132,192 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
           const value = getValue() as CmsPostTableRow["status"];
 
           return (
-            <Badge
+            <DataTableBadge
               intent={statusIntentMap[value]}
-              isCircle={false}
               className="capitalize"
             >
               {statusLabelMap[value]}
-            </Badge>
+            </DataTableBadge>
           );
         },
       }),
       columnHelper.accessor("authorName", {
         id: "author",
         header: "Tác giả",
-        cell: ({ getValue }) => getValue() ?? "Chưa gán",
+        cell: ({ getValue }) => getValue() ?? "Chính hệ thống",
       }),
       columnHelper.accessor("publishedAt", {
+        id: "published_at",
         header: "Ngày xuất bản",
         cell: ({ getValue }) => formatDate(getValue()),
       }),
       columnHelper.accessor("updatedAt", {
         header: "Cập nhật",
+        enableSorting: false,
         cell: ({ getValue }) => formatDate(getValue()),
       }),
-    ],
-    [],
-  );
+      columnHelper.display({
+        id: "actions",
+        header: "",
+        cell: ({ row }) => {
+          const showApproval =
+            can.publishPosts &&
+            (row.original.status === "pending" ||
+              row.original.status === "draft");
+          const showManage = can.managePosts;
+
+          if (!showManage && !showApproval) {
+            return null;
+          }
+
+          return (
+            <DataTableActions
+              triggerAriaLabel={`Tác vụ cho ${row.original.title}`}
+            >
+              {showManage ? (
+                <MenuItem
+                  onAction={() => {
+                    router.visit(
+                      postsRoutes.edit.url({ post: row.original.id }),
+                    );
+                  }}
+                >
+                  <PencilSquareIcon />
+                  Chỉnh sửa
+                </MenuItem>
+              ) : null}
+
+              {showApproval ? (
+                <>
+                  <MenuItem
+                    onAction={() => {
+                      handlePublishStatus(row.original.id, "published");
+                    }}
+                  >
+                    <CheckCircleIcon className="text-success" />
+                    Phê duyệt đăng bài
+                  </MenuItem>
+                  <MenuItem
+                    intent="danger"
+                    onAction={() => {
+                      handlePublishStatus(row.original.id, "rejected");
+                    }}
+                  >
+                    <XCircleIcon className="text-danger" />
+                    Từ chối bài viết
+                  </MenuItem>
+                </>
+              ) : null}
+
+              {showManage ? (
+                <MenuItem
+                  intent="danger"
+                  onAction={() => setDeleteTarget(row.original)}
+                >
+                  <TrashIcon />
+                  Xóa bài viết
+                </MenuItem>
+              ) : null}
+            </DataTableActions>
+          );
+        },
+      }),
+  ];
+
+  function handlePublishStatus(
+    postId: number,
+    status: "published" | "rejected",
+  ): void {
+    setIsPublishing(true);
+    router.patch(
+      postsRoutes.publish.url({ post: postId }),
+      {
+        status,
+      },
+      {
+        onFinish: () => setIsPublishing(false),
+        preserveScroll: true,
+      },
+    );
+  }
+
+  function deletePost(): void {
+    if (!deleteTarget) {
+      return;
+    }
+
+    setIsDeleting(true);
+    router.delete(postsRoutes.destroy.url({ post: deleteTarget.id }), {
+      onFinish: () => setIsDeleting(false),
+      onSuccess: () => setDeleteTarget(null),
+      preserveScroll: true,
+    });
+  }
 
   return (
     <>
       <Head title="Bài viết" />
+      {flash?.message ? (
+        <PostsFlashToast
+          key={`${flash.type}:${flash.message}`}
+          message={flash.message}
+          type={flash.type}
+        />
+      ) : null}
+
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <CmsDataTable
           columns={columns}
-          data={posts.data}
+          data={tableQueryState.data}
           defaultSort={{ column: "created_at", direction: "desc" }}
-          description="Danh sách bài viết này dùng TanStack Table cho cấu hình cột và trạng thái bảng, đồng thời đồng bộ tìm kiếm, lọc, sắp xếp, phân trang với query string bằng nuqs."
-          emptyDescription="Hãy thử thay đổi bộ lọc hoặc tạo dữ liệu bài viết để kiểm tra luồng phân trang từ backend."
+          description="Quản lý nội dung bài viết, tin tức sự kiện khoa học và phê duyệt lịch xuất bản."
+          emptyDescription="Chưa có bài viết phù hợp với bộ lọc hiện tại."
           emptyTitle="Chưa có bài viết phù hợp"
-          filterOptions={statusOptions.map((option) => ({ ...option }))}
-          filterValue={tableQueryState.query.status}
+          filterSections={[
+            {
+              id: "status",
+              label: "Trạng thái",
+              options: statusOptions.map((opt) => ({ ...opt })),
+              selectedValue: tableQueryState.query.status,
+              onChange: (value) => tableQueryState.setStatus(value),
+            },
+            {
+              id: "categoryId",
+              label: "Chuyên mục",
+              options: [
+                { label: "Tất cả chuyên mục", value: "all" },
+                ...categoryOptions.map((opt) => ({ ...opt })),
+              ],
+              selectedValue:
+                tableQueryState.query.categoryId === null
+                  ? "all"
+                  : String(tableQueryState.query.categoryId),
+              onChange: (value) =>
+                tableQueryState.setCategoryId(
+                  value === "all" ? null : Number(value),
+                ),
+            },
+          ]}
           isReloading={tableQueryState.isReloading}
-          meta={posts.meta}
-          onFilterChange={(value) => tableQueryState.setStatus(value)}
+          meta={tableQueryState.meta}
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}
           onSearchChange={(value) => tableQueryState.setSearch(value)}
           onSortingChange={(column, direction) =>
             tableQueryState.setSorting(column, direction)
           }
-          searchPlaceholder="Tìm theo tiêu đề, slug hoặc mô tả ngắn"
+          primaryAction={
+            can.managePosts ? (
+              <Link
+                href={postsRoutes.create.url()}
+                className="inline-flex min-h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-fg shadow-xs transition hover:bg-primary/90 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-ring active:bg-primary"
+              >
+                <PlusIcon className="size-4 mr-1.5 shrink-0" />
+                Tạo bài viết
+              </Link>
+            ) : null
+          }
+          searchPlaceholder="Tìm theo tiêu đề, slug hoặc mô tả"
           searchValue={tableQueryState.query.search}
           sort={{
             column: tableQueryState.query.sort,
@@ -112,6 +326,48 @@ export default function CmsPostsPage({ posts }: CmsPostsPageProps) {
           title="Bài viết"
         />
       </div>
+
+      {deleteTarget ? (
+        <ModalContent
+          aria-label="Xác nhận xóa bài viết"
+          isOpen={deleteTarget !== null}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setDeleteTarget(null);
+            }
+          }}
+          size="lg"
+        >
+          <ModalHeader>
+            <ModalTitle>Xóa bài viết</ModalTitle>
+            <ModalDescription>
+              Bạn sắp xóa bài viết <strong>{deleteTarget.title}</strong>. Hành
+              động này không thể phục hồi lại.
+            </ModalDescription>
+          </ModalHeader>
+          <ModalBody>
+            <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
+              <Text className="text-danger">
+                {t(
+                  "Sau khi xóa, mọi liên kết đến bài viết này từ navigation menu hoặc trang công khai sẽ bị hỏng.",
+                )}
+              </Text>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button intent="outline" onPress={() => setDeleteTarget(null)}>
+              Hủy
+            </Button>
+            <Button
+              intent="danger"
+              isDisabled={isDeleting}
+              onPress={deletePost}
+            >
+              Xác nhận xóa
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      ) : null}
     </>
   );
 }
@@ -139,3 +395,30 @@ const statusLabelMap = {
   published: "Đã xuất bản",
   rejected: "Bị từ chối",
 } as const;
+
+function PostsFlashToast({
+  message,
+  type,
+}: {
+  message: string;
+  type: FlashData["type"];
+}) {
+  useMountEffect(() => {
+    switch (type) {
+      case "error":
+        toast.error(message);
+        break;
+      case "warning":
+        toast.warning(message);
+        break;
+      case "info":
+        toast.info(message);
+        break;
+      default:
+        toast.success(message);
+        break;
+    }
+  });
+
+  return null;
+}

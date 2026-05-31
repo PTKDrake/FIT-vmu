@@ -1,13 +1,22 @@
-import { router } from "@inertiajs/react";
-import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
-import { useState } from "react";
+import {
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryStates,
+} from "nuqs";
+import { useMemo, useRef, useState } from "react";
+import { useAsyncList } from "react-stately";
+import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
+import type { CmsTablePaginationMeta } from "@/components/cms/types";
 import type { CmsTableSortDirection } from "@/components/cms/types";
 
-interface UseCmsTableQueryStateConfig {
+interface UseCmsTableQueryStateConfig<TItem extends object> {
   defaultPerPage?: number;
   defaultSortColumn: string;
   defaultSortDirection?: CmsTableSortDirection;
-  only?: string[];
+  initialItems: TItem[];
+  initialMeta: CmsTablePaginationMeta;
+  resourceKey: string;
 }
 
 interface ReloadOptions {
@@ -15,13 +24,14 @@ interface ReloadOptions {
   resetPage?: boolean;
 }
 
-export function useCmsTableQueryState({
+export function useCmsTableQueryState<TItem extends object>({
   defaultPerPage = 10,
   defaultSortColumn,
   defaultSortDirection = "desc",
-  only,
-}: UseCmsTableQueryStateConfig) {
-  const [isReloading, setIsReloading] = useState(false);
+  initialItems,
+  initialMeta,
+  resourceKey,
+}: UseCmsTableQueryStateConfig<TItem>) {
   const [query, setQuery] = useQueryStates(
     {
       direction: parseAsStringLiteral(["asc", "desc"]).withDefault(
@@ -32,6 +42,8 @@ export function useCmsTableQueryState({
       search: parseAsString.withDefault(""),
       sort: parseAsString.withDefault(defaultSortColumn),
       status: parseAsString.withDefault("all"),
+      categoryId: parseAsInteger,
+      role: parseAsString.withDefault(""),
     },
     {
       clearOnDefault: true,
@@ -40,26 +52,61 @@ export function useCmsTableQueryState({
       shallow: true,
     },
   );
+  const [meta, setMeta] = useState(initialMeta);
+  const queryRef = useRef(query);
+
+  const list = useAsyncList<TItem>({
+    async load({ signal }) {
+      const { items, meta: nextMeta } = await fetchInertiaCollectionPage(
+        resourceKey,
+        queryRef.current,
+        signal,
+      );
+
+      setMeta((currentMeta) => {
+        if (!nextMeta || typeof nextMeta !== "object") {
+          return currentMeta;
+        }
+
+        return nextMeta as unknown as CmsTablePaginationMeta;
+      });
+
+      return {
+        items: items as TItem[],
+      };
+    },
+  });
+
+  const items = useMemo<TItem[]>(
+    () =>
+      list.loadingState === "loading" && list.items.length === 0
+        ? initialItems
+        : list.items,
+    [initialItems, list.items, list.loadingState],
+  );
 
   async function syncQuery(
     nextQuery: Partial<typeof query>,
     options: ReloadOptions = {},
   ): Promise<void> {
-    await setQuery({
+    const resolvedQuery = {
+      ...queryRef.current,
       ...nextQuery,
-      page: options.page ?? (options.resetPage ? 1 : nextQuery.page),
-    });
+      page:
+        options.page ??
+        (options.resetPage ? 1 : (nextQuery.page ?? queryRef.current.page)),
+    };
 
-    router.reload({
-      only,
-      replace: true,
-      onFinish: () => setIsReloading(false),
-      onStart: () => setIsReloading(true),
-    });
+    queryRef.current = resolvedQuery;
+    await setQuery(resolvedQuery);
+    list.reload();
   }
 
   return {
-    isReloading,
+    data: items,
+    isReloading: list.isLoading,
+    list,
+    meta,
     query,
     async setPage(page: number): Promise<void> {
       await syncQuery({ page }, { page });
@@ -81,6 +128,12 @@ export function useCmsTableQueryState({
     },
     async setStatus(status: string): Promise<void> {
       await syncQuery({ status }, { resetPage: true });
+    },
+    async setCategoryId(categoryId: number | null): Promise<void> {
+      await syncQuery({ categoryId }, { resetPage: true });
+    },
+    async setRole(role: string): Promise<void> {
+      await syncQuery({ role }, { resetPage: true });
     },
   };
 }

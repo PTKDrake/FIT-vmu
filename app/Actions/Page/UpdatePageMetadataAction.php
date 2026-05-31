@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Page;
 
+use App\Events\CmsContentChanged;
 use App\Models\Page;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,8 @@ class UpdatePageMetadataAction
                 'seo_title' => $attributes['seo_title'] ?? null,
                 'seo_description' => $attributes['seo_description'] ?? null,
             ]);
+
+            event(CmsContentChanged::forPage($page, 'metadata-updated', 'Đã cập nhật thông tin trang.'));
 
             return $page->fresh(['author']) ?? $page;
         });

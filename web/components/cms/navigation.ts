@@ -5,6 +5,7 @@ import {
   ShieldCheckIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import { createMockNavigationMenus } from "@/lib/navigation/tree";
 
 export const cmsDashboardHref = "/cms";
 
@@ -47,6 +48,7 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
     items: [
       { href: "/cms/staff-profiles", title: "Hồ sơ cán bộ" },
       { href: "/cms/units", title: "Đơn vị" },
+      { href: "/cms/positions", title: "Chức vụ" },
     ],
     title: "Nhân sự",
   },
@@ -74,11 +76,30 @@ export function findCmsNavigationLeaf(
 
   for (const section of cmsNavigationItems) {
     for (const item of section.items ?? []) {
-      if (item.href === normalizedUrl) {
+      if (
+        item.href === normalizedUrl ||
+        normalizedUrl.startsWith(`${item.href}/`)
+      ) {
         return item;
       }
     }
   }
 
   return null;
+}
+
+export function findCmsNavigationMenuTitle(currentUrl: string): string | null {
+  const normalizedUrl = currentUrl.split("?")[0];
+  const navigationMatch = normalizedUrl.match(/^\/cms\/navigation\/(\d+)$/);
+
+  if (!navigationMatch) {
+    return null;
+  }
+
+  const navigationMenuId = Number(navigationMatch[1]);
+
+  return (
+    createMockNavigationMenus().find((menu) => menu.id === navigationMenuId)
+      ?.name ?? null
+  );
 }

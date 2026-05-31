@@ -1,26 +1,28 @@
-import { CalendarDaysIcon } from "@heroicons/react/24/outline"
-import type { DateDuration } from "@internationalized/date"
-import { Button } from "react-aria-components/Button"
-import type { DateValue } from "react-aria-components/DateField"
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+import type { DateDuration } from "@internationalized/date";
+import { Button } from "react-aria-components/Button";
+import type { DateValue } from "react-aria-components/DateField";
 import {
   DatePicker as DatePickerPrimitive,
   type DatePickerProps as DatePickerPrimitiveProps,
-} from "react-aria-components/DatePicker"
-import type { GroupProps } from "react-aria-components/Group"
-import type { PopoverProps } from "react-aria-components/Popover"
-import { twJoin } from "tailwind-merge"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { cx } from "@/lib/primitive"
-import { Calendar } from "./calendar"
-import { DateInput } from "./date-field"
-import { fieldStyles } from "./field.styles"
-import { InputGroup } from "./input"
-import { ModalContent } from "./modal"
-import { PopoverContent } from "./popover"
-import { RangeCalendar } from "./range-calendar"
+} from "react-aria-components/DatePicker";
+import type { GroupProps } from "react-aria-components/Group";
+import type { PopoverProps } from "react-aria-components/Popover";
+import { twJoin } from "tailwind-merge";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cx } from "@/lib/primitive";
+import { Calendar } from "./calendar";
+import { DateInput } from "./date-field";
+import { fieldStyles } from "./field.styles";
+import { InputGroup } from "./input";
+import { ModalContent } from "./modal";
+import { PopoverContent } from "./popover";
+import { RangeCalendar } from "./range-calendar";
 
-export interface DatePickerProps<T extends DateValue> extends DatePickerPrimitiveProps<T> {
-  popover?: Omit<PopoverProps, "children">
+export interface DatePickerProps<
+  T extends DateValue,
+> extends DatePickerPrimitiveProps<T> {
+  popover?: Omit<PopoverProps, "children">;
 }
 
 export function DatePicker<T extends DateValue>({
@@ -42,13 +44,13 @@ export function DatePicker<T extends DateValue>({
         </>
       )}
     </DatePickerPrimitive>
-  )
+  );
 }
 
 export interface DatePickerOverlayProps extends Omit<PopoverProps, "children"> {
-  range?: boolean
-  visibleDuration?: DateDuration
-  pageBehavior?: "visible" | "single"
+  range?: boolean;
+  visibleDuration?: DateDuration;
+  pageBehavior?: "visible" | "single";
 }
 
 export function DatePickerOverlay({
@@ -58,13 +60,16 @@ export function DatePickerOverlay({
   range,
   ...props
 }: DatePickerOverlayProps) {
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
 
   return isMobile ? (
     <ModalContent closeButton={false}>
       <div className="flex justify-center p-6">
         {range ? (
-          <RangeCalendar pageBehavior={pageBehavior} visibleDuration={visibleDuration} />
+          <RangeCalendar
+            pageBehavior={pageBehavior}
+            visibleDuration={visibleDuration}
+          />
         ) : (
           <Calendar />
         )}
@@ -81,17 +86,23 @@ export function DatePickerOverlay({
       {...props}
     >
       {range ? (
-        <RangeCalendar pageBehavior={pageBehavior} visibleDuration={visibleDuration} />
+        <RangeCalendar
+          pageBehavior={pageBehavior}
+          visibleDuration={visibleDuration}
+        />
       ) : (
         <Calendar />
       )}
     </PopoverContent>
-  )
+  );
 }
 
 export function DatePickerTrigger({ className, ...props }: GroupProps) {
   return (
-    <InputGroup className={cx("*:data-[slot=control]:w-full", className)} {...props}>
+    <InputGroup
+      className={cx("*:data-[slot=control]:w-full", className)}
+      {...props}
+    >
       <DateInput />
       <Button
         data-slot="date-picker-trigger"
@@ -105,5 +116,5 @@ export function DatePickerTrigger({ className, ...props }: GroupProps) {
         <CalendarDaysIcon />
       </Button>
     </InputGroup>
-  )
+  );
 }

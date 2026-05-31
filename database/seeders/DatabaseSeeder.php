@@ -19,14 +19,16 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleAndPermissionSeeder::class,
             SuperAdminUserSeeder::class,
+            UnitsAndPositionsSeeder::class,
+            StaffProfileSeeder::class,
         ]);
 
         User::factory()->count(10)->createMany();
 
         $admin = User::query()->updateOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@vimaru.edu.vn'],
             [
-                'name' => 'Admin',
+                'name' => 'Quản trị viên',
                 'email_verified_at' => now(),
                 'password' => User::factory()->makeOne()->password,
                 'remember_token' => Str::random(10),
@@ -34,5 +36,11 @@ class DatabaseSeeder extends Seeder
         );
 
         $admin->assignRole('admin');
+
+        $this->call([
+            MediaSeeder::class,
+            PostCategorySeeder::class,
+            PostSeeder::class,
+        ]);
     }
 }

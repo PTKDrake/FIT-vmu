@@ -252,6 +252,23 @@
 }
 
 @layer components {
+    .dark .vmu-puck-page-builder {
+        --puck-color-white: var(--overlay);
+        --puck-color-black: var(--fg);
+        --puck-color-grey-12: var(--bg);
+        --puck-color-grey-11: var(--muted);
+        --puck-color-grey-10: var(--border);
+        --puck-color-grey-09: var(--border);
+        --puck-color-grey-08: var(--muted-fg);
+        --puck-color-grey-07: var(--muted-fg);
+        --puck-color-grey-06: var(--muted-fg);
+        --puck-color-grey-05: var(--fg);
+        --puck-color-grey-04: var(--fg);
+        --puck-color-grey-03: var(--fg);
+        --puck-color-grey-02: var(--fg);
+        --puck-color-grey-01: var(--fg);
+    }
+
     .vmu-blocknote {
         --bn-colors-editor-background: var(--overlay);
         --bn-colors-editor-text: var(--fg);
@@ -302,6 +319,55 @@
 
     .vmu-blocknote--readonly .bn-editor {
         min-height: auto;
+    }
+
+    .navigation-tree-editor [role="treeitem"] {
+        border-bottom: 1px solid
+            color-mix(in oklch, var(--border) 92%, transparent);
+        background-color: color-mix(in oklch, var(--overlay) 96%, var(--muted));
+        transition:
+            border-color 150ms ease,
+            background-color 150ms ease,
+            box-shadow 150ms ease;
+    }
+
+    .navigation-tree-editor [role="treeitem"]:hover,
+    .navigation-tree-editor [role="treeitem"][data-hovered],
+    .navigation-tree-editor [role="treeitem"][data-focused] {
+        border-bottom-color: color-mix(
+            in oklch,
+            var(--primary) 28%,
+            var(--border)
+        );
+        background-color: color-mix(
+            in oklch,
+            var(--primary-subtle) 84%,
+            var(--overlay)
+        );
+    }
+
+    .navigation-tree-editor [role="treeitem"][data-selected],
+    .navigation-tree-editor [role="treeitem"][aria-selected="true"] {
+        border-bottom-color: color-mix(
+            in oklch,
+            var(--primary) 45%,
+            var(--border)
+        );
+        background-color: color-mix(
+            in oklch,
+            var(--primary-subtle) 92%,
+            var(--overlay)
+        );
+        box-shadow: inset 0 0 0 1px
+            color-mix(in oklch, var(--primary) 18%, transparent);
+    }
+
+    .navigation-tree-editor__row {
+        min-height: 3.25rem;
+    }
+
+    .navigation-tree-editor__tree {
+        gap: 0;
     }
 }
 

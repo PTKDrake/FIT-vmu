@@ -1,12 +1,14 @@
-import { Form, Head } from "@inertiajs/react"
-import type { ReactNode } from "react"
-import GuestLayout from "@/layouts/guest-layout"
+import { Form, Head } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import GuestLayout from "@/layouts/guest-layout";
 
 interface ForgotPasswordPageProps {
-  status?: string
+  status?: string;
 }
 
-export default function ForgotPasswordPage({ status }: ForgotPasswordPageProps) {
+export default function ForgotPasswordPage({
+  status,
+}: ForgotPasswordPageProps) {
   return (
     <>
       <Head title="Forgot Password" />
@@ -19,7 +21,12 @@ export default function ForgotPasswordPage({ status }: ForgotPasswordPageProps) 
         {({ errors, processing }) => (
           <>
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-fg">Email</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-fg"
+              >
+                Email
+              </label>
               <input
                 id="email"
                 aria-label="Email"
@@ -27,7 +34,9 @@ export default function ForgotPasswordPage({ status }: ForgotPasswordPageProps) 
                 name="email"
                 type="email"
               />
-              {errors.email ? <p className="text-sm text-danger-subtle-fg">{errors.email}</p> : null}
+              {errors.email ? (
+                <p className="text-sm text-danger-subtle-fg">{errors.email}</p>
+              ) : null}
             </div>
             <button
               type="submit"
@@ -40,7 +49,7 @@ export default function ForgotPasswordPage({ status }: ForgotPasswordPageProps) 
         )}
       </Form>
     </>
-  )
+  );
 }
 
 ForgotPasswordPage.layout = (page: ReactNode) => (
@@ -50,4 +59,4 @@ ForgotPasswordPage.layout = (page: ReactNode) => (
   >
     {page}
   </GuestLayout>
-)
+);

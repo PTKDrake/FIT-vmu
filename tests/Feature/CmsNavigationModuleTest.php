@@ -30,12 +30,12 @@ test('cms navigation index returns real menus tree and resource catalog', functi
         'is_active' => true,
     ]);
 
-    Post::factory()->create([
+    $post = Post::factory()->create([
         'title' => 'Thông báo tuyển sinh',
         'slug' => 'thong-bao-tuyen-sinh',
         'status' => 'published',
-        'category_id' => $category->getKey(),
     ]);
+    $post->categories()->sync([$category->getKey()]);
 
     $menu = NavigationMenu::factory()->create([
         'name' => 'Header chính',
