@@ -551,12 +551,12 @@ Checklist:
 
 Checklist:
 
-- [ ] CRUD navigation menus.
-- [ ] CRUD navigation items.
-- [ ] Hỗ trợ parent-child qua `parent_id`.
-- [ ] Hỗ trợ reorder bằng `sort_order`.
-- [ ] Item có thể trỏ tới `post_category`, `page`, `post` hoặc `custom_url`.
-- [ ] Chỉ render item `is_active` ở public.
+- [x] CRUD navigation menus.
+- [x] CRUD navigation items.
+- [x] Hỗ trợ parent-child qua `parent_id`.
+- [x] Hỗ trợ reorder bằng `sort_order`.
+- [x] Item có thể trỏ tới `post_category`, `page`, `post` hoặc `custom_url`.
+- [x] Chỉ render item `is_active` ở public.
 
 #### Task 5.8 - Documents module thường
 
