@@ -11,7 +11,7 @@ test('super admin user seeder creates and updates the seeded account when passwo
 
     $this->seed(SuperAdminUserSeeder::class);
 
-    $user = User::query()->where('email', 'super-admin@vmufit.local')->first();
+    $user = User::query()->where('email', 'super-admin@vimaru.edu.vn')->first();
 
     expect($user)->not->toBeNull()
         ->and($user?->name)->toBe('Super Admin')
@@ -25,7 +25,7 @@ test('super admin user seeder creates and updates the seeded account when passwo
 
     $updatedUser = $user?->fresh();
 
-    expect(User::query()->where('email', 'super-admin@vmufit.local')->count())->toBe(1)
+    expect(User::query()->where('email', 'super-admin@vimaru.edu.vn')->count())->toBe(1)
         ->and(Hash::check('UpdatedSeedPassword#2026', $updatedUser?->password ?? ''))->toBeTrue();
 });
 
@@ -34,7 +34,7 @@ test('super admin user seeder skips creation when password is missing', function
 
     $this->seed(SuperAdminUserSeeder::class);
 
-    expect(User::query()->where('email', 'super-admin@vmufit.local')->exists())->toBeFalse();
+    expect(User::query()->where('email', 'super-admin@vimaru.edu.vn')->exists())->toBeFalse();
 });
 
 test('database seeder creates a reusable admin account without duplicate emails', function () {
@@ -43,11 +43,11 @@ test('database seeder creates a reusable admin account without duplicate emails'
     $this->seed(DatabaseSeeder::class);
     $this->seed(DatabaseSeeder::class);
 
-    $admin = User::query()->where('email', 'admin@example.com')->first();
+    $admin = User::query()->where('email', 'admin@vimaru.edu.vn')->first();
 
     expect($admin)->not->toBeNull()
         ->and($admin?->name)->toBe('Admin')
         ->and($admin?->hasRole('admin'))->toBeTrue()
-        ->and(User::query()->where('email', 'admin@example.com')->count())->toBe(1)
-        ->and(User::query()->where('email', 'super-admin@vmufit.local')->count())->toBe(1);
+        ->and(User::query()->where('email', 'admin@vimaru.edu.vn')->count())->toBe(1)
+        ->and(User::query()->where('email', 'super-admin@vimaru.edu.vn')->count())->toBe(1);
 });

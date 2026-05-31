@@ -62,7 +62,7 @@ class MediaSeeder extends Seeder
     private function resolveUploader(): User
     {
         $existingUploader = User::query()
-            ->whereIn('email', ['admin@example.com', 'super-admin@vmufit.local'])
+            ->whereIn('email', ['admin@vimaru.edu.vn', 'super-admin@vimaru.edu.vn'])
             ->first();
 
         if ($existingUploader instanceof User) {
@@ -77,7 +77,7 @@ class MediaSeeder extends Seeder
 
         /** @var User $user */
         $user = User::query()->updateOrCreate(
-            ['email' => 'media-seeder@vmufit.local'],
+            ['email' => 'media-seeder@vimaru.edu.vn'],
             [
                 'name' => 'Media Seeder',
                 'email_verified_at' => now(),

@@ -147,7 +147,7 @@ class PostSeeder extends Seeder
     private function resolveAuthor(): User
     {
         $existingAuthor = User::query()
-            ->whereIn('email', ['admin@example.com', 'super-admin@vmufit.local', 'content-seeder@vmufit.local'])
+            ->whereIn('email', ['admin@vimaru.edu.vn', 'super-admin@vimaru.edu.vn', 'content-seeder@vimaru.edu.vn'])
             ->first();
 
         if ($existingAuthor instanceof User) {
@@ -156,7 +156,7 @@ class PostSeeder extends Seeder
 
         /** @var User $author */
         $author = User::query()->updateOrCreate(
-            ['email' => 'content-seeder@vmufit.local'],
+            ['email' => 'content-seeder@vimaru.edu.vn'],
             [
                 'name' => 'Content Seeder',
                 'email_verified_at' => now(),

@@ -45,6 +45,11 @@ import PositionsIndexController from './PositionsIndexController'
 import StorePositionController from './StorePositionController'
 import UpdatePositionController from './UpdatePositionController'
 import DeletePositionController from './DeletePositionController'
+import UsersIndexController from './UsersIndexController'
+import UserCreatePageController from './UserCreatePageController'
+import StoreUserController from './StoreUserController'
+import UserEditPageController from './UserEditPageController'
+import UpdateUserController from './UpdateUserController'
 
 const Cms = {
     PingCmsRealtimeController: Object.assign(PingCmsRealtimeController, PingCmsRealtimeController),
@@ -94,6 +99,11 @@ const Cms = {
     StorePositionController: Object.assign(StorePositionController, StorePositionController),
     UpdatePositionController: Object.assign(UpdatePositionController, UpdatePositionController),
     DeletePositionController: Object.assign(DeletePositionController, DeletePositionController),
+    UsersIndexController: Object.assign(UsersIndexController, UsersIndexController),
+    UserCreatePageController: Object.assign(UserCreatePageController, UserCreatePageController),
+    StoreUserController: Object.assign(StoreUserController, StoreUserController),
+    UserEditPageController: Object.assign(UserEditPageController, UserEditPageController),
+    UpdateUserController: Object.assign(UpdateUserController, UpdateUserController),
 }
 
 export default Cms

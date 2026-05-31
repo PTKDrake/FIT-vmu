@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\ProvisionStudentProfileFromEmailAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
@@ -30,7 +32,7 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, ProvisionStudentProfileFromEmailAction $provisionStudentProfile): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -41,11 +43,17 @@ class RegisteredUserController extends Controller
         /** @var array{name: string, email: string, password: string} $validated */
         $validated = $request->only('name', 'email', 'password');
 
-        $user = User::query()->create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = DB::transaction(function () use ($validated, $provisionStudentProfile): User {
+            $user = User::query()->create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            $provisionStudentProfile($user);
+
+            return $user;
+        });
 
         event(new Registered($user));
 
