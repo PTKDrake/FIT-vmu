@@ -11,6 +11,7 @@ use App\Models\StaffProfile;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Role;
 
 Route::get('/', Controllers\HomeController::class)->name('home');
 
@@ -208,9 +209,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('update', 'user')
             ->name('users.update');
 
-        Route::get('roles-permissions', fn () => inertia('cms/roles-permissions/index'))
-            ->can('manage roles')
+        Route::get('roles-permissions', Controllers\Cms\RolesPermissionsIndexController::class)
+            ->can('viewAny', Role::class)
             ->name('roles-permissions');
+        Route::post('roles-permissions', Controllers\Cms\StoreRoleController::class)
+            ->can('create', Role::class)
+            ->name('roles-permissions.store');
+        Route::patch('roles-permissions/{role}', Controllers\Cms\UpdateRoleController::class)
+            ->can('update', 'role')
+            ->name('roles-permissions.update');
+        Route::delete('roles-permissions/{role}', Controllers\Cms\DeleteRoleController::class)
+            ->can('update', 'role')
+            ->name('roles-permissions.delete');
     });
 });
 

@@ -56,6 +56,10 @@ import UserCreatePageController from './UserCreatePageController'
 import StoreUserController from './StoreUserController'
 import UserEditPageController from './UserEditPageController'
 import UpdateUserController from './UpdateUserController'
+import RolesPermissionsIndexController from './RolesPermissionsIndexController'
+import StoreRoleController from './StoreRoleController'
+import UpdateRoleController from './UpdateRoleController'
+import DeleteRoleController from './DeleteRoleController'
 
 const Cms = {
     PingCmsRealtimeController: Object.assign(PingCmsRealtimeController, PingCmsRealtimeController),
@@ -116,6 +120,10 @@ const Cms = {
     StoreUserController: Object.assign(StoreUserController, StoreUserController),
     UserEditPageController: Object.assign(UserEditPageController, UserEditPageController),
     UpdateUserController: Object.assign(UpdateUserController, UpdateUserController),
+    RolesPermissionsIndexController: Object.assign(RolesPermissionsIndexController, RolesPermissionsIndexController),
+    StoreRoleController: Object.assign(StoreRoleController, StoreRoleController),
+    UpdateRoleController: Object.assign(UpdateRoleController, UpdateRoleController),
+    DeleteRoleController: Object.assign(DeleteRoleController, DeleteRoleController),
 }
 
 export default Cms
