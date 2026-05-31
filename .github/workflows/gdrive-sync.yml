@@ -82,7 +82,7 @@ jobs:
           find "$EXPORT_DIR" -type f | sort
 
       - name: Sync to Google Drive
-        timeout-minutes: 2
+        timeout-minutes: 10
         shell: bash
         run: |
           set -euo pipefail
