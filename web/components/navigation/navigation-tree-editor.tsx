@@ -7,8 +7,10 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { router, usePage } from "@inertiajs/react";
 import { Collection } from "react-aria-components/Collection";
 import { type Key, type ReactNode, startTransition, useState } from "react";
+import syncNavigationMenuTree from "@/actions/App/Http/Controllers/Cms/SyncNavigationMenuTreeController";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,6 +51,7 @@ import {
   normalizeNavigationTree,
   removeNavigationItem,
   updateNavigationItem,
+  type NavigationResourceCatalog,
   type NavigationInternalResourceType,
   type NavigationItemDraft,
   type NavigationItemTarget,
@@ -56,6 +59,22 @@ import {
   type NavigationMenuDraft,
   type NavigationResourceOption,
 } from "@/lib/navigation/tree";
+import type { SharedData } from "@/types/shared";
+
+type SerializedNavigationItem = {
+  id: number;
+  isActive: boolean;
+  linkableId: number | null;
+  linkableType: string | null;
+  menuId: number;
+  parentId: number | null;
+  sortOrder: number;
+  target: string;
+  title: string;
+  type: string;
+  url: string | null;
+  children: SerializedNavigationItem[];
+};
 
 const navigationTypeLabels: Record<NavigationItemType, string> = {
   custom_url: "Custom URL",
@@ -69,27 +88,49 @@ const navigationTargetLabels: Record<NavigationItemTarget, string> = {
   _self: "Cùng tab hiện tại",
 };
 
+interface NavigationTreeEditorProps {
+  initialMenus?: NavigationMenuDraft[];
+  resourceCatalog?: NavigationResourceCatalog;
+}
+
 const locationLabels: Record<string, string> = {
   footer: "Footer",
   header: "Header",
 };
 
-export function NavigationTreeEditor() {
-  const [menus, setMenus] = useState<NavigationMenuDraft[]>(createMockNavigationMenus);
+export function NavigationTreeEditor({
+  initialMenus,
+  resourceCatalog = navigationResourceCatalog,
+}: NavigationTreeEditorProps) {
+  const { errors } = usePage<SharedData & { errors?: Record<string, string> }>().props;
+  const [menus, setMenus] = useState<NavigationMenuDraft[]>(
+    () => cloneNavigationMenus(initialMenus ?? createMockNavigationMenus()),
+  );
+  const [savedMenus, setSavedMenus] = useState<NavigationMenuDraft[]>(
+    () => cloneNavigationMenus(initialMenus ?? createMockNavigationMenus()),
+  );
   const [activeMenuId, setActiveMenuId] = useState(menus[0]?.id ?? 0);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(
     menus[0]?.items[0]?.id ?? null,
   );
   const [draftId, setDraftId] = useState(1000);
+  const [isSaving, setIsSaving] = useState(false);
 
   const activeMenu = menus.find((menu) => menu.id === activeMenuId) ?? menus[0] ?? null;
   const activeItems = activeMenu?.items ?? [];
   const selectedItem = selectedItemId === null ? null : findNavigationItem(activeItems, selectedItemId);
   const parentOptions = collectNavigationParentOptions(activeItems, selectedItemId);
-  const activeResourceOptions = resolveResourceOptions(selectedItem?.type ?? "custom_url");
+  const activeResourceOptions = resolveResourceOptions(
+    selectedItem?.type ?? "custom_url",
+    resourceCatalog,
+  );
 
   const activeCount = countNavigationItems(activeItems);
   const activeDepth = getTreeDepth(activeItems);
+  const hasUnsavedChanges = JSON.stringify(menus) !== JSON.stringify(savedMenus);
+  const clientValidationErrors = collectNavigationValidationErrors(activeItems, resourceCatalog);
+  const validationMessages = [...clientValidationErrors, ...Object.values(errors ?? {})];
+  const canSave = hasUnsavedChanges && !isSaving && validationMessages.length === 0;
 
   function updateActiveMenu(
     menuId: number,
@@ -233,6 +274,31 @@ export function NavigationTreeEditor() {
     }));
   }
 
+  function handleSave(): void {
+    if (!activeMenu || !hasUnsavedChanges || clientValidationErrors.length > 0) {
+      return;
+    }
+
+    setIsSaving(true);
+
+    router.patch(
+      syncNavigationMenuTree.url({ navigation_menu: activeMenu.id }),
+      {
+        items: serializeNavigationItems(activeMenu.items),
+      },
+      {
+        onError: () => {
+          setIsSaving(false);
+        },
+        onSuccess: () => {
+          setSavedMenus(cloneNavigationMenus(menus));
+          setIsSaving(false);
+        },
+        preserveScroll: true,
+      },
+    );
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <Card className="rounded-xl border-border bg-overlay shadow-none">
@@ -256,6 +322,13 @@ export function NavigationTreeEditor() {
             </div>
 
             <CardAction className="flex flex-wrap gap-2">
+              <Button
+                intent="primary"
+                isDisabled={!canSave}
+                onPress={handleSave}
+              >
+                {isSaving ? "Đang lưu..." : "Lưu navigation"}
+              </Button>
               <Button intent="secondary" onPress={() => handleAddItem(null)}>
                 <PlusIcon />
                 Thêm item cấp gốc
@@ -265,13 +338,28 @@ export function NavigationTreeEditor() {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <Note intent="info">
-            <Text className="text-current">
-              UI này chỉ hỗ trợ trải nghiệm biên tập ở frontend. Backend vẫn là
-              nơi bắt buộc validate `custom_url`, `linkable_type`,
-              `linkable_id`, parent-child và các rule an toàn khi lưu thật.
-            </Text>
-          </Note>
+          {validationMessages.length > 0 ? (
+            <Note intent="warning">
+              <div className="space-y-2">
+                <Text className="text-current font-medium">
+                  Navigation chưa thể lưu vì còn dữ liệu chưa hợp lệ.
+                </Text>
+                <div className="space-y-1">
+                  {validationMessages.slice(0, 4).map((message) => (
+                    <Text key={message} className="text-current">
+                      - {message}
+                    </Text>
+                  ))}
+                </div>
+              </div>
+            </Note>
+          ) : (
+            <Note intent="info">
+              <Text className="text-current">
+                Sửa item rồi lưu để đồng bộ toàn bộ cây navigation vào database.
+              </Text>
+            </Note>
+          )}
 
           <div className="grid gap-4 xl:grid-cols-3">
             <SummaryCard
@@ -352,7 +440,7 @@ export function NavigationTreeEditor() {
                         );
                       }}
                     >
-                      {renderTreeItems(activeItems)}
+                      {renderTreeItems(activeItems, resourceCatalog)}
                     </Tree>
                   ) : (
                     <div className="flex h-full min-h-56 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-muted/30 p-6 text-center">
@@ -385,10 +473,14 @@ export function NavigationTreeEditor() {
                   label="Item đang chọn"
                   value={selectedItem?.title ?? "Chưa chọn"}
                 />
-                <StatusCard
-                  label="Preview đích"
-                  value={selectedItem ? describeNavigationDestination(selectedItem) : "—"}
-                />
+                    <StatusCard
+                      label="Preview đích"
+                      value={
+                        selectedItem
+                          ? describeNavigationDestination(selectedItem, resourceCatalog)
+                          : "—"
+                      }
+                    />
               </div>
             </div>
           </CardContent>
@@ -618,7 +710,7 @@ export function NavigationTreeEditor() {
                     />
                     <StatusCard
                       label="Đích hiện tại"
-                      value={describeNavigationDestination(selectedItem)}
+                      value={describeNavigationDestination(selectedItem, resourceCatalog)}
                     />
                   </div>
 
@@ -683,7 +775,10 @@ export function NavigationTreeEditor() {
   );
 }
 
-function renderTreeItems(items: NavigationItemDraft[]): ReactNode {
+function renderTreeItems(
+  items: NavigationItemDraft[],
+  resourceCatalog: NavigationResourceCatalog,
+): ReactNode {
   return (
     <Collection items={items}>
       {(item) => (
@@ -703,7 +798,8 @@ function renderTreeItems(items: NavigationItemDraft[]): ReactNode {
                   ) : null}
                 </div>
                 <Text className="truncate text-muted-fg">
-                  #{item.sortOrder} · {describeNavigationDestination(item)}
+                  #{item.sortOrder} ·{" "}
+                  {describeNavigationDestination(item, resourceCatalog)}
                 </Text>
               </div>
 
@@ -714,7 +810,9 @@ function renderTreeItems(items: NavigationItemDraft[]): ReactNode {
               ) : null}
             </div>
           </TreeContent>
-          {item.children.length > 0 ? renderTreeItems(item.children) : null}
+          {item.children.length > 0
+            ? renderTreeItems(item.children, resourceCatalog)
+            : null}
         </TreeItem>
       )}
     </Collection>
@@ -740,16 +838,21 @@ function getTreeDepth(items: NavigationItemDraft[], depth = 0): number {
 
 function resolveResourceOptions(
   type: NavigationItemType,
+  resourceCatalog: NavigationResourceCatalog,
 ): NavigationResourceOption[] {
   if (type === "custom_url") {
     return [];
   }
 
-  return navigationResourceCatalog[type];
+  return resourceCatalog[type];
 }
 
 function resolveDefaultResourceId(type: NavigationItemType): number | null {
-  const firstResource = resolveResourceOptions(type)[0];
+  if (type === "custom_url") {
+    return null;
+  }
+
+  const firstResource = navigationResourceCatalog[type][0];
 
   return firstResource?.id ?? null;
 }
@@ -787,4 +890,61 @@ function StatusCard({
       </Text>
     </div>
   );
+}
+
+function cloneNavigationMenus(menus: NavigationMenuDraft[]): NavigationMenuDraft[] {
+  return structuredClone(menus);
+}
+
+function serializeNavigationItems(
+  items: NavigationItemDraft[],
+): SerializedNavigationItem[] {
+  return items.map((item) => ({
+    id: item.id,
+    isActive: item.isActive,
+    linkableId: item.linkableId,
+    linkableType: item.linkableType,
+    menuId: item.menuId,
+    parentId: item.parentId,
+    sortOrder: item.sortOrder,
+    target: item.target,
+    title: item.title,
+    type: item.type,
+    url: item.url,
+    children: serializeNavigationItems(item.children),
+  }));
+}
+
+function collectNavigationValidationErrors(
+  items: NavigationItemDraft[],
+  resourceCatalog: NavigationResourceCatalog,
+): string[] {
+  return items.flatMap((item) => {
+    const itemLabel = item.title.trim() === "" ? "Item chưa có tiêu đề" : `Item "${item.title}"`;
+    const currentErrors: string[] = [];
+
+    if (item.title.trim() === "") {
+      currentErrors.push(`${itemLabel} cần có tiêu đề hiển thị.`);
+    }
+
+    if (item.type === "custom_url") {
+      if ((item.url ?? "").trim() === "") {
+        currentErrors.push(`${itemLabel} cần nhập URL đích trước khi lưu.`);
+      }
+    } else {
+      if (item.linkableType === null || item.linkableId === null) {
+        currentErrors.push(`${itemLabel} cần chọn tài nguyên nội bộ trước khi lưu.`);
+      } else {
+        const resourceExists = resourceCatalog[item.linkableType].some(
+          (resource) => resource.id === item.linkableId,
+        );
+
+        if (!resourceExists) {
+          currentErrors.push(`${itemLabel} đang trỏ tới tài nguyên nội bộ không hợp lệ.`);
+        }
+      }
+    }
+
+    return [...currentErrors, ...collectNavigationValidationErrors(item.children, resourceCatalog)];
+  });
 }

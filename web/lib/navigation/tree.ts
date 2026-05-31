@@ -11,6 +11,11 @@ export interface NavigationResourceOption {
   type: NavigationInternalResourceType;
 }
 
+export type NavigationResourceCatalog = Record<
+  NavigationInternalResourceType,
+  NavigationResourceOption[]
+>;
+
 export interface NavigationItemDraft {
   id: number;
   isActive: boolean;
@@ -51,10 +56,7 @@ function createNavigationItem(
   };
 }
 
-export const navigationResourceCatalog: Record<
-  NavigationInternalResourceType,
-  NavigationResourceOption[]
-> = {
+export const navigationResourceCatalog: NavigationResourceCatalog = {
   page: [
     {
       id: 301,
@@ -411,13 +413,16 @@ export function countNavigationItems(items: NavigationItemDraft[]): number {
   );
 }
 
-export function describeNavigationDestination(item: NavigationItemDraft): string {
+export function describeNavigationDestination(
+  item: NavigationItemDraft,
+  resourceCatalog: NavigationResourceCatalog = navigationResourceCatalog,
+): string {
   if (item.type === "custom_url") {
     return item.url || "Chưa nhập URL";
   }
 
   const selectedResource = item.linkableType
-    ? navigationResourceCatalog[item.linkableType].find(
+    ? resourceCatalog[item.linkableType].find(
         (resource) => resource.id === item.linkableId,
       )
     : null;

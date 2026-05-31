@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers;
+use App\Models\NavigationMenu;
 use App\Models\Page;
 use Illuminate\Support\Facades\Route;
 
@@ -44,9 +45,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('delete', 'page')
             ->name('pages.destroy');
 
-        Route::get('navigation', fn () => inertia('cms/navigation/index'))
-            ->can('view posts')
+        Route::get('navigation', Controllers\Cms\NavigationIndexController::class)
+            ->can('viewAny', NavigationMenu::class)
             ->name('navigation');
+        Route::patch('navigation/{navigation_menu}', Controllers\Cms\SyncNavigationMenuTreeController::class)
+            ->whereNumber('navigation_menu')
+            ->can('update', 'navigation_menu')
+            ->name('navigation.update');
 
         Route::get('media', fn () => inertia('cms/media/index'))
             ->can('view posts')
