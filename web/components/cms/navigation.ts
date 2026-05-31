@@ -88,6 +88,24 @@ export function findCmsNavigationLeaf(
   return null;
 }
 
+export function findCmsNavigationGroupTitle(currentUrl: string): string | null {
+  const normalizedUrl = currentUrl.split("?")[0];
+
+  for (const section of cmsNavigationItems) {
+    if (
+      section.items?.some(
+        (item) =>
+          item.href === normalizedUrl ||
+          normalizedUrl.startsWith(`${item.href}/`),
+      )
+    ) {
+      return section.title;
+    }
+  }
+
+  return null;
+}
+
 export function findCmsNavigationMenuTitle(currentUrl: string): string | null {
   const normalizedUrl = currentUrl.split("?")[0];
   const navigationMatch = normalizedUrl.match(/^\/cms\/navigation\/(\d+)$/);

@@ -9,7 +9,7 @@ import {
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { Head } from "@inertiajs/react";
-import { Fragment, useDeferredValue, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useDeferredValue, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { RoleActionDialog } from "@/components/cms/role-action-dialog";
 import { RoleFormDialog } from "@/components/cms/role-form-dialog";
@@ -172,19 +172,14 @@ export default function CmsRolesPermissionsPage({
   >("copy");
   const [actionRole, setActionRole] = useState<RoleData | null>(null);
 
-  const allCategories = useMemo(
-    () =>
-      sortByLabel(
-        Array.from(
-          new Set(permissions.map((permission) => getCategoryLabel(permission.name))),
-        ),
+  const allCategories = sortByLabel(
+    Array.from(
+      new Set(
+        permissions.map((permission) => getCategoryLabel(permission.name)),
       ),
-    [permissions],
+    ),
   );
-  const allRoleNames = useMemo(
-    () => sortByLabel(roleItems.map((role) => role.name)),
-    [roleItems],
-  );
+  const allRoleNames = sortByLabel(roleItems.map((role) => role.name));
 
   const [selectedCategories, setSelectedCategories] =
     useState<string[]>(allCategories);
@@ -194,21 +189,19 @@ export default function CmsRolesPermissionsPage({
   const [matrixSearchQuery, setMatrixSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
-  >(() => Object.fromEntries(allCategories.map((category) => [category, false])));
+  >(() =>
+    Object.fromEntries(allCategories.map((category) => [category, false])),
+  );
 
   const deferredMatrixSearch = useDeferredValue(matrixSearchQuery);
 
-  const roleItemsById = useMemo(
-    () => new Map(roleItems.map((role) => [role.id, role])),
-    [roleItems],
+  const roleItemsById = new Map(roleItems.map((role) => [role.id, role]));
+
+  const filteredRoles = roleItems.filter((role) =>
+    selectedRoles.includes(role.name),
   );
 
-  const filteredRoles = useMemo(
-    () => roleItems.filter((role) => selectedRoles.includes(role.name)),
-    [roleItems, selectedRoles],
-  );
-
-  const groupedPermissions = useMemo(() => {
+  const groupedPermissions = (() => {
     const groups = new Map<string, PermissionData[]>();
     const searchTerm = deferredMatrixSearch.trim().toLowerCase();
 
@@ -235,9 +228,9 @@ export default function CmsRolesPermissionsPage({
     return Array.from(groups.entries()).sort(([left], [right]) =>
       left.localeCompare(right, "vi", { sensitivity: "base" }),
     );
-  }, [deferredMatrixSearch, permissions, selectedCategories]);
+  })();
 
-  const filteredCategoryOptions = useMemo(() => {
+  const filteredCategoryOptions = (() => {
     if (categorySearch.trim() === "") {
       return allCategories;
     }
@@ -247,9 +240,9 @@ export default function CmsRolesPermissionsPage({
     return allCategories.filter((category) =>
       category.toLowerCase().includes(keyword),
     );
-  }, [allCategories, categorySearch]);
+  })();
 
-  const filteredRoleOptions = useMemo(() => {
+  const filteredRoleOptions = (() => {
     if (roleSearch.trim() === "") {
       return allRoleNames;
     }
@@ -259,50 +252,46 @@ export default function CmsRolesPermissionsPage({
     return allRoleNames.filter((roleName) =>
       roleName.toLowerCase().includes(keyword),
     );
-  }, [allRoleNames, roleSearch]);
+  })();
 
-  const dirtyRoleIds = useMemo(
-    () =>
-      Object.entries(draftPermissionsByRole)
-        .filter(([roleId, nextPermissions]) => {
-          const baseRole = roleItemsById.get(Number(roleId));
+  const dirtyRoleIds = Object.entries(draftPermissionsByRole)
+    .filter(([roleId, nextPermissions]) => {
+      const baseRole = roleItemsById.get(Number(roleId));
 
-          if (!baseRole) {
-            return false;
-          }
+      if (!baseRole) {
+        return false;
+      }
 
-          return !arraysAreEqual(baseRole.permissions, nextPermissions);
-        })
-        .map(([roleId]) => Number(roleId)),
-    [draftPermissionsByRole, roleItemsById],
-  );
+      return !arraysAreEqual(baseRole.permissions, nextPermissions);
+    })
+    .map(([roleId]) => Number(roleId));
 
-  const dirtyPermissionCount = useMemo(
-    () =>
-      dirtyRoleIds.reduce((count, roleId) => {
-        const role = roleItemsById.get(roleId);
-        const draftPermissions = draftPermissionsByRole[roleId];
+  const dirtyPermissionCount = dirtyRoleIds.reduce((count, roleId) => {
+    const role = roleItemsById.get(roleId);
+    const draftPermissions = draftPermissionsByRole[roleId];
 
-        if (!role || !draftPermissions) {
-          return count;
-        }
+    if (!role || !draftPermissions) {
+      return count;
+    }
 
-        const basePermissions = new Set(role.permissions);
-        const nextPermissions = new Set(draftPermissions);
-        const changedPermissions = Array.from(
-          new Set([...role.permissions, ...draftPermissions]),
-        ).filter(
-          (permission) =>
-            basePermissions.has(permission) !== nextPermissions.has(permission),
-        );
+    const basePermissions = new Set(role.permissions);
+    const nextPermissions = new Set(draftPermissions);
+    const changedPermissions = Array.from(
+      new Set([...role.permissions, ...draftPermissions]),
+    ).filter(
+      (permission) =>
+        basePermissions.has(permission) !== nextPermissions.has(permission),
+    );
 
-        return count + changedPermissions.length;
-      }, 0),
-    [dirtyRoleIds, draftPermissionsByRole, roleItemsById],
-  );
+    return count + changedPermissions.length;
+  }, 0);
 
   function getEffectivePermissions(roleId: number): string[] {
-    return draftPermissionsByRole[roleId] ?? roleItemsById.get(roleId)?.permissions ?? [];
+    return (
+      draftPermissionsByRole[roleId] ??
+      roleItemsById.get(roleId)?.permissions ??
+      []
+    );
   }
 
   function handleCreateRole(): void {
@@ -353,7 +342,12 @@ export default function CmsRolesPermissionsPage({
   function togglePermission(roleId: number, permissionName: string): void {
     const role = roleItemsById.get(roleId);
 
-    if (!role || !can.managePermissions || role.isProtected || isSavingChanges) {
+    if (
+      !role ||
+      !can.managePermissions ||
+      role.isProtected ||
+      isSavingChanges
+    ) {
       return;
     }
 
@@ -362,10 +356,12 @@ export default function CmsRolesPermissionsPage({
       const nextPermissions = currentPermissions.includes(permissionName)
         ? currentPermissions.filter((item) => item !== permissionName)
         : [...currentPermissions, permissionName];
-      const normalizedNextPermissions = normalizePermissionList(nextPermissions);
+      const normalizedNextPermissions =
+        normalizePermissionList(nextPermissions);
 
       if (arraysAreEqual(role.permissions, normalizedNextPermissions)) {
-        const { [roleId]: _, ...rest } = current;
+        const rest = { ...current };
+        delete rest[roleId];
 
         return rest;
       }
@@ -393,20 +389,23 @@ export default function CmsRolesPermissionsPage({
           continue;
         }
 
-        const response = await fetch(rolesPermissions.update.url({ role: roleId }), {
-          method: "PATCH",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": csrfToken(),
-            "X-Requested-With": "XMLHttpRequest",
+        const response = await fetch(
+          rolesPermissions.update.url({ role: roleId }),
+          {
+            method: "PATCH",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": csrfToken(),
+              "X-Requested-With": "XMLHttpRequest",
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              name: role.name,
+              permissions: nextPermissions,
+            }),
           },
-          credentials: "same-origin",
-          body: JSON.stringify({
-            name: role.name,
-            permissions: nextPermissions,
-          }),
-        });
+        );
 
         if (!response.ok) {
           let errorMessage = `Không thể cập nhật vai trò "${role.name}".`;
@@ -448,7 +447,9 @@ export default function CmsRolesPermissionsPage({
         }),
       );
       setDraftPermissionsByRole({});
-      toast.success(`Đã lưu ${dirtyRoleIds.length} vai trò với ${dirtyPermissionCount} thay đổi quyền.`);
+      toast.success(
+        `Đã lưu ${dirtyRoleIds.length} vai trò với ${dirtyPermissionCount} thay đổi quyền.`,
+      );
       setIsSavingChanges(false);
 
       return true;
@@ -482,10 +483,13 @@ export default function CmsRolesPermissionsPage({
           <CardHeader>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-3xl space-y-2">
-                <CardTitle className="text-xl">Ma trận role-permission</CardTitle>
+                <CardTitle className="text-xl">
+                  Ma trận role-permission
+                </CardTitle>
                 <CardDescription>
                   Tick trực tiếp vào từng ô để gán hoặc bỏ permission cho role.
-                  Thay đổi chỉ được lưu khi bạn bấm nút ở thanh hành động cố định phía dưới.
+                  Thay đổi chỉ được lưu khi bạn bấm nút ở thanh hành động cố
+                  định phía dưới.
                 </CardDescription>
               </div>
 
@@ -583,7 +587,9 @@ export default function CmsRolesPermissionsPage({
                         Nhóm quyền / permission
                       </th>
                       {filteredRoles.map((role) => {
-                        const effectivePermissions = getEffectivePermissions(role.id);
+                        const effectivePermissions = getEffectivePermissions(
+                          role.id,
+                        );
                         const isDirty = dirtyRoleIds.includes(role.id);
 
                         return (
@@ -616,7 +622,11 @@ export default function CmsRolesPermissionsPage({
                                 </div>
 
                                 <div className="flex flex-wrap gap-1.5">
-                                  <Badge intent={role.isProtected ? "warning" : "secondary"}>
+                                  <Badge
+                                    intent={
+                                      role.isProtected ? "warning" : "secondary"
+                                    }
+                                  >
                                     {effectivePermissions.length} quyền
                                   </Badge>
                                   {isDirty ? (
@@ -626,7 +636,10 @@ export default function CmsRolesPermissionsPage({
                               </div>
 
                               {can.manageRoles ? (
-                                <RoleMenu onRoleAction={handleRoleAction} role={role} />
+                                <RoleMenu
+                                  onRoleAction={handleRoleAction}
+                                  role={role}
+                                />
                               ) : null}
                             </div>
                           </th>
@@ -646,7 +659,9 @@ export default function CmsRolesPermissionsPage({
                               <button
                                 type="button"
                                 className="flex w-full items-center gap-3 text-left"
-                                onClick={() => toggleCategoryExpansion(category)}
+                                onClick={() =>
+                                  toggleCategoryExpansion(category)
+                                }
                               >
                                 {isExpanded ? (
                                   <ChevronDownIcon className="size-4 text-muted-fg" />
@@ -655,11 +670,16 @@ export default function CmsRolesPermissionsPage({
                                 )}
                                 <div className="space-y-1">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-fg">{category}</span>
-                                    <Badge intent="secondary">{items.length} quyền</Badge>
+                                    <span className="font-semibold text-fg">
+                                      {category}
+                                    </span>
+                                    <Badge intent="secondary">
+                                      {items.length} quyền
+                                    </Badge>
                                   </div>
                                   <Text className="text-xs">
-                                    {isExpanded ? "Thu gọn" : "Mở rộng"} nhóm quyền này.
+                                    {isExpanded ? "Thu gọn" : "Mở rộng"} nhóm
+                                    quyền này.
                                   </Text>
                                 </div>
                               </button>
@@ -689,7 +709,11 @@ export default function CmsRolesPermissionsPage({
                                           width: `${
                                             items.length === 0
                                               ? 0
-                                              : Math.round((checkedCount / items.length) * 100)
+                                              : Math.round(
+                                                  (checkedCount /
+                                                    items.length) *
+                                                    100,
+                                                )
                                           }%`,
                                         }}
                                       />
@@ -710,18 +734,22 @@ export default function CmsRolesPermissionsPage({
                                     <div className="flex items-start gap-3 pl-7">
                                       <div className="mt-1 size-1.5 rounded-full bg-border" />
                                       <div className="space-y-1">
-                                        <Code className="text-xs">{permission.name}</Code>
+                                        <Code className="text-xs">
+                                          {permission.name}
+                                        </Code>
                                         <Text className="text-xs">
-                                          {permission.roleCount} role đang sử dụng
+                                          {permission.roleCount} role đang sử
+                                          dụng
                                         </Text>
                                       </div>
                                     </div>
                                   </td>
 
                                   {filteredRoles.map((role) => {
-                                    const hasPermission = getEffectivePermissions(
-                                      role.id,
-                                    ).includes(permission.name);
+                                    const hasPermission =
+                                      getEffectivePermissions(role.id).includes(
+                                        permission.name,
+                                      );
                                     const isDisabled =
                                       !can.managePermissions ||
                                       role.isProtected ||
@@ -738,7 +766,10 @@ export default function CmsRolesPermissionsPage({
                                             isDisabled={isDisabled}
                                             isSelected={hasPermission}
                                             onChange={() =>
-                                              togglePermission(role.id, permission.name)
+                                              togglePermission(
+                                                role.id,
+                                                permission.name,
+                                              )
                                             }
                                           />
                                         </div>

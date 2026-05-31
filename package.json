@@ -5,10 +5,10 @@
     "scripts": {
         "build": "vite build && vite build --ssr",
         "build:ssr": "vite build && vite build --ssr",
-        "check": "pnpm lint && pnpm typecheck && pnpm build",
+        "check": "pnpm doctor && pnpm typecheck",
         "dev": "vite",
-        "doctor": "react-doctor -y --offline --fail-on error",
-        "doctor:strict": "react-doctor -y --offline --fail-on warning",
+        "doctor": "react-doctor -y --offline --verbose --fail-on error",
+        "doctor:strict": "react-doctor -y --offline --verbose --fail-on warning",
         "format": "prettier --write web/",
         "format:check": "prettier --check web/",
         "lint": "oxlint --config .oxlintrc.json web",

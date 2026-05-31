@@ -36,13 +36,13 @@ import { TreeIndicator } from "@/components/ui/tree";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { cx } from "@/lib/primitive";
+import { parseSidebarOpenState, SIDEBAR_COOKIE_NAME } from "./sidebar-state";
 import { Button } from "./button";
 import { Link } from "./link";
 import { Tooltip, TooltipContent } from "./tooltip";
 
 const SIDEBAR_WIDTH = "17rem";
 const SIDEBAR_WIDTH_DOCK = "3.25rem";
-const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 type SidebarContextProps = {
@@ -86,7 +86,13 @@ const SidebarProvider = ({
 }: SidebarProviderProps) => {
   const [openMobile, setOpenMobile] = useState(false);
 
-  const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
+  const [internalOpenState, setInternalOpenState] = useState(() => {
+    if (typeof document === "undefined") {
+      return defaultOpen;
+    }
+
+    return parseSidebarOpenState(document.cookie) ?? defaultOpen;
+  });
   const open = openProp ?? internalOpenState;
   function setOpen(value: boolean | ((value: boolean) => boolean)): void {
     const openState = typeof value === "function" ? value(open) : value;

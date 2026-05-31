@@ -1,15 +1,9 @@
 import { useForm } from "@inertiajs/react";
-import { useMemo } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  FieldError,
-  FieldGroup,
-  Fieldset,
-  Label,
-} from "@/components/ui/field";
+import { FieldError, FieldGroup, Fieldset, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   ModalBody,
@@ -49,20 +43,20 @@ interface RoleFormDialogProps {
 }
 
 const categoryTranslations: Record<string, string> = {
-  "posts": "Bài viết (posts)",
-  "pages": "Trang (pages)",
-  "documents": "Tài liệu (documents)",
-  "roles": "Vai trò (roles)",
-  "permissions": "Quyền hạn (permissions)",
-  "users": "Người dùng (users)",
+  posts: "Bài viết (posts)",
+  pages: "Trang (pages)",
+  documents: "Tài liệu (documents)",
+  roles: "Vai trò (roles)",
+  permissions: "Quyền hạn (permissions)",
+  users: "Người dùng (users)",
   "staff profiles": "Hồ sơ cán bộ (staff profiles)",
   "staff-profiles": "Hồ sơ cán bộ (staff profiles)",
-  "staff": "Cán bộ (staff)",
-  "units": "Đơn vị (units)",
-  "media": "Thư viện Media (media)",
-  "navigation": "Menu điều hướng (navigation)",
+  staff: "Cán bộ (staff)",
+  units: "Đơn vị (units)",
+  media: "Thư viện Media (media)",
+  navigation: "Menu điều hướng (navigation)",
   "navigation menus": "Menu điều hướng (navigation)",
-  "positions": "Chức vụ (positions)",
+  positions: "Chức vụ (positions)",
   "post categories": "Danh mục bài viết (post-categories)",
   "post-categories": "Danh mục bài viết (post-categories)",
 };
@@ -71,7 +65,10 @@ const getCategory = (permissionName: string) => {
   const parts = permissionName.split(" ");
   if (parts.length > 1) {
     const rawCategory = parts.slice(1).join(" ");
-    return categoryTranslations[rawCategory] || `${rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1)}`;
+    return (
+      categoryTranslations[rawCategory] ||
+      `${rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1)}`
+    );
   }
   return "Hệ thống";
 };
@@ -90,12 +87,11 @@ export function RoleFormDialog({
     permissions: initialValues.permissions,
   });
 
-  const isProtectedRole = useMemo(() => {
-    return mode === "edit" && protectedRoleNames.includes(initialValues.name);
-  }, [mode, initialValues.name, protectedRoleNames]);
+  const isProtectedRole =
+    mode === "edit" && protectedRoleNames.includes(initialValues.name);
 
   // Group permissions for grouped UI
-  const groupedPermissions = useMemo(() => {
+  const groupedPermissions = (() => {
     const groups: Record<string, PermissionData[]> = {};
     allPermissions.forEach((permission) => {
       const cat = getCategory(permission.name);
@@ -105,7 +101,7 @@ export function RoleFormDialog({
       groups[cat].push(permission);
     });
     return groups;
-  }, [allPermissions]);
+  })();
 
   function togglePermission(name: string): void {
     if (!canManagePermissions || isProtectedRole) {
@@ -121,7 +117,11 @@ export function RoleFormDialog({
     form.setData("permissions", current);
   }
 
-  function handleToggleAllInCategory(categoryName: string, permissionNames: string[], allSelected: boolean): void {
+  function handleToggleAllInCategory(
+    categoryName: string,
+    permissionNames: string[],
+    allSelected: boolean,
+  ): void {
     if (!canManagePermissions || isProtectedRole) {
       return;
     }
@@ -183,7 +183,9 @@ export function RoleFormDialog({
       <form onSubmit={submit} className="flex flex-col h-full max-h-[85vh]">
         <ModalHeader className="border-b border-border pb-4">
           <ModalTitle>
-            {mode === "create" ? "Tạo vai trò mới" : `Cập nhật vai trò: ${initialValues.name}`}
+            {mode === "create"
+              ? "Tạo vai trò mới"
+              : `Cập nhật vai trò: ${initialValues.name}`}
           </ModalTitle>
           <ModalDescription>
             {mode === "create"
@@ -196,8 +198,10 @@ export function RoleFormDialog({
           {isProtectedRole ? (
             <div className="rounded-lg border border-warning-subtle bg-warning-subtle/10 p-4">
               <Text className="text-warning-fg text-sm font-medium">
-                Đây là vai trò hệ thống quan trọng (<strong>{initialValues.name}</strong>). 
-                Để đảm bảo tính toàn vẹn của hệ thống, vai trò này không được đổi tên hoặc thay đổi quyền trực tiếp từ giao diện CMS.
+                Đây là vai trò hệ thống quan trọng (
+                <strong>{initialValues.name}</strong>). Để đảm bảo tính toàn vẹn
+                của hệ thống, vai trò này không được đổi tên hoặc thay đổi quyền
+                trực tiếp từ giao diện CMS.
               </Text>
             </div>
           ) : null}
@@ -239,9 +243,12 @@ export function RoleFormDialog({
             <div className="space-y-6">
               {Object.entries(groupedPermissions).map(([category, items]) => {
                 const itemNames = items.map((i) => i.name);
-                const selectedInGroup = items.filter((i) => form.data.permissions.includes(i.name));
+                const selectedInGroup = items.filter((i) =>
+                  form.data.permissions.includes(i.name),
+                );
                 const allSelected = selectedInGroup.length === items.length;
-                const isSomeSelected = selectedInGroup.length > 0 && !allSelected;
+                const isSomeSelected =
+                  selectedInGroup.length > 0 && !allSelected;
 
                 return (
                   <div
@@ -257,7 +264,13 @@ export function RoleFormDialog({
                           type="button"
                           intent="outline"
                           size="xs"
-                          onPress={() => handleToggleAllInCategory(category, itemNames, allSelected)}
+                          onPress={() =>
+                            handleToggleAllInCategory(
+                              category,
+                              itemNames,
+                              allSelected,
+                            )
+                          }
                         >
                           {allSelected ? "Bỏ chọn tất cả" : "Chọn tất cả"}
                         </Button>
@@ -266,7 +279,9 @@ export function RoleFormDialog({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       {items.map((permission) => {
-                        const isChecked = form.data.permissions.includes(permission.name);
+                        const isChecked = form.data.permissions.includes(
+                          permission.name,
+                        );
                         return (
                           <div
                             key={permission.id}
@@ -279,9 +294,15 @@ export function RoleFormDialog({
                             <Checkbox
                               isSelected={isChecked}
                               onChange={() => togglePermission(permission.name)}
-                              isDisabled={!canManagePermissions || isProtectedRole || form.processing}
+                              isDisabled={
+                                !canManagePermissions ||
+                                isProtectedRole ||
+                                form.processing
+                              }
                             >
-                              <span className="text-xs font-mono">{permission.name}</span>
+                              <span className="text-xs font-mono">
+                                {permission.name}
+                              </span>
                             </Checkbox>
                           </div>
                         );
@@ -311,8 +332,8 @@ export function RoleFormDialog({
             {form.processing
               ? "Đang lưu..."
               : mode === "create"
-              ? "Tạo vai trò"
-              : "Lưu thay đổi"}
+                ? "Tạo vai trò"
+                : "Lưu thay đổi"}
           </Button>
         </ModalFooter>
       </form>
