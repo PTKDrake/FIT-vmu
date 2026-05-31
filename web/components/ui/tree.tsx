@@ -44,7 +44,7 @@ const TreeItem = <T extends object>({
     <TreeItemPrimitive
       className={cx(
         [
-          "shrink-0 rounded-lg px-5 py-1.5 pe-2 border-1",
+          "shrink-0 rounded-lg px-5 py-1.5 pe-2",
           "group/tree-item relative flex select-none rounded-lg focus:outline-hidden",
           "focus:bg-(--tree-active-bg) focus:text-(--tree-active-fg) focus:**:[.text-muted-fg]:text-(--tree-active-fg)",
           "**:data-[slot=avatar]:*:size-6 **:data-[slot=avatar]:size-6 sm:**:data-[slot=avatar]:*:size-5 sm:**:data-[slot=avatar]:size-5",
