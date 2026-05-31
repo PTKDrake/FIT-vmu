@@ -52,11 +52,11 @@ export default function CmsUserEditPage({
 
   // Safe checks for currentUserRoles
   const currentUserRoles = auth.user
-    ? (user.id === auth.user.id
-        ? user.roles
-        : auth.permissions.length >= 35
+    ? user.id === auth.user.id
+      ? user.roles
+      : auth.permissions.length >= 35
         ? ["super-admin"]
-        : [])
+        : []
     : [];
 
   return (

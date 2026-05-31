@@ -10,10 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
+import { t } from "@/lib/i18n";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { echo } from "@/lib/echo";
-import type { SharedData } from "@/types/shared";
 import realtimeRoutes from "@/routes/cms/realtime";
+import type { SharedData } from "@/types/shared";
 
 interface CmsRealtimePingPayload {
   message: string;
@@ -120,14 +121,14 @@ export function CmsRealtimeDemoCard() {
   return (
     <Card className="border-border bg-overlay/70">
       <CardHeader>
-        <CardTitle>Realtime demo</CardTitle>
+        <CardTitle>{t("Realtime demo")}</CardTitle>
         <CardDescription>
-          Kiểm tra private channel Reverb cho tài khoản CMS hiện tại.
+          {t("Kiểm tra private channel Reverb cho tài khoản CMS hiện tại.")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-xl border border-border bg-muted/40 p-4">
-          <p className="text-sm font-medium text-fg">Private channel</p>
+          <p className="text-sm font-medium text-fg">{t("Private channel")}</p>
           <Text className="mt-1 font-mono text-xs">{channelName}</Text>
         </div>
 
@@ -142,7 +143,8 @@ export function CmsRealtimeDemoCard() {
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-h-5 text-sm text-muted-fg">
-            {requestMessage ?? "Bấm nút để gửi một broadcast test về chính bạn."}
+            {requestMessage ??
+              "Bấm nút để gửi một broadcast test về chính bạn."}
           </div>
 
           <Button isDisabled={isSubmitting} onPress={triggerRealtimePing}>

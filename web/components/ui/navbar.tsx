@@ -1,11 +1,6 @@
 import { Bars2Icon } from "@heroicons/react/20/solid";
 import { LayoutGroup, motion } from "motion/react";
-import {
-  createContext,
-  use,
-  useId,
-  useState,
-} from "react";
+import { createContext, use, useId, useState } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
 import { Link, type LinkProps } from "@/components/ui/link";
 import { useIsMobile } from "@/hooks/use-mobile";

@@ -22,16 +22,16 @@ export function getHideOnClass(
 export function getGapClass(gap?: "sm" | "md" | "lg" | "xl" | number) {
   if (typeof gap === "number") {
     if (gap <= 16) {
-return "gap-4";
-}
+      return "gap-4";
+    }
 
     if (gap <= 24) {
-return "gap-6";
-}
+      return "gap-6";
+    }
 
     if (gap <= 32) {
-return "gap-8";
-}
+      return "gap-8";
+    }
 
     return "gap-12";
   }
@@ -338,8 +338,8 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
     children: Children,
   }) => {
     if (!Children) {
-return <></>;
-}
+      return <></>;
+    }
 
     // Backward compatibility for paddingY
     const pt = paddingTop ?? paddingY ?? "md";
@@ -476,8 +476,8 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       children: Children,
     }) => {
       if (!Children) {
-return <></>;
-}
+        return <></>;
+      }
 
       const widthClass = {
         sm: "max-w-3xl",

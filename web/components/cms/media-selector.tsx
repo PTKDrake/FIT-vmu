@@ -11,6 +11,7 @@ import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label, Description, FieldError } from "@/components/ui/field";
+import { t } from "@/lib/i18n";
 import {
   ModalContent,
   ModalBody,
@@ -133,6 +134,7 @@ export function MediaSelector({
       if (meta) {
         setLastPage(meta.lastPage || 1);
       }
+
       setLoadingLibrary(false);
     } catch (err: any) {
       console.error(err);
@@ -200,6 +202,9 @@ export function MediaSelector({
     maxFiles: 1,
     onDrop: handleUpload,
   });
+
+  const dropzoneRootProps = getRootProps();
+  const dropzoneInputProps = getInputProps() as any;
 
   const handleRemove = () => {
     onChange(null);
@@ -307,7 +312,7 @@ export function MediaSelector({
             {/* Hover Actions Hint Overlay */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <span className="rounded-lg bg-bg/95 px-3 py-1.5 text-xs font-semibold text-fg shadow-md backdrop-blur-xs">
-                Chọn ảnh khác
+                {t("Chọn ảnh khác")}
               </span>
             </div>
           </button>
@@ -345,10 +350,10 @@ export function MediaSelector({
             </div>
             <div className="space-y-1 mt-3">
               <p className="text-sm font-medium text-fg">
-                Chọn ảnh đại diện bài viết
+                {t("Chọn ảnh đại diện bài viết")}
               </p>
               <p className="text-xs text-muted-fg">
-                Nhấp để mở thư viện ảnh hoặc tải lên tệp mới
+                {t("Nhấp để mở thư viện ảnh hoặc tải lên tệp mới")}
               </p>
             </div>
           </div>
@@ -384,7 +389,7 @@ export function MediaSelector({
                       : "border-transparent text-muted-fg hover:text-fg"
                   }`}
                 >
-                  Thư viện ảnh
+                  {t("Thư viện ảnh")}
                 </button>
                 <button
                   type="button"
@@ -443,10 +448,10 @@ export function MediaSelector({
                     <div className="text-center py-12 space-y-3">
                       <PhotoIcon className="size-12 text-muted-fg/40 mx-auto" />
                       <p className="text-sm font-semibold text-fg">
-                        Không tìm thấy hình ảnh nào
+                        {t("Không tìm thấy hình ảnh nào")}
                       </p>
                       <p className="text-xs text-muted-fg">
-                        Thư viện trống hoặc từ khóa tìm kiếm không khớp.
+                        {t("Thư viện trống hoặc từ khóa tìm kiếm không khớp.")}
                       </p>
                       <Button
                         intent="outline"
@@ -555,14 +560,33 @@ export function MediaSelector({
               {/* TAB CONTENT 2: Upload Files Dropzone */}
               {activeTab === "upload" && (
                 <div
-                  {...getRootProps()}
+                  ref={dropzoneRootProps.ref}
+                  role={dropzoneRootProps.role}
+                  tabIndex={dropzoneRootProps.tabIndex}
+                  onClick={dropzoneRootProps.onClick}
+                  onKeyDown={dropzoneRootProps.onKeyDown}
+                  onFocus={dropzoneRootProps.onFocus}
+                  onBlur={dropzoneRootProps.onBlur}
+                  onDragEnter={dropzoneRootProps.onDragEnter}
+                  onDragLeave={dropzoneRootProps.onDragLeave}
+                  onDragOver={dropzoneRootProps.onDragOver}
+                  onDrop={dropzoneRootProps.onDrop}
                   className={`flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-xl cursor-pointer transition ${
                     isDragActive
                       ? "bg-primary/5 border-primary"
                       : "border-border hover:bg-muted/5 hover:border-muted-fg/40"
                   }`}
                 >
-                  <input {...getInputProps()} />
+                  <input
+                    ref={dropzoneInputProps.ref}
+                    type={dropzoneInputProps.type}
+                    multiple={dropzoneInputProps.multiple}
+                    accept={dropzoneInputProps.accept}
+                    autoComplete={dropzoneInputProps.autoComplete}
+                    style={dropzoneInputProps.style}
+                    onChange={dropzoneInputProps.onChange}
+                    onClick={dropzoneInputProps.onClick}
+                  />
                   {uploading ? (
                     <div className="space-y-3 py-4 flex flex-col items-center text-center">
                       <ArrowPathIcon className="size-10 text-primary animate-spin" />

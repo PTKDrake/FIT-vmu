@@ -1,5 +1,6 @@
 import { router } from "@inertiajs/react";
 import React, { createContext, use, useRef, useState } from "react";
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import {
   ModalContent,
@@ -8,8 +9,8 @@ import {
   ModalDescription,
   ModalFooter,
 } from "@/components/ui/modal";
-import { useMountEffect } from "@/hooks/use-mount-effect";
 import { shouldInterceptUnsavedAnchorNavigation } from "@/hooks/unsaved-navigation";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 
 type UnsavedChangesState = {
   isDirty: boolean;
@@ -35,7 +36,10 @@ function saveDirtyEntry(
   state: UnsavedChangesState,
   onSaveRef: Record<string, () => Promise<boolean> | boolean | void>,
 ): Promise<boolean> {
-  const onSave = onSaveRef[id] ?? state.onSave;
+  const onSave =
+    (Reflect.get(onSaveRef, id) as
+      | (() => Promise<boolean> | boolean | void)
+      | undefined) ?? state.onSave;
 
   return new Promise<boolean>((resolve) => {
     let resolved = false;
@@ -119,7 +123,7 @@ async function saveDirtyEntriesSequentially(
   onSaveRef: Record<string, () => Promise<boolean> | boolean | void>,
   index = 0,
 ): Promise<boolean> {
-  const currentEntry = dirtyEntries[index];
+  const currentEntry = dirtyEntries.at(index);
 
   if (!currentEntry) {
     return true;
@@ -156,15 +160,21 @@ export function UnsavedChangesProvider({
   const pendingNavigationRef = useRef<PendingNavigation | null>(null);
   const [contextValue] = useState<UnsavedChangesContextType>(() => ({
     setDirty(id, isDirty, onSave) {
-      onSaveRefs.current[id] = onSave;
-      dirtyStatesRef.current[id] = { isDirty, onSave };
+      if (id === "__proto__" || id === "constructor" || id === "prototype")
+        return;
+      const safeId = `safe_${id}`;
+      onSaveRefs.current[safeId] = onSave;
+      dirtyStatesRef.current[safeId] = { isDirty, onSave };
       isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some(
         (state) => state.isDirty,
       );
     },
     removeDirty(id) {
-      delete onSaveRefs.current[id];
-      delete dirtyStatesRef.current[id];
+      if (id === "__proto__" || id === "constructor" || id === "prototype")
+        return;
+      const safeId = `safe_${id}`;
+      delete onSaveRefs.current[safeId];
+      delete dirtyStatesRef.current[safeId];
       isAnyDirtyRef.current = Object.values(dirtyStatesRef.current).some(
         (state) => state.isDirty,
       );
@@ -179,7 +189,9 @@ export function UnsavedChangesProvider({
         return;
       }
 
-      const visitMethod = String(event.detail.visit.method ?? "get").toLowerCase();
+      const visitMethod = String(
+        event.detail.visit.method ?? "get",
+      ).toLowerCase();
 
       if (visitMethod !== "get") {
         return;
@@ -380,7 +392,7 @@ export function UnsavedChangesProvider({
                 onPress={handleDiscard}
                 isDisabled={isSaving}
               >
-                Không lưu
+                {t("Không lưu")}
               </Button>
               <Button
                 intent="primary"

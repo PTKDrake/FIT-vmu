@@ -12,15 +12,18 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
+import {
+  CmsDataTable,
+  DataTableBadge,
+  DataTableActions,
+} from "@/components/cms/cms-data-table";
 import type {
   CmsPostTableRow,
   CmsPostsPageProps,
 } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -29,14 +32,8 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
+import { t } from "@/lib/i18n";
 import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
@@ -87,26 +84,14 @@ export default function CmsPostsPage({
   });
 
   const columns: Array<ColumnDef<CmsPostTableRow, any>> = [
-    columnHelper.accessor("title", {
+      columnHelper.accessor("title", {
         header: "Bài viết",
         cell: ({ row }) => (
           <div className="space-y-1">
             <p className="font-medium text-fg">{row.original.title}</p>
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <Text className="text-xs text-muted-fg font-mono">
-                {row.original.slug}
-              </Text>
-              {row.original.categoryNames.length > 0 ? (
-                <>
-                  <span className="text-muted-fg/40 text-xs">•</span>
-                  {row.original.categoryNames.map((categoryName) => (
-                    <Badge key={categoryName} intent="info" isCircle={false}>
-                      {categoryName}
-                    </Badge>
-                  ))}
-                </>
-              ) : null}
-            </div>
+            <Text className="text-xs text-muted-fg font-mono block">
+              {row.original.slug}
+            </Text>
             {row.original.excerpt ? (
               <Text className="line-clamp-2 text-sm text-muted-fg mt-1">
                 {row.original.excerpt}
@@ -115,19 +100,44 @@ export default function CmsPostsPage({
           </div>
         ),
       }),
+      columnHelper.accessor("categoryNames", {
+        id: "categories",
+        header: "Chuyên mục",
+        enableSorting: false,
+        cell: ({ getValue }) => {
+          const categoryNames = getValue() as string[];
+
+          if (categoryNames.length === 0) {
+            return (
+              <span className="text-xs text-muted-fg italic">
+                {t("Chưa phân loại")}
+              </span>
+            );
+          }
+
+          return (
+            <div className="flex flex-wrap gap-1 max-w-[180px]">
+              {categoryNames.map((categoryName) => (
+                <DataTableBadge key={categoryName} intent="info">
+                  {categoryName}
+                </DataTableBadge>
+              ))}
+            </div>
+          );
+        },
+      }),
       columnHelper.accessor("status", {
         header: "Trạng thái",
         cell: ({ getValue }) => {
           const value = getValue() as CmsPostTableRow["status"];
 
           return (
-            <Badge
+            <DataTableBadge
               intent={statusIntentMap[value]}
-              isCircle={false}
               className="capitalize"
             >
               {statusLabelMap[value]}
-            </Badge>
+            </DataTableBadge>
           );
         },
       }),
@@ -137,11 +147,13 @@ export default function CmsPostsPage({
         cell: ({ getValue }) => getValue() ?? "Chính hệ thống",
       }),
       columnHelper.accessor("publishedAt", {
+        id: "published_at",
         header: "Ngày xuất bản",
         cell: ({ getValue }) => formatDate(getValue()),
       }),
       columnHelper.accessor("updatedAt", {
         header: "Cập nhật",
+        enableSorting: false,
         cell: ({ getValue }) => formatDate(getValue()),
       }),
       columnHelper.display({
@@ -159,60 +171,54 @@ export default function CmsPostsPage({
           }
 
           return (
-            <Menu>
-              <MenuTrigger
-                aria-label={`Tác vụ cho ${row.original.title}`}
-                className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
-              >
-                <EllipsisHorizontalIcon className="size-5" />
-              </MenuTrigger>
-              <MenuContent placement="bottom right">
-                {showManage ? (
+            <DataTableActions
+              triggerAriaLabel={`Tác vụ cho ${row.original.title}`}
+            >
+              {showManage ? (
+                <MenuItem
+                  onAction={() => {
+                    router.visit(
+                      postsRoutes.edit.url({ post: row.original.id }),
+                    );
+                  }}
+                >
+                  <PencilSquareIcon />
+                  Chỉnh sửa
+                </MenuItem>
+              ) : null}
+
+              {showApproval ? (
+                <>
                   <MenuItem
                     onAction={() => {
-                      router.visit(
-                        postsRoutes.edit.url({ post: row.original.id }),
-                      );
+                      handlePublishStatus(row.original.id, "published");
                     }}
                   >
-                    <PencilSquareIcon />
-                    Chỉnh sửa
+                    <CheckCircleIcon className="text-success" />
+                    Phê duyệt đăng bài
                   </MenuItem>
-                ) : null}
-
-                {showApproval ? (
-                  <>
-                    <MenuItem
-                      onAction={() => {
-                        handlePublishStatus(row.original.id, "published");
-                      }}
-                    >
-                      <CheckCircleIcon className="text-success" />
-                      Phê duyệt đăng bài
-                    </MenuItem>
-                    <MenuItem
-                      intent="danger"
-                      onAction={() => {
-                        handlePublishStatus(row.original.id, "rejected");
-                      }}
-                    >
-                      <XCircleIcon className="text-danger" />
-                      Từ chối bài viết
-                    </MenuItem>
-                  </>
-                ) : null}
-
-                {showManage ? (
                   <MenuItem
                     intent="danger"
-                    onAction={() => setDeleteTarget(row.original)}
+                    onAction={() => {
+                      handlePublishStatus(row.original.id, "rejected");
+                    }}
                   >
-                    <TrashIcon />
-                    Xóa bài viết
+                    <XCircleIcon className="text-danger" />
+                    Từ chối bài viết
                   </MenuItem>
-                ) : null}
-              </MenuContent>
-            </Menu>
+                </>
+              ) : null}
+
+              {showManage ? (
+                <MenuItem
+                  intent="danger"
+                  onAction={() => setDeleteTarget(row.original)}
+                >
+                  <TrashIcon />
+                  Xóa bài viết
+                </MenuItem>
+              ) : null}
+            </DataTableActions>
           );
         },
       }),
@@ -267,11 +273,33 @@ export default function CmsPostsPage({
           description="Quản lý nội dung bài viết, tin tức sự kiện khoa học và phê duyệt lịch xuất bản."
           emptyDescription="Chưa có bài viết phù hợp với bộ lọc hiện tại."
           emptyTitle="Chưa có bài viết phù hợp"
-          filterOptions={statusOptions.map((option) => ({ ...option }))}
-          filterValue={tableQueryState.query.status}
+          filterSections={[
+            {
+              id: "status",
+              label: "Trạng thái",
+              options: statusOptions.map((opt) => ({ ...opt })),
+              selectedValue: tableQueryState.query.status,
+              onChange: (value) => tableQueryState.setStatus(value),
+            },
+            {
+              id: "categoryId",
+              label: "Chuyên mục",
+              options: [
+                { label: "Tất cả chuyên mục", value: "all" },
+                ...categoryOptions.map((opt) => ({ ...opt })),
+              ],
+              selectedValue:
+                tableQueryState.query.categoryId === null
+                  ? "all"
+                  : String(tableQueryState.query.categoryId),
+              onChange: (value) =>
+                tableQueryState.setCategoryId(
+                  value === "all" ? null : Number(value),
+                ),
+            },
+          ]}
           isReloading={tableQueryState.isReloading}
           meta={tableQueryState.meta}
-          onFilterChange={(value) => tableQueryState.setStatus(value)}
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}
           onSearchChange={(value) => tableQueryState.setSearch(value)}
@@ -279,47 +307,15 @@ export default function CmsPostsPage({
             tableQueryState.setSorting(column, direction)
           }
           primaryAction={
-            <div className="flex items-center gap-3">
-              <Select
-                aria-label="Lọc theo chuyên mục"
-                selectedKey={
-                  tableQueryState.query.categoryId === null
-                    ? "all"
-                    : String(tableQueryState.query.categoryId)
-                }
-                onSelectionChange={(key) => {
-                  void tableQueryState.setCategoryId(
-                    key === "all" ? null : Number(key),
-                  );
-                }}
+            can.managePosts ? (
+              <Link
+                href={postsRoutes.create.url()}
+                className="inline-flex min-h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-fg shadow-xs transition hover:bg-primary/90 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-ring active:bg-primary"
               >
-                <SelectTrigger className="w-48 text-start" />
-                <SelectContent>
-                  <SelectItem id="all" textValue="Tất cả chuyên mục">
-                    <SelectLabel>Tất cả chuyên mục</SelectLabel>
-                  </SelectItem>
-                  {categoryOptions.map((opt) => (
-                    <SelectItem
-                      key={opt.value}
-                      id={opt.value}
-                      textValue={opt.label}
-                    >
-                      <SelectLabel>{opt.label}</SelectLabel>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {can.managePosts ? (
-                <Link
-                  href={postsRoutes.create.url()}
-                  className="inline-flex min-h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-fg shadow-xs transition hover:bg-primary/90 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-ring active:bg-primary"
-                >
-                  <PlusIcon className="size-4 mr-1.5 shrink-0" />
-                  Tạo bài viết
-                </Link>
-              ) : null}
-            </div>
+                <PlusIcon className="size-4 mr-1.5 shrink-0" />
+                Tạo bài viết
+              </Link>
+            ) : null
           }
           searchPlaceholder="Tìm theo tiêu đề, slug hoặc mô tả"
           searchValue={tableQueryState.query.search}
@@ -352,8 +348,9 @@ export default function CmsPostsPage({
           <ModalBody>
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
-                Sau khi xóa, mọi liên kết đến bài viết này từ navigation menu
-                hoặc trang công khai sẽ bị hỏng.
+                {t(
+                  "Sau khi xóa, mọi liên kết đến bài viết này từ navigation menu hoặc trang công khai sẽ bị hỏng.",
+                )}
               </Text>
             </div>
           </ModalBody>

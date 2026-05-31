@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         $admin = User::query()->updateOrCreate(
             ['email' => 'admin@vimaru.edu.vn'],
             [
-                'name' => 'Admin',
+                'name' => 'Quản trị viên',
                 'email_verified_at' => now(),
                 'password' => User::factory()->makeOne()->password,
                 'remember_token' => Str::random(10),

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('units')
+                ->nullOnDelete();
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('type')->index();
@@ -21,6 +25,8 @@ return new class extends Migration
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true)->index();
             $table->timestamps();
+
+            $table->index(['parent_id', 'sort_order']);
         });
     }
 

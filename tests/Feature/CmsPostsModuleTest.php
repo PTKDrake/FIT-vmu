@@ -125,7 +125,7 @@ test('cms post can be created by managers', function () {
     ]);
     $this->assertDatabaseHas('post_post_category', [
         'post_id' => Post::query()->where('slug', 'bai-viet-moi-tinh')->value('id'),
-        'category_id' => $category->id,
+        'post_category_id' => $category->id,
     ]);
 
     Event::assertDispatchedTimes(CmsContentChanged::class, 1);
@@ -168,7 +168,7 @@ test('cms post can be updated by managers', function () {
     ]);
     $this->assertDatabaseHas('post_post_category', [
         'post_id' => $post->id,
-        'category_id' => $category->id,
+        'post_category_id' => $category->id,
     ]);
 
     Event::assertDispatchedTimes(CmsContentChanged::class, 1);

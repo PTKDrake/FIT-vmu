@@ -12,17 +12,20 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
+import { t } from "@/lib/i18n";
+import {
+  CmsDataTable,
+  DataTableBadge,
+  DataTableActions,
+} from "@/components/cms/cms-data-table";
 import type { PageFormValues } from "@/components/cms/page-form-dialog";
 import type {
   CmsPageTableRow,
   CmsPagesPageProps,
 } from "@/components/cms/types";
-import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
 import {
   ModalContent,
   ModalDescription,
@@ -31,6 +34,7 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import CmsLayout from "@/layouts/cms-layout";
 import {
   clone,
@@ -77,71 +81,86 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
   });
 
   const columns: Array<ColumnDef<CmsPageTableRow, any>> = [
-    columnHelper.accessor("title", {
-      header: "Trang",
-      cell: ({ row }) => (
-        <div className="space-y-1">
-          <p className="font-medium text-fg">{row.original.title}</p>
-          <Text className="line-clamp-2 text-sm text-muted-fg">
-            {row.original.excerpt ?? `Slug: ${row.original.slug}`}
-          </Text>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("urlPath", {
-      header: "URL",
-      cell: ({ getValue, row }) => (
-        <div className="space-y-1">
+      columnHelper.accessor("title", {
+        header: "Trang",
+        cell: ({ row }) => (
+          <div className="space-y-1">
+            <p className="font-medium text-fg">{row.original.title}</p>
+            <Text className="line-clamp-2 text-sm text-muted-fg">
+              {row.original.excerpt ?? `Slug: ${row.original.slug}`}
+            </Text>
+          </div>
+        ),
+      }),
+      columnHelper.accessor("urlPath", {
+        header: "Đường dẫn",
+        enableSorting: false,
+        cell: ({ getValue }) => (
           <Text className="font-medium text-fg">{getValue()}</Text>
-          <Text className="text-sm text-muted-fg">{row.original.slug}</Text>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("seoTitle", {
-      header: "SEO",
-      cell: ({ row }) => (
-        <div className="space-y-1">
-          <Text className="line-clamp-1 font-medium text-fg">
-            {row.original.seoTitle ?? "Chưa cấu hình SEO title"}
+        ),
+      }),
+      columnHelper.accessor("slug", {
+        id: "slug",
+        header: "Slug",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
+        ),
+      }),
+      columnHelper.accessor("seoTitle", {
+        header: "Tiêu đề SEO",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">
+            {getValue() ?? (
+              <span className="text-xs text-muted-fg italic">
+                {t("Chưa cấu hình")}
+              </span>
+            )}
           </Text>
-          <Text className="line-clamp-2 text-sm text-muted-fg">
-            {row.original.seoDescription ?? "Chưa có SEO description"}
+        ),
+      }),
+      columnHelper.accessor("seoDescription", {
+        id: "seo_description",
+        header: "Mô tả SEO",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="text-xs text-muted-fg">
+            {getValue() ?? (
+              <span className="text-xs text-muted-fg italic">
+                {t("Chưa cấu hình")}
+              </span>
+            )}
           </Text>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("status", {
-      header: "Trạng thái",
-      cell: ({ getValue }) => {
-        const value = getValue() as CmsPageTableRow["status"];
+        ),
+      }),
+      columnHelper.accessor("status", {
+        header: "Trạng thái",
+        cell: ({ getValue }) => {
+          const value = getValue() as CmsPageTableRow["status"];
 
-        return (
-          <Badge
-            intent={statusIntentMap[value]}
-            isCircle={false}
-            className="capitalize"
+          return (
+            <DataTableBadge
+              intent={statusIntentMap[value]}
+              className="capitalize"
+            >
+              {statusLabelMap[value]}
+            </DataTableBadge>
+          );
+        },
+      }),
+      columnHelper.accessor("updatedAt", {
+        id: "updated_at",
+        header: "Cập nhật",
+        cell: ({ getValue }) => formatDate(getValue()),
+      }),
+      columnHelper.display({
+        id: "actions",
+        header: "",
+        cell: ({ row }) => (
+          <DataTableActions
+            triggerAriaLabel={`Tác vụ cho trang ${row.original.title}`}
           >
-            {statusLabelMap[value]}
-          </Badge>
-        );
-      },
-    }),
-    columnHelper.accessor("updatedAt", {
-      header: "Cập nhật",
-      cell: ({ getValue }) => formatDate(getValue()),
-    }),
-    columnHelper.display({
-      id: "actions",
-      header: "",
-      cell: ({ row }) => (
-        <Menu>
-          <MenuTrigger
-            aria-label={`Tác vụ cho trang ${row.original.title}`}
-            className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
-          >
-            <EllipsisHorizontalIcon className="size-5" />
-          </MenuTrigger>
-          <MenuContent placement="bottom right">
             <MenuItem href={builder.url({ page: row.original.id })}>
               <Squares2X2Icon />
               Mở trình dựng
@@ -173,10 +192,9 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
               <TrashIcon />
               Xóa trang
             </MenuItem>
-          </MenuContent>
-        </Menu>
-      ),
-    }),
+          </DataTableActions>
+        ),
+      }),
   ];
 
   function deletePage(): void {

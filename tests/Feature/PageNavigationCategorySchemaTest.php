@@ -24,7 +24,7 @@ test('post category page and navigation tables expose the expected domain column
     ]))->toBeTrue()
         ->and(Schema::hasColumns('post_post_category', [
             'post_id',
-            'category_id',
+            'post_category_id',
             'created_at',
             'updated_at',
         ]))->toBeTrue()

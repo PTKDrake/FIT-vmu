@@ -8,12 +8,19 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
-import type { CmsTablePaginationMeta, CmsPaginatedCollection } from "@/components/cms/types";
+import { t } from "@/lib/i18n";
+import {
+  CmsDataTable,
+  DataTableBadge,
+  DataTableActions,
+} from "@/components/cms/cms-data-table";
+import type {
+  CmsTablePaginationMeta,
+  CmsPaginatedCollection,
+} from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Avatar } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
 import {
   Select,
   SelectTrigger,
@@ -81,101 +88,115 @@ export default function CmsUsersPage({
   });
 
   const currentUserFromList = users.data.find((u) => u.id === auth.user?.id);
-  const currentUserRoles = currentUserFromList?.roles ?? (auth.permissions.length >= 35 ? ["super-admin"] : []);
+  const currentUserRoles =
+    currentUserFromList?.roles ??
+    (auth.permissions.length >= 35 ? ["super-admin"] : []);
 
   const columns: Array<ColumnDef<CmsUserTableRow, any>> = [
-    columnHelper.accessor("name", {
-      header: "Người dùng",
-      cell: ({ row }) => {
-        // Gravatar URL fallback
-        const gravatarUrl = `https://www.gravatar.com/avatar/${row.original.id}?d=mp`;
-        return (
-          <div className="flex items-center gap-3">
-            <Avatar
-              src={gravatarUrl}
-              initials={row.original.name.substring(0, 2).toUpperCase()}
-              alt={row.original.name}
-              className="size-9 bg-primary/10 text-primary font-medium"
-            />
-            <div className="space-y-0.5">
-              <p className="font-semibold text-fg text-sm">{row.original.name}</p>
-              <p className="text-xs text-muted-fg font-mono">{row.original.email}</p>
+      columnHelper.accessor("name", {
+        header: "Người dùng",
+        cell: ({ row }) => {
+          // Gravatar URL fallback
+          const gravatarUrl = `https://www.gravatar.com/avatar/${row.original.id}?d=mp`;
+
+          return (
+            <div className="flex items-center gap-3">
+              <Avatar
+                src={gravatarUrl}
+                initials={row.original.name.substring(0, 2).toUpperCase()}
+                alt={row.original.name}
+                className="size-9 bg-primary/10 text-primary font-medium"
+              />
+              <span className="font-semibold text-fg text-sm">
+                {row.original.name}
+              </span>
             </div>
-          </div>
-        );
-      },
-    }),
-    columnHelper.accessor("roles", {
-      header: "Vai trò",
-      cell: ({ getValue }) => {
-        const roles = getValue() as string[];
-        if (roles.length === 0) {
-          return <span className="text-xs text-muted-fg italic">Chưa có vai trò</span>;
-        }
+          );
+        },
+      }),
+      columnHelper.accessor("email", {
+        id: "email",
+        header: "Email",
+        cell: ({ getValue }) => (
+          <span className="font-mono text-xs text-muted-fg">{getValue()}</span>
+        ),
+      }),
+      columnHelper.accessor("roles", {
+        header: "Vai trò",
+        enableSorting: false,
+        cell: ({ getValue }) => {
+          const roles = getValue() as string[];
 
-        return (
-          <div className="flex flex-wrap gap-1 max-w-[200px]">
-            {roles.map((role) => {
-              const isSuper = role === "super-admin";
-              const isAdmin = role === "admin";
-              
-              return (
-                <Badge
-                  key={role}
-                  intent={isSuper ? "danger" : isAdmin ? "primary" : "secondary"}
-                  isCircle={false}
-                  className="text-xs py-0.5 font-medium"
-                >
-                  {role}
-                </Badge>
-              );
-            })}
-          </div>
-        );
-      },
-    }),
-    columnHelper.accessor("status", {
-      header: "Xác thực email",
-      cell: ({ row }) => (
-        <Badge
-          intent={row.original.isVerified ? "success" : "warning"}
-          isCircle={false}
-        >
-          {row.original.isVerified ? "Đã xác thực" : "Chưa xác thực"}
-        </Badge>
-      ),
-    }),
-    columnHelper.accessor("createdAt", {
-      header: "Ngày tạo",
-      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-    }),
-    columnHelper.accessor("updatedAt", {
-      header: "Cập nhật",
-      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-    }),
-    columnHelper.display({
-      id: "actions",
-      header: "",
-      cell: ({ row }) => {
-        const isTargetSuperAdmin = row.original.roles.includes("super-admin");
-        const isCurrentUserSuperAdmin = currentUserRoles.includes("super-admin");
-        
-        // Non-super-admins cannot update super-admins
-        const isActionsDisabled = isTargetSuperAdmin && !isCurrentUserSuperAdmin;
+          if (roles.length === 0) {
+            return (
+              <span className="text-xs text-muted-fg italic">
+                {t("Chưa có vai trò")}
+              </span>
+            );
+          }
 
-        if (!can.manageUsers || isActionsDisabled) {
-          return null;
-        }
+          return (
+            <div className="flex flex-wrap gap-1 max-w-[200px]">
+              {roles.map((role) => {
+                const isSuper = role === "super-admin";
+                const isAdmin = role === "admin";
 
-        return (
-          <Menu>
-            <MenuTrigger
-              aria-label={`Tác vụ cho ${row.original.name}`}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+                return (
+                  <DataTableBadge
+                    key={role}
+                    intent={
+                      isSuper ? "danger" : isAdmin ? "primary" : "secondary"
+                    }
+                  >
+                    {role}
+                  </DataTableBadge>
+                );
+              })}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("status", {
+        id: "email_verified_at",
+        header: "Xác thực email",
+        cell: ({ row }) => (
+          <DataTableBadge
+            intent={row.original.isVerified ? "success" : "warning"}
+          >
+            {row.original.isVerified ? "Đã xác thực" : "Chưa xác thực"}
+          </DataTableBadge>
+        ),
+      }),
+      columnHelper.accessor("createdAt", {
+        id: "created_at",
+        header: "Ngày tạo",
+        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+      }),
+      columnHelper.accessor("updatedAt", {
+        header: "Cập nhật",
+        enableSorting: false,
+        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+      }),
+      columnHelper.display({
+        id: "actions",
+        header: "",
+        cell: ({ row }) => {
+          const isTargetSuperAdmin = row.original.roles.includes("super-admin");
+          const isCurrentUserSuperAdmin =
+            currentUserRoles.includes("super-admin");
+
+          // Non-super-admins cannot update super-admins
+          const isActionsDisabled =
+            isTargetSuperAdmin && !isCurrentUserSuperAdmin;
+
+          if (!can.manageUsers || isActionsDisabled) {
+            return null;
+          }
+
+          return (
+            <DataTableActions
+              triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
             >
-              <EllipsisHorizontalIcon className="size-5" />
-            </MenuTrigger>
-            <MenuContent placement="bottom right">
               <MenuItem
                 onAction={() => {
                   router.visit(usersRoutes.edit.url({ user: row.original.id }));
@@ -184,11 +205,10 @@ export default function CmsUsersPage({
                 <PencilSquareIcon />
                 Chỉnh sửa
               </MenuItem>
-            </MenuContent>
-          </Menu>
-        );
-      },
-    }),
+            </DataTableActions>
+          );
+        },
+      }),
   ];
 
   return (
@@ -210,11 +230,28 @@ export default function CmsUsersPage({
           description="Quản lý tài khoản quản trị nội bộ, phân quyền vai trò Spatie và theo dõi trạng thái xác thực."
           emptyDescription="Không tìm thấy tài khoản người dùng nào khớp với bộ lọc hiện tại."
           emptyTitle="Không tìm thấy người dùng"
-          filterOptions={statusOptions.map((option) => ({ ...option }))}
-          filterValue={tableQueryState.query.status}
+          filterSections={[
+            {
+              id: "status",
+              label: "Trạng thái",
+              options: statusOptions.map((opt) => ({ ...opt })),
+              selectedValue: tableQueryState.query.status,
+              onChange: (value) => tableQueryState.setStatus(value),
+            },
+            {
+              id: "role",
+              label: "Vai trò",
+              options: [
+                { label: "Tất cả vai trò", value: "all" },
+                ...roleOptions.map((opt) => ({ ...opt })),
+              ],
+              selectedValue: tableQueryState.query.role || "all",
+              onChange: (value) =>
+                tableQueryState.setRole(value === "all" ? "" : value),
+            },
+          ]}
           isReloading={tableQueryState.isReloading}
           meta={tableQueryState.meta}
-          onFilterChange={(value) => tableQueryState.setStatus(value)}
           onPageChange={(page) => tableQueryState.setPage(page)}
           onPerPageChange={(value) => tableQueryState.setPerPage(value)}
           onSearchChange={(value) => tableQueryState.setSearch(value)}
@@ -222,41 +259,15 @@ export default function CmsUsersPage({
             tableQueryState.setSorting(column, direction)
           }
           primaryAction={
-            <div className="flex items-center gap-3">
-              <Select
-                aria-label="Lọc theo vai trò"
-                selectedKey={tableQueryState.query.role || "all"}
-                onSelectionChange={(key) => {
-                  void tableQueryState.setRole(key === "all" ? "" : String(key));
-                }}
+            can.createUsers || can.manageUsers ? (
+              <Link
+                href={usersRoutes.create.url()}
+                className="inline-flex min-h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-fg shadow-xs transition hover:bg-primary/90 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-ring active:bg-primary"
               >
-                <SelectTrigger className="w-48 text-start" />
-                <SelectContent>
-                  <SelectItem id="all" textValue="Tất cả vai trò">
-                    <SelectLabel>Tất cả vai trò</SelectLabel>
-                  </SelectItem>
-                  {roleOptions.map((opt) => (
-                    <SelectItem
-                      key={opt.value}
-                      id={opt.value}
-                      textValue={opt.label}
-                    >
-                      <SelectLabel>{opt.label}</SelectLabel>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {can.createUsers || can.manageUsers ? (
-                <Link
-                  href={usersRoutes.create.url()}
-                  className="inline-flex min-h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-fg shadow-xs transition hover:bg-primary/90 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-ring active:bg-primary"
-                >
-                  <PlusIcon className="size-4 mr-1.5 shrink-0" />
-                  Thêm người dùng
-                </Link>
-              ) : null}
-            </div>
+                <PlusIcon className="size-4 mr-1.5 shrink-0" />
+                Thêm người dùng
+              </Link>
+            ) : null
           }
           searchPlaceholder="Tìm theo tên, email"
           searchValue={tableQueryState.query.search}

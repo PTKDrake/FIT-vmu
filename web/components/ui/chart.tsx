@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  type ReactElement,
-  use,
-  useId,
-  useState,
-} from "react";
+import { createContext, type ReactElement, use, useId, useState } from "react";
 import { ToggleButton } from "react-aria-components/ToggleButton";
 import {
   ToggleButtonGroup,

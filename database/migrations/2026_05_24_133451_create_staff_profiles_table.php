@@ -25,7 +25,6 @@ return new class extends Migration
             $table->longText('bio')->nullable();
             $table->string('bio_format', 50)->default('blocknote_json');
             $table->boolean('is_public')->default(false)->index();
-            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

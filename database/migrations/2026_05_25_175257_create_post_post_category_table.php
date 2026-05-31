@@ -12,13 +12,13 @@ return new class extends Migration
             $table->foreignId('post_id')
                 ->constrained('posts')
                 ->cascadeOnDelete();
-            $table->foreignId('category_id')
+            $table->foreignId('post_category_id')
                 ->constrained('post_categories')
                 ->cascadeOnDelete();
             $table->timestamps();
 
-            $table->primary(['post_id', 'category_id']);
-            $table->index('category_id');
+            $table->primary(['post_id', 'post_category_id']);
+            $table->index('post_category_id');
         });
     }
 

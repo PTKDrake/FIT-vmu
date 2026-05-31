@@ -10,7 +10,7 @@ test('media seeder copies 30 source files into the public disk without creating 
 
     $uploader = User::factory()->create([
         'email' => 'admin@vimaru.edu.vn',
-        'name' => 'Admin Seeder',
+        'name' => 'Trình tạo quản trị',
     ]);
 
     $this->seed(MediaSeeder::class);

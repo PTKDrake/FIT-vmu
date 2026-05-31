@@ -1,4 +1,6 @@
 import { Link } from "@inertiajs/react";
+import { t } from "@/lib/i18n";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxGroup } from "@/components/ui/checkbox";
 import {
@@ -13,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
-import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 
 export interface UserFormValues {
   id?: number;
@@ -36,7 +37,10 @@ interface UserFormProps {
   processing: boolean;
   roleOptions: Array<{ value: string; label: string }>;
   onSubmit: () => void;
-  onUpdate: <TKey extends keyof UserFormValues>(key: TKey, value: UserFormValues[TKey]) => void;
+  onUpdate: <TKey extends keyof UserFormValues>(
+    key: TKey,
+    value: UserFormValues[TKey],
+  ) => void;
   currentUserId?: number;
   currentUserRoles?: string[];
   canManageRoles: boolean;
@@ -64,17 +68,22 @@ export function UserForm({
 
   // Determine if editing the user details should be completely disabled
   // e.g. non-super-admin trying to edit a super-admin account
-  const isEditDisabled = mode === "edit" && isTargetSuperAdmin && !isCurrentUserSuperAdmin;
+  const isEditDisabled =
+    mode === "edit" && isTargetSuperAdmin && !isCurrentUserSuperAdmin;
 
   function handleSubmit(event: React.FormEvent): void {
     event.preventDefault();
+
     if (!isEditDisabled) {
       onSubmit();
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto w-full max-w-4xl space-y-6"
+    >
       <div className="flex flex-col gap-1 border-b border-border pb-5">
         <h1 className="text-2xl font-bold tracking-tight text-fg">{title}</h1>
         {description && <p className="text-sm text-muted-fg">{description}</p>}
@@ -83,7 +92,8 @@ export function UserForm({
       {isEditDisabled ? (
         <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/20 px-4 py-3">
           <Text className="text-danger font-medium">
-            Bạn không có quyền quản lý hoặc sửa đổi tài khoản Quản trị cấp cao (super-admin).
+            Bạn không có quyền quản lý hoặc sửa đổi tài khoản Quản trị cấp cao
+            (super-admin).
           </Text>
         </div>
       ) : null}
@@ -93,11 +103,14 @@ export function UserForm({
         <div className="space-y-2">
           <h2 className="text-lg font-semibold text-fg">Thông tin tài khoản</h2>
           <p className="text-sm text-muted-fg">
-            Nhập tên hiển thị, địa chỉ email của người dùng. Địa chỉ email phải là duy nhất trên hệ thống.
+            {t(
+              "Nhập tên hiển thị, địa chỉ email của người dùng. Địa chỉ email phải là duy nhất trên hệ thống.",
+            )}
           </p>
           {mode === "edit" && (
             <p className="text-xs text-muted-fg">
-              Để trống phần mật khẩu và xác nhận mật khẩu nếu bạn không có ý định thay đổi chúng.
+              Để trống phần mật khẩu và xác nhận mật khẩu nếu bạn không có ý
+              định thay đổi chúng.
             </p>
           )}
         </div>
@@ -168,7 +181,8 @@ export function UserForm({
                   <SwitchLabel>Xác thực Email tài khoản</SwitchLabel>
                 </Switch>
                 <Description className="mt-1 ml-11 text-xs text-muted-fg">
-                  Kích hoạt để người dùng có thể đăng nhập ngay mà không cần qua bước xác minh email.
+                  Kích hoạt để người dùng có thể đăng nhập ngay mà không cần qua
+                  bước xác minh email.
                 </Description>
               </div>
             </FieldGroup>
@@ -179,9 +193,12 @@ export function UserForm({
       {/* Spatie Roles Section */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3 pt-6 border-t border-border">
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold text-fg">Vai trò thành viên</h2>
+          <h2 className="text-lg font-semibold text-fg">
+            {t("Vai trò thành viên")}
+          </h2>
           <p className="text-sm text-muted-fg">
-            Gán các vai trò cụ thể để phân chia quyền hạn quản lý các phân hệ CMS khác nhau cho người dùng này.
+            Gán các vai trò cụ thể để phân chia quyền hạn quản lý các phân hệ
+            CMS khác nhau cho người dùng này.
           </p>
         </div>
 
@@ -189,7 +206,8 @@ export function UserForm({
           {!canManageRoles ? (
             <div className="rounded-xl border border-muted bg-muted/30 px-3 py-2">
               <Text className="text-muted-fg text-xs">
-                Bạn không có quyền quản lý vai trò. Các vai trò hiện tại của tài khoản:{" "}
+                Bạn không có quyền quản lý vai trò. Các vai trò hiện tại của tài
+                khoản:{" "}
                 <span className="font-semibold text-fg">
                   {data.roles.length > 0 ? data.roles.join(", ") : "Không có"}
                 </span>
@@ -199,7 +217,8 @@ export function UserForm({
             <div className="space-y-3">
               <div className="rounded-xl border border-warning-subtle bg-warning-subtle/20 px-3 py-2">
                 <Text className="text-warning text-xs font-medium">
-                  Bạn không thể tự chỉnh sửa vai trò của chính mình để tránh vô tình tước quyền admin.
+                  Bạn không thể tự chỉnh sửa vai trò của chính mình để tránh vô
+                  tình tước quyền admin.
                 </Text>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -223,7 +242,8 @@ export function UserForm({
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {roleOptions.map((option) => {
                   const isSuperAdminRole = option.value === "super-admin";
-                  const isDisabled = isSuperAdminRole && !isCurrentUserSuperAdmin;
+                  const isDisabled =
+                    isSuperAdminRole && !isCurrentUserSuperAdmin;
 
                   return (
                     <Checkbox
@@ -232,10 +252,12 @@ export function UserForm({
                       isDisabled={isDisabled || isEditDisabled}
                     >
                       <span className="flex flex-col">
-                        <span className="font-medium text-sm text-fg">{option.label}</span>
+                        <span className="font-medium text-sm text-fg">
+                          {option.label}
+                        </span>
                         {isSuperAdminRole && (
                           <span className="text-xs text-muted-fg mt-0.5">
-                            Quyền tối cao, bỏ qua mọi kiểm tra Gate
+                            {t("Quyền tối cao, bỏ qua mọi kiểm tra Gate")}
                           </span>
                         )}
                       </span>

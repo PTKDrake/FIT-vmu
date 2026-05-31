@@ -1,12 +1,7 @@
 "use client";
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import {
-  createContext,
-  use,
-  useRef,
-  useState,
-} from "react";
+import { createContext, use, useRef, useState } from "react";
 import {
   type ButtonProps,
   Button as Trigger,

@@ -12,15 +12,18 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { CategoryFormDialog } from "@/components/cms/category-form-dialog";
 import type { CategoryFormValues } from "@/components/cms/category-form-dialog";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
+import {
+  CmsDataTable,
+  DataTableBadge,
+  DataTableActions,
+} from "@/components/cms/cms-data-table";
 import type {
   CmsPostCategoryRow,
   CmsPostCategoriesPageProps,
 } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -86,72 +89,76 @@ export default function CmsPostCategoriesPage({
   });
 
   const columns: Array<ColumnDef<CmsPostCategoryRow, any>> = [
-    categoryColumnHelper.accessor("name", {
-      header: "Danh mục",
-      cell: ({ row }) => (
-        <div className="space-y-1">
-          <Text className="font-medium text-fg">{row.original.name}</Text>
-          <Text className="text-sm text-muted-fg">{row.original.slug}</Text>
-        </div>
-      ),
-    }),
-    categoryColumnHelper.accessor("parentName", {
-      header: "Danh mục cha",
-      cell: ({ getValue }) => (
-        <Text className="text-sm text-muted-fg">
-          {getValue() ? (
-            <Badge intent="info" isCircle={false}>
-              {getValue()}
-            </Badge>
-          ) : (
-            <span className="text-muted-fg/60 italic">Cấp cao nhất</span>
-          )}
-        </Text>
-      ),
-    }),
-    categoryColumnHelper.accessor("sortOrder", {
-      header: "Thứ tự",
-      cell: ({ getValue }) => (
-        <Text className="font-medium text-fg">{getValue()}</Text>
-      ),
-    }),
-    categoryColumnHelper.accessor("postCount", {
-      header: "Số bài viết",
-      cell: ({ getValue }) => (
-        <Text className="font-medium text-fg">{getValue()} bài viết</Text>
-      ),
-    }),
-    categoryColumnHelper.accessor("childrenCount", {
-      header: "Danh mục con",
-      cell: ({ getValue }) => (
-        <Text className="font-medium text-fg">{getValue()} con</Text>
-      ),
-    }),
-    categoryColumnHelper.accessor("isActive", {
-      header: "Trạng thái",
-      cell: ({ getValue }) => (
-        <Badge intent={getValue() ? "success" : "secondary"} isCircle={false}>
-          {getValue() ? "Đang hoạt động" : "Đang ẩn"}
-        </Badge>
-      ),
-    }),
-    categoryColumnHelper.accessor("updatedAt", {
-      header: "Cập nhật",
-      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-    }),
-    categoryColumnHelper.display({
-      id: "actions",
-      header: "",
-      cell: ({ row }) =>
-        can.manageCategories ? (
-          <Menu>
-            <MenuTrigger
-              aria-label={`Tác vụ cho ${row.original.name}`}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+      categoryColumnHelper.accessor("name", {
+        header: "Danh mục",
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()}</Text>
+        ),
+      }),
+      categoryColumnHelper.accessor("slug", {
+        id: "slug",
+        header: "Slug",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
+        ),
+      }),
+      categoryColumnHelper.accessor("parentName", {
+        header: "Danh mục cha",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="text-sm text-muted-fg">
+            {getValue() ? (
+              <DataTableBadge intent="info">{getValue()}</DataTableBadge>
+            ) : (
+              <span className="text-muted-fg/60 italic">Cấp cao nhất</span>
+            )}
+          </Text>
+        ),
+      }),
+      categoryColumnHelper.accessor("sortOrder", {
+        id: "sort_order",
+        header: "Thứ tự",
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()}</Text>
+        ),
+      }),
+      categoryColumnHelper.accessor("postCount", {
+        header: "Số bài viết",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()} bài viết</Text>
+        ),
+      }),
+      categoryColumnHelper.accessor("childrenCount", {
+        header: "Danh mục con",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()} con</Text>
+        ),
+      }),
+      categoryColumnHelper.accessor("isActive", {
+        header: "Trạng thái",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <DataTableBadge intent={getValue() ? "success" : "secondary"}>
+            {getValue() ? "Đang hoạt động" : "Đang ẩn"}
+          </DataTableBadge>
+        ),
+      }),
+      categoryColumnHelper.accessor("updatedAt", {
+        header: "Cập nhật",
+        enableSorting: false,
+        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+      }),
+      categoryColumnHelper.display({
+        id: "actions",
+        header: "",
+        cell: ({ row }) =>
+          can.manageCategories ? (
+            <DataTableActions
+              triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
             >
-              <EllipsisHorizontalIcon className="size-5" />
-            </MenuTrigger>
-            <MenuContent placement="bottom right">
               <MenuItem
                 onAction={() => {
                   setDialogMode("edit");
@@ -177,10 +184,9 @@ export default function CmsPostCategoriesPage({
                 <TrashIcon />
                 Xóa danh mục
               </MenuItem>
-            </MenuContent>
-          </Menu>
-        ) : null,
-    }),
+            </DataTableActions>
+          ) : null,
+      }),
   ];
 
   function deleteCategory(): void {

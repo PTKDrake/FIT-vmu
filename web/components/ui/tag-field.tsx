@@ -53,7 +53,9 @@ export function TagField({
     (onChange ?? setInternalSelection)(next as Selection);
 
   const list =
-    selection === "all" ? [] : Array.from(selection).map((value) => String(value));
+    selection === "all"
+      ? []
+      : Array.from(selection).map((value) => String(value));
 
   const isInvalid = Boolean(isRequired && list.length === 0 && touched);
   const errorText = requiredMessage ?? "At least one item is required";

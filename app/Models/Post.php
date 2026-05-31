@@ -64,7 +64,7 @@ class Post extends Model
     /** @return BelongsToMany<PostCategory, $this> */
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(PostCategory::class, 'post_post_category', 'post_id', 'category_id')
+        return $this->belongsToMany(PostCategory::class)
             ->withTimestamps();
     }
 

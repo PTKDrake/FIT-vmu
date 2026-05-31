@@ -10,7 +10,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CmsDataTable } from "@/components/cms/cms-data-table";
+import {
+  CmsDataTable,
+  DataTableBadge,
+  DataTableActions,
+} from "@/components/cms/cms-data-table";
 import { PositionFormDialog } from "@/components/cms/position-form-dialog";
 import type { PositionFormValues } from "@/components/cms/position-form-dialog";
 import type {
@@ -18,9 +22,8 @@ import type {
   CmsPositionsPageProps,
 } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -30,6 +33,7 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { t } from "@/lib/i18n";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import positionsRoutes from "@/routes/cms/positions";
@@ -81,52 +85,56 @@ export default function CmsPositionsPage({
   });
 
   const columns: Array<ColumnDef<CmsPositionRow, any>> = [
-    positionColumnHelper.accessor("name", {
-      header: "Chức vụ",
-      cell: ({ row }) => (
-        <div className="space-y-1">
-          <Text className="font-medium text-fg">{row.original.name}</Text>
-          <Text className="text-sm text-muted-fg">{row.original.slug}</Text>
-        </div>
-      ),
-    }),
-    positionColumnHelper.accessor("sortOrder", {
-      header: "Thứ tự",
-      cell: ({ getValue }) => (
-        <Text className="font-medium text-fg">{getValue()}</Text>
-      ),
-    }),
-    positionColumnHelper.accessor("appointmentCount", {
-      header: "Đang dùng",
-      cell: ({ getValue }) => (
-        <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
-      ),
-    }),
-    positionColumnHelper.accessor("isActive", {
-      header: "Trạng thái",
-      cell: ({ getValue }) => (
-        <Badge intent={getValue() ? "success" : "secondary"} isCircle={false}>
-          {getValue() ? "Đang hoạt động" : "Đang ẩn"}
-        </Badge>
-      ),
-    }),
-    positionColumnHelper.accessor("updatedAt", {
-      header: "Cập nhật",
-      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-    }),
-    positionColumnHelper.display({
-      id: "actions",
-      header: "",
-      cell: ({ row }) =>
-        can.managePositions ? (
-          <Menu>
-            <MenuTrigger
-              aria-label={`Tác vụ cho ${row.original.name}`}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+      positionColumnHelper.accessor("name", {
+        header: "Chức vụ",
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()}</Text>
+        ),
+      }),
+      positionColumnHelper.accessor("slug", {
+        id: "slug",
+        header: "Slug",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
+        ),
+      }),
+      positionColumnHelper.accessor("sortOrder", {
+        id: "sort_order",
+        header: "Thứ tự",
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()}</Text>
+        ),
+      }),
+      positionColumnHelper.accessor("appointmentCount", {
+        header: "Đang dùng",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
+        ),
+      }),
+      positionColumnHelper.accessor("isActive", {
+        header: "Trạng thái",
+        enableSorting: false,
+        cell: ({ getValue }) => (
+          <DataTableBadge intent={getValue() ? "success" : "secondary"}>
+            {getValue() ? "Đang hoạt động" : "Đang ẩn"}
+          </DataTableBadge>
+        ),
+      }),
+      positionColumnHelper.accessor("updatedAt", {
+        header: "Cập nhật",
+        enableSorting: false,
+        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+      }),
+      positionColumnHelper.display({
+        id: "actions",
+        header: "",
+        cell: ({ row }) =>
+          can.managePositions ? (
+            <DataTableActions
+              triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
             >
-              <EllipsisHorizontalIcon className="size-5" />
-            </MenuTrigger>
-            <MenuContent placement="bottom right">
               <MenuItem
                 onAction={() => {
                   setDialogMode("edit");
@@ -150,10 +158,9 @@ export default function CmsPositionsPage({
                 <TrashIcon />
                 Xóa chức vụ
               </MenuItem>
-            </MenuContent>
-          </Menu>
-        ) : null,
-    }),
+            </DataTableActions>
+          ) : null,
+      }),
   ];
 
   function deletePosition(): void {
@@ -253,8 +260,9 @@ export default function CmsPositionsPage({
           <ModalBody>
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
-                Việc xóa danh mục chức vụ có thể ảnh hưởng đến dữ liệu staff
-                appointments đã tồn tại.
+                {t(
+                  "Việc xóa danh mục chức vụ có thể ảnh hưởng đến dữ liệu staff appointments đã tồn tại.",
+                )}
               </Text>
             </div>
           </ModalBody>

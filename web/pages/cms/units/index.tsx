@@ -17,12 +17,16 @@ import type { DropIndicatorProps } from "react-aria-components/useDragAndDrop";
 import { useAsyncList } from "react-stately";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
+import {
+  DataTableBadge,
+  DataTableActions,
+  DataTableFilterButton,
+} from "@/components/cms/cms-data-table";
 import { fetchInertiaCollectionPage } from "@/components/cms/inertia-collection-loader";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import type { CmsUnitRow, CmsUnitsPageProps } from "@/components/cms/types";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
+import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
 import {
   ModalBody,
   ModalContent,
@@ -34,13 +38,6 @@ import {
 
 import { SearchField, SearchInput } from "@/components/ui/search-field";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -49,6 +46,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
+import { t } from "@/lib/i18n";
 import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
@@ -266,43 +264,37 @@ export default function CmsUnitsIndexPage({
             </div>
           </div>
 
-          <div className="grid gap-3 border-b border-border px-5 py-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]">
-            <SearchField
-              key={query.search}
-              aria-label="Tìm đơn vị"
-              defaultValue={query.search}
-              onClear={() => {
-                void syncQuery({ search: "" });
-              }}
-              onSubmit={(value) => {
-                void syncQuery({ search: value });
-              }}
-            >
-              <SearchInput placeholder="Tìm theo tên, slug hoặc mô tả" />
-            </SearchField>
+          <div className="flex flex-col gap-3 px-5 py-3 border-b border-border bg-muted/5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              <DataTableFilterButton
+                options={[
+                  { label: "Tất cả trạng thái", value: "all" },
+                  { label: "Đang hoạt động", value: "active" },
+                  { label: "Đang ẩn", value: "inactive" },
+                ]}
+                selectedValue={query.status}
+                onChange={(value) => {
+                  void syncQuery({ status: value as typeof query.status });
+                }}
+              />
+            </div>
 
-            <Select
-              aria-label="Lọc theo trạng thái"
-              selectedKey={query.status}
-              onSelectionChange={(key) => {
-                if (key !== null) {
-                  void syncQuery({ status: key as typeof query.status });
-                }
-              }}
-            >
-              <SelectTrigger />
-              <SelectContent>
-                <SelectItem id="all" textValue="Tất cả trạng thái">
-                  <SelectLabel>Tất cả trạng thái</SelectLabel>
-                </SelectItem>
-                <SelectItem id="active" textValue="Đang hoạt động">
-                  <SelectLabel>Đang hoạt động</SelectLabel>
-                </SelectItem>
-                <SelectItem id="inactive" textValue="Đang ẩn">
-                  <SelectLabel>Đang ẩn</SelectLabel>
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <SearchField
+                key={query.search}
+                aria-label="Tìm đơn vị"
+                defaultValue={query.search}
+                onClear={() => {
+                  void syncQuery({ search: "" });
+                }}
+                onSubmit={(value) => {
+                  void syncQuery({ search: value });
+                }}
+                className="w-full sm:w-64"
+              >
+                <SearchInput placeholder="Tìm theo tên, slug hoặc mô tả" />
+              </SearchField>
+            </div>
           </div>
 
           <div className="overflow-hidden border-t border-border">
@@ -313,14 +305,14 @@ export default function CmsUnitsIndexPage({
             >
               <TableHeader>
                 <TableColumn id="name" isRowHeader>
-                  Đơn vị
+                  {t("Đơn vị")}
                 </TableColumn>
-                <TableColumn id="slug">Slug</TableColumn>
-                <TableColumn id="status">Trạng thái</TableColumn>
-                <TableColumn id="sortOrder">Thứ tự</TableColumn>
-                <TableColumn id="updatedAt">Cập nhật</TableColumn>
+                <TableColumn id="slug">{t("Slug")}</TableColumn>
+                <TableColumn id="status">{t("Trạng thái")}</TableColumn>
+                <TableColumn id="sortOrder">{t("Thứ tự")}</TableColumn>
+                <TableColumn id="updatedAt">{t("Cập nhật")}</TableColumn>
                 <TableColumn id="actions" className="text-end">
-                  Thao tác
+                  {t("Thao tác")}
                 </TableColumn>
               </TableHeader>
               <TableBody
@@ -328,11 +320,12 @@ export default function CmsUnitsIndexPage({
                 renderEmptyState={() => (
                   <div className="px-6 py-14 text-center">
                     <Text className="font-medium text-fg">
-                      Không có đơn vị phù hợp với bộ lọc hiện tại.
+                      {t("Không có đơn vị phù hợp với bộ lọc hiện tại.")}
                     </Text>
                     <Text className="mt-2 text-sm text-muted-fg">
-                      Hãy đổi bộ lọc hoặc tạo một đơn vị mới để bắt đầu quản lý
-                      danh sách.
+                      {t(
+                        "Hãy đổi bộ lọc hoặc tạo một đơn vị mới để bắt đầu quản lý danh sách.",
+                      )}
                     </Text>
                     {can.manageUnits ? (
                       <div className="mt-5">
@@ -341,7 +334,7 @@ export default function CmsUnitsIndexPage({
                           onPress={() => router.visit(create.url())}
                         >
                           <PlusIcon />
-                          Tạo đơn vị
+                          {t("Tạo đơn vị")}
                         </Button>
                       </div>
                     ) : null}
@@ -358,24 +351,22 @@ export default function CmsUnitsIndexPage({
                         >
                           {unit.name}
                         </Link>
-                        <Badge
+                        <DataTableBadge
                           intent={unit.isActive ? "success" : "secondary"}
-                          isCircle={false}
                         >
                           {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
-                        </Badge>
+                        </DataTableBadge>
                       </div>
                     </TableCell>
                     <TableCell>
                       <Text className="text-sm text-fg">{unit.slug}</Text>
                     </TableCell>
                     <TableCell>
-                      <Badge
+                      <DataTableBadge
                         intent={unit.isActive ? "success" : "secondary"}
-                        isCircle={false}
                       >
                         {unit.isActive ? "Đang hoạt động" : "Đang ẩn"}
-                      </Badge>
+                      </DataTableBadge>
                     </TableCell>
                     <TableCell>
                       <Text className="font-medium text-fg">
@@ -385,31 +376,25 @@ export default function CmsUnitsIndexPage({
                     <TableCell>{formatDateTime(unit.updatedAt)}</TableCell>
                     <TableCell className="text-end">
                       {can.manageUnits ? (
-                        <Menu>
-                          <MenuTrigger
-                            aria-label={`Tác vụ cho ${unit.name}`}
-                            className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg text-muted-fg transition hover:text-fg"
+                        <DataTableActions
+                          triggerAriaLabel={`Tác vụ cho ${unit.name}`}
+                        >
+                          <MenuItem href={show.url({ unit: unit.id })}>
+                            <EyeIcon />
+                            Xem chi tiết
+                          </MenuItem>
+                          <MenuItem href={edit.url({ unit: unit.id })}>
+                            <PencilSquareIcon />
+                            Chỉnh sửa
+                          </MenuItem>
+                          <MenuItem
+                            intent="danger"
+                            onAction={() => setDeleteTarget(unit)}
                           >
-                            <EllipsisHorizontalIcon className="size-5" />
-                          </MenuTrigger>
-                          <MenuContent placement="bottom right">
-                            <MenuItem href={show.url({ unit: unit.id })}>
-                              <EyeIcon />
-                              Xem chi tiết
-                            </MenuItem>
-                            <MenuItem href={edit.url({ unit: unit.id })}>
-                              <PencilSquareIcon />
-                              Chỉnh sửa
-                            </MenuItem>
-                            <MenuItem
-                              intent="danger"
-                              onAction={() => setDeleteTarget(unit)}
-                            >
-                              <TrashIcon />
-                              Xóa đơn vị
-                            </MenuItem>
-                          </MenuContent>
-                        </Menu>
+                            <TrashIcon />
+                            Xóa đơn vị
+                          </MenuItem>
+                        </DataTableActions>
                       ) : null}
                     </TableCell>
                   </TableRow>
@@ -424,7 +409,7 @@ export default function CmsUnitsIndexPage({
         <StickyActionBar>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Text className="text-sm font-medium text-fg">
-              Thay đổi thứ tự hiển thị đơn vị chưa được lưu.
+              {t("Thay đổi thứ tự hiển thị đơn vị chưa được lưu.")}
             </Text>
 
             <div className="flex items-center justify-end gap-2 w-full sm:w-auto shrink-0">
@@ -549,7 +534,7 @@ function formatDateTime(value: string): string {
 
 function UnitTableDropIndicator({
   isHidden = false,
-  ...props
+  target,
 }: DropIndicatorProps & {
   isHidden?: boolean;
 }) {
@@ -563,7 +548,7 @@ function UnitTableDropIndicator({
           isDropTarget && "before:bg-primary",
         )
       }
-      {...props}
+      target={target}
     />
   );
 }

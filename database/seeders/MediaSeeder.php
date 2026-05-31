@@ -79,7 +79,7 @@ class MediaSeeder extends Seeder
         $user = User::query()->updateOrCreate(
             ['email' => 'media-seeder@vimaru.edu.vn'],
             [
-                'name' => 'Media Seeder',
+                'name' => 'Trình tạo media',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
             ],

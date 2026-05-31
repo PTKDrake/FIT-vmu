@@ -14,7 +14,7 @@ test('super admin user seeder creates and updates the seeded account when passwo
     $user = User::query()->where('email', 'super-admin@vimaru.edu.vn')->first();
 
     expect($user)->not->toBeNull()
-        ->and($user?->name)->toBe('Super Admin')
+        ->and($user?->name)->toBe('Quản trị viên cấp cao')
         ->and($user?->hasRole('super-admin'))->toBeTrue()
         ->and($user?->email_verified_at)->not->toBeNull()
         ->and(Hash::check('SeededPassword#2026', $user?->password ?? ''))->toBeTrue();
@@ -46,7 +46,7 @@ test('database seeder creates a reusable admin account without duplicate emails'
     $admin = User::query()->where('email', 'admin@vimaru.edu.vn')->first();
 
     expect($admin)->not->toBeNull()
-        ->and($admin?->name)->toBe('Admin')
+        ->and($admin?->name)->toBe('Quản trị viên')
         ->and($admin?->hasRole('admin'))->toBeTrue()
         ->and(User::query()->where('email', 'admin@vimaru.edu.vn')->count())->toBe(1)
         ->and(User::query()->where('email', 'super-admin@vimaru.edu.vn')->count())->toBe(1);
