@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Page;
 
+use App\Events\CmsContentChanged;
 use App\Models\Page;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,8 @@ class CreatePageAction
                 'author_id' => $author->getKey(),
                 'status' => $attributes['status'],
             ]);
+
+            event(CmsContentChanged::forPage($page, 'created', 'Đã tạo trang mới.'));
 
             return $page->fresh(['author']) ?? $page;
         });

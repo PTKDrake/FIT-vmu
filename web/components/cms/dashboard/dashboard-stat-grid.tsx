@@ -4,8 +4,6 @@ import {
   PhotoIcon,
 } from "@heroicons/react/24/outline";
 import type { DashboardOverview } from "@/components/cms/types";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 
 export function DashboardStatGrid({
@@ -38,25 +36,22 @@ export function DashboardStatGrid({
         const Icon = card.icon;
 
         return (
-          <Card
+          <div
             key={card.label}
-            className="overflow-hidden rounded-xl border-border bg-overlay shadow-none"
+            className="rounded-2xl border border-border bg-overlay"
           >
-            <CardHeader className="gap-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="rounded-xl bg-muted p-3 text-fg">
+            <div className="px-5 py-4">
+              <div className="space-y-3">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-muted text-fg">
                   <Icon className="size-5" />
                 </div>
-                <Badge intent="outline" isCircle={false}>
-                  Tổng quan
-                </Badge>
+                <div className="space-y-1">
+                  <p className="font-medium text-fg">{card.label}</p>
+                  <Text>{card.value.toLocaleString("vi-VN")} mục</Text>
+                </div>
               </div>
-              <div className="space-y-1">
-                <CardTitle>{card.label}</CardTitle>
-                <Text>{card.value.toLocaleString("vi-VN")} mục</Text>
-              </div>
-            </CardHeader>
-          </Card>
+            </div>
+          </div>
         );
       })}
     </div>

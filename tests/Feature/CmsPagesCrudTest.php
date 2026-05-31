@@ -1,12 +1,15 @@
 <?php
 
+use App\Events\CmsContentChanged;
 use App\Models\Page;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
+use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('cms pages create edit clone and delete flows persist page data', function () {
     $this->seed(RoleAndPermissionSeeder::class);
+    Event::fake([CmsContentChanged::class]);
 
     $editor = User::factory()->create();
     $editor->assignRole('editor');
@@ -15,7 +18,6 @@ test('cms pages create edit clone and delete flows persist page data', function 
 
     $storeResponse = $this->post('/cms/pages', [
         'title' => 'Trang gioi thieu',
-        'slug' => 'trang-gioi-thieu',
         'excerpt' => 'Tom tat ngan',
         'seo_title' => 'SEO gioi thieu',
         'seo_description' => 'Mo ta SEO gioi thieu',
@@ -27,13 +29,22 @@ test('cms pages create edit clone and delete flows persist page data', function 
     $page = Page::query()->where('slug', 'trang-gioi-thieu')->firstOrFail();
 
     $storeResponse
-        ->assertRedirect(sprintf('/cms/pages/%d/edit', $page->getKey()));
+        ->assertRedirect(sprintf('/cms/pages/%d/builder', $page->getKey()));
 
     expect($page->title)->toBe('Trang gioi thieu')
+        ->and($page->slug)->toBe('trang-gioi-thieu')
         ->and($page->seo_title)->toBe('SEO gioi thieu')
         ->and($page->seo_description)->toBe('Mo ta SEO gioi thieu')
         ->and($page->author_id)->toBe($editor->getKey());
 
+    // Test GET create page
+    $this->get('/cms/pages/create')
+        ->assertOk()
+        ->assertInertia(fn (Assert $inertiaPage) => $inertiaPage
+            ->component('cms/pages/create')
+        );
+
+    // Test GET edit page (metadata editor)
     $this->get(sprintf('/cms/pages/%d/edit', $page->getKey()))
         ->assertOk()
         ->assertInertia(fn (Assert $inertiaPage) => $inertiaPage
@@ -41,6 +52,25 @@ test('cms pages create edit clone and delete flows persist page data', function 
             ->where('page.id', $page->getKey())
             ->where('page.slug', 'trang-gioi-thieu')
             ->where('page.contentFormat', 'puck_json')
+        );
+
+    // Test GET builder page (Puck builder editor)
+    $this->get(sprintf('/cms/pages/%d/builder', $page->getKey()))
+        ->assertOk()
+        ->assertInertia(fn (Assert $inertiaPage) => $inertiaPage
+            ->component('cms/pages/builder')
+            ->where('page.id', $page->getKey())
+            ->where('page.slug', 'trang-gioi-thieu')
+            ->where('page.contentFormat', 'puck_json')
+        );
+
+    // Test GET show page (fullscreen preview)
+    $this->get(sprintf('/cms/pages/%d/show', $page->getKey()))
+        ->assertOk()
+        ->assertInertia(fn (Assert $inertiaPage) => $inertiaPage
+            ->component('cms/pages/show')
+            ->where('page.id', $page->getKey())
+            ->where('page.slug', 'trang-gioi-thieu')
         );
 
     $this->patch(sprintf('/cms/pages/%d/metadata', $page->getKey()), [
@@ -84,4 +114,11 @@ test('cms pages create edit clone and delete flows persist page data', function 
     $this->assertDatabaseMissing('pages', [
         'id' => $page->getKey(),
     ]);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 5);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'pages'
+            && $event->action === 'content-updated'
+            && $event->title === 'Trang gioi thieu moi';
+    });
 });

@@ -1,4 +1,4 @@
-import { tv } from "tailwind-variants"
+import { tv } from "tailwind-variants";
 
 export const labelStyles = tv({
   base: [
@@ -6,15 +6,15 @@ export const labelStyles = tv({
     "in-data-required:not-data-[slot='control-label']:after:text-danger-subtle-fg in-data-required:not-data-[slot='control-label']:after:content-['*']",
     "in-disabled:pointer-events-none in-disabled:opacity-50 group-disabled:opacity-50",
   ],
-})
+});
 
 export const descriptionStyles = tv({
   base: "block text-muted-fg text-sm/6 in-disabled:opacity-50 group-disabled:opacity-50",
-})
+});
 
 export const fieldErrorStyles = tv({
   base: "block text-danger-subtle-fg text-sm/6 in-disabled:opacity-50 group-disabled:opacity-50 forced-colors:text-[Mark]",
-})
+});
 
 export const fieldStyles = tv({
   base: [
@@ -28,4 +28,4 @@ export const fieldStyles = tv({
     "*:data-[slot=label]:font-medium",
     "in-disabled:opacity-50 disabled:opacity-50",
   ],
-})
+});

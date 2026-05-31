@@ -1,8 +1,8 @@
 import {
   ColorSwatch as ColorSwatchPrimitive,
   type ColorSwatchProps,
-} from "react-aria-components/ColorSwatch"
-import { cx } from "@/lib/primitive"
+} from "react-aria-components/ColorSwatch";
+import { cx } from "@/lib/primitive";
 
 export function ColorSwatch({ className, ...props }: ColorSwatchProps) {
   return (
@@ -14,5 +14,5 @@ export function ColorSwatch({ className, ...props }: ColorSwatchProps) {
       )}
       {...props}
     />
-  )
+  );
 }

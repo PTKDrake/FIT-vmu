@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 const PostsIndexController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ PostsIndexController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 PostsIndexController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ PostsIndexController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 PostsIndexController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ PostsIndexController.get = (options?: RouteQueryOptions): RouteDefinition<'get'>
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 PostsIndexController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ PostsIndexController.head = (options?: RouteQueryOptions): RouteDefinition<'head
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 const PostsIndexControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const PostsIndexControllerForm = (options?: RouteQueryOptions): RouteFormDefinit
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 PostsIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ PostsIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinitio
 
 /**
 * @see \App\Http\Controllers\Cms\PostsIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostsIndexController.php:27
+* @see app/Http/Controllers/Cms/PostsIndexController.php:28
 * @route '/cms/posts'
 */
 PostsIndexControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

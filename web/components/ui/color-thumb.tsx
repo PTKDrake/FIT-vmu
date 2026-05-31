@@ -1,8 +1,8 @@
 import {
   ColorThumb as ColorThumbPrimitive,
   type ColorThumbProps,
-} from "react-aria-components/ColorThumb"
-import { cx } from "@/lib/primitive"
+} from "react-aria-components/ColorThumb";
+import { cx } from "@/lib/primitive";
 
 export function ColorThumb({ className, ...props }: ColorThumbProps) {
   return (
@@ -20,5 +20,5 @@ export function ColorThumb({ className, ...props }: ColorThumbProps) {
         className,
       )}
     />
-  )
+  );
 }

@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import { createContext, use } from "react"
+import { createContext, use } from "react";
 import {
   ProgressBar as ProgressBarPrimitive,
   type ProgressBarProps,
   type ProgressBarRenderProps,
-} from "react-aria-components/ProgressBar"
-import { twMerge } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
+} from "react-aria-components/ProgressBar";
+import { twMerge } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
 
-const ProgressBarContext = createContext<ProgressBarRenderProps | null>(null)
+const ProgressBarContext = createContext<ProgressBarRenderProps | null>(null);
 
-export function ProgressBar({ className, children, ...props }: ProgressBarProps) {
+export function ProgressBar({
+  className,
+  children,
+  ...props
+}: ProgressBarProps) {
   return (
     <ProgressBarPrimitive
       data-slot="control"
@@ -34,24 +38,27 @@ export function ProgressBar({ className, children, ...props }: ProgressBarProps)
         </ProgressBarContext>
       )}
     </ProgressBarPrimitive>
-  )
+  );
 }
 
-export function ProgressBarHeader({ className, ...props }: React.ComponentProps<"div">) {
+export function ProgressBarHeader({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="progress-bar-header"
       className={twMerge("flex items-center justify-between", className)}
       {...props}
     />
-  )
+  );
 }
 
 export function ProgressBarValue({
   className,
   ...props
 }: Omit<React.ComponentProps<"span">, "children">) {
-  const { valueText } = use(ProgressBarContext)!
+  const { valueText } = use(ProgressBarContext)!;
   return (
     <span
       data-slot="progress-bar-value"
@@ -60,11 +67,15 @@ export function ProgressBarValue({
     >
       {valueText}
     </span>
-  )
+  );
 }
 
-export function ProgressBarTrack({ className, ref, ...props }: React.ComponentProps<"div">) {
-  const { isIndeterminate, percentage } = use(ProgressBarContext)!
+export function ProgressBarTrack({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<"div">) {
+  const { isIndeterminate, percentage } = use(ProgressBarContext)!;
   return (
     <span data-slot="progress-bar-track" className="relative block w-full">
       <style>{`
@@ -99,5 +110,5 @@ export function ProgressBarTrack({ className, ref, ...props }: React.ComponentPr
         </div>
       </div>
     </span>
-  )
+  );
 }

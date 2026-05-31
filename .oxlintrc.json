@@ -15,6 +15,10 @@
     "jsPlugins": [
         "oxlint-plugin-eslint",
         {
+            "name": "react-hooks-js",
+            "specifier": "eslint-plugin-react-hooks"
+        },
+        {
             "name": "react-doctor",
             "specifier": "./node_modules/.pnpm/node_modules/oxlint-plugin-react-doctor/dist/index.js"
         }
@@ -38,6 +42,8 @@
         "react/rules-of-hooks": "error",
         "react/exhaustive-deps": "warn",
         "react/only-export-components": "off",
+        "react-hooks-js/refs": "error",
+        "react-hooks-js/incompatible-library": "warn",
         "react-doctor/no-fetch-in-effect": "warn",
         "react-doctor/no-derived-state-effect": "warn",
         "eslint/no-unused-vars": "off",

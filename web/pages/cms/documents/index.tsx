@@ -9,7 +9,7 @@ export default function CmsDocumentsPage() {
       <Head title="Tài liệu" />
       <CmsPagePlaceholder
         title="Tài liệu"
-        description="Danh sách tài liệu sẽ kế thừa layout CMS để gắn bộ lọc, phân quyền tải xuống và các workflow duyệt tài liệu."
+        description="Quản lý tài liệu, bộ lọc và quyền truy cập tải xuống."
       />
     </>
   );

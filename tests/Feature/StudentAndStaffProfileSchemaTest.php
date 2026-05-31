@@ -27,7 +27,6 @@ test('students and staff profiles tables expose the expected domain columns', fu
             'bio',
             'bio_format',
             'is_public',
-            'sort_order',
             'created_at',
             'updated_at',
         ]))->toBeTrue();
@@ -68,6 +67,5 @@ test('staff profile defaults match the mvp content storage convention', function
 
     expect($staffProfile->bio)->toBeNull()
         ->and($staffProfile->bio_format)->toBe('blocknote_json')
-        ->and($staffProfile->is_public)->toBeFalse()
-        ->and($staffProfile->sort_order)->toBe(0);
+        ->and($staffProfile->is_public)->toBeFalse();
 });

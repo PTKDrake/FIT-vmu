@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { type ComponentProps, startTransition } from "react"
-import { Bar, BarChart as BarChartPrimitive } from "recharts"
+import { type ComponentProps, startTransition } from "react";
+import { Bar, BarChart as BarChartPrimitive } from "recharts";
 import {
   type BaseChartProps,
   CartesianGrid,
@@ -12,23 +12,31 @@ import {
   ChartTooltipContent,
   XAxis,
   YAxis,
-} from "./chart"
-import { DEFAULT_COLORS, constructCategoryColors, getColorValue, valueToPercent } from "./chart.utils"
+} from "./chart";
+import {
+  DEFAULT_COLORS,
+  constructCategoryColors,
+  getColorValue,
+  valueToPercent,
+} from "./chart.utils";
 
-const EMPTY_BAR_CHART_DATA: BaseChartProps["data"] = []
+const EMPTY_BAR_CHART_DATA: BaseChartProps["data"] = [];
 
 function defaultBarValueFormatter(value: number): string {
-  return value.toString()
+  return value.toString();
 }
 
 export interface BarChartProps extends BaseChartProps {
-  barCategoryGap?: number
-  barRadius?: number
-  barGap?: number
-  barSize?: number
-  barProps?: Partial<React.ComponentProps<typeof Bar>>
+  barCategoryGap?: number;
+  barRadius?: number;
+  barGap?: number;
+  barSize?: number;
+  barProps?: Partial<React.ComponentProps<typeof Bar>>;
 
-  chartProps?: Omit<ComponentProps<typeof BarChartPrimitive>, "data" | "stackOffset">
+  chartProps?: Omit<
+    ComponentProps<typeof BarChartPrimitive>,
+    "data" | "stackOffset"
+  >;
 }
 
 export function BarChart({
@@ -71,19 +79,25 @@ export function BarChart({
 
   ...props
 }: BarChartProps) {
-  const configKeys = Object.keys(config)
-  const categoryColors = constructCategoryColors(configKeys, colors)
-  const configEntries = Object.entries(config)
+  const configKeys = Object.keys(config);
+  const categoryColors = constructCategoryColors(configKeys, colors);
+  const configEntries = Object.entries(config);
 
-  const stacked = type === "stacked" || type === "percent"
-  const defaultBarRadius = stacked ? undefined : 4
+  const stacked = type === "stacked" || type === "percent";
+  const defaultBarRadius = stacked ? undefined : 4;
 
   return (
-    <Chart config={config} data={data} dataKey={dataKey} layout={layout} {...props}>
+    <Chart
+      config={config}
+      data={data}
+      dataKey={dataKey}
+      layout={layout}
+      {...props}
+    >
       {({ onLegendSelect, selectedLegend }) => (
         <BarChartPrimitive
           onClick={() => {
-            onLegendSelect(null)
+            onLegendSelect(null);
           }}
           data={data}
           margin={{
@@ -96,7 +110,9 @@ export function BarChart({
           barGap={barGap}
           barSize={barSize}
           barCategoryGap={barCategoryGap}
-          stackOffset={type === "percent" ? "expand" : stacked ? "sign" : undefined}
+          stackOffset={
+            type === "percent" ? "expand" : stacked ? "sign" : undefined
+          }
           {...chartProps}
         >
           {!hideGridLines && <CartesianGrid strokeDasharray="4 4" />}
@@ -116,7 +132,9 @@ export function BarChart({
 
           {legend && (
             <ChartLegend
-              content={typeof legend === "boolean" ? <ChartLegendContent /> : legend}
+              content={
+                typeof legend === "boolean" ? <ChartLegendContent /> : legend
+              }
               {...legendProps}
             />
           )}
@@ -124,7 +142,11 @@ export function BarChart({
           {tooltip && (
             <ChartTooltip
               content={
-                typeof tooltip === "boolean" ? <ChartTooltipContent accessibilityLayer /> : tooltip
+                typeof tooltip === "boolean" ? (
+                  <ChartTooltipContent accessibilityLayer />
+                ) : (
+                  tooltip
+                )
               }
               {...tooltipProps}
             />
@@ -132,9 +154,13 @@ export function BarChart({
 
           {!children
             ? configEntries.map(([category, values]) => {
-                const color = getColorValue(values.color || categoryColors.get(category))
-                const strokeOpacity = selectedLegend && selectedLegend !== category ? 0.2 : 0
-                const fillOpacity = selectedLegend && selectedLegend !== category ? 0.1 : 1
+                const color = getColorValue(
+                  values.color || categoryColors.get(category),
+                );
+                const strokeOpacity =
+                  selectedLegend && selectedLegend !== category ? 0.2 : 0;
+                const fillOpacity =
+                  selectedLegend && selectedLegend !== category ? 0.1 : 1;
 
                 return (
                   <Bar
@@ -145,11 +171,11 @@ export function BarChart({
                     strokeWidth={1}
                     stackId={stacked ? "stack" : undefined}
                     onClick={(_item, _number, event) => {
-                      event.stopPropagation()
+                      event.stopPropagation();
 
                       startTransition(() => {
-                        onLegendSelect(category)
-                      })
+                        onLegendSelect(category);
+                      });
                     }}
                     radius={barRadius ?? defaultBarRadius}
                     strokeOpacity={strokeOpacity}
@@ -157,11 +183,11 @@ export function BarChart({
                     fill={color}
                     {...barProps}
                   />
-                )
+                );
               })
             : children}
         </BarChartPrimitive>
       )}
     </Chart>
-  )
+  );
 }

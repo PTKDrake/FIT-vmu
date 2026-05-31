@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { MinusIcon } from "@heroicons/react/20/solid"
-import { OTPInput, OTPInputContext } from "input-otp"
-import { use } from "react"
-import { twMerge } from "tailwind-merge"
-import { Label } from "@/components/ui/field"
-import { fieldStyles } from "@/components/ui/field.styles"
+import { MinusIcon } from "@heroicons/react/20/solid";
+import { OTPInput, OTPInputContext } from "input-otp";
+import { use } from "react";
+import { twMerge } from "tailwind-merge";
+import { Label } from "@/components/ui/field";
+import { fieldStyles } from "@/components/ui/field.styles";
 
 export function InputOTP({
   containerClassName,
@@ -22,27 +22,36 @@ export function InputOTP({
         {...props}
       />
     </span>
-  )
+  );
 }
 
-export function InputOTPControl({ className, ...props }: React.ComponentProps<"span">) {
+export function InputOTPControl({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
   return (
     <span
       data-slot="control"
-      className={twMerge("flex items-center gap-2 has-disabled:opacity-50", className)}
+      className={twMerge(
+        "flex items-center gap-2 has-disabled:opacity-50",
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
-export function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
+export function InputOTPGroup({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="input-otp-group"
       className={twMerge("flex items-center", className)}
       {...props}
     />
-  )
+  );
 }
 
 export function InputOTPSlot({
@@ -50,10 +59,10 @@ export function InputOTPSlot({
   className,
   ...props
 }: React.ComponentProps<"div"> & {
-  index: number
+  index: number;
 }) {
-  const inputOTPContext = use(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {}
+  const inputOTPContext = use(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
 
   return (
     <div
@@ -72,7 +81,7 @@ export function InputOTPSlot({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
@@ -80,9 +89,9 @@ export function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
     <div data-slot="input-otp-separator" {...props}>
       <MinusIcon className="size-4" />
     </div>
-  )
+  );
 }
 
 export function InputOTPLabel(props: React.ComponentProps<typeof Label>) {
-  return <Label elementType="span" data-slot="control-label" {...props} />
+  return <Label elementType="span" data-slot="control-label" {...props} />;
 }

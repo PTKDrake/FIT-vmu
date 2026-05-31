@@ -1,5 +1,5 @@
-import { twMerge } from "tailwind-merge"
-import { tv, type VariantProps } from "tailwind-variants"
+import { twMerge } from "tailwind-merge";
+import { tv, type VariantProps } from "tailwind-variants";
 
 const buttonGroupStyles = tv({
   base: "flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-e-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
@@ -14,7 +14,7 @@ const buttonGroupStyles = tv({
   defaultVariants: {
     orientation: "horizontal",
   },
-})
+});
 
 export function ButtonGroup({
   className,
@@ -29,10 +29,13 @@ export function ButtonGroup({
       className={buttonGroupStyles({ orientation, className })}
       {...props}
     />
-  )
+  );
 }
 
-export function ButtonGroupText({ className, ...props }: React.ComponentProps<"div">) {
+export function ButtonGroupText({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       className={twMerge(
@@ -41,5 +44,5 @@ export function ButtonGroupText({ className, ...props }: React.ComponentProps<"d
       )}
       {...props}
     />
-  )
+  );
 }

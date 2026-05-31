@@ -1,42 +1,50 @@
-"use client"
+"use client";
 
-import { Children, isValidElement, useMemo, useRef } from "react"
-import { Autocomplete, useFilter } from "react-aria-components/Autocomplete"
-import { ListBox } from "react-aria-components/ListBox"
-import { Select, type SelectProps, SelectValue } from "react-aria-components/Select"
-import { cx } from "@/lib/primitive"
-import { Button } from "./button"
-import { fieldStyles } from "./field.styles"
-import { ListBoxItem } from "./list-box"
-import { PopoverContent } from "./popover"
-import { SearchField, SearchInput } from "./search-field"
-import { Tag, TagGroup, TagList } from "./tag-group"
+import { Children, isValidElement, useRef } from "react";
+import { Autocomplete, useFilter } from "react-aria-components/Autocomplete";
+import { ListBox } from "react-aria-components/ListBox";
+import {
+  Select,
+  type SelectProps,
+  SelectValue,
+} from "react-aria-components/Select";
+import { cx } from "@/lib/primitive";
+import { Button } from "./button";
+import { fieldStyles } from "./field.styles";
+import { ListBoxItem } from "./list-box";
+import { PopoverContent } from "./popover";
+import { SearchField, SearchInput } from "./search-field";
+import { Tag, TagGroup, TagList } from "./tag-group";
 
 interface OptionBase {
-  id: string | number
-  name: string
+  id: string | number;
+  name: string;
 }
 
-interface MultipleSelectProps<T extends OptionBase>
-  extends Omit<SelectProps<T, "multiple">, "selectionMode" | "children"> {
-  placeholder?: string
-  className?: string
-  children?: React.ReactNode
-  name?: string
-  searchPlaceholder?: string
-  searchValue?: string
-  onSearchChange?: (value: string) => void
+interface MultipleSelectProps<T extends OptionBase> extends Omit<
+  SelectProps<T, "multiple">,
+  "selectionMode" | "children" | "selectedKey" | "onSelectionChange"
+> {
+  placeholder?: string;
+  className?: string;
+  children?: React.ReactNode;
+  name?: string;
+  searchPlaceholder?: string;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 interface MultipleSelectContentProps<T extends OptionBase> {
-  items: Iterable<T>
-  children: (item: T) => React.ReactNode
+  items: Iterable<T>;
+  children: (item: T) => React.ReactNode;
 }
 
-function MultipleSelectContent<T extends OptionBase>(_props: MultipleSelectContentProps<T>) {
-  return null
+function MultipleSelectContent<T extends OptionBase>(
+  _props: MultipleSelectContentProps<T>,
+) {
+  return null;
 }
-;(MultipleSelectContent as any).displayName = "MultipleSelectContent"
+(MultipleSelectContent as any).displayName = "MultipleSelectContent";
 
 function MultipleSelect<T extends OptionBase>({
   placeholder = "No selected items",
@@ -48,20 +56,21 @@ function MultipleSelect<T extends OptionBase>({
   onSearchChange,
   ...props
 }: MultipleSelectProps<T>) {
-  const triggerRef = useRef<HTMLDivElement | null>(null)
-  const { contains } = useFilter({ sensitivity: "base" })
+  const triggerRef = useRef<HTMLDivElement | null>(null);
+  const { contains } = useFilter({ sensitivity: "base" });
 
-  const { before, after, list } = useMemo(() => {
-    const arr = Children.toArray(children)
-    const idx = arr.findIndex(
-      (c) => isValidElement(c) && (c.type as any)?.displayName === "MultipleSelectContent",
-    )
-    if (idx === -1) {
-      return { before: arr, after: [], list: null as null | MultipleSelectContentProps<T> }
-    }
-    const el = arr[idx] as React.ReactElement<MultipleSelectContentProps<T>>
-    return { before: arr.slice(0, idx), after: arr.slice(idx + 1), list: el.props }
-  }, [children])
+  const arr = Children.toArray(children);
+  const idx = arr.findIndex(
+    (child) =>
+      isValidElement(child) &&
+      (child.type as any)?.displayName === "MultipleSelectContent",
+  );
+  const list =
+    idx === -1
+      ? null
+      : (arr[idx] as React.ReactElement<MultipleSelectContentProps<T>>).props;
+  const before = idx === -1 ? arr : arr.slice(0, idx);
+  const after = idx === -1 ? [] : arr.slice(idx + 1);
 
   return (
     <Select
@@ -69,7 +78,7 @@ function MultipleSelect<T extends OptionBase>({
       data-slot="control"
       className={cx(fieldStyles(), className)}
       selectionMode="multiple"
-      {...props}
+      {...(props as unknown as SelectProps<T, "multiple">)}
     >
       {before}
       {list && (
@@ -85,14 +94,16 @@ function MultipleSelect<T extends OptionBase>({
                   aria-label="Selected items"
                   onRemove={(keys) => {
                     if (Array.isArray(state.value)) {
-                      state.setValue(state.value.filter((k) => !keys.has(k)))
+                      state.setValue(state.value.filter((k) => !keys.has(k)));
                     }
                   }}
                 >
                   <TagList
                     items={selectedItems.filter((i) => i != null)}
                     renderEmptyState={() => (
-                      <i className="ps-2 text-muted-fg text-sm">{placeholder}</i>
+                      <i className="ps-2 text-muted-fg text-sm">
+                        {placeholder}
+                      </i>
                     )}
                   >
                     {(item) => <Tag className="rounded-md">{item.name}</Tag>}
@@ -101,6 +112,7 @@ function MultipleSelect<T extends OptionBase>({
               )}
             </SelectValue>
             <Button
+              aria-label="Mở danh sách lựa chọn"
               intent="secondary"
               size="sq-xs"
               className="self-end rounded-[calc(var(--radius-lg)-(--spacing(1)))]"
@@ -127,6 +139,7 @@ function MultipleSelect<T extends OptionBase>({
             <Autocomplete filter={contains}>
               <SearchField
                 autoFocus
+                aria-label="Tìm kiếm lựa chọn"
                 className="rounded-none py-0.5 outline-hidden"
                 value={searchValue}
                 onChange={onSearchChange}
@@ -148,9 +161,9 @@ function MultipleSelect<T extends OptionBase>({
       )}
       {after}
     </Select>
-  )
+  );
 }
 
-const MultipleSelectItem = ListBoxItem
+const MultipleSelectItem = ListBoxItem;
 
-export { MultipleSelect, MultipleSelectContent, MultipleSelectItem }
+export { MultipleSelect, MultipleSelectContent, MultipleSelectItem };

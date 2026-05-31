@@ -1,24 +1,34 @@
-import type { DateFieldProps, DateInputProps, DateValue } from "react-aria-components/DateField"
+import type {
+  DateFieldProps,
+  DateInputProps,
+  DateValue,
+} from "react-aria-components/DateField";
 import {
   DateField as DateFieldPrimitive,
   DateInput as DateInputPrimitive,
   DateSegment,
-} from "react-aria-components/DateField"
-import { twJoin } from "tailwind-merge"
-import { cx } from "@/lib/primitive"
-import { fieldStyles } from "./field.styles"
+} from "react-aria-components/DateField";
+import { twJoin } from "tailwind-merge";
+import { cx } from "@/lib/primitive";
+import { fieldStyles } from "./field.styles";
 
-export function DateField<T extends DateValue>({ className, ...props }: DateFieldProps<T>) {
+export function DateField<T extends DateValue>({
+  className,
+  ...props
+}: DateFieldProps<T>) {
   return (
     <DateFieldPrimitive
       {...props}
       data-slot="control"
       className={cx(fieldStyles({ className: "w-fit" }), className)}
     />
-  )
+  );
 }
 
-export function DateInput({ className, ...props }: Omit<DateInputProps, "children">) {
+export function DateInput({
+  className,
+  ...props
+}: Omit<DateInputProps, "children">) {
   return (
     <span data-slot="control" className="relative block">
       <DateInputPrimitive
@@ -49,5 +59,5 @@ export function DateInput({ className, ...props }: Omit<DateInputProps, "childre
         )}
       </DateInputPrimitive>
     </span>
-  )
+  );
 }

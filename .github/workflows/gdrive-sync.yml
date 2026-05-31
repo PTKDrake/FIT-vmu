@@ -1,0 +1,93 @@
+name: Gdrive sync
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    env:
+      RCLONE_REMOTE: gdrive
+      GDRIVE_TARGET: VMUFit
+      EXPORT_DIR: .gdrive-export
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup rclone
+        uses: AnimMouse/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+
+      - name: Test rclone config
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Available remotes:"
+          rclone listremotes
+
+          echo "Test Google Drive target:"
+          rclone lsd "${RCLONE_REMOTE}:/${GDRIVE_TARGET}" --max-depth 1
+
+      - name: Prepare selected files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -rf "$EXPORT_DIR"
+          mkdir -p "$EXPORT_DIR"
+
+          if [ ! -f ".gdsync" ]; then
+            echo "Missing .gdsync file"
+            exit 1
+          fi
+
+          shopt -s globstar nullglob dotglob
+
+          while IFS= read -r pattern || [ -n "$pattern" ]; do
+            # Trim leading/trailing spaces
+            pattern="${pattern#"${pattern%%[![:space:]]*}"}"
+            pattern="${pattern%"${pattern##*[![:space:]]}"}"
+
+            # Skip empty lines and comments
+            [ -z "$pattern" ] && continue
+            [[ "$pattern" == \#* ]] && continue
+
+            echo "Including: $pattern"
+
+            matches=( $pattern )
+
+            if [ ${#matches[@]} -eq 0 ]; then
+              echo "No matches for: $pattern"
+              continue
+            fi
+
+            for item in "${matches[@]}"; do
+              if [ -e "$item" ]; then
+                rsync -aRL "$item" "$EXPORT_DIR/"
+              fi
+            done
+          done < ".gdsync"
+
+          shopt -u globstar nullglob dotglob
+
+          echo "Prepared files:"
+          find "$EXPORT_DIR" -type f | sort
+
+      - name: Sync to Google Drive
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rclone sync "$EXPORT_DIR" "${RCLONE_REMOTE}:/${GDRIVE_TARGET}/${{ github.event.repository.name }}" \
+            --drive-skip-gdocs \
+            -P \
+            --stats-one-line

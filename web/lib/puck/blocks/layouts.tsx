@@ -1,0 +1,916 @@
+import React from "react";
+import { cn } from "@/lib/utils";
+import type { PageBuilderComponentConfig } from "./types";
+
+// --- HELPER CLASSES & FUNCTIONS ---
+
+export function getHideOnClass(
+  hideOn?: "none" | "mobile" | "tablet" | "desktop",
+) {
+  switch (hideOn) {
+    case "mobile":
+      return "hidden sm:block";
+    case "tablet":
+      return "sm:hidden lg:block";
+    case "desktop":
+      return "lg:hidden";
+    default:
+      return "";
+  }
+}
+
+export function getGapClass(gap?: "sm" | "md" | "lg" | "xl" | number) {
+  if (typeof gap === "number") {
+    if (gap <= 16) {
+      return "gap-4";
+    }
+
+    if (gap <= 24) {
+      return "gap-6";
+    }
+
+    if (gap <= 32) {
+      return "gap-8";
+    }
+
+    return "gap-12";
+  }
+
+  const gapClasses = {
+    sm: "gap-4",
+    md: "gap-6",
+    lg: "gap-8",
+    xl: "gap-12",
+  };
+
+  return gap ? (gapClasses[gap] ?? "gap-8") : "gap-8"; // lg as default
+}
+
+export function getGapAxisClass(
+  axis: "x" | "y",
+  gap?: "sm" | "md" | "lg" | "xl",
+) {
+  const gapClasses = {
+    sm: axis === "x" ? "gap-x-4" : "gap-y-4",
+    md: axis === "x" ? "gap-x-6" : "gap-y-6",
+    lg: axis === "x" ? "gap-x-8" : "gap-y-8",
+    xl: axis === "x" ? "gap-x-12" : "gap-y-12",
+  };
+
+  return gap ? (gapClasses[gap] ?? gapClasses.lg) : gapClasses.lg;
+}
+
+export function getPaddingTopClass(paddingTop?: "none" | "sm" | "md" | "lg") {
+  const ptClasses = {
+    none: "pt-0",
+    sm: "pt-4 sm:pt-6",
+    md: "pt-10 sm:pt-16",
+    lg: "pt-16 sm:pt-24",
+  };
+
+  return paddingTop ? ptClasses[paddingTop] : "";
+}
+
+export function getPaddingBottomClass(
+  paddingBottom?: "none" | "sm" | "md" | "lg",
+) {
+  const pbClasses = {
+    none: "pb-0",
+    sm: "pb-4 sm:pb-6",
+    md: "pb-10 sm:pb-16",
+    lg: "pb-16 sm:pb-24",
+  };
+
+  return paddingBottom ? pbClasses[paddingBottom] : "";
+}
+
+export function getPaddingXClass(paddingX?: "none" | "sm" | "md" | "lg") {
+  const pxClasses = {
+    none: "px-0",
+    sm: "px-4 sm:px-6",
+    md: "px-4 sm:px-6 md:px-8",
+    lg: "px-5 sm:px-8 md:px-10",
+  };
+
+  return paddingX ? pxClasses[paddingX] : "";
+}
+
+export function getBackgroundClass(background?: string) {
+  const bgClasses: Record<string, string> = {
+    transparent: "bg-transparent text-fg",
+    none: "bg-transparent text-fg",
+    primarySubtle: "bg-primary-subtle/10 border-y border-primary/5 text-fg",
+    "primary-subtle": "bg-primary-subtle/10 border-y border-primary/5 text-fg",
+    infoSubtle: "bg-info-subtle/10 border-y border-info/5 text-fg",
+    "info-subtle": "bg-info-subtle/10 border-y border-info/5 text-fg",
+    dark: "bg-zinc-900 text-zinc-100 dark:bg-black",
+  };
+
+  return background
+    ? (bgClasses[background] ?? "bg-transparent text-fg")
+    : "bg-transparent text-fg";
+}
+
+export function getMinHeightClass(minHeight?: "auto" | "md" | "lg" | "screen") {
+  const mhClasses = {
+    auto: "min-h-0",
+    md: "min-h-[400px] sm:min-h-[500px]",
+    lg: "min-h-[600px] sm:min-h-[750px]",
+    screen: "min-h-screen",
+  };
+
+  return minHeight ? mhClasses[minHeight] : "min-h-0";
+}
+
+export function getOverlayClass(
+  overlay?: "none" | "light" | "dark" | "primary",
+) {
+  const overlayClasses = {
+    none: "",
+    light:
+      "absolute inset-0 bg-white/70 dark:bg-black/70 z-0 pointer-events-none",
+    dark: "absolute inset-0 bg-black/50 z-0 pointer-events-none",
+    primary:
+      "absolute inset-0 bg-primary/20 dark:bg-primary/40 z-0 pointer-events-none",
+  };
+
+  return overlay ? overlayClasses[overlay] : "";
+}
+
+export function getBorderRadiusClass(
+  borderRadius?: "none" | "lg" | "xl" | "2xl" | "3xl",
+) {
+  const radiusClasses = {
+    none: "rounded-none",
+    lg: "rounded-lg",
+    xl: "rounded-xl",
+    "2xl": "rounded-2xl",
+    "3xl": "rounded-3xl",
+  };
+
+  return borderRadius ? radiusClasses[borderRadius] : "";
+}
+
+export function getAlignItemsClass(
+  alignItems?: "start" | "center" | "stretch",
+) {
+  const alignClasses = {
+    start: "items-start",
+    center: "items-center",
+    stretch: "items-stretch",
+  };
+
+  return alignItems ? alignClasses[alignItems] : "items-stretch";
+}
+
+export function getJustifyItemsClass(
+  justifyItems?: "start" | "center" | "end" | "stretch",
+) {
+  const justifyClasses = {
+    start: "justify-items-start",
+    center: "justify-items-center",
+    end: "justify-items-end",
+    stretch: "justify-items-stretch",
+  };
+
+  return justifyItems ? justifyClasses[justifyItems] : "justify-items-stretch";
+}
+
+// 1. SECTION LAYOUT BLOCK
+export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
+  label: "Vùng nội dung (Section)",
+  defaultProps: {
+    background: "transparent",
+    paddingTop: "md",
+    paddingBottom: "md",
+    paddingX: "none",
+    minHeight: "auto",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    overlay: "none",
+    contentAlign: "top",
+    borderRadius: "none",
+    hideOn: "none",
+    className: "",
+  },
+  fields: {
+    anchorId: {
+      type: "text",
+      label: "ID điều hướng",
+    },
+    background: {
+      type: "select",
+      label: "Kiểu nền",
+      options: [
+        { label: "Không màu", value: "transparent" },
+        { label: "Xanh nhạt", value: "primarySubtle" },
+        { label: "Trời nhạt", value: "infoSubtle" },
+        { label: "Nền tối", value: "dark" },
+      ],
+    },
+    paddingTop: {
+      type: "select",
+      label: "Khoảng đệm trên",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
+    paddingBottom: {
+      type: "select",
+      label: "Khoảng đệm dưới",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
+    paddingX: {
+      type: "select",
+      label: "Khoảng đệm ngang",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
+    minHeight: {
+      type: "select",
+      label: "Chiều cao tối thiểu",
+      options: [
+        { label: "Tự động", value: "auto" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+        { label: "Đầy màn hình", value: "screen" },
+      ],
+    },
+    backgroundImage: {
+      type: "text",
+      label: "URL ảnh nền",
+    },
+    backgroundPosition: {
+      type: "select",
+      label: "Vị trí ảnh nền",
+      options: [
+        { label: "Trên", value: "top" },
+        { label: "Giữa", value: "center" },
+        { label: "Dưới", value: "bottom" },
+      ],
+    },
+    backgroundSize: {
+      type: "select",
+      label: "Cách hiển thị ảnh nền",
+      options: [
+        { label: "Phủ kín", value: "cover" },
+        { label: "Hiển thị toàn ảnh", value: "contain" },
+        { label: "Kích thước gốc", value: "auto" },
+      ],
+    },
+    overlay: {
+      type: "select",
+      label: "Lớp phủ màu",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Sáng", value: "light" },
+        { label: "Tối", value: "dark" },
+        { label: "Xanh", value: "primary" },
+      ],
+    },
+    contentAlign: {
+      type: "select",
+      label: "Canh nội dung theo chiều dọc",
+      options: [
+        { label: "Trên", value: "top" },
+        { label: "Giữa", value: "center" },
+        { label: "Dưới", value: "bottom" },
+      ],
+    },
+    borderRadius: {
+      type: "select",
+      label: "Bo góc khối",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Nhẹ", value: "lg" },
+        { label: "Vừa", value: "xl" },
+        { label: "Lớn", value: "2xl" },
+        { label: "Rất lớn", value: "3xl" },
+      ],
+    },
+    hideOn: {
+      type: "select",
+      label: "Ẩn theo thiết bị",
+      options: [
+        { label: "Không ẩn", value: "none" },
+        { label: "Di động", value: "mobile" },
+        { label: "Máy tính bảng", value: "tablet" },
+        { label: "Máy tính", value: "desktop" },
+      ],
+    },
+    className: {
+      type: "text",
+      label: "CSS class bổ sung",
+    },
+    children: {
+      type: "slot",
+      label: "Nội dung",
+    },
+  },
+  render: ({
+    background,
+    paddingTop,
+    paddingBottom,
+    paddingY,
+    paddingX,
+    minHeight,
+    backgroundImage,
+    backgroundPosition,
+    backgroundSize,
+    overlay,
+    contentAlign,
+    borderRadius,
+    anchorId,
+    hideOn,
+    className,
+    children: Children,
+  }) => {
+    if (!Children) {
+      return <></>;
+    }
+
+    // Backward compatibility for paddingY
+    const pt = paddingTop ?? paddingY ?? "md";
+    const pb = paddingBottom ?? paddingY ?? "md";
+
+    const alignClass =
+      minHeight && minHeight !== "auto"
+        ? {
+            top: "justify-start",
+            center: "justify-center",
+            bottom: "justify-end",
+          }[contentAlign || "top"]
+        : "";
+
+    return (
+      <section
+        id={anchorId || undefined}
+        className={cn(
+          "w-full transition-colors duration-300 relative overflow-hidden",
+          getBackgroundClass(background),
+          getPaddingTopClass(pt),
+          getPaddingBottomClass(pb),
+          getPaddingXClass(paddingX),
+          getMinHeightClass(minHeight),
+          getBorderRadiusClass(borderRadius),
+          minHeight && minHeight !== "auto" ? "flex flex-col" : "",
+          alignClass,
+          getHideOnClass(hideOn),
+          className,
+        )}
+        style={
+          backgroundImage
+            ? {
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: backgroundSize || "cover",
+                backgroundPosition: backgroundPosition || "center",
+                backgroundRepeat: "no-repeat",
+              }
+            : undefined
+        }
+      >
+        {backgroundImage && overlay && overlay !== "none" && (
+          <div className={getOverlayClass(overlay)} />
+        )}
+        <div
+          className={cn(
+            "w-full min-h-12 relative z-10",
+            minHeight && minHeight !== "auto"
+              ? "flex flex-col grow h-full"
+              : "",
+          )}
+        >
+          <Children className="w-full h-full" />
+        </div>
+      </section>
+    );
+  },
+};
+
+// 2. CONTAINER LAYOUT BLOCK
+export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
+  {
+    label: "Giới hạn chiều rộng (Container)",
+    defaultProps: {
+      maxWidth: "lg",
+      horizontalPadding: "md",
+      align: "center",
+      hideOn: "none",
+      className: "",
+    },
+    fields: {
+      anchorId: {
+        type: "text",
+        label: "ID điều hướng",
+      },
+      maxWidth: {
+        type: "select",
+        label: "Chiều rộng tối đa",
+        options: [
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+          { label: "Rất lớn", value: "xl" },
+          { label: "Cực lớn", value: "2xl" },
+          { label: "Tràn màn hình", value: "full" },
+        ],
+      },
+      horizontalPadding: {
+        type: "select",
+        label: "Khoảng đệm ngang",
+        options: [
+          { label: "Không", value: "none" },
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+        ],
+      },
+      align: {
+        type: "select",
+        label: "Canh container",
+        options: [
+          { label: "Giữa", value: "center" },
+          { label: "Trái", value: "left" },
+          { label: "Phải", value: "right" },
+        ],
+      },
+      hideOn: {
+        type: "select",
+        label: "Ẩn theo thiết bị",
+        options: [
+          { label: "Không ẩn", value: "none" },
+          { label: "Di động", value: "mobile" },
+          { label: "Máy tính bảng", value: "tablet" },
+          { label: "Máy tính", value: "desktop" },
+        ],
+      },
+      className: {
+        type: "text",
+        label: "CSS class bổ sung",
+      },
+      children: {
+        type: "slot",
+        label: "Nội dung",
+      },
+    },
+    render: ({
+      anchorId,
+      maxWidth,
+      paddingX,
+      horizontalPadding,
+      align,
+      hideOn,
+      className,
+      children: Children,
+    }) => {
+      if (!Children) {
+        return <></>;
+      }
+
+      const widthClass = {
+        sm: "max-w-3xl",
+        md: "max-w-5xl",
+        lg: "max-w-7xl",
+        xl: "max-w-[1440px]",
+        "2xl": "max-w-[1680px]",
+        full: "max-w-full",
+      }[maxWidth || "lg"];
+
+      const alignClass = {
+        center: "mx-auto",
+        left: "mr-auto ml-0",
+        right: "ml-auto mr-0",
+      }[align || "center"];
+
+      const resolvedHorizontalPadding =
+        horizontalPadding ??
+        (paddingX === false || paddingX === "no"
+          ? "none"
+          : paddingX === true || paddingX === "yes" || paddingX === undefined
+            ? "md"
+            : "none");
+
+      return (
+        <div
+          id={anchorId || undefined}
+          className={cn(
+            "w-full",
+            alignClass,
+            widthClass,
+            getPaddingXClass(resolvedHorizontalPadding),
+            getHideOnClass(hideOn),
+            className,
+          )}
+        >
+          <Children className="w-full min-h-12" />
+        </div>
+      );
+    },
+  };
+
+// 3. TWO COLUMNS LAYOUT BLOCK
+export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns"> =
+  {
+    label: "2 cột nội dung",
+    defaultProps: {
+      columnRatio: "equal",
+      gap: "lg",
+      stackOnMobile: true,
+      reverseOnMobile: false,
+      verticalAlign: "center",
+      hideOn: "none",
+      className: "",
+    },
+    fields: {
+      anchorId: {
+        type: "text",
+        label: "ID điều hướng",
+      },
+      columnRatio: {
+        type: "select",
+        label: "Tỷ lệ 2 cột",
+        options: [
+          { label: "Đều nhau", value: "equal" },
+          { label: "Trái rộng", value: "leftWide" },
+          { label: "Phải rộng", value: "rightWide" },
+        ],
+      },
+      gap: {
+        type: "select",
+        label: "Khoảng cách giữa 2 cột",
+        options: [
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+          { label: "Rất lớn", value: "xl" },
+        ],
+      },
+      stackOnMobile: {
+        type: "radio",
+        label: "Xếp thành 1 cột trên mobile",
+        options: [
+          { label: "Có", value: true as any },
+          { label: "Không", value: false as any },
+        ],
+      },
+      reverseOnMobile: {
+        type: "radio",
+        label: "Đảo thứ tự trên mobile",
+        options: [
+          { label: "Có", value: true as any },
+          { label: "Không", value: false as any },
+        ],
+      },
+      verticalAlign: {
+        type: "select",
+        label: "Canh 2 cột theo chiều dọc",
+        options: [
+          { label: "Trên", value: "top" },
+          { label: "Giữa", value: "center" },
+          { label: "Dưới", value: "bottom" },
+          { label: "Kéo giãn", value: "stretch" },
+        ],
+      },
+      hideOn: {
+        type: "select",
+        label: "Ẩn theo thiết bị",
+        options: [
+          { label: "Không ẩn", value: "none" },
+          { label: "Di động", value: "mobile" },
+          { label: "Máy tính bảng", value: "tablet" },
+          { label: "Máy tính", value: "desktop" },
+        ],
+      },
+      className: {
+        type: "text",
+        label: "CSS class bổ sung",
+      },
+      left: {
+        type: "slot",
+        label: "Nội dung cột trái",
+      },
+      right: {
+        type: "slot",
+        label: "Nội dung cột phải",
+      },
+    },
+    render: ({
+      columnRatio,
+      gap,
+      stackOnMobile,
+      reverseOnMobile,
+      verticalAlign,
+      anchorId,
+      hideOn,
+      className,
+      left: Left,
+      right: Right,
+    }) => {
+      const ratioClass = {
+        equal: "grid-cols-1 md:grid-cols-2",
+        leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr]",
+        rightWide: "grid-cols-1 md:grid-cols-[1fr_2fr]",
+        // Backwards compatibility mappings:
+        "1:1": "grid-cols-1 md:grid-cols-2",
+        "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr]",
+        "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr]",
+      }[columnRatio || "equal"];
+
+      const isStack = stackOnMobile !== false;
+      const isReverse = reverseOnMobile === true;
+
+      const gapStyle =
+        typeof gap === "number" ? { gap: `${gap}px` } : undefined;
+
+      const wrapperClass = cn(
+        "w-full",
+        isStack
+          ? cn(
+              "flex",
+              isReverse ? "flex-col-reverse" : "flex-col",
+              "md:grid",
+              ratioClass,
+            )
+          : cn("grid", ratioClass),
+        typeof gap === "number" ? undefined : getGapClass(gap),
+        verticalAlign
+          ? {
+              top: "items-start",
+              center: "items-center",
+              bottom: "items-end",
+              stretch: "items-stretch",
+            }[verticalAlign]
+          : "items-center",
+        getHideOnClass(hideOn),
+        className,
+      );
+
+      return (
+        <div
+          id={anchorId || undefined}
+          className={wrapperClass}
+          style={gapStyle}
+        >
+          <div className="flex flex-col h-full w-full">
+            {Left ? (
+              <Left className="w-full min-h-16 rounded-2xl border border-dashed border-border/60 p-3" />
+            ) : (
+              <div className="h-16 w-full rounded-2xl border border-dashed border-border/40 bg-muted/20 flex items-center justify-center text-xs text-muted-fg">
+                Cột trái
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col h-full w-full">
+            {Right ? (
+              <Right className="w-full min-h-16 rounded-2xl border border-dashed border-border/60 p-3" />
+            ) : (
+              <div className="h-16 w-full rounded-2xl border border-dashed border-border/40 bg-muted/20 flex items-center justify-center text-xs text-muted-fg">
+                Cột phải
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    },
+  };
+
+// 4. SPACER LAYOUT BLOCK
+export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
+  label: "Khoảng cách dọc (Spacer)",
+  defaultProps: {
+    height: "md",
+    mobileHeight: "sm",
+    hideOn: "none",
+    className: "",
+  },
+  fields: {
+    anchorId: {
+      type: "text",
+      label: "ID điều hướng",
+    },
+    height: {
+      type: "select",
+      label: "Chiều cao từ tablet trở lên",
+      options: [
+        { label: "Cực nhỏ", value: "xs" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+        { label: "Cực lớn", value: "xl" },
+      ],
+    },
+    mobileHeight: {
+      type: "select",
+      label: "Chiều cao trên mobile",
+      options: [
+        { label: "Cực nhỏ", value: "xs" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+        { label: "Cực lớn", value: "xl" },
+      ],
+    },
+    hideOn: {
+      type: "select",
+      label: "Ẩn theo thiết bị",
+      options: [
+        { label: "Không ẩn", value: "none" },
+        { label: "Di động", value: "mobile" },
+        { label: "Máy tính bảng", value: "tablet" },
+        { label: "Máy tính", value: "desktop" },
+      ],
+    },
+    className: {
+      type: "text",
+      label: "CSS class bổ sung",
+    },
+  },
+  render: ({ anchorId, height, mobileHeight, hideOn, className }) => {
+    const desktopHeightClass = {
+      xs: "sm:h-4",
+      sm: "sm:h-8",
+      md: "sm:h-16",
+      lg: "sm:h-24",
+      xl: "sm:h-36",
+    }[height || "md"];
+
+    const activeMobileHeight = mobileHeight || height || "sm";
+    const mobileHeightClass = {
+      xs: "h-3",
+      sm: "h-6",
+      md: "h-12",
+      lg: "h-20",
+      xl: "h-28",
+    }[activeMobileHeight];
+
+    return (
+      <div
+        id={anchorId || undefined}
+        className={cn(
+          "w-full clear-both",
+          mobileHeightClass,
+          desktopHeightClass,
+          getHideOnClass(hideOn),
+          className,
+        )}
+      />
+    );
+  },
+};
+
+// 5. DIVIDER LAYOUT BLOCK
+export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
+  label: "Đường phân tách (Divider)",
+  defaultProps: {
+    type: "solid",
+    color: "default",
+    spacingY: "md",
+    width: "full",
+    align: "center",
+    hideOn: "none",
+    className: "",
+  },
+  fields: {
+    anchorId: {
+      type: "text",
+      label: "ID điều hướng",
+    },
+    type: {
+      type: "select",
+      label: "Kiểu đường kẻ",
+      options: [
+        { label: "Liền mạch", value: "solid" },
+        { label: "Đứt nét", value: "dashed" },
+        { label: "Chấm nét", value: "dotted" },
+      ],
+    },
+    color: {
+      type: "select",
+      label: "Màu đường kẻ",
+      options: [
+        { label: "Mặc định", value: "default" },
+        { label: "Nổi bật", value: "primary" },
+        { label: "Mờ", value: "muted" },
+      ],
+    },
+    spacingY: {
+      type: "select",
+      label: "Khoảng cách trên và dưới",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
+    width: {
+      type: "select",
+      label: "Độ dài đường kẻ",
+      options: [
+        { label: "Đầy đủ", value: "full" },
+        { label: "Theo khung", value: "container" },
+        { label: "Ngắn", value: "short" },
+      ],
+    },
+    align: {
+      type: "select",
+      label: "Canh đường kẻ",
+      options: [
+        { label: "Trái", value: "left" },
+        { label: "Giữa", value: "center" },
+        { label: "Phải", value: "right" },
+      ],
+    },
+    hideOn: {
+      type: "select",
+      label: "Ẩn theo thiết bị",
+      options: [
+        { label: "Không ẩn", value: "none" },
+        { label: "Di động", value: "mobile" },
+        { label: "Máy tính bảng", value: "tablet" },
+        { label: "Máy tính", value: "desktop" },
+      ],
+    },
+    className: {
+      type: "text",
+      label: "CSS class bổ sung",
+    },
+  },
+  render: ({
+    type,
+    color,
+    spacingY,
+    width,
+    align,
+    anchorId,
+    hideOn,
+    className,
+  }) => {
+    const borderTypeClass = {
+      solid: "border-solid",
+      dashed: "border-dashed",
+      dotted: "border-dotted",
+    }[type || "solid"];
+
+    const activeColor =
+      (color as string) === "border" ? "default" : color || "default";
+    const borderColorClass = {
+      default: "border-border",
+      primary: "border-primary/45",
+      muted: "border-border/30",
+    }[activeColor];
+
+    const spacingYClass = {
+      none: "py-0",
+      sm: "py-4",
+      md: "py-8",
+      lg: "py-12",
+    }[spacingY || "md"];
+
+    const widthClass = {
+      full: "w-full",
+      container: "max-w-7xl mx-auto px-4 sm:px-6 md:px-8",
+      short: "w-24",
+    }[width || "full"];
+
+    const alignClass = {
+      left: "mr-auto ml-0",
+      center: "mx-auto",
+      right: "ml-auto mr-0",
+    }[align || "center"];
+
+    return (
+      <div
+        id={anchorId || undefined}
+        className={cn(
+          "w-full",
+          spacingYClass,
+          getHideOnClass(hideOn),
+          className,
+        )}
+      >
+        <hr
+          className={cn(
+            "border-t w-full",
+            borderTypeClass,
+            borderColorClass,
+            widthClass,
+            width === "short" ? alignClass : "",
+          )}
+        />
+      </div>
+    );
+  },
+};

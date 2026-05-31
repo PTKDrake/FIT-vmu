@@ -20,6 +20,7 @@ test('units positions and staff appointments tables expose the expected domain c
         'is_active',
         'created_at',
         'updated_at',
+        'parent_id',
     ]))->toBeTrue()
         ->and(Schema::hasColumns('positions', [
             'id',
@@ -48,7 +49,6 @@ test('unit and position defaults align with the mvp catalog design', function ()
     $unit = Unit::query()->create([
         'name' => 'Bo mon He thong thong tin',
         'slug' => 'bo-mon-he-thong-thong-tin',
-        'type' => 'department',
     ])->refresh();
 
     $position = Position::query()->create([

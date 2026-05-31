@@ -1,10 +1,13 @@
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
-import "@measured/puck/puck.css";
+import "@blocknote/xl-ai/style.css";
+import "@puckeditor/core/puck.css";
+import "./lib/echo";
 import { createInertiaApp } from "@inertiajs/react";
+import { NuqsAdapter } from "nuqs/adapters/react";
 import type { ComponentType } from "react";
 import { createRoot } from "react-dom/client";
-import { NuqsAdapter } from "nuqs/adapters/react";
+import { Toast } from "@/components/ui/toast";
 import { initializeTheme } from "@/hooks/use-theme";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -24,7 +27,10 @@ void createInertiaApp({
   setup({ el, App, props }) {
     createRoot(el!).render(
       <NuqsAdapter>
-        <App {...props} />
+        <>
+          <App {...props} />
+          <Toast position="top-right" />
+        </>
       </NuqsAdapter>,
     );
   },

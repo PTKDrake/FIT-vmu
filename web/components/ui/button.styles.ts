@@ -1,4 +1,4 @@
-import { tv } from "tailwind-variants"
+import { tv } from "tailwind-variants";
 
 export const buttonStyles = tv({
   base: [
@@ -80,4 +80,4 @@ export const buttonStyles = tv({
     size: "md",
     isCircle: false,
   },
-})
+});

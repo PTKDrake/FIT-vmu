@@ -1,23 +1,23 @@
-import { Head, useForm } from "@inertiajs/react"
-import type { FormEvent, ReactNode } from "react"
-import AppLayout from "@/layouts/app-layout"
-import SettingsLayout from "@/pages/settings/settings-layout"
+import { Head, useForm } from "@inertiajs/react";
+import type { FormEvent, ReactNode } from "react";
+import AppLayout from "@/layouts/app-layout";
+import SettingsLayout from "@/pages/settings/settings-layout";
 
 export default function PasswordPage() {
   const form = useForm({
     current_password: "",
     password: "",
     password_confirmation: "",
-  })
+  });
 
   function submit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault()
+    event.preventDefault();
     form.put("/settings/password", {
       preserveScroll: true,
       onSuccess: () => {
-        form.reset()
+        form.reset();
       },
-    })
+    });
   }
 
   return (
@@ -26,7 +26,9 @@ export default function PasswordPage() {
       <div className="space-y-6 rounded-xl border border-border bg-overlay p-6">
         <div>
           <h1 className="text-2xl font-semibold text-fg">Change Password</h1>
-          <p className="text-sm text-muted-fg">Update your password to keep your account secure.</p>
+          <p className="text-sm text-muted-fg">
+            Update your password to keep your account secure.
+          </p>
         </div>
 
         <form className="space-y-4" onSubmit={submit}>
@@ -36,7 +38,12 @@ export default function PasswordPage() {
             ["password_confirmation", "Confirm Password"],
           ].map(([field, label]) => (
             <div key={field} className="space-y-2">
-              <label htmlFor={field} className="block text-sm font-medium text-fg">{label}</label>
+              <label
+                htmlFor={field}
+                className="block text-sm font-medium text-fg"
+              >
+                {label}
+              </label>
               <input
                 id={field}
                 name={field}
@@ -45,7 +52,10 @@ export default function PasswordPage() {
                 type="password"
                 value={form.data[field as keyof typeof form.data]}
                 onChange={(event) =>
-                  form.setData(field as keyof typeof form.data, event.target.value)
+                  form.setData(
+                    field as keyof typeof form.data,
+                    event.target.value,
+                  )
                 }
               />
               {form.errors[field as keyof typeof form.errors] ? (
@@ -64,16 +74,18 @@ export default function PasswordPage() {
             >
               Save
             </button>
-            {form.recentlySuccessful ? <span className="text-sm text-muted-fg">Saved.</span> : null}
+            {form.recentlySuccessful ? (
+              <span className="text-sm text-muted-fg">Saved.</span>
+            ) : null}
           </div>
         </form>
       </div>
     </>
-  )
+  );
 }
 
 PasswordPage.layout = (page: ReactNode) => (
   <AppLayout>
     <SettingsLayout>{page}</SettingsLayout>
   </AppLayout>
-)
+);

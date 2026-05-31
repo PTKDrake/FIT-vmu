@@ -2,7 +2,19 @@
 
 Tài liệu này tách riêng phần kế hoạch triển khai, tracking task và quy trình làm việc nhiều người. Guideline kiến trúc chính nằm ở `VMUFit.md`.
 
----
+## Mục lục
+
+- [1. Kế hoạch chia nhỏ implementation cho Codex](#1-ke-hoach-chia-nho-implementation-cho-codex)
+- [1.1. Phase 0 - Chuẩn bị project và quy ước làm việc](#11-phase-0---chuan-bi-project-va-quy-uoc-lam-viec)
+- [1.2. Phase 1 - Nền tảng auth, role và permission](#12-phase-1---nen-tang-auth-role-va-permission)
+- [1.3. Phase 2 - Database domain MVP](#13-phase-2---database-domain-mvp)
+- [1.4. Phase 3 - Backend actions, data objects và policy](#14-phase-3---backend-actions-data-objects-va-policy)
+- [1.5. Phase 4 - Frontend CMS foundation](#15-phase-4---frontend-cms-foundation)
+- [1.6. Phase 5 - Module nội dung chính](#16-phase-5---module-noi-dung-chinh)
+- [1.7. Phase 6 - Public website MVP](#17-phase-6---public-website-mvp)
+- [1.8. Phase 7 - Testing, hardening và release MVP](#18-phase-7---testing-hardening-va-release-mvp)
+- [2. Tracking tiến độ dự án](#2-tracking-tien-do-du-an)
+- [3. Quy trình làm việc nhiều người để hạn chế conflict](#3-quy-trinh-lam-viec-nhieu-nguoi-de-han-che-conflict)
 
 ## 1. Kế hoạch chia nhỏ implementation cho Codex
 
@@ -204,7 +216,7 @@ Triển khai units, positions, staff_appointments theo VMUFit.md. Tạo migratio
 Checklist:
 
 - [ ] Tạo migration `post_categories`.
-- [ ] Tạo migration hoặc cập nhật `posts` có `category_id`.
+- [ ] Tạo migration hoặc cập nhật `posts` + pivot `post_post_category` để hỗ trợ nhiều chuyên mục cho một bài viết.
 - [ ] Tạo migration `pages` dùng `content_format` mặc định `puck_json`.
 - [ ] Tạo migration `navigation_menus`.
 - [ ] Tạo migration `navigation_items` có `parent_id`, `type`, `linkable_type`, `linkable_id`, `url`, `sort_order`.
@@ -214,7 +226,7 @@ Checklist:
 Prompt mẫu:
 
 ```text
-Triển khai post_categories, posts có category_id, pages và navigation theo VMUFit.md. Pages lưu Puck JSON, posts lưu BlockNote JSON. Navigation hỗ trợ parent-child và polymorphic link tới post_category/page/post hoặc custom_url.
+Triển khai post_categories, posts với quan hệ nhiều-nhiều category qua pivot, pages và navigation theo VMUFit.md. Pages lưu Puck JSON, posts lưu BlockNote JSON. Navigation hỗ trợ parent-child và polymorphic link tới post_category/page/post hoặc custom_url.
 ```
 
 #### Task 2.4 - Documents, Document Rows và Media
@@ -272,7 +284,8 @@ Checklist:
 - [ ] Tạo policy cho posts.
 - [ ] Check bằng `$user->can(...)`.
 - [ ] Tạo request validate create/update/publish nếu cần.
-- [ ] Validate `category_id` nếu post gắn category.
+- [ ] Validate `category_ids` và pivot category nếu post gắn chuyên mục.
+- [ ] Tách rõ request lưu bài (`draft|pending`, hoặc `published` nếu có quyền) với request duyệt bài (`published|rejected`).
 - [ ] Không check bằng `$user->hasRole('admin')` trong policy.
 
 Prompt mẫu:
@@ -427,6 +440,26 @@ Prompt mẫu:
 Tạo foundation UI cho navigation tree theo VMUFit.md. Navigation item hỗ trợ parent-child, reorder, và link tới custom_url/post_category/page/post. UI chỉ phục vụ trải nghiệm; backend vẫn validate toàn bộ.
 ```
 
+#### Task 4.7 - Reverb realtime CMS demo
+
+Checklist:
+
+- [x] Cài `laravel/reverb` và `pusher/pusher-php-server`.
+- [x] Cập nhật `.env.example` với nhóm biến Reverb/Broadcasting cần thiết.
+- [x] Tạo `web/lib/echo.ts` dùng `laravel-echo` + `pusher-js`.
+- [x] Import Echo ở entry point frontend một lần.
+- [x] Tạo event broadcast private channel `cms-user.{userId}`.
+- [x] Tạo route `POST /cms/realtime/ping` chỉ dành cho user đã login, verified và có quyền `view admin dashboard`.
+- [x] Thêm widget “Test realtime” trong CMS dashboard.
+- [x] Bổ sung test backend cho route và channel authorization.
+- [x] Cập nhật `composer run dev` để chạy thêm `reverb:start`.
+
+Prompt mẫu:
+
+```text
+Triển khai Reverb theo hướng tối thiểu nhưng production-aware cho VMUFit. Cài backend broadcasting/Reverb, cấu hình env, tạo Echo setup frontend, thêm một demo realtime an toàn trong CMS dashboard và kiểm thử route/channel authorization. Không hard-code secret và không tạo permission mới nếu permission đã tồn tại.
+```
+
 ### 1.6. Phase 5 - Module nội dung chính
 
 Mục tiêu:
@@ -445,7 +478,9 @@ Thứ tự đề xuất:
 7. Navigation.
 8. Documents thường.
 9. Documents Excel cá nhân hóa.
-10. Public website render pages/navigation.
+10. User management.
+11. Role/permission management.
+12. Public website render pages/navigation.
 
 #### Task 5.1 - Media module
 
@@ -460,10 +495,10 @@ Checklist:
 
 Checklist:
 
-- [ ] CRUD units.
-- [ ] CRUD positions.
-- [ ] Sort order/is_active.
-- [ ] Description dùng BlockNote JSON.
+- [x] CRUD units.
+- [x] CRUD positions.
+- [x] Sort order/is_active.
+- [x] Description dùng BlockNote JSON.
 
 #### Task 5.3 - Staff Profiles module
 
@@ -490,9 +525,12 @@ Checklist:
 Checklist:
 
 - [ ] CRUD posts.
-- [ ] Gắn `category_id` cho post.
+- [ ] Gắn nhiều `category_ids` cho post qua pivot `post_post_category`.
 - [ ] Draft/pending/published/rejected.
 - [ ] Publish permission riêng.
+- [ ] Editor lưu bản nháp hoặc gửi duyệt bằng `pending`.
+- [ ] User có quyền `publish posts` có thể publish trực tiếp trong form khi cần.
+- [ ] Có action/endpoint duyệt riêng để chuyển `pending -> published|rejected`.
 - [ ] Thumbnail qua media.
 - [ ] Content dùng BlockNote JSON.
 - [ ] Public page chỉ hiển thị bài published.
@@ -547,6 +585,60 @@ Prompt mẫu:
 Triển khai import Excel cá nhân hóa cho documents theo VMUFit.md. Logic import đặt trong action/service riêng, không viết trong controller. Parse row theo student_code, lưu data JSON và row_index. Sinh viên chỉ xem dữ liệu theo student_code của chính mình.
 ```
 
+#### Task 5.10 - Hardening luồng duyệt bài viết
+
+Checklist:
+
+- [ ] Chỉ cho phép duyệt/từ chối các bài đang ở trạng thái `pending`.
+- [ ] Bổ sung metadata người duyệt và thời điểm duyệt/từ chối nếu nghiệp vụ cần theo dõi.
+- [ ] Bổ sung lý do từ chối để editor có thể chỉnh sửa và gửi lại.
+- [ ] Làm rõ transition `draft -> pending -> published|rejected`, và đường quay lại từ `rejected`.
+- [ ] Bổ sung test cho transition bất hợp lệ và authorization của endpoint duyệt.
+
+Prompt mẫu:
+
+```text
+Hardening luồng duyệt bài viết trong CMS. Giữ CRUD posts hiện tại, nhưng siết state transition để chỉ bài pending mới được duyệt/từ chối, bổ sung metadata reviewer và rejection reason nếu cần, đồng thời cập nhật test cho các transition và quyền publish.
+```
+
+#### Task 5.11 - User management module
+
+Checklist:
+
+- [ ] Có trang danh sách user trong CMS.
+- [ ] Có filter cơ bản theo tên, email, trạng thái, role.
+- [ ] Có form tạo user nội bộ nếu nghiệp vụ cần.
+- [ ] Có form cập nhật thông tin user cơ bản.
+- [ ] Có cơ chế gán hoặc bỏ role cho user.
+- [ ] Không cho sửa quyền bằng cách ghi trực tiếp vào bảng trung gian ngoài flow chuẩn của Spatie.
+- [ ] Có guard không cho người không đủ quyền tự nâng quyền bản thân.
+- [ ] Có test cho list/create/update/assign role và authorization chính.
+
+Prompt mẫu:
+
+```text
+Triển khai module quản lý user trong CMS cho VMUFit. Module cần có list/filter, create/update thông tin cơ bản và gán role cho user bằng API/flow chuẩn của spatie/laravel-permission. Không thêm users.role hay hardcode quyền ở frontend. Bổ sung test cho authorization và các thao tác quản trị chính.
+```
+
+#### Task 5.12 - Role và permission management module
+
+Checklist:
+
+- [ ] Có trang xem danh sách roles và permissions hiện có.
+- [ ] Có thể tạo hoặc cập nhật role nếu dự án cho phép quản trị động.
+- [ ] Có UI gán permission cho từng role.
+- [ ] Hiển thị rõ permission đang được dùng bởi role nào.
+- [ ] Flush permission cache đúng lúc sau khi cập nhật mapping.
+- [ ] Chặn sửa hoặc xóa các role hệ thống nhạy cảm nếu nghiệp vụ yêu cầu.
+- [ ] Không thay thế policy/gate bằng logic UI.
+- [ ] Có test cho sync permission, authorization và các guard quan trọng.
+
+Prompt mẫu:
+
+```text
+Triển khai module quản lý role và permission trong CMS cho VMUFit. Cho phép xem role/permission hiện có và cập nhật mapping role -> permission qua flow chuẩn của spatie/laravel-permission, đồng thời flush permission cache đúng cách và bảo vệ các role hệ thống nhạy cảm. Viết test cho authorization và permission sync.
+```
+
 ### 1.7. Phase 6 - Public website MVP
 
 Mục tiêu:
@@ -578,6 +670,7 @@ Checklist:
 - [ ] Test import Excel.
 - [ ] Test page publish/render bằng Puck JSON.
 - [ ] Test category filter cho posts.
+- [ ] Test riêng cho luồng duyệt bài viết: submit review, approve, reject, invalid transition.
 - [ ] Test navigation tree và linkable target.
 - [ ] Test user không có quyền không truy cập được route quản trị.
 - [ ] Test public chỉ thấy dữ liệu published/public.
@@ -590,13 +683,23 @@ Checklist:
 
 ---
 
-## 17. Tracking tiến độ dự án
+## 2. Tracking tiến độ dự án
 
 Nên tạo file:
 
 ```text
 docs/tasks.md
 ```
+
+### 2.1. Status convention
+
+- `todo`: chưa làm
+- `doing`: đang làm
+- `review`: đã mở PR/chờ review
+- `blocked`: đang bị chặn
+- `done`: đã merge hoặc hoàn tất
+
+### 2.2. Task board template
 
 Mỗi task phải được tracking theo mẫu sau:
 
@@ -613,14 +716,14 @@ Mỗi task phải được tracking theo mẫu sau:
 
 ## Task board
 
-| ID | Phase | Task | Status | Owner | Branch | PR | Files touched | Test commands | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0.1 | Setup | Backend packages | todo |  | feature/setup-backend-packages |  | composer.json, composer.lock | composer test |  |
-| 0.2 | Setup | Frontend packages | todo |  | feature/setup-frontend-packages |  | package.json, pnpm-lock.yaml | pnpm lint, pnpm typecheck | BlockNote + Puck + form/table/query/upload/date packages |
-| 1.1 | Auth | Configure Spatie permission | todo |  | feature/auth-spatie-config |  | app/Models/User.php, config/permission.php | php artisan test |  |
+| ID  | Phase | Task                        | Status | Owner | Branch                          | PR  | Files touched                              | Test commands             | Notes                                                    |
+| --- | ----- | --------------------------- | ------ | ----- | ------------------------------- | --- | ------------------------------------------ | ------------------------- | -------------------------------------------------------- |
+| 0.1 | Setup | Backend packages            | todo   |       | feature/setup-backend-packages  |     | composer.json, composer.lock               | composer test             |                                                          |
+| 0.2 | Setup | Frontend packages           | todo   |       | feature/setup-frontend-packages |     | package.json, pnpm-lock.yaml               | pnpm lint, pnpm typecheck | BlockNote + Puck + form/table/query/upload/date packages |
+| 1.1 | Auth  | Configure Spatie permission | todo   |       | feature/auth-spatie-config      |     | app/Models/User.php, config/permission.php | php artisan test          |                                                          |
 ```
 
-### 17.1. Definition of Ready
+### 2.3. Definition of Ready
 
 Một task chỉ nên bắt đầu khi có đủ:
 
@@ -631,7 +734,7 @@ Một task chỉ nên bắt đầu khi có đủ:
 - [ ] Có lệnh kiểm tra tối thiểu.
 - [ ] Có tiêu chí hoàn thành.
 
-### 17.2. Definition of Done
+### 2.4. Definition of Done
 
 Một task được coi là xong khi:
 
@@ -646,7 +749,7 @@ Một task được coi là xong khi:
 - [ ] Đã cập nhật `docs/tasks.md`.
 - [ ] PR mô tả rõ file đã sửa và cách kiểm tra.
 
-### 2.3. Quy tắc cập nhật tracking
+### 2.5. Quy tắc cập nhật tracking
 
 - Khi bắt đầu task: chuyển `todo` -> `doing`, điền owner và branch.
 - Khi mở PR: chuyển `doing` -> `review`, điền PR link/id.
@@ -692,7 +795,7 @@ Quy tắc:
 - Rebase hoặc merge `main` thường xuyên trước khi mở PR.
 - PR nhỏ dễ review hơn PR lớn.
 
-### 18.2. Chia ownership theo khu vực file
+### 3.2. Chia ownership theo khu vực file
 
 Để giảm conflict, nên chia ownership tạm thời theo module:
 
@@ -781,30 +884,36 @@ Sau khi làm xong, hãy liệt kê:
 4. Rủi ro hoặc việc còn lại.
 ```
 
-### 18.4. Quy tắc PR
+### 3.4. Quy tắc PR
 
 Mỗi PR nên có mô tả:
 
 ```markdown
 ## Summary
+
 - ...
 
 ## Scope
+
 - ...
 
 ## Files changed
+
 - ...
 
 ## Verification
+
 - [ ] php artisan test
 - [ ] ./vendor/bin/pint --test
 - [ ] pnpm lint
 - [ ] pnpm typecheck
 
 ## Screenshots
+
 Nếu có UI thì thêm ảnh.
 
 ## Notes / Risks
+
 - ...
 ```
 
@@ -815,7 +924,7 @@ Quy tắc review:
 - Không merge PR có authorization chỉ ở frontend.
 - Không merge PR lớn hơn phạm vi task nếu không có lý do rõ.
 
-### 18.5. Thứ tự merge đề xuất
+### 3.5. Thứ tự merge đề xuất
 
 Để tránh conflict và lỗi phụ thuộc, nên merge theo thứ tự:
 
@@ -848,7 +957,7 @@ Với lockfile:
 - Sau khi resolve `package.json`, chạy lại `pnpm install`.
 - Commit lockfile mới sau khi đã chạy install thành công.
 
-### 18.7. Quy tắc đặt tên commit
+### 3.7. Quy tắc đặt tên commit
 
 Nên dùng conventional commit đơn giản:
 

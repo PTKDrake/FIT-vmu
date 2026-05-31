@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Media;
 use App\Models\Post;
+use App\Models\PostCategory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -40,6 +41,12 @@ class UpdatePostRequest extends FormRequest
                 'max:255',
                 Rule::unique((new Post)->getTable(), 'slug')->ignore($postId),
             ],
+            'category_ids' => ['nullable', 'array'],
+            'category_ids.*' => [
+                'integer',
+                'distinct',
+                Rule::exists(PostCategory::class, 'id'),
+            ],
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['blocknote_json'])],
@@ -48,7 +55,11 @@ class UpdatePostRequest extends FormRequest
                 'integer',
                 Rule::exists((new Media)->getTable(), 'id'),
             ],
-            'status' => ['required', 'string', Rule::in(['draft', 'pending'])],
+            'status' => [
+                'required',
+                'string',
+                Rule::in($this->user()?->can('publish posts') ? ['draft', 'pending', 'published'] : ['draft', 'pending']),
+            ],
         ];
     }
 }

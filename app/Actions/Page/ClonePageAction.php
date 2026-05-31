@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Page;
 
+use App\Events\CmsContentChanged;
 use App\Models\Page;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,8 @@ class ClonePageAction
             $clone->status = 'draft';
             $clone->published_at = null;
             $clone->save();
+
+            event(CmsContentChanged::forPage($clone, 'cloned', 'Đã sao chép trang.'));
 
             return $clone->fresh(['author']) ?? $clone;
         });

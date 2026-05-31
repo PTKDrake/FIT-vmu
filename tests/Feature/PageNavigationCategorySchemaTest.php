@@ -22,8 +22,11 @@ test('post category page and navigation tables expose the expected domain column
         'created_at',
         'updated_at',
     ]))->toBeTrue()
-        ->and(Schema::hasColumns('posts', [
-            'category_id',
+        ->and(Schema::hasColumns('post_post_category', [
+            'post_id',
+            'post_category_id',
+            'created_at',
+            'updated_at',
         ]))->toBeTrue()
         ->and(Schema::hasColumns('pages', [
             'id',
@@ -118,7 +121,8 @@ test('post category tree page authoring and navigation polymorphic links resolve
     $author = User::factory()->create();
     $category = PostCategory::factory()->create();
     $childCategory = PostCategory::factory()->for($category, 'parent')->create();
-    $post = Post::factory()->for($author, 'author')->for($category, 'category')->create();
+    $post = Post::factory()->for($author, 'author')->create();
+    $post->categories()->sync([$category->id]);
     $page = Page::factory()->for($author, 'author')->create([
         'published_at' => '2026-05-24 09:15:00',
     ]);
@@ -147,7 +151,7 @@ test('post category tree page authoring and navigation polymorphic links resolve
 
     expect($childCategory->parent?->is($category))->toBeTrue()
         ->and($category->children)->toHaveCount(1)
-        ->and($post->category?->is($category))->toBeTrue()
+        ->and($post->categories->contains($category))->toBeTrue()
         ->and($category->posts)->toHaveCount(1)
         ->and($page->author->is($author))->toBeTrue()
         ->and($author->authoredPages)->toHaveCount(1)

@@ -1,11 +1,11 @@
-import { HomeModernIcon } from "@heroicons/react/24/outline"
-import { Link } from "@inertiajs/react"
-import type { PropsWithChildren, ReactNode } from "react"
-import { home } from "@/routes"
+import { HomeModernIcon } from "@heroicons/react/24/outline";
+import { Link } from "@inertiajs/react";
+import type { PropsWithChildren, ReactNode } from "react";
+import { home } from "@/routes";
 
 interface GuestLayoutProps {
-  description?: ReactNode
-  header?: ReactNode
+  description?: ReactNode;
+  header?: ReactNode;
 }
 
 export default function GuestLayout({
@@ -32,8 +32,16 @@ export default function GuestLayout({
           <div className="flex flex-1 items-center justify-center px-6 py-12 sm:px-10 lg:px-12">
             <div className="w-full max-w-md">
               <div className="mb-8">
-                {header ? <h1 className="text-4xl font-semibold tracking-tight text-fg">{header}</h1> : null}
-                {description ? <p className="mt-3 text-base leading-7 text-muted-fg">{description}</p> : null}
+                {header ? (
+                  <h1 className="text-4xl font-semibold tracking-tight text-fg">
+                    {header}
+                  </h1>
+                ) : null}
+                {description ? (
+                  <p className="mt-3 text-base leading-7 text-muted-fg">
+                    {description}
+                  </p>
+                ) : null}
               </div>
               {children}
             </div>
@@ -79,5 +87,5 @@ export default function GuestLayout({
         </aside>
       </div>
     </div>
-  )
+  );
 }

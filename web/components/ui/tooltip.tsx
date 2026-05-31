@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { Button } from "react-aria-components/Button"
-import { composeRenderProps } from "react-aria-components/composeRenderProps"
-import type { TooltipProps as TooltipPrimitiveProps } from "react-aria-components/Tooltip"
+import { Button } from "react-aria-components/Button";
+import { composeRenderProps } from "react-aria-components/composeRenderProps";
+import type { TooltipProps as TooltipPrimitiveProps } from "react-aria-components/Tooltip";
 import {
   OverlayArrow,
   Tooltip as TooltipPrimitive,
   TooltipTrigger as TooltipTriggerPrimitive,
-} from "react-aria-components/Tooltip"
-import { twJoin } from "tailwind-merge"
-import type { VariantProps } from "tailwind-variants"
-import { tv } from "tailwind-variants"
+} from "react-aria-components/Tooltip";
+import { twJoin } from "tailwind-merge";
+import type { VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 const tooltipStyles = tv({
   base: [
@@ -18,7 +18,10 @@ const tooltipStyles = tv({
   ],
   variants: {
     inverse: {
-      true: ["border-transparent bg-fg text-bg", "**:[.text-muted-fg]:text-bg/60"],
+      true: [
+        "border-transparent bg-fg text-bg",
+        "**:[.text-muted-fg]:text-bg/60",
+      ],
       false: "bg-overlay text-overlay-fg",
     },
     isEntering: {
@@ -37,16 +40,17 @@ const tooltipStyles = tv({
   defaultVariants: {
     inverse: false,
   },
-})
+});
 
-type TooltipProps = React.ComponentProps<typeof TooltipTriggerPrimitive>
-const Tooltip = (props: TooltipProps) => <TooltipTriggerPrimitive {...props} />
+type TooltipProps = React.ComponentProps<typeof TooltipTriggerPrimitive>;
+const Tooltip = (props: TooltipProps) => <TooltipTriggerPrimitive {...props} />;
 
 interface TooltipContentProps
-  extends Omit<TooltipPrimitiveProps, "children">,
+  extends
+    Omit<TooltipPrimitiveProps, "children">,
     VariantProps<typeof tooltipStyles> {
-  arrow?: boolean
-  children?: React.ReactNode
+  arrow?: boolean;
+  children?: React.ReactNode;
 }
 
 const TooltipContent = ({
@@ -77,7 +81,9 @@ const TooltipContent = ({
             // inverse
             className={twJoin(
               "block group-placement-bottom:rotate-180 group-placement-left:-rotate-90 group-placement-right:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]",
-              inverse ? "fill-fg stroke-transparent" : "fill-overlay stroke-(--tooltip-border)",
+              inverse
+                ? "fill-fg stroke-transparent"
+                : "fill-overlay stroke-(--tooltip-border)",
             )}
           >
             <path d="M0 0 L6 6 L12 0" />
@@ -86,10 +92,10 @@ const TooltipContent = ({
       )}
       {children}
     </TooltipPrimitive>
-  )
-}
+  );
+};
 
-const TooltipTrigger = Button
+const TooltipTrigger = Button;
 
-export type { TooltipContentProps, TooltipProps }
-export { Tooltip, TooltipContent, TooltipTrigger }
+export type { TooltipContentProps, TooltipProps };
+export { Tooltip, TooltipContent, TooltipTrigger };

@@ -1,23 +1,26 @@
-import { Form, Head, Link, usePage } from "@inertiajs/react"
-import type { ReactNode } from "react"
-import { store as loginStore } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController"
-import { redirect as googleRedirect } from "@/actions/App/Http/Controllers/Auth/GoogleOAuthController"
-import { create as registerCreate } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController"
-import GuestLayout from "@/layouts/guest-layout"
-import { request as forgotPasswordRequest } from "@/routes/password"
-import type { SharedData } from "@/types/shared"
+import { Form, Head, Link, usePage } from "@inertiajs/react";
+import type { ReactNode } from "react";
+import { store as loginStore } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
+import { redirect as googleRedirect } from "@/actions/App/Http/Controllers/Auth/GoogleOAuthController";
+import { create as registerCreate } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController";
+import GuestLayout from "@/layouts/guest-layout";
+import { request as forgotPasswordRequest } from "@/routes/password";
+import type { SharedData } from "@/types/shared";
 
 interface LoginPageProps {
-  canResetPassword: boolean
-  status?: string
+  canResetPassword: boolean;
+  status?: string;
 }
 
-export default function LoginPage({ canResetPassword, status }: LoginPageProps) {
+export default function LoginPage({
+  canResetPassword,
+  status,
+}: LoginPageProps) {
   const {
     auth: {
       social: { googleEnabled },
     },
-  } = usePage<SharedData>().props
+  } = usePage<SharedData>().props;
 
   return (
     <>
@@ -31,7 +34,10 @@ export default function LoginPage({ canResetPassword, status }: LoginPageProps) 
         {({ errors, processing }) => (
           <>
             <div className="space-y-2.5">
-              <label htmlFor="email" className="block text-sm font-medium text-fg">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-fg"
+              >
                 Email
               </label>
               <input
@@ -42,11 +48,16 @@ export default function LoginPage({ canResetPassword, status }: LoginPageProps) 
                 type="email"
                 placeholder="m@example.com"
               />
-              {errors.email ? <p className="text-sm text-danger-subtle-fg">{errors.email}</p> : null}
+              {errors.email ? (
+                <p className="text-sm text-danger-subtle-fg">{errors.email}</p>
+              ) : null}
             </div>
             <div className="space-y-2.5">
               <div className="flex items-center justify-between gap-4">
-                <label htmlFor="password" className="block text-sm font-medium text-fg">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-fg"
+                >
                   Password
                 </label>
                 {canResetPassword ? (
@@ -65,7 +76,11 @@ export default function LoginPage({ canResetPassword, status }: LoginPageProps) 
                 name="password"
                 type="password"
               />
-              {errors.password ? <p className="text-sm text-danger-subtle-fg">{errors.password}</p> : null}
+              {errors.password ? (
+                <p className="text-sm text-danger-subtle-fg">
+                  {errors.password}
+                </p>
+              ) : null}
             </div>
             <button
               type="submit"
@@ -79,7 +94,9 @@ export default function LoginPage({ canResetPassword, status }: LoginPageProps) 
               <>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <span className="text-sm text-muted-fg">Or continue with</span>
+                  <span className="text-sm text-muted-fg">
+                    Or continue with
+                  </span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -95,7 +112,10 @@ export default function LoginPage({ canResetPassword, status }: LoginPageProps) 
 
             <p className="text-center text-sm text-muted-fg">
               Don&apos;t have an account?{" "}
-              <Link href={registerCreate.url()} className="font-medium text-fg underline-offset-4 hover:underline">
+              <Link
+                href={registerCreate.url()}
+                className="font-medium text-fg underline-offset-4 hover:underline"
+              >
                 Sign up
               </Link>
             </p>
@@ -103,7 +123,7 @@ export default function LoginPage({ canResetPassword, status }: LoginPageProps) 
         )}
       </Form>
     </>
-  )
+  );
 }
 
 LoginPage.layout = (page: ReactNode) => (
@@ -113,7 +133,7 @@ LoginPage.layout = (page: ReactNode) => (
   >
     {page}
   </GuestLayout>
-)
+);
 
 function GoogleMark() {
   return (
@@ -135,5 +155,5 @@ function GoogleMark() {
         fill="#EA4335"
       />
     </svg>
-  )
+  );
 }

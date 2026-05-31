@@ -1,21 +1,21 @@
-import { Head, useForm } from "@inertiajs/react"
-import type { FormEvent, ReactNode } from "react"
-import AppLayout from "@/layouts/app-layout"
-import SettingsLayout from "@/pages/settings/settings-layout"
+import { Head, useForm } from "@inertiajs/react";
+import type { FormEvent, ReactNode } from "react";
+import AppLayout from "@/layouts/app-layout";
+import SettingsLayout from "@/pages/settings/settings-layout";
 
 export default function DeleteAccountPage() {
   const form = useForm({
     password: "",
-  })
+  });
 
   function submit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault()
+    event.preventDefault();
     form.delete("/settings/delete-account", {
       preserveScroll: true,
       onSuccess: () => {
-        form.reset()
+        form.reset();
       },
-    })
+    });
   }
 
   return (
@@ -31,7 +31,12 @@ export default function DeleteAccountPage() {
 
         <form className="space-y-4" onSubmit={submit}>
           <div className="space-y-2">
-            <label htmlFor="delete_password" className="block text-sm font-medium text-fg">Confirm Password</label>
+            <label
+              htmlFor="delete_password"
+              className="block text-sm font-medium text-fg"
+            >
+              Confirm Password
+            </label>
             <input
               id="delete_password"
               name="password"
@@ -41,7 +46,11 @@ export default function DeleteAccountPage() {
               value={form.data.password}
               onChange={(event) => form.setData("password", event.target.value)}
             />
-            {form.errors.password ? <p className="text-sm text-danger-subtle-fg">{form.errors.password}</p> : null}
+            {form.errors.password ? (
+              <p className="text-sm text-danger-subtle-fg">
+                {form.errors.password}
+              </p>
+            ) : null}
           </div>
 
           <button
@@ -54,11 +63,11 @@ export default function DeleteAccountPage() {
         </form>
       </div>
     </>
-  )
+  );
 }
 
 DeleteAccountPage.layout = (page: ReactNode) => (
   <AppLayout>
     <SettingsLayout>{page}</SettingsLayout>
   </AppLayout>
-)
+);

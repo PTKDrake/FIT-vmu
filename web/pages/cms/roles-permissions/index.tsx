@@ -9,7 +9,7 @@ export default function CmsRolesPermissionsPage() {
       <Head title="Vai trò & quyền" />
       <CmsPagePlaceholder
         title="Vai trò & quyền"
-        description="Trang vai trò và quyền sẽ dùng cùng shell CMS để cấu hình nhóm quyền, gán vai trò và theo dõi quyền truy cập."
+        description="Quản lý vai trò, nhóm quyền và quyền truy cập trong CMS."
       />
     </>
   );

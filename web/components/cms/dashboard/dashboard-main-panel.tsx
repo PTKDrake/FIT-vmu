@@ -1,7 +1,6 @@
+import { CmsRealtimeDemoCard } from "@/components/cms/dashboard/cms-realtime-demo-card";
 import type { DashboardOverview } from "@/components/cms/types";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 
 const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
@@ -20,21 +19,14 @@ export function DashboardMainPanel({
   overview: DashboardOverview;
 }) {
   return (
-    <Card className="min-h-[100vh] flex-1 rounded-xl border-border bg-overlay shadow-none md:min-h-min">
-      <CardHeader className="gap-3">
+    <div className="min-h-[100vh] flex-1 rounded-2xl border border-border bg-overlay md:min-h-min">
+      <div className="border-b border-border px-5 py-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-2">
-            <Badge intent="primary" isCircle={false}>
-              Bảng điều hành
-            </Badge>
-            <Heading level={2} className="text-2xl/8 sm:text-3xl/9">
-              Điều phối nội dung và dữ liệu trong một không gian làm việc
-            </Heading>
-            <Text className="max-w-3xl">
-              Dashboard CMS đã được tách thành layout và component dùng chung để
-              các trang con như Bài viết, Tài liệu, Hồ sơ cán bộ hay Quản trị có
-              thể tái sử dụng cùng cấu trúc.
-            </Text>
+            <p className="text-lg font-semibold text-fg">Tổng quan CMS</p>
+            <p className="max-w-3xl text-sm text-muted-fg">
+              Theo dõi nội dung đang hoạt động và các hạng mục cần xử lý.
+            </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
@@ -45,7 +37,7 @@ export function DashboardMainPanel({
               <p className="mt-2 text-2xl font-semibold text-fg">
                 {overview.pendingReview.length.toLocaleString("vi-VN")}
               </p>
-              <Text>Hạng mục đang chờ xử lý biên tập hoặc duyệt.</Text>
+              <Text>Hạng mục đang chờ xử lý.</Text>
             </div>
             <div className="rounded-xl border border-border bg-muted/50 px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-fg">
@@ -54,19 +46,17 @@ export function DashboardMainPanel({
               <p className="mt-2 text-2xl font-semibold text-fg">
                 {overview.recentActivity.length.toLocaleString("vi-VN")}
               </p>
-              <Text>
-                Dòng hoạt động mới nhất từ các module đang có dữ liệu.
-              </Text>
+              <Text>Các thay đổi mới nhất trong hệ thống.</Text>
             </div>
           </div>
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(22rem,0.9fr)]">
+      <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(22rem,0.9fr)]">
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-muted/40 p-4">
             <div className="flex items-center justify-between gap-3">
-              <Heading level={3}>Hoạt động gần đây</Heading>
+              <p className="font-medium text-fg">Hoạt động gần đây</p>
               <Badge intent="outline" isCircle={false}>
                 {overview.recentActivity.length} mục
               </Badge>
@@ -91,7 +81,7 @@ export function DashboardMainPanel({
 
           <div className="rounded-xl border border-border bg-muted/40 p-4">
             <div className="flex items-center justify-between gap-3">
-              <Heading level={3}>Tài liệu gần đây</Heading>
+              <p className="font-medium text-fg">Tài liệu gần đây</p>
               <Badge intent="outline" isCircle={false}>
                 {overview.recentDocuments.length} mục
               </Badge>
@@ -118,8 +108,10 @@ export function DashboardMainPanel({
         </div>
 
         <div className="space-y-4">
+          <CmsRealtimeDemoCard />
+
           <div className="rounded-xl border border-border bg-muted/40 p-4">
-            <Heading level={3}>Nhóm quyền hiện có</Heading>
+            <p className="font-medium text-fg">Không gian làm việc</p>
             <div className="mt-4 space-y-3">
               <div className="rounded-xl border border-border bg-overlay px-4 py-3">
                 <p className="text-sm font-medium text-fg">
@@ -130,24 +122,20 @@ export function DashboardMainPanel({
                     "vi-VN",
                   )}
                 </p>
-                <Text>
-                  Số module quản trị chính đang được mở cho tài khoản hiện tại.
-                </Text>
+                <Text>Số module quản trị đang khả dụng.</Text>
               </div>
               <div className="rounded-xl border border-border bg-overlay px-4 py-3">
                 <p className="text-sm font-medium text-fg">Nút tổ chức</p>
                 <p className="mt-2 text-3xl font-semibold text-fg">
                   {overview.workspace.organizationNodes.toLocaleString("vi-VN")}
                 </p>
-                <Text>
-                  Tổng hợp đơn vị, vị trí và cấu trúc tổ chức đang quản lý.
-                </Text>
+                <Text>Tổng số đơn vị và cấu trúc đang quản lý.</Text>
               </div>
             </div>
           </div>
 
           <div className="rounded-xl border border-border bg-muted/40 p-4">
-            <Heading level={3}>Mục chờ duyệt</Heading>
+            <p className="font-medium text-fg">Mục chờ duyệt</p>
             <div className="mt-4 space-y-3">
               {overview.pendingReview.slice(0, 4).map((item) => (
                 <div
@@ -161,7 +149,7 @@ export function DashboardMainPanel({
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

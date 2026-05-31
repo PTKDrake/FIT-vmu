@@ -1,6 +1,13 @@
-import { BlockNoteView } from "@blocknote/shadcn";
+import { vi as blockNoteViDictionary } from "@blocknote/core/locales";
 import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/shadcn";
+import { vi as blockNoteAiViDictionary } from "@blocknote/xl-ai/locales";
+import { usePage } from "@inertiajs/react";
 import { twMerge } from "tailwind-merge";
+import { useTheme } from "@/hooks/use-theme";
+import type { SharedData } from "@/types/shared";
+import { BlockNoteAiControllers } from "./blocknote-ai";
+import { createBlockNoteAiExtension } from "./blocknote-ai-extension";
 import {
   cloneBlockNoteContent,
   getBlockNoteFormat,
@@ -39,18 +46,27 @@ export function BlockNoteEditor({
   readOnly = false,
   uploadFile,
 }: BlockNoteEditorProps) {
+  const { resolvedTheme } = useTheme();
+  const page = usePage<SharedData>();
   const initialContent = parseBlockNoteContent(content);
   const isEditable = !disabled && !readOnly;
+  const blockNoteAiEnabled =
+    isEditable && page.props.features.blocknoteAiEnabled;
   const editor = useCreateBlockNote(
     {
       defaultStyles: true,
+      dictionary: {
+        ...blockNoteViDictionary,
+        ai: blockNoteAiViDictionary,
+      },
+      extensions: blockNoteAiEnabled ? [createBlockNoteAiExtension()] : [],
       initialContent,
       uploadFile,
     },
-    [editorKey],
+    [blockNoteAiEnabled, editorKey],
   );
 
-  function handleChange(): void {
+  function handleEditorChange(): void {
     const blocks = cloneBlockNoteContent(editor.document);
 
     onChange?.({
@@ -75,16 +91,19 @@ export function BlockNoteEditor({
         key={editorKey}
         className="vmu-blocknote__view"
         editor={editor}
+        theme={resolvedTheme}
         editable={isEditable}
         emojiPicker={isEditable}
         filePanel={isEditable}
-        formattingToolbar={isEditable}
         linkToolbar={isEditable}
-        onChange={handleChange}
+        onChange={handleEditorChange}
         sideMenu={isEditable}
-        slashMenu={isEditable}
+        slashMenu={blockNoteAiEnabled ? false : isEditable}
         tableHandles={isEditable}
-      />
+        formattingToolbar={blockNoteAiEnabled ? false : isEditable}
+      >
+        {blockNoteAiEnabled ? <BlockNoteAiControllers /> : null}
+      </BlockNoteView>
     </div>
   );
 }
