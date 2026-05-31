@@ -16,12 +16,16 @@ final class PublishPostController extends Controller
     {
         /** @var array{
          *     status: string,
-         *     published_at?: string|null
+         *     published_at?: string|null,
+         *     rejection_reason?: string|null
          * } $validated
          */
         $validated = $request->validated();
 
-        $publishAction($post, $validated);
+        /** @var int $reviewerId */
+        $reviewerId = $request->user()?->getKey();
+
+        $publishAction($post, $validated, $reviewerId);
 
         flash($validated['status'] === 'published' ? 'Đã xuất bản bài viết.' : 'Đã từ chối duyệt bài viết.');
 

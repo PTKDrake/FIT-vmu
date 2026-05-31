@@ -69,6 +69,9 @@ export default function CmsPostsPage({
   );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [rejectTarget, setRejectTarget] = useState<CmsPostTableRow | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionError, setRejectionError] = useState("");
 
   useCmsContentRealtime("posts", (payload) => {
     toast.info(payload.message);
@@ -96,6 +99,18 @@ export default function CmsPostsPage({
               <Text className="line-clamp-2 text-sm text-muted-fg mt-1">
                 {row.original.excerpt}
               </Text>
+            ) : null}
+            {row.original.status === "rejected" && row.original.rejectionReason ? (
+              <div className="mt-2 text-xs text-danger border border-danger/20 bg-danger/5 p-2.5 rounded-lg max-w-lg">
+                <span className="font-semibold block">Lý do từ chối:</span>
+                <p className="mt-1 whitespace-pre-wrap">{row.original.rejectionReason}</p>
+                {row.original.reviewerName ? (
+                  <span className="text-muted-fg block mt-1.5 text-[10px]">
+                    Người từ chối: {row.original.reviewerName}
+                    {row.original.reviewedAt ? ` - ${formatDate(row.original.reviewedAt)}` : ""}
+                  </span>
+                ) : null}
+              </div>
             ) : null}
           </div>
         ),
@@ -162,8 +177,7 @@ export default function CmsPostsPage({
         cell: ({ row }) => {
           const showApproval =
             can.publishPosts &&
-            (row.original.status === "pending" ||
-              row.original.status === "draft");
+            row.original.status === "pending";
           const showManage = can.managePosts;
 
           if (!showManage && !showApproval) {
@@ -193,14 +207,15 @@ export default function CmsPostsPage({
                     onAction={() => {
                       handlePublishStatus(row.original.id, "published");
                     }}
+                    className="text-primary"
                   >
-                    <CheckCircleIcon className="text-success" />
-                    Phê duyệt đăng bài
+                    <CheckCircleIcon className="text-primary" />
+                    Phê duyệt bài đăng
                   </MenuItem>
                   <MenuItem
                     intent="danger"
                     onAction={() => {
-                      handlePublishStatus(row.original.id, "rejected");
+                      setRejectTarget(row.original);
                     }}
                   >
                     <XCircleIcon className="text-danger" />
@@ -326,6 +341,92 @@ export default function CmsPostsPage({
           title="Bài viết"
         />
       </div>
+
+      {rejectTarget ? (
+        <ModalContent
+          aria-label="Xác nhận từ chối bài viết"
+          isOpen={rejectTarget !== null}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setRejectTarget(null);
+              setRejectionReason("");
+              setRejectionError("");
+            }
+          }}
+          size="lg"
+        >
+          <ModalHeader>
+            <ModalTitle>Từ chối bài viết</ModalTitle>
+            <ModalDescription>
+              Bạn sắp từ chối bài viết <strong>{rejectTarget.title}</strong>. Vui lòng nhập lý do từ chối để tác giả có thể chỉnh sửa lại.
+            </ModalDescription>
+          </ModalHeader>
+          <ModalBody>
+            <div className="space-y-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-fg">
+                  Lý do từ chối <span className="text-danger">*</span>
+                </label>
+                <textarea
+                  className="w-full min-h-24 p-3 rounded-lg border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-hidden"
+                  placeholder="Ví dụ: Nội dung chưa phù hợp, thiếu hình ảnh minh họa..."
+                  value={rejectionReason}
+                  onChange={(e) => {
+                    setRejectionReason(e.target.value);
+                    if (e.target.value.trim()) {
+                      setRejectionError("");
+                    }
+                  }}
+                />
+                {rejectionError ? (
+                  <p className="text-xs text-danger">{rejectionError}</p>
+                ) : null}
+              </div>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              intent="outline"
+              onPress={() => {
+                setRejectTarget(null);
+                setRejectionReason("");
+                setRejectionError("");
+              }}
+            >
+              Hủy
+            </Button>
+            <Button
+              intent="danger"
+              isDisabled={isPublishing}
+              onPress={() => {
+                if (!rejectionReason.trim()) {
+                  setRejectionError("Lý do từ chối là bắt buộc.");
+                  return;
+                }
+                setIsPublishing(true);
+                router.patch(
+                  postsRoutes.publish.url({ post: rejectTarget.id }),
+                  {
+                    status: "rejected",
+                    rejection_reason: rejectionReason,
+                  },
+                  {
+                    onFinish: () => {
+                      setIsPublishing(false);
+                      setRejectTarget(null);
+                      setRejectionReason("");
+                      setRejectionError("");
+                    },
+                    preserveScroll: true,
+                  }
+                );
+              }}
+            >
+              Xác nhận từ chối
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      ) : null}
 
       {deleteTarget ? (
         <ModalContent

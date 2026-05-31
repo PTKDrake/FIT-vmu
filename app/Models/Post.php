@@ -29,8 +29,11 @@ class Post extends Model
         'content_format',
         'thumbnail_id',
         'author_id',
+        'reviewed_by_id',
         'status',
         'published_at',
+        'reviewed_at',
+        'rejection_reason',
     ];
 
     /**
@@ -52,6 +55,7 @@ class Post extends Model
     {
         return [
             'published_at' => 'datetime',
+            'reviewed_at' => 'datetime',
         ];
     }
 
@@ -72,6 +76,12 @@ class Post extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    /** @return BelongsTo<User, $this> */
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by_id');
     }
 
     /** @return HasMany<NavigationItem, $this> */

@@ -76,6 +76,9 @@ export interface CmsPostTableRow {
   status: "draft" | "pending" | "published" | "rejected";
   title: string;
   updatedAt: string;
+  rejectionReason?: string | null;
+  reviewedAt?: string | null;
+  reviewerName?: string | null;
 }
 
 export interface CmsPostsPageProps extends SharedData {

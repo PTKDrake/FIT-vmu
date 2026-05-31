@@ -49,7 +49,7 @@ final class PostsIndexController extends Controller
         );
 
         $posts = CmsPostsQueryBuilder::make($queryBuilderRequest)
-            ->with(['author', 'categories'])
+            ->with(['author', 'categories', 'reviewer'])
             ->paginate($perPage, ['*'], 'page', $page);
 
         $rows = $posts->getCollection()
@@ -159,6 +159,9 @@ final class PostsIndexController extends Controller
             'authorName' => $post->author?->name,
             'publishedAt' => $this->formatDateTime($post->published_at),
             'updatedAt' => $this->formatDateTime($post->updated_at) ?? now()->toAtomString(),
+            'rejectionReason' => $post->rejection_reason,
+            'reviewedAt' => $this->formatDateTime($post->reviewed_at),
+            'reviewerName' => $post->reviewer?->name,
         ];
     }
 

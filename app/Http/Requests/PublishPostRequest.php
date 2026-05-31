@@ -31,6 +31,12 @@ class PublishPostRequest extends FormRequest
         return [
             'status' => ['required', 'string', Rule::in(['published', 'rejected'])],
             'published_at' => ['nullable', 'date'],
+            'rejection_reason' => [
+                Rule::requiredIf(fn (): bool => $this->string('status')->toString() === 'rejected'),
+                'nullable',
+                'string',
+                'max:2000',
+            ],
         ];
     }
 }
