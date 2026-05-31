@@ -29,6 +29,7 @@ final class CmsUsersQueryBuilder
             );
     }
 
+    /** @param Builder<User> $query */
     private static function searchFilter(Builder $query, mixed $value): void
     {
         if (! is_string($value) || trim($value) === '') {
@@ -44,6 +45,7 @@ final class CmsUsersQueryBuilder
         });
     }
 
+    /** @param Builder<User> $query */
     private static function verifiedFilter(Builder $query, mixed $value): void
     {
         if ($value === '1' || $value === 1 || $value === true) {
@@ -57,6 +59,7 @@ final class CmsUsersQueryBuilder
         }
     }
 
+    /** @param Builder<User> $query */
     private static function roleFilter(Builder $query, mixed $value): void
     {
         if (! is_string($value) || trim($value) === '') {

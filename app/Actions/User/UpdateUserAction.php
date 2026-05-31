@@ -55,6 +55,7 @@ class UpdateUserAction
      */
     private function ensureActorCanAssignRoles(User $actor, User $target, array $roles): void
     {
+        /** @var list<string> $currentRoles */
         $currentRoles = $target->getRoleNames()->values()->all();
 
         if (in_array('super-admin', $currentRoles, true) && ! $actor->hasRole('super-admin')) {

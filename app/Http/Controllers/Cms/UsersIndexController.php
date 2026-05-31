@@ -156,6 +156,7 @@ final class UsersIndexController extends Controller
         /** @var int $userId */
         $userId = $user->getKey();
 
+        /** @var list<string> $roleNames */
         $roleNames = $user->getRoleNames()->sort()->values()->all();
         $isVerified = $user->email_verified_at !== null;
 

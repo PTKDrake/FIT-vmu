@@ -36,8 +36,6 @@ class ProvisionStudentProfileFromEmailAction
             return null;
         }
 
-        $studentCode = $matches['student_code'] ?? null;
-
-        return is_string($studentCode) && $studentCode !== '' ? $studentCode : null;
+        return $matches['student_code'];
     }
 }
