@@ -52,7 +52,8 @@ class PostPolicy
      */
     public function publish(User $user, Post $post): bool
     {
-        return $user->can('publish posts');
+        return $user->can('publish posts')
+            && $post->status === 'pending';
     }
 
     /**

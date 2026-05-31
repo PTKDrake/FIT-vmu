@@ -20,20 +20,22 @@ test('post policy abilities follow permission checks', function () {
     $staff = User::factory()->create();
     $staff->assignRole('staff');
 
-    $post = Post::factory()->create();
+    $pendingPost = Post::factory()->create(['status' => 'pending']);
+    $draftPost = Post::factory()->create(['status' => 'draft']);
 
     expect(Gate::forUser($editor)->allows('viewAny', Post::class))->toBeTrue()
-        ->and(Gate::forUser($editor)->allows('view', $post))->toBeTrue()
+        ->and(Gate::forUser($editor)->allows('view', $pendingPost))->toBeTrue()
         ->and(Gate::forUser($editor)->allows('create', Post::class))->toBeTrue()
-        ->and(Gate::forUser($editor)->allows('update', $post))->toBeTrue()
-        ->and(Gate::forUser($editor)->allows('delete', $post))->toBeTrue()
-        ->and(Gate::forUser($editor)->allows('publish', $post))->toBeTrue()
+        ->and(Gate::forUser($editor)->allows('update', $pendingPost))->toBeTrue()
+        ->and(Gate::forUser($editor)->allows('delete', $pendingPost))->toBeTrue()
+        ->and(Gate::forUser($editor)->allows('publish', $pendingPost))->toBeTrue()
+        ->and(Gate::forUser($editor)->allows('publish', $draftPost))->toBeFalse()
         ->and(Gate::forUser($staff)->allows('viewAny', Post::class))->toBeFalse()
-        ->and(Gate::forUser($staff)->allows('view', $post))->toBeFalse()
+        ->and(Gate::forUser($staff)->allows('view', $pendingPost))->toBeFalse()
         ->and(Gate::forUser($staff)->allows('create', Post::class))->toBeFalse()
-        ->and(Gate::forUser($staff)->allows('update', $post))->toBeFalse()
-        ->and(Gate::forUser($staff)->allows('delete', $post))->toBeFalse()
-        ->and(Gate::forUser($staff)->allows('publish', $post))->toBeFalse();
+        ->and(Gate::forUser($staff)->allows('update', $pendingPost))->toBeFalse()
+        ->and(Gate::forUser($staff)->allows('delete', $pendingPost))->toBeFalse()
+        ->and(Gate::forUser($staff)->allows('publish', $pendingPost))->toBeFalse();
 });
 
 test('store post request authorizes only users who can create posts', function () {
@@ -54,16 +56,20 @@ test('update and publish requests authorize against the target post policy', fun
     $staff = User::factory()->create();
     $staff->assignRole('staff');
 
-    $post = Post::factory()->create();
+    $pendingPost = Post::factory()->create(['status' => 'pending']);
+    $draftPost = Post::factory()->create(['status' => 'draft']);
 
-    expect(makeUpdatePostRequest([], $editor, $post)->authorize())->toBeTrue()
-        ->and(makeUpdatePostRequest([], $staff, $post)->authorize())->toBeFalse()
-        ->and(makePublishPostRequest([], $editor, $post)->authorize())->toBeTrue()
-        ->and(makePublishPostRequest([], $staff, $post)->authorize())->toBeFalse();
+    expect(makeUpdatePostRequest([], $editor, $pendingPost)->authorize())->toBeTrue()
+        ->and(makeUpdatePostRequest([], $staff, $pendingPost)->authorize())->toBeFalse()
+        ->and(makePublishPostRequest([], $editor, $pendingPost)->authorize())->toBeTrue()
+        ->and(makePublishPostRequest([], $editor, $draftPost)->authorize())->toBeFalse()
+        ->and(makePublishPostRequest([], $staff, $pendingPost)->authorize())->toBeFalse();
 });
 
 test('store post request validates the expected payload', function () {
     $existingPost = Post::factory()->create(['slug' => 'existing-post']);
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
 
     $validData = [
         'title' => 'VMUFit launch update',
@@ -75,39 +81,45 @@ test('store post request validates the expected payload', function () {
         'status' => 'draft',
     ];
 
-    expect(validateRequest(makeStorePostRequest($validData), $validData)->passes())->toBeTrue()
+    expect(validateRequest(makeStorePostRequest($validData, $editor), $validData)->passes())->toBeTrue()
         ->and(validateRequest(makeStorePostRequest([
             ...$validData,
             'slug' => 'existing-post',
-        ]), [
+        ], $editor), [
             ...$validData,
             'slug' => 'existing-post',
         ])->errors()->keys())->toContain('slug')
         ->and(validateRequest(makeStorePostRequest([
             ...$validData,
             'status' => 'published',
-        ]), [
+        ], $editor), [
             ...$validData,
             'status' => 'published',
         ])->errors()->keys())->toContain('status')
         ->and(validateRequest(makeStorePostRequest([
             ...$validData,
             'thumbnail_id' => 999999,
-        ]), [
+        ], $editor), [
             ...$validData,
             'thumbnail_id' => 999999,
         ])->errors()->keys())->toContain('thumbnail_id')
         ->and(validateRequest(makeStorePostRequest([
             ...$validData,
             'content' => '',
-        ]), [
+        ], $editor), [
             ...$validData,
             'content' => '',
         ])->errors()->keys())->toContain('content');
 });
 
-test('update post request allows the current post slug and publish request restricts status values', function () {
-    $post = Post::factory()->create(['slug' => 'keep-this-slug']);
+test('update post request allows the current post slug and publish request enforces review payload', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $post = Post::factory()->create([
+        'slug' => 'keep-this-slug',
+        'status' => 'pending',
+    ]);
 
     $updateData = [
         'title' => 'Updated title',
@@ -124,13 +136,32 @@ test('update post request allows the current post slug and publish request restr
         'published_at' => now()->toDateTimeString(),
     ];
 
-    expect(validateRequest(makeUpdatePostRequest($updateData, null, $post), $updateData)->passes())->toBeTrue()
-        ->and(validateRequest(makePublishPostRequest($publishData, null, $post), $publishData)->passes())->toBeTrue()
+    expect(validateRequest(makeUpdatePostRequest($updateData, $editor, $post), $updateData)->passes())->toBeTrue()
+        ->and(validateRequest(makePublishPostRequest($publishData, $editor, $post), $publishData)->passes())->toBeTrue()
+        ->and(validateRequest(makeUpdatePostRequest([
+            ...$updateData,
+            'status' => 'published',
+        ], $editor, $post), [
+            ...$updateData,
+            'status' => 'published',
+        ])->errors()->keys())->toContain('status')
         ->and(validateRequest(makePublishPostRequest([
             'status' => 'draft',
-        ], null, $post), [
+        ], $editor, $post), [
             'status' => 'draft',
-        ])->errors()->keys())->toContain('status');
+        ])->errors()->keys())->toContain('status')
+        ->and(validateRequest(makePublishPostRequest([
+            'status' => 'rejected',
+        ], $editor, $post), [
+            'status' => 'rejected',
+        ])->errors()->keys())->toContain('rejection_reason')
+        ->and(validateRequest(makePublishPostRequest([
+            'status' => 'rejected',
+            'rejection_reason' => 'Thiếu nội dung cần thiết.',
+        ], $editor, $post), [
+            'status' => 'rejected',
+            'rejection_reason' => 'Thiếu nội dung cần thiết.',
+        ])->passes())->toBeTrue();
 });
 
 function makeStorePostRequest(array $data, ?User $user = null): StorePostRequest

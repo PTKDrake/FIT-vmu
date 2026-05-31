@@ -3,8 +3,9 @@
 import {
   ArrowsPointingOutIcon,
   ArrowsPointingInIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { useForm, Link } from "@inertiajs/react";
+import { useForm, Link, router } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
@@ -22,6 +23,15 @@ import { TextField } from "@/components/ui/text-field";
 import { Textarea } from "@/components/ui/textarea";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
+import postsRoutes from "@/routes/cms/posts";
+import {
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
 export interface PostFormValues {
   id?: number;
   title: string;
@@ -32,7 +42,10 @@ export interface PostFormValues {
   content: string;
   content_format: "blocknote_json";
   thumbnail_id: number | null;
-  status: "draft" | "pending" | "published";
+  status: "draft" | "pending" | "published" | "rejected";
+  rejection_reason?: string | null;
+  reviewed_at?: string | null;
+  reviewer_name?: string | null;
 }
 
 interface PostFormProps {
@@ -56,6 +69,52 @@ export function PostForm({
   canPublish = false,
 }: PostFormProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionError, setRejectionError] = useState("");
+
+  const handleApprove = () => {
+    if (!initialValues.id) {
+      return;
+    }
+    setIsPublishing(true);
+    router.patch(
+      postsRoutes.publish.url({ post: initialValues.id }),
+      {
+        status: "published",
+      },
+      {
+        onFinish: () => setIsPublishing(false),
+      }
+    );
+  };
+
+  const handleReject = () => {
+    if (!rejectionReason.trim()) {
+      setRejectionError("Lý do từ chối là bắt buộc.");
+      return;
+    }
+    if (!initialValues.id) {
+      return;
+    }
+    setIsPublishing(true);
+    router.patch(
+      postsRoutes.publish.url({ post: initialValues.id }),
+      {
+        status: "rejected",
+        rejection_reason: rejectionReason,
+      },
+      {
+        onFinish: () => {
+          setIsPublishing(false);
+          setShowRejectModal(false);
+          setRejectionReason("");
+          setRejectionError("");
+        },
+      }
+    );
+  };
 
   const form = useForm<PostFormValues>({
     id: initialValues.id,
@@ -70,7 +129,7 @@ export function PostForm({
   });
 
   function triggerSubmitWithStatus(
-    status: "draft" | "pending" | "published",
+    status: "draft" | "pending",
   ): void {
     form.setData("status", status);
     setTimeout(() => {
@@ -82,7 +141,8 @@ export function PostForm({
     {
       isDirty: form.isDirty,
       onSave: () => {
-        triggerSubmitWithStatus(form.data.status);
+        const targetStatus = form.data.status === "draft" ? "draft" : "pending";
+        triggerSubmitWithStatus(targetStatus);
       },
     },
     "post-form",
@@ -118,6 +178,30 @@ export function PostForm({
     >
       {/* Hidden native submit button to route form submit action */}
       <button id="post-form-submit-btn" type="submit" className="hidden" />
+
+      {initialValues.status === "rejected" && initialValues.rejection_reason ? (
+        <div className="mb-6 p-4 rounded-xl border border-danger/30 bg-danger/5 flex items-start gap-3 w-full animate-in fade-in duration-200">
+          <ExclamationTriangleIcon className="size-5 text-danger shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <h4 className="text-sm font-semibold text-danger">Bài viết bị từ chối phê duyệt</h4>
+            <p className="text-sm text-fg whitespace-pre-wrap mt-1">
+              Lý do từ chối: <span className="font-medium">{initialValues.rejection_reason}</span>
+            </p>
+            {initialValues.reviewer_name ? (
+              <p className="text-xs text-muted-fg mt-1.5">
+                Người duyệt: {initialValues.reviewer_name}
+                {initialValues.reviewed_at ? ` vào ngày ${new Intl.DateTimeFormat("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }).format(new Date(initialValues.reviewed_at))}` : ""}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
 
       {/* Main Form Content - 3 Column Grid */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 items-start w-full">
@@ -263,29 +347,39 @@ export function PostForm({
           <div className="flex items-center gap-3">
             <Button
               intent="secondary"
-              isDisabled={form.processing}
+              isDisabled={form.processing || isPublishing}
               onPress={() => triggerSubmitWithStatus("draft")}
             >
               Lưu nháp
             </Button>
 
-            {canPublish ? (
-              <Button
-                intent="primary"
-                isDisabled={form.processing}
-                onPress={() => triggerSubmitWithStatus("published")}
-              >
-                {submitLabel}
-              </Button>
-            ) : (
-              <Button
-                intent="primary"
-                isDisabled={form.processing}
-                onPress={() => triggerSubmitWithStatus("pending")}
-              >
-                Yêu cầu duyệt
-              </Button>
-            )}
+            <Button
+              intent="primary"
+              isDisabled={form.processing || isPublishing}
+              onPress={() => triggerSubmitWithStatus("pending")}
+            >
+              {initialValues.id ? "Lưu thay đổi" : "Yêu cầu duyệt"}
+            </Button>
+
+            {initialValues.id && initialValues.status === "pending" && canPublish ? (
+              <>
+                <div className="h-6 w-px bg-border mx-1" />
+                <Button
+                  intent="danger"
+                  isDisabled={form.processing || isPublishing}
+                  onPress={() => setShowRejectModal(true)}
+                >
+                  Từ chối duyệt
+                </Button>
+                <Button
+                  intent="success"
+                  isDisabled={form.processing || isPublishing}
+                  onPress={handleApprove}
+                >
+                  Phê duyệt đăng
+                </Button>
+              </>
+            ) : null}
           </div>
         </div>
       </StickyActionBar>
@@ -361,6 +455,70 @@ export function PostForm({
             </div>
           </div>
         </div>
+      ) : null}
+
+      {showRejectModal ? (
+        <ModalContent
+          aria-label="Xác nhận từ chối bài viết"
+          isOpen={showRejectModal}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setShowRejectModal(false);
+              setRejectionReason("");
+              setRejectionError("");
+            }
+          }}
+          size="lg"
+        >
+          <ModalHeader>
+            <ModalTitle>Từ chối bài viết</ModalTitle>
+            <ModalDescription>
+              Bạn sắp từ chối bài viết <strong>{initialValues.title}</strong>. Vui lòng nhập lý do từ chối để tác giả có thể chỉnh sửa lại.
+            </ModalDescription>
+          </ModalHeader>
+          <ModalBody>
+            <div className="space-y-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-fg">
+                  Lý do từ chối <span className="text-danger">*</span>
+                </label>
+                <textarea
+                  className="w-full min-h-24 p-3 rounded-lg border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-hidden"
+                  placeholder="Ví dụ: Nội dung chưa phù hợp, thiếu hình ảnh minh họa..."
+                  value={rejectionReason}
+                  onChange={(e) => {
+                    setRejectionReason(e.target.value);
+                    if (e.target.value.trim()) {
+                      setRejectionError("");
+                    }
+                  }}
+                />
+                {rejectionError ? (
+                  <p className="text-xs text-danger">{rejectionError}</p>
+                ) : null}
+              </div>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              intent="outline"
+              onPress={() => {
+                setShowRejectModal(false);
+                setRejectionReason("");
+                setRejectionError("");
+              }}
+            >
+              Hủy
+            </Button>
+            <Button
+              intent="danger"
+              isDisabled={isPublishing}
+              onPress={handleReject}
+            >
+              Xác nhận từ chối
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       ) : null}
     </form>
   );

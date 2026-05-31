@@ -51,7 +51,7 @@ class StorePostRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                Rule::in($this->user()?->can('publish posts') ? ['draft', 'pending', 'published'] : ['draft', 'pending']),
+                Rule::in(['draft', 'pending']),
             ],
         ];
     }

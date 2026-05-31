@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Cms;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
+use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
 use Inertia\Response;
 
@@ -14,7 +15,7 @@ final class PostEditPageController extends Controller
 {
     public function __invoke(Request $request, Post $post): Response
     {
-        $post->load('categories', 'thumbnail');
+        $post->load('categories', 'thumbnail', 'reviewer');
 
         $categories = PostCategory::query()
             ->select(['id', 'name'])
@@ -29,6 +30,7 @@ final class PostEditPageController extends Controller
 
         /** @var int $postId */
         $postId = $post->getKey();
+        $reviewedAt = $post->getAttribute('reviewed_at');
 
         return inertia('cms/posts/edit', [
             'post' => [
@@ -47,6 +49,9 @@ final class PostEditPageController extends Controller
                 'thumbnail_id' => $post->thumbnail_id,
                 'thumbnail_url' => $post->thumbnail?->preview_url,
                 'status' => $post->status,
+                'rejection_reason' => $post->rejection_reason,
+                'reviewed_at' => $reviewedAt instanceof CarbonInterface ? $reviewedAt->toAtomString() : null,
+                'reviewer_name' => $post->reviewer?->name,
             ],
             'categories' => $categories,
         ]);

@@ -82,7 +82,7 @@ create.form = createForm
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 export const edit = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 edit.url = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ edit.url = (args: { post: number | { id: number } } | [post: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 edit.get = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -140,7 +140,7 @@ edit.get = (args: { post: number | { id: number } } | [post: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 edit.head = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -150,7 +150,7 @@ edit.head = (args: { post: number | { id: number } } | [post: number | { id: num
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 const editForm = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ const editForm = (args: { post: number | { id: number } } | [post: number | { id
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 editForm.get = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -170,7 +170,7 @@ editForm.get = (args: { post: number | { id: number } } | [post: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Cms\PostEditPageController::__invoke
-* @see app/Http/Controllers/Cms/PostEditPageController.php:15
+* @see app/Http/Controllers/Cms/PostEditPageController.php:16
 * @route '/cms/posts/{post}/edit'
 */
 editForm.head = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

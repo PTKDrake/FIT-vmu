@@ -196,8 +196,11 @@ test('cms post status can be updated/published by authorized publishers', functi
     $this->assertDatabaseHas('posts', [
         'id' => $post->id,
         'status' => 'published',
+        'reviewed_by_id' => $editor->id,
+        'rejection_reason' => null,
     ]);
-    expect($post->fresh()->published_at)->not->toBeNull();
+    expect($post->fresh()->published_at)->not->toBeNull()
+        ->and($post->fresh()->reviewed_at)->not->toBeNull();
 
     Event::assertDispatchedTimes(CmsContentChanged::class, 1);
     Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
@@ -205,6 +208,72 @@ test('cms post status can be updated/published by authorized publishers', functi
             && $event->action === 'published'
             && $event->status === 'published';
     });
+});
+
+test('cms post can be rejected with a review reason by authorized publishers', function () {
+    Event::fake([CmsContentChanged::class]);
+
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $post = Post::factory()->create(['status' => 'pending']);
+
+    $this->actingAs($editor)
+        ->patch("/cms/posts/{$post->id}/publish", [
+            'status' => 'rejected',
+            'rejection_reason' => 'Nội dung cần bổ sung nguồn trích dẫn.',
+        ])
+        ->assertRedirect('/cms/posts');
+
+    $this->assertDatabaseHas('posts', [
+        'id' => $post->id,
+        'status' => 'rejected',
+        'reviewed_by_id' => $editor->id,
+        'rejection_reason' => 'Nội dung cần bổ sung nguồn trích dẫn.',
+    ]);
+    expect($post->fresh()->published_at)->toBeNull()
+        ->and($post->fresh()->reviewed_at)->not->toBeNull();
+
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'rejected'
+            && $event->status === 'rejected';
+    });
+});
+
+test('cms post publish endpoint rejects invalid review transitions', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $draftPost = Post::factory()->create(['status' => 'draft']);
+    $rejectedPost = Post::factory()->create(['status' => 'rejected']);
+
+    $this->actingAs($editor)
+        ->patch("/cms/posts/{$draftPost->id}/publish", [
+            'status' => 'published',
+        ])
+        ->assertForbidden();
+
+    $this->actingAs($editor)
+        ->patch("/cms/posts/{$rejectedPost->id}/publish", [
+            'status' => 'published',
+        ])
+        ->assertForbidden();
+});
+
+test('cms post reject endpoint requires a rejection reason', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $post = Post::factory()->create(['status' => 'pending']);
+
+    $this->actingAs($editor)
+        ->from('/cms/posts')
+        ->patch("/cms/posts/{$post->id}/publish", [
+            'status' => 'rejected',
+        ])
+        ->assertRedirect('/cms/posts')
+        ->assertSessionHasErrors(['rejection_reason']);
 });
 
 test('cms post can be deleted by managers', function () {
