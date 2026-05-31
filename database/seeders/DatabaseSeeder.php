@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             MediaSeeder::class,
             PostCategorySeeder::class,
             PostSeeder::class,
+            NavigationSeeder::class,
         ]);
     }
 }

@@ -11,10 +11,10 @@ import { SidebarNav, SidebarTrigger } from "@/components/ui/sidebar";
 
 export function CmsTopbar({ currentUrl }: { currentUrl: string }) {
   const currentItem = findCmsNavigationLeaf(currentUrl);
-  const currentNavigationMenuTitle = findCmsNavigationMenuTitle(currentUrl);
-
   const page = usePage<any>();
   const props = page.props;
+  const currentNavigationMenuTitle =
+    props.navigationMenuName ?? findCmsNavigationMenuTitle(currentUrl);
 
   // Identify if the current URL is a subpage of the current item (resource)
   let subpageTitle = "";

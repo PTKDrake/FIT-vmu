@@ -13,7 +13,7 @@ class UpdateNavigationMenuRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $navigationMenu = $this->route('navigation_menu');
+        $navigationMenu = $this->route('navigationMenu') ?? $this->route('navigation_menu');
 
         return $navigationMenu instanceof NavigationMenu
             ? $this->user()?->can('update', $navigationMenu) ?? false
@@ -25,7 +25,7 @@ class UpdateNavigationMenuRequest extends FormRequest
      */
     public function rules(): array
     {
-        $navigationMenu = $this->route('navigation_menu');
+        $navigationMenu = $this->route('navigationMenu') ?? $this->route('navigation_menu');
         $navigationMenuId = $navigationMenu instanceof NavigationMenu ? $navigationMenu->getKey() : null;
 
         return [

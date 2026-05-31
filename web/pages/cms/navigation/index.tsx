@@ -1,20 +1,19 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Head, Link } from "@inertiajs/react";
 import type { ReactNode } from "react";
+import type { CmsNavigationPageProps } from "@/components/cms/types";
 import CmsLayout from "@/layouts/cms-layout";
-import {
-  countNavigationItems,
-  createMockNavigationMenus,
-} from "@/lib/navigation/tree";
-
-const navigationMenus = createMockNavigationMenus();
+import { countNavigationItems } from "@/lib/navigation/tree";
+import { show } from "@/routes/cms/navigation";
 
 const locationLabels: Record<string, string> = {
   footer: "Footer",
   header: "Header",
 };
 
-export default function CmsNavigationIndexPage() {
+export default function CmsNavigationIndexPage({
+  navigationMenus,
+}: CmsNavigationPageProps) {
   return (
     <>
       <Head title="Navigation" />
@@ -32,7 +31,7 @@ export default function CmsNavigationIndexPage() {
             {navigationMenus.map((menu) => (
               <Link
                 key={menu.id}
-                href={`/cms/navigation/${menu.id}`}
+                href={show.url({ navigationMenu: menu.id })}
                 className="flex items-center justify-between gap-4 border-b border-border px-5 py-4 transition hover:bg-muted/35 last:border-b-0"
               >
                 <div className="min-w-0">

@@ -1,4 +1,8 @@
 import type { SharedData } from "@/types/shared";
+import type {
+  NavigationMenuDraft,
+  NavigationResourceOption,
+} from "@/lib/navigation/tree";
 
 export interface DashboardOverview {
   recentActivity: Array<{
@@ -102,6 +106,27 @@ export interface CmsPageTableRow {
 
 export interface CmsPagesPageProps extends SharedData {
   pages: CmsPaginatedCollection<CmsPageTableRow>;
+}
+
+export interface CmsNavigationResourceCatalog {
+  page: NavigationResourceOption[];
+  post: NavigationResourceOption[];
+  post_category: NavigationResourceOption[];
+}
+
+export type CmsNavigationMenuRow = NavigationMenuDraft;
+
+export interface CmsNavigationPageProps extends SharedData {
+  navigationMenus: CmsNavigationMenuRow[];
+  navigationStateVersion: string;
+}
+
+export interface CmsNavigationShowPageProps extends SharedData {
+  navigationMenuId: number;
+  navigationMenuName: string;
+  navigationMenus: CmsNavigationMenuRow[];
+  navigationStateVersion: string;
+  resourceCatalog: CmsNavigationResourceCatalog;
 }
 
 export interface CmsMediaRow {

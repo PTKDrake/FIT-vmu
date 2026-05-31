@@ -20,6 +20,12 @@ import UpdatePageMetadataController from './UpdatePageMetadataController'
 import UpdatePageContentController from './UpdatePageContentController'
 import ClonePageController from './ClonePageController'
 import DeletePageController from './DeletePageController'
+import NavigationMenusIndexController from './NavigationMenusIndexController'
+import NavigationMenuShowController from './NavigationMenuShowController'
+import StoreNavigationMenuController from './StoreNavigationMenuController'
+import UpdateNavigationMenuController from './UpdateNavigationMenuController'
+import DeleteNavigationMenuController from './DeleteNavigationMenuController'
+import SyncNavigationMenuItemsController from './SyncNavigationMenuItemsController'
 import MediaIndexController from './MediaIndexController'
 import StoreMediaController from './StoreMediaController'
 import RenameMediaController from './RenameMediaController'
@@ -74,6 +80,12 @@ const Cms = {
     UpdatePageContentController: Object.assign(UpdatePageContentController, UpdatePageContentController),
     ClonePageController: Object.assign(ClonePageController, ClonePageController),
     DeletePageController: Object.assign(DeletePageController, DeletePageController),
+    NavigationMenusIndexController: Object.assign(NavigationMenusIndexController, NavigationMenusIndexController),
+    NavigationMenuShowController: Object.assign(NavigationMenuShowController, NavigationMenuShowController),
+    StoreNavigationMenuController: Object.assign(StoreNavigationMenuController, StoreNavigationMenuController),
+    UpdateNavigationMenuController: Object.assign(UpdateNavigationMenuController, UpdateNavigationMenuController),
+    DeleteNavigationMenuController: Object.assign(DeleteNavigationMenuController, DeleteNavigationMenuController),
+    SyncNavigationMenuItemsController: Object.assign(SyncNavigationMenuItemsController, SyncNavigationMenuItemsController),
     MediaIndexController: Object.assign(MediaIndexController, MediaIndexController),
     StoreMediaController: Object.assign(StoreMediaController, StoreMediaController),
     RenameMediaController: Object.assign(RenameMediaController, RenameMediaController),
