@@ -1,3 +1,5 @@
+import type { FormDataConvertible } from "@inertiajs/core";
+
 export type NavigationItemType =
   | "custom_url"
   | "post_category"
@@ -32,6 +34,20 @@ export interface NavigationItemDraft {
   type: NavigationItemType;
   url: string | null;
   children: NavigationItemDraft[];
+}
+
+export interface NavigationItemSyncPayload
+  extends Record<string, FormDataConvertible> {
+  id: number;
+  is_active: boolean;
+  linkable_id: number | null;
+  linkable_type: NavigationInternalResourceType | null;
+  parent_id: number | null;
+  sort_order: number;
+  target: NavigationItemTarget;
+  title: string;
+  type: NavigationItemType;
+  url: string | null;
 }
 
 export interface NavigationMenuDraft {
@@ -820,13 +836,17 @@ export function countNavigationItems(items: NavigationItemDraft[]): number {
 
 export function describeNavigationDestination(
   item: NavigationItemDraft,
+  resourceCatalog: Record<
+    NavigationInternalResourceType,
+    NavigationResourceOption[]
+  > = navigationResourceCatalog,
 ): string {
   if (item.type === "custom_url") {
     return item.url || "Chưa nhập URL";
   }
 
   const selectedResource = item.linkableType
-    ? navigationResourceCatalog[item.linkableType].find(
+    ? resourceCatalog[item.linkableType].find(
         (resource) => resource.id === item.linkableId,
       )
     : null;
@@ -836,6 +856,27 @@ export function describeNavigationDestination(
   }
 
   return `${selectedResource.label} · ${selectedResource.meta}`;
+}
+
+export function flattenNavigationTree(
+  items: NavigationItemDraft[],
+  parentId: number | null = null,
+): NavigationItemSyncPayload[] {
+  return items.flatMap((item, index) => [
+    {
+      id: item.id,
+      is_active: item.isActive,
+      linkable_id: item.linkableId,
+      linkable_type: item.linkableType,
+      parent_id: parentId,
+      sort_order: index + 1,
+      target: item.target,
+      title: item.title,
+      type: item.type,
+      url: item.url,
+    },
+    ...flattenNavigationTree(item.children, item.id),
+  ]);
 }
 
 export function createEmptyNavigationItem(

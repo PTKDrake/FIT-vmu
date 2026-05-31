@@ -8,6 +8,7 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { router } from "@inertiajs/react";
 import { startTransition, useRef, useState } from "react";
 import type { Key, ReactNode } from "react";
 import { Collection } from "react-aria-components/Collection";
@@ -48,12 +49,11 @@ import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import {
   collectNavigationParentOptions,
   createEmptyNavigationItem,
-  createMockNavigationMenus,
+  flattenNavigationTree,
   describeNavigationDestination,
   findNavigationItem,
   insertNavigationItem,
   moveNavigationItemsToTarget,
-  navigationResourceCatalog,
   normalizeNavigationTree,
   removeNavigationItem,
   updateNavigationItem,
@@ -66,8 +66,7 @@ import type {
   NavigationMenuDraft,
   NavigationResourceOption,
 } from "@/lib/navigation/tree";
-
-const initialMenus = createMockNavigationMenus();
+import syncNavigationMenuItems from "@/actions/App/Http/Controllers/Cms/SyncNavigationMenuItemsController";
 
 const navigationTypeLabels: Record<NavigationItemType, string> = {
   custom_url: "Custom URL",
@@ -82,6 +81,11 @@ const navigationTargetLabels: Record<NavigationItemTarget, string> = {
 };
 
 interface NavigationTreeEditorProps {
+  initialMenus: NavigationMenuDraft[];
+  resourceCatalog: Record<
+    NavigationInternalResourceType,
+    NavigationResourceOption[]
+  >;
   initialMenuId?: number;
 }
 
@@ -92,27 +96,29 @@ type PendingConfirmation =
   | null;
 
 export function NavigationTreeEditor({
+  initialMenus,
+  resourceCatalog,
   initialMenuId,
 }: NavigationTreeEditorProps) {
-  const [savedMenus, setSavedMenus] = useState<NavigationMenuDraft[]>(() =>
+  const initialActiveMenu =
+    initialMenus.find((menu) => menu.id === initialMenuId) ??
+    initialMenus[0] ??
+    null;
+  const [savedMenus] = useState<NavigationMenuDraft[]>(() =>
     cloneNavigationMenus(initialMenus),
   );
   const [draftMenus, setDraftMenus] = useState<NavigationMenuDraft[]>(() =>
     cloneNavigationMenus(initialMenus),
   );
-  const [activeMenuId, setActiveMenuId] = useState(
-    initialMenus.find((menu) => menu.id === initialMenuId)?.id ??
-      initialMenus[0]?.id ??
-      0,
-  );
+  const [activeMenuId] = useState(initialActiveMenu?.id ?? 0);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(
-    initialMenus[0]?.items[0]?.id ?? null,
+    resolveFirstSelectableItemId(initialActiveMenu),
   );
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [pendingNewItemId, setPendingNewItemId] = useState<number | null>(null);
   const [pendingConfirmation, setPendingConfirmation] =
     useState<PendingConfirmation>(null);
-  const draftIdRef = useRef(1000);
+  const draftIdRef = useRef(-1);
   const editingSnapshotRef = useRef<NavigationItemDraft | null>(null);
 
   const activeMenu =
@@ -131,13 +137,7 @@ export function NavigationTreeEditor({
     {
       isDirty: hasUnsavedChanges,
       onSave: () => {
-        const nextMenus = cloneNavigationMenus(draftMenus);
-        startTransition(() => {
-          setSavedMenus(nextMenus);
-          setDraftMenus(cloneNavigationMenus(nextMenus));
-          setIsEditorOpen(false);
-          setPendingConfirmation(null);
-        });
+        persistActiveMenu();
       },
     },
     "navigation-tree-editor",
@@ -199,7 +199,7 @@ export function NavigationTreeEditor({
       return;
     }
 
-    const nextDraftId = draftIdRef.current + 1;
+    const nextDraftId = draftIdRef.current - 1;
     const draftItem = createEmptyNavigationItem(
       nextDraftId,
       activeMenu.id,
@@ -346,6 +346,27 @@ export function NavigationTreeEditor({
     setIsEditorOpen(false);
   }
 
+  function persistActiveMenu(): void {
+    if (!activeMenu) {
+      return;
+    }
+
+    const items = flattenNavigationTree(normalizeNavigationTree(activeMenu.items));
+
+    router.patch(
+      syncNavigationMenuItems.url({ navigationMenu: activeMenu.id }),
+      {
+        items,
+      },
+      {
+        preserveScroll: true,
+        onFinish: () => {
+          setPendingConfirmation(null);
+        },
+      },
+    );
+  }
+
   function handleConfirmAction(): void {
     if (!activeMenu || pendingConfirmation === null) {
       setPendingConfirmation(null);
@@ -386,14 +407,7 @@ export function NavigationTreeEditor({
     }
 
     if (pendingConfirmation.kind === "save") {
-      const nextMenus = cloneNavigationMenus(draftMenus);
-
-      startTransition(() => {
-        setSavedMenus(nextMenus);
-        setDraftMenus(cloneNavigationMenus(nextMenus));
-        setIsEditorOpen(false);
-        setPendingConfirmation(null);
-      });
+      persistActiveMenu();
 
       return;
     }
@@ -427,6 +441,7 @@ export function NavigationTreeEditor({
             >
               <NavigationTreeItems
                 items={activeItems}
+                resourceCatalog={resourceCatalog}
                 onAddChild={(item) => {
                   setSelectedItemId(item.id);
                   handleAddItem(item.id);
@@ -493,6 +508,7 @@ export function NavigationTreeEditor({
         isOpen={isEditorOpen && selectedItem !== null}
         isCreating={pendingNewItemId === selectedItem?.id}
         isEditing={pendingNewItemId !== selectedItem?.id}
+        resourceCatalog={resourceCatalog}
         onConfirmEdit={handleConfirmEdit}
         onConfirmCreate={handleConfirmPendingItem}
         onOpenChange={handleEditorOpenChange}
@@ -614,6 +630,10 @@ interface NavigationItemEditorModalProps {
   isEditing: boolean;
   isOpen: boolean;
   item: NavigationItemDraft | null;
+  resourceCatalog: Record<
+    NavigationInternalResourceType,
+    NavigationResourceOption[]
+  >;
   onCancelEdit: () => void;
   onCancelCreate: () => void;
   onConfirmEdit: () => void;
@@ -639,13 +659,14 @@ function NavigationItemEditorModal({
   onItemFieldChange,
   onOpenChange,
   onParentChange,
+  resourceCatalog,
   parentOptions,
 }: NavigationItemEditorModalProps) {
   if (!item || !isOpen) {
     return null;
   }
 
-  const activeResourceOptions = resolveResourceOptions(item.type);
+  const activeResourceOptions = resolveResourceOptions(item.type, resourceCatalog);
 
   return (
     <ModalContent
@@ -688,7 +709,7 @@ function NavigationItemEditorModal({
                 linkableId:
                   nextType === "custom_url"
                     ? null
-                    : resolveDefaultResourceId(nextType),
+                  : resolveDefaultResourceId(nextType, resourceCatalog),
                 linkableType: nextType === "custom_url" ? null : nextType,
                 url: nextType === "custom_url" ? (currentItem.url ?? "") : null,
               }));
@@ -816,7 +837,7 @@ function NavigationItemEditorModal({
           <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3">
             <Text className="text-muted-fg">Đích hiện tại</Text>
             <Text className="mt-1 text-fg">
-              <Strong>{describeNavigationDestination(item)}</Strong>
+              <Strong>{describeNavigationDestination(item, resourceCatalog)}</Strong>
             </Text>
           </div>
         </FieldGroup>
@@ -853,6 +874,10 @@ function NavigationItemEditorModal({
 
 interface NavigationTreeItemsProps {
   items: NavigationItemDraft[];
+  resourceCatalog: Record<
+    NavigationInternalResourceType,
+    NavigationResourceOption[]
+  >;
   onAddChild: (item: NavigationItemDraft) => void;
   onDelete: (item: NavigationItemDraft) => void;
   onEdit: (item: NavigationItemDraft) => void;
@@ -860,6 +885,7 @@ interface NavigationTreeItemsProps {
 
 function NavigationTreeItems({
   items,
+  resourceCatalog,
   onAddChild,
   onDelete,
   onEdit,
@@ -908,7 +934,7 @@ function NavigationTreeItems({
                   ) : null}
                 </div>
                 <Text className="truncate text-muted-fg">
-                  {describeNavigationDestination(item)}
+                  {describeNavigationDestination(item, resourceCatalog)}
                 </Text>
               </div>
 
@@ -922,6 +948,7 @@ function NavigationTreeItems({
           {item.children.length > 0 ? (
             <NavigationTreeItems
               items={item.children}
+              resourceCatalog={resourceCatalog}
               onAddChild={onAddChild}
               onDelete={onDelete}
               onEdit={onEdit}
@@ -942,16 +969,26 @@ function collectExpandableKeys(items: NavigationItemDraft[]): string[] {
 
 function resolveResourceOptions(
   type: NavigationItemType,
+  resourceCatalog: Record<
+    NavigationInternalResourceType,
+    NavigationResourceOption[]
+  >,
 ): NavigationResourceOption[] {
   if (type === "custom_url") {
     return [];
   }
 
-  return navigationResourceCatalog[type];
+  return resourceCatalog[type];
 }
 
-function resolveDefaultResourceId(type: NavigationItemType): number | null {
-  const firstResource = resolveResourceOptions(type)[0];
+function resolveDefaultResourceId(
+  type: NavigationItemType,
+  resourceCatalog: Record<
+    NavigationInternalResourceType,
+    NavigationResourceOption[]
+  >,
+): number | null {
+  const firstResource = resolveResourceOptions(type, resourceCatalog)[0];
 
   return firstResource?.id ?? null;
 }

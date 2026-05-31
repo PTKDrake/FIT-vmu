@@ -2,6 +2,7 @@
 
 use App\Http\Controllers;
 use App\Models\Media;
+use App\Models\NavigationMenu;
 use App\Models\Page;
 use App\Models\Position;
 use App\Models\Post;
@@ -90,15 +91,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('delete', 'page')
             ->name('pages.destroy');
 
-        Route::get('navigation', fn () => inertia('cms/navigation/index'))
-            ->can('view posts')
+        Route::get('navigation', Controllers\Cms\NavigationMenusIndexController::class)
+            ->can('viewAny', NavigationMenu::class)
             ->name('navigation');
-        Route::get('navigation/{navigationMenu}', fn (int $navigationMenu) => inertia('cms/navigation/show', [
-            'navigationMenuId' => $navigationMenu,
-        ]))
-            ->whereNumber('navigationMenu')
-            ->can('view posts')
+        Route::get('navigation/{navigationMenu}', Controllers\Cms\NavigationMenuShowController::class)
+            ->can('view', 'navigationMenu')
             ->name('navigation.show');
+        Route::post('navigation', Controllers\Cms\StoreNavigationMenuController::class)
+            ->can('create', NavigationMenu::class)
+            ->name('navigation.store');
+        Route::patch('navigation/{navigationMenu}', Controllers\Cms\UpdateNavigationMenuController::class)
+            ->can('update', 'navigationMenu')
+            ->name('navigation.update');
+        Route::delete('navigation/{navigationMenu}', Controllers\Cms\DeleteNavigationMenuController::class)
+            ->can('delete', 'navigationMenu')
+            ->name('navigation.destroy');
+        Route::patch('navigation/{navigationMenu}/items', Controllers\Cms\SyncNavigationMenuItemsController::class)
+            ->can('update', 'navigationMenu')
+            ->name('navigation.items.sync');
 
         Route::get('media', Controllers\Cms\MediaIndexController::class)
             ->can('viewAny', Media::class)

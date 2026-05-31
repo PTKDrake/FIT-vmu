@@ -75,7 +75,9 @@ class NavigationItem extends Model
     /** @return HasMany<self, $this> */
     public function children(): HasMany
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('sort_order')
+            ->orderBy('id');
     }
 
     /** @return MorphTo<Model, $this> */

@@ -50,6 +50,8 @@ class NavigationMenu extends Model
     /** @return HasMany<NavigationItem, $this> */
     public function items(): HasMany
     {
-        return $this->hasMany(NavigationItem::class, 'menu_id');
+        return $this->hasMany(NavigationItem::class, 'menu_id')
+            ->orderBy('sort_order')
+            ->orderBy('id');
     }
 }
