@@ -36,7 +36,7 @@ class StaffProfileSeeder extends Seeder
 
         // 1. NGƯỜI DÙNG 1: TRƯỞNG KHOA & GIẢNG VIÊN KHMT
         $user1 = User::query()->updateOrCreate(
-            ['email' => 'nguyenvana@vmu.edu.vn'],
+            ['email' => 'nguyenvana@vimaru.edu.vn'],
             [
                 'name' => 'PGS.TS. Nguyễn Văn A',
                 'password' => bcrypt('password'),
@@ -86,7 +86,7 @@ class StaffProfileSeeder extends Seeder
 
         // 2. NGƯỜI DÙNG 2: PHÓ TRƯỞNG KHOA & TRƯỞNG BỘ MÔN HTTT
         $user2 = User::query()->updateOrCreate(
-            ['email' => 'tranthib@vmu.edu.vn'],
+            ['email' => 'tranthib@vimaru.edu.vn'],
             [
                 'name' => 'TS. Trần Thị B',
                 'password' => bcrypt('password'),
@@ -139,7 +139,7 @@ class StaffProfileSeeder extends Seeder
         // 3. NGƯỜI DÙNG 3: TRƯỞNG BỘ MÔN MẠNG & TRUYỀN THÔNG
         if ($unitMmt && $posTbm) {
             $user3 = User::query()->updateOrCreate(
-                ['email' => 'lehoangc@vmu.edu.vn'],
+                ['email' => 'lehoangc@vimaru.edu.vn'],
                 [
                     'name' => 'ThS. Lê Hoàng C',
                     'password' => bcrypt('password'),
@@ -178,7 +178,7 @@ class StaffProfileSeeder extends Seeder
         // 4. NGƯỜI DÙNG 4: TRỢ LÝ ĐÀO TẠO VĂN PHÒNG KHOA
         if ($unitVpk && $posTldt) {
             $user4 = User::query()->updateOrCreate(
-                ['email' => 'phamthid@vmu.edu.vn'],
+                ['email' => 'phamthid@vimaru.edu.vn'],
                 [
                     'name' => 'Bà Phạm Thị D',
                     'password' => bcrypt('password'),

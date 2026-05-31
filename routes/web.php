@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\StaffProfile;
 use App\Models\Unit;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Controllers\HomeController::class)->name('home');
@@ -181,9 +182,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('delete', 'position')
             ->name('positions.destroy');
 
-        Route::get('users', fn () => inertia('cms/users/index'))
-            ->can('manage users')
+        Route::get('users', Controllers\Cms\UsersIndexController::class)
+            ->can('viewAny', User::class)
             ->name('users');
+        Route::get('users/create', Controllers\Cms\UserCreatePageController::class)
+            ->can('create', User::class)
+            ->name('users.create');
+        Route::post('users', Controllers\Cms\StoreUserController::class)
+            ->can('create', User::class)
+            ->name('users.store');
+        Route::get('users/{user}/edit', Controllers\Cms\UserEditPageController::class)
+            ->can('update', 'user')
+            ->name('users.edit');
+        Route::patch('users/{user}', Controllers\Cms\UpdateUserController::class)
+            ->can('update', 'user')
+            ->name('users.update');
 
         Route::get('roles-permissions', fn () => inertia('cms/roles-permissions/index'))
             ->can('manage roles')

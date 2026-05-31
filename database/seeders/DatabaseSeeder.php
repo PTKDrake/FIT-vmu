@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(10)->createMany();
 
         $admin = User::query()->updateOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@vimaru.edu.vn'],
             [
                 'name' => 'Admin',
                 'email_verified_at' => now(),

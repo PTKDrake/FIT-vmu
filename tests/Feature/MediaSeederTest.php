@@ -9,7 +9,7 @@ test('media seeder copies 30 source files into the public disk without creating 
     Storage::fake('public');
 
     $uploader = User::factory()->create([
-        'email' => 'admin@example.com',
+        'email' => 'admin@vimaru.edu.vn',
         'name' => 'Admin Seeder',
     ]);
 

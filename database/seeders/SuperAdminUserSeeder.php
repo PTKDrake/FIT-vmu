@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminUserSeeder extends Seeder
 {
-    private const SUPER_ADMIN_EMAIL = 'super-admin@vmufit.local';
+    private const SUPER_ADMIN_EMAIL = 'super-admin@vimaru.edu.vn';
 
     /**
      * Run the database seeds.

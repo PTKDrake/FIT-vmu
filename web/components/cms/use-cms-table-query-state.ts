@@ -43,6 +43,7 @@ export function useCmsTableQueryState<TItem extends object>({
       sort: parseAsString.withDefault(defaultSortColumn),
       status: parseAsString.withDefault("all"),
       categoryId: parseAsInteger,
+      role: parseAsString.withDefault(""),
     },
     {
       clearOnDefault: true,
@@ -130,6 +131,9 @@ export function useCmsTableQueryState<TItem extends object>({
     },
     async setCategoryId(categoryId: number | null): Promise<void> {
       await syncQuery({ categoryId }, { resetPage: true });
+    },
+    async setRole(role: string): Promise<void> {
+      await syncQuery({ role }, { resetPage: true });
     },
   };
 }
