@@ -36,6 +36,7 @@ test('cms navigation index returns real menus tree and resource catalog', functi
         'status' => 'published',
     ]);
     $post->categories()->sync([$category->getKey()]);
+    PostCategory::query()->whereKeyNot($category->getKey())->delete();
 
     $menu = NavigationMenu::factory()->create([
         'name' => 'Header chính',

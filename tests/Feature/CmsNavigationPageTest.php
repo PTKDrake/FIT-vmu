@@ -14,10 +14,15 @@ test('cms navigation list page is available for editors', function () {
 
     $this->get('/cms/navigation')
         ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page->component('cms/navigation/index'));
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('cms/navigation/index')
+            ->has('editorStateKey')
+            ->has('menus')
+            ->has('resourceCatalog')
+        );
 });
 
-test('cms navigation detail page is available for editors', function () {
+test('cms navigation old detail route is not available anymore', function () {
     $this->seed(RoleAndPermissionSeeder::class);
 
     $user = User::factory()->create();
@@ -26,9 +31,5 @@ test('cms navigation detail page is available for editors', function () {
     $this->actingAs($user);
 
     $this->get('/cms/navigation/1')
-        ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('cms/navigation/show')
-            ->where('navigationMenuId', 1)
-        );
+        ->assertMethodNotAllowed();
 });
