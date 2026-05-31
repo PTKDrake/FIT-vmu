@@ -2,7 +2,19 @@
 
 Tài liệu này tách riêng phần kế hoạch triển khai, tracking task và quy trình làm việc nhiều người. Guideline kiến trúc chính nằm ở `VMUFit.md`.
 
----
+## Mục lục
+
+- [1. Kế hoạch chia nhỏ implementation cho Codex](#1-ke-hoach-chia-nho-implementation-cho-codex)
+- [1.1. Phase 0 - Chuẩn bị project và quy ước làm việc](#11-phase-0---chuan-bi-project-va-quy-uoc-lam-viec)
+- [1.2. Phase 1 - Nền tảng auth, role và permission](#12-phase-1---nen-tang-auth-role-va-permission)
+- [1.3. Phase 2 - Database domain MVP](#13-phase-2---database-domain-mvp)
+- [1.4. Phase 3 - Backend actions, data objects và policy](#14-phase-3---backend-actions-data-objects-va-policy)
+- [1.5. Phase 4 - Frontend CMS foundation](#15-phase-4---frontend-cms-foundation)
+- [1.6. Phase 5 - Module nội dung chính](#16-phase-5---module-noi-dung-chinh)
+- [1.7. Phase 6 - Public website MVP](#17-phase-6---public-website-mvp)
+- [1.8. Phase 7 - Testing, hardening và release MVP](#18-phase-7---testing-hardening-va-release-mvp)
+- [2. Tracking tiến độ dự án](#2-tracking-tien-do-du-an)
+- [3. Quy trình làm việc nhiều người để hạn chế conflict](#3-quy-trinh-lam-viec-nhieu-nguoi-de-han-che-conflict)
 
 ## 1. Kế hoạch chia nhỏ implementation cho Codex
 
@@ -671,13 +683,23 @@ Checklist:
 
 ---
 
-## 17. Tracking tiến độ dự án
+## 2. Tracking tiến độ dự án
 
 Nên tạo file:
 
 ```text
 docs/tasks.md
 ```
+
+### 2.1. Status convention
+
+- `todo`: chưa làm
+- `doing`: đang làm
+- `review`: đã mở PR/chờ review
+- `blocked`: đang bị chặn
+- `done`: đã merge hoặc hoàn tất
+
+### 2.2. Task board template
 
 Mỗi task phải được tracking theo mẫu sau:
 
@@ -701,7 +723,7 @@ Mỗi task phải được tracking theo mẫu sau:
 | 1.1 | Auth  | Configure Spatie permission | todo   |       | feature/auth-spatie-config      |     | app/Models/User.php, config/permission.php | php artisan test          |                                                          |
 ```
 
-### 17.1. Definition of Ready
+### 2.3. Definition of Ready
 
 Một task chỉ nên bắt đầu khi có đủ:
 
@@ -712,7 +734,7 @@ Một task chỉ nên bắt đầu khi có đủ:
 - [ ] Có lệnh kiểm tra tối thiểu.
 - [ ] Có tiêu chí hoàn thành.
 
-### 17.2. Definition of Done
+### 2.4. Definition of Done
 
 Một task được coi là xong khi:
 
@@ -727,7 +749,7 @@ Một task được coi là xong khi:
 - [ ] Đã cập nhật `docs/tasks.md`.
 - [ ] PR mô tả rõ file đã sửa và cách kiểm tra.
 
-### 2.3. Quy tắc cập nhật tracking
+### 2.5. Quy tắc cập nhật tracking
 
 - Khi bắt đầu task: chuyển `todo` -> `doing`, điền owner và branch.
 - Khi mở PR: chuyển `doing` -> `review`, điền PR link/id.
@@ -773,7 +795,7 @@ Quy tắc:
 - Rebase hoặc merge `main` thường xuyên trước khi mở PR.
 - PR nhỏ dễ review hơn PR lớn.
 
-### 18.2. Chia ownership theo khu vực file
+### 3.2. Chia ownership theo khu vực file
 
 Để giảm conflict, nên chia ownership tạm thời theo module:
 
@@ -862,7 +884,7 @@ Sau khi làm xong, hãy liệt kê:
 4. Rủi ro hoặc việc còn lại.
 ```
 
-### 18.4. Quy tắc PR
+### 3.4. Quy tắc PR
 
 Mỗi PR nên có mô tả:
 
@@ -902,7 +924,7 @@ Quy tắc review:
 - Không merge PR có authorization chỉ ở frontend.
 - Không merge PR lớn hơn phạm vi task nếu không có lý do rõ.
 
-### 18.5. Thứ tự merge đề xuất
+### 3.5. Thứ tự merge đề xuất
 
 Để tránh conflict và lỗi phụ thuộc, nên merge theo thứ tự:
 
@@ -935,7 +957,7 @@ Với lockfile:
 - Sau khi resolve `package.json`, chạy lại `pnpm install`.
 - Commit lockfile mới sau khi đã chạy install thành công.
 
-### 18.7. Quy tắc đặt tên commit
+### 3.7. Quy tắc đặt tên commit
 
 Nên dùng conventional commit đơn giản:
 
