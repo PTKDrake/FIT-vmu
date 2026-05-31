@@ -559,7 +559,7 @@ export function MediaSelector({
 
               {/* TAB CONTENT 2: Upload Files Dropzone */}
               {activeTab === "upload" && (
-                <div
+                <button
                   ref={dropzoneRootProps.ref}
                   role={dropzoneRootProps.role}
                   tabIndex={dropzoneRootProps.tabIndex}
@@ -576,6 +576,7 @@ export function MediaSelector({
                       ? "bg-primary/5 border-primary"
                       : "border-border hover:bg-muted/5 hover:border-muted-fg/40"
                   }`}
+                  type="button"
                 >
                   <input
                     ref={dropzoneInputProps.ref}
@@ -615,7 +616,7 @@ export function MediaSelector({
                       </div>
                     </div>
                   )}
-                </div>
+                </button>
               )}
             </ModalBody>
             <ModalFooter className="flex justify-end items-center">

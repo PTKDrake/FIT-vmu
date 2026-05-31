@@ -837,7 +837,12 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               </Text>
 
               <FieldGroup className="pb-2">
-                <div data-slot="control" {...dropzoneRootProps}>
+                <button
+                  data-slot="control"
+                  {...dropzoneRootProps}
+                  type="button"
+                  aria-label={t("Khu vực tải media")}
+                >
                   <DropZone
                     className={twMerge(
                       "rounded-2xl border border-dashed p-6 transition-colors",
@@ -874,7 +879,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                       </Button>
                     </div>
                   </DropZone>
-                </div>
+                </button>
 
                 {uploadForm.progress ? (
                   <div data-slot="control">
