@@ -10,6 +10,7 @@ import staffProfilesB92b14 from './staff-profiles'
 import unitsD09b1b from './units'
 import positions7be47e from './positions'
 import users48860f from './users'
+import rolesPermissionsD027a2 from './roles-permissions'
 /**
 * @see \App\Http\Controllers\DashboardController::__invoke
 * @see app/Http/Controllers/DashboardController.php:16
@@ -497,7 +498,7 @@ mediaForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 media.form = mediaForm
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 export const documents = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -511,7 +512,7 @@ documents.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 documents.url = (options?: RouteQueryOptions) => {
@@ -519,7 +520,7 @@ documents.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -528,7 +529,7 @@ documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -537,7 +538,7 @@ documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -546,7 +547,7 @@ const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 })
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -555,7 +556,7 @@ documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 })
 
 /**
-* @see routes/web.php:132
+* @see routes/web.php:133
 * @route '/cms/documents'
 */
 documentsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -895,7 +896,8 @@ usersForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 users.form = usersForm
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 export const rolesPermissions = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -909,7 +911,8 @@ rolesPermissions.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.url = (options?: RouteQueryOptions) => {
@@ -917,7 +920,8 @@ rolesPermissions.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -926,7 +930,8 @@ rolesPermissions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 })
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 rolesPermissions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -935,7 +940,8 @@ rolesPermissions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
 })
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 const rolesPermissionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -944,7 +950,8 @@ const rolesPermissionsForm = (options?: RouteQueryOptions): RouteFormDefinition<
 })
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 rolesPermissionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -953,7 +960,8 @@ rolesPermissionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'g
 })
 
 /**
-* @see routes/web.php:211
+* @see \App\Http\Controllers\Cms\RolesPermissionsIndexController::__invoke
+* @see app/Http/Controllers/Cms/RolesPermissionsIndexController.php:20
 * @route '/cms/roles-permissions'
 */
 rolesPermissionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -982,7 +990,7 @@ const cms = {
     units: Object.assign(units, unitsD09b1b),
     positions: Object.assign(positions, positions7be47e),
     users: Object.assign(users, users48860f),
-    rolesPermissions: Object.assign(rolesPermissions, rolesPermissions),
+    rolesPermissions: Object.assign(rolesPermissions, rolesPermissionsD027a2),
 }
 
 export default cms
