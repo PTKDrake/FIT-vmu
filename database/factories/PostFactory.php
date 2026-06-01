@@ -62,6 +62,8 @@ class PostFactory extends Factory
             'author_id' => User::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'published', 'rejected']),
             'published_at' => fake()->optional()->dateTimeBetween('-1 year', 'now'),
+            'template_key' => fake()->randomElement(['article', 'news', 'announcement', 'research', 'event']),
+            'template_data' => null,
         ];
     }
 }

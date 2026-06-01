@@ -11,6 +11,21 @@ use Spatie\LaravelData\Data as BaseData;
 
 abstract class Data extends BaseData
 {
+    /**
+     * @return array<string, mixed>|null
+     */
+    protected static function normalizeArray(mixed $value): ?array
+    {
+        if (! is_array($value)) {
+            return null;
+        }
+
+        /** @var array<string, mixed> $normalized */
+        $normalized = $value;
+
+        return $normalized;
+    }
+
     protected static function normalizeDateTime(mixed $value): ?CarbonInterface
     {
         if ($value === null) {

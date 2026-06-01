@@ -14,6 +14,8 @@ use Illuminate\Validation\Rule;
 
 class StorePageRequest extends FormRequest
 {
+    private const TEMPLATE_KEYS = ['default', 'landing', 'fullwidth', 'blank', 'sidebar-right'];
+
     public function authorize(): bool
     {
         return $this->user()?->can('create', Page::class) ?? false;
@@ -58,6 +60,8 @@ class StorePageRequest extends FormRequest
             'seo_description' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['puck_json'])],
+            'template_key' => ['sometimes', 'string', Rule::in(self::TEMPLATE_KEYS)],
+            'template_data' => ['nullable', 'array'],
             'thumbnail_id' => ['nullable', 'integer', Rule::exists((new Media)->getTable(), 'id')],
             'status' => ['required', 'string', Rule::in(['draft', 'pending'])],
         ];

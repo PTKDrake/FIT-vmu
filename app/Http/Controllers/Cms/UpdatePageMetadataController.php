@@ -23,7 +23,9 @@ final class UpdatePageMetadataController extends Controller
          *     slug: string,
          *     excerpt?: ?string,
          *     seo_title?: ?string,
-         *     seo_description?: ?string
+         *     seo_description?: ?string,
+         *     template_key?: ?string,
+         *     template_data?: ?array<string, mixed>
          * } $validated
          */
         $updatePageMetadata($page, $validated);

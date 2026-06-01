@@ -21,6 +21,8 @@ final class UpdatePostController extends Controller
          *     excerpt?: string|null,
          *     content: string,
          *     content_format: string,
+         *     template_key?: ?string,
+         *     template_data?: ?array<string, mixed>,
          *     thumbnail_id?: int|null,
          *     status: string
          * } $validated

@@ -28,6 +28,11 @@ class PostCategory extends Model
         'parent_id',
         'sort_order',
         'is_active',
+        'display_mode',
+        'archive_template_key',
+        'archive_template_data',
+        'post_template_key',
+        'post_template_data',
     ];
 
     /**
@@ -38,6 +43,7 @@ class PostCategory extends Model
     protected $attributes = [
         'sort_order' => 0,
         'is_active' => true,
+        'display_mode' => 'archive',
     ];
 
     /**
@@ -51,6 +57,8 @@ class PostCategory extends Model
             'parent_id' => 'integer',
             'sort_order' => 'integer',
             'is_active' => 'boolean',
+            'archive_template_data' => 'array',
+            'post_template_data' => 'array',
         ];
     }
 

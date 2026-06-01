@@ -20,6 +20,8 @@ class CreatePageAction
      *     seo_description?: ?string,
      *     content: string,
      *     content_format: string,
+     *     template_key?: ?string,
+     *     template_data?: ?array<string, mixed>,
      *     thumbnail_id?: ?int,
      *     status: string
      * } $attributes
@@ -36,6 +38,8 @@ class CreatePageAction
                 'seo_description' => $attributes['seo_description'] ?? null,
                 'content' => $attributes['content'],
                 'content_format' => $attributes['content_format'],
+                'template_key' => $attributes['template_key'] ?? 'default',
+                'template_data' => $attributes['template_data'] ?? null,
                 'thumbnail_id' => $attributes['thumbnail_id'] ?? null,
                 'author_id' => $author->getKey(),
                 'status' => $attributes['status'],

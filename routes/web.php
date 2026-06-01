@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 
 Route::get('/', Controllers\HomeController::class)->name('home');
+Route::get('/pages/{page:slug}', Controllers\PublicPageController::class)->name('public.pages.show');
+Route::get('/posts/{post:slug}', Controllers\PublicPostController::class)->name('public.posts.show');
+Route::get('/categories/{post_category:slug}', Controllers\PublicCategoryController::class)->name('public.categories.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::redirect('dashboard', 'cms');

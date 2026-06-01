@@ -26,6 +26,8 @@ final class StorePageController extends Controller
          *     seo_description?: ?string,
          *     content: string,
          *     content_format: string,
+         *     template_key?: ?string,
+         *     template_data?: ?array<string, mixed>,
          *     thumbnail_id?: ?int,
          *     status: string
          * } $validated

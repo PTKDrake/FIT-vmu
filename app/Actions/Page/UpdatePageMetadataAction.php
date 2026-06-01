@@ -16,7 +16,9 @@ class UpdatePageMetadataAction
      *     slug: string,
      *     excerpt?: ?string,
      *     seo_title?: ?string,
-     *     seo_description?: ?string
+     *     seo_description?: ?string,
+     *     template_key?: ?string,
+     *     template_data?: ?array<string, mixed>
      * } $attributes
      */
     public function __invoke(Page $page, array $attributes): Page
@@ -28,6 +30,8 @@ class UpdatePageMetadataAction
                 'excerpt' => $attributes['excerpt'] ?? null,
                 'seo_title' => $attributes['seo_title'] ?? null,
                 'seo_description' => $attributes['seo_description'] ?? null,
+                'template_key' => $attributes['template_key'] ?? $page->template_key,
+                'template_data' => $attributes['template_data'] ?? $page->template_data,
             ]);
 
             event(CmsContentChanged::forPage($page, 'metadata-updated', 'Đã cập nhật thông tin trang.'));

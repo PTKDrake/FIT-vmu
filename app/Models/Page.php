@@ -32,6 +32,8 @@ class Page extends Model
         'author_id',
         'status',
         'published_at',
+        'template_key',
+        'template_data',
     ];
 
     /**
@@ -42,6 +44,7 @@ class Page extends Model
     protected $attributes = [
         'content_format' => 'puck_json',
         'status' => 'draft',
+        'template_key' => 'default',
     ];
 
     /**
@@ -53,6 +56,7 @@ class Page extends Model
     {
         return [
             'published_at' => 'datetime',
+            'template_data' => 'array',
         ];
     }
 

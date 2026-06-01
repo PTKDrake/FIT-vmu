@@ -13,6 +13,8 @@ use Illuminate\Validation\Rule;
 
 class UpdatePageMetadataRequest extends FormRequest
 {
+    private const TEMPLATE_KEYS = ['default', 'landing', 'fullwidth', 'blank', 'sidebar-right'];
+
     public function authorize(): bool
     {
         $page = $this->route('page');
@@ -60,6 +62,8 @@ class UpdatePageMetadataRequest extends FormRequest
             'excerpt' => ['nullable', 'string'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],
+            'template_key' => ['sometimes', 'string', Rule::in(self::TEMPLATE_KEYS)],
+            'template_data' => ['nullable', 'array'],
         ];
     }
 }

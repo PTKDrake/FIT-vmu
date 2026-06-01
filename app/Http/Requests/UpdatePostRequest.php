@@ -11,6 +11,8 @@ use Illuminate\Validation\Rule;
 
 class UpdatePostRequest extends FormRequest
 {
+    private const TEMPLATE_KEYS = ['article', 'news', 'announcement', 'research', 'event'];
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -50,6 +52,8 @@ class UpdatePostRequest extends FormRequest
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['blocknote_json'])],
+            'template_key' => ['sometimes', 'string', Rule::in(self::TEMPLATE_KEYS)],
+            'template_data' => ['nullable', 'array'],
             'thumbnail_id' => [
                 'nullable',
                 'integer',

@@ -19,7 +19,12 @@ final class StorePostCategoryController extends Controller
          *     description?: string|null,
          *     parent_id?: int|null,
          *     sort_order: int,
-         *     is_active: bool
+         *     is_active: bool,
+         *     display_mode?: ?string,
+         *     archive_template_key?: ?string,
+         *     archive_template_data?: ?array<string, mixed>,
+         *     post_template_key?: ?string,
+         *     post_template_data?: ?array<string, mixed>
          * } $validated
          */
         $validated = $request->validated();

@@ -34,6 +34,8 @@ class Post extends Model
         'published_at',
         'reviewed_at',
         'rejection_reason',
+        'template_key',
+        'template_data',
     ];
 
     /**
@@ -44,6 +46,7 @@ class Post extends Model
     protected $attributes = [
         'content_format' => 'blocknote_json',
         'status' => 'draft',
+        'template_key' => 'article',
     ];
 
     /**
@@ -56,6 +59,7 @@ class Post extends Model
         return [
             'published_at' => 'datetime',
             'reviewed_at' => 'datetime',
+            'template_data' => 'array',
         ];
     }
 

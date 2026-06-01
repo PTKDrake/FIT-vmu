@@ -29,6 +29,11 @@ class PostCategoryFactory extends Factory
             'parent_id' => null,
             'sort_order' => fake()->numberBetween(0, 20),
             'is_active' => true,
+            'display_mode' => fake()->randomElement(['archive', 'landing', 'hybrid']),
+            'archive_template_key' => fake()->randomElement(['archive-default', 'archive-landing', 'archive-featured', 'archive-sidebar']),
+            'archive_template_data' => null,
+            'post_template_key' => null,
+            'post_template_data' => null,
         ];
     }
 }
