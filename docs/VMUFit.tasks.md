@@ -622,7 +622,29 @@ Mục tiêu:
 - Render navigation từ CMS theo location và cây parent-child.
 - Chỉ render dữ liệu đã published/public.
 
-Task đề xuất:
+#### Task 6.1 - Public render architecture shell/template/content
+
+Checklist:
+
+- [ ] Chốt site shell cho header/footer/navigation.
+- [ ] Chốt registry template cho page, post và category.
+- [ ] Page render theo `shell -> template -> content`.
+- [ ] `pages.content` chỉ là body Puck JSON.
+- [ ] Post render theo `shell -> template -> content`.
+- [ ] `posts.content` chỉ là body BlockNote JSON.
+- [ ] Category render theo `shell -> template -> content`.
+- [ ] `PostCategory` có thể dùng archive/landing/hybrid template theo `docs/content-layout-strategy.md`.
+- [ ] Có test cho mapping template và render pipeline cơ bản.
+
+Prompt mẫu cho Codex:
+
+```text
+Triển khai chiến lược render shell -> template -> content cho public website theo docs/content-layout-strategy.md. Chỉ chốt kiến trúc render, registry template và rule cho page/post/category; không làm full public pages module ở task này.
+```
+
+#### Task 6.2 - Public website, pages, and navigation MVP
+
+Checklist:
 
 - [ ] Trang chủ từ `pages` nếu có page published tương ứng.
 - [ ] Header/footer navigation từ `navigation_menus/items`.
@@ -642,6 +664,7 @@ Checklist:
 - [ ] Test seeder permission.
 - [ ] Test policy quan trọng.
 - [ ] Test import Excel.
+- [ ] Test render shell/template/content cho page, post và category.
 - [ ] Test page publish/render bằng Puck JSON.
 - [ ] Test category filter cho posts.
 - [ ] Test riêng cho luồng duyệt bài viết: submit review, approve, reject, invalid transition.

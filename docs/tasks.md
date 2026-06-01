@@ -111,7 +111,8 @@
 
 | ID  | Task                                      | Status | Branch                                | PR  | Files touched    | Test commands                                                  | Notes                                                                                                                                                   |
 | --- | ----------------------------------------- | ------ | ------------------------------------- | --- | ---------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 6.1 | Public website, pages, and navigation MVP | todo   | `feature/public-pages-navigation-mvp` |     | `app/*`, `web/*` | `./phpw artisan test --compact`, `pnpm lint`, `pnpm typecheck` | Render CMS navigation theo location/tree, render `pages` published từ Puck JSON, posts theo category, staff, units, documents, login, khu vực sinh viên; public layout theo `docs/content-layout-strategy.md` |
+| 6.1 | Public render architecture shell/template/content | todo   | `feature/public-layout-strategy`      |     | `app/*`, `web/*`, `docs/content-layout-strategy.md` | `./phpw artisan test --compact`, `pnpm lint`, `pnpm typecheck` | Chốt site shell, template registry và pipeline render `shell -> template -> content`; page dùng Puck body, post dùng BlockNote body, category dùng archive/landing template theo `docs/content-layout-strategy.md` |
+| 6.2 | Public website, pages, and navigation MVP        | todo   | `feature/public-pages-navigation-mvp` |     | `app/*`, `web/*` | `./phpw artisan test --compact`, `pnpm lint`, `pnpm typecheck` | Render CMS navigation theo location/tree, render `pages` published từ Puck JSON, posts theo category, staff, units, documents, login, khu vực sinh viên |
 
 ### Phase 7 - Release hardening
 
