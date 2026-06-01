@@ -100,13 +100,13 @@ export default function LoginPage({
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
-                <Link
+                <a
                   href={googleRedirect.url()}
                   className="inline-flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-border bg-overlay px-4 text-sm font-semibold text-fg shadow-sm transition hover:bg-muted"
                 >
                   <GoogleMark />
                   Login with Google
-                </Link>
+                </a>
               </>
             ) : null}
 

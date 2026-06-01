@@ -83,9 +83,34 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->and($baiVietNoiBatItem->linkable_type)->toBe(Post::class)
         ->and($baiVietNoiBatItem->linkable?->slug)->toBe('vmu-khai-truong-chuoi-hoat-dong-chao-don-tan-sinh-vien');
 
+    $seededPage = Page::query()
+        ->where('slug', 'gioi-thieu-vmu')
+        ->firstOrFail();
+
+    /** @var array{
+     *     root: array{props: array{title: string}},
+     *     content: list<array{type: string, props: array{id: string}}>,
+     *     zones: array<string, mixed>
+     * } $pageContent
+     */
+    $pageContent = json_decode($seededPage->content ?? '', true, flags: JSON_THROW_ON_ERROR);
+
     expect(Page::query()->whereIn('slug', [
         'gioi-thieu-vmu',
         'su-menh-va-tam-nhin',
         'co-cau-to-chuc',
-    ])->count())->toBe(3);
+    ])->count())->toBe(3)
+        ->and($seededPage->content_format)->toBe('puck_json')
+        ->and($pageContent['root']['props']['title'])->toBe('Giới thiệu VMU')
+        ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
+            'HeroBanner',
+            'RichText',
+            'CTASection',
+        ])
+        ->and(collect($pageContent['content'])->pluck('props.id')->all())->toBe([
+            'gioi-thieu-vmu-hero',
+            'gioi-thieu-vmu-rich-text',
+            'gioi-thieu-vmu-cta',
+        ])
+        ->and($pageContent['zones'])->toBe([]);
 });

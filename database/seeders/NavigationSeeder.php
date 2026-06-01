@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use stdClass;
 
 class NavigationSeeder extends Seeder
 {
@@ -23,7 +24,13 @@ class NavigationSeeder extends Seeder
      *     excerpt: string,
      *     seo_title: string,
      *     seo_description: string,
-     *     body: string
+     *     eyebrow: string,
+     *     description: string,
+     *     primary_action_href: string,
+     *     primary_action_label: string,
+     *     secondary_action_href: string,
+     *     secondary_action_label: string,
+     *     rich_text: string
      * }>
      */
     private const PAGES = [
@@ -33,7 +40,17 @@ class NavigationSeeder extends Seeder
             'excerpt' => 'Tổng quan về lịch sử, định hướng và thế mạnh của VMU.',
             'seo_title' => 'Giới thiệu VMU',
             'seo_description' => 'Trang giới thiệu tổng quan cho menu điều hướng của VMU.',
-            'body' => 'Thông tin tổng quan về VMU được dùng để minh họa mục điều hướng nội bộ và public.',
+            'eyebrow' => 'Tổng quan',
+            'description' => 'Khái quát về lịch sử hình thành, định hướng phát triển và những thế mạnh tiêu biểu của Trường Đại học Hàng hải Việt Nam.',
+            'primary_action_href' => '#tong-quan',
+            'primary_action_label' => 'Xem tổng quan',
+            'secondary_action_href' => '/cms/pages',
+            'secondary_action_label' => 'Quản lý trang',
+            'rich_text' => <<<'HTML'
+<h2>VMU trong hành trình phát triển</h2>
+<p>VMU là một trong những cơ sở đào tạo trọng điểm về hàng hải, logistics và công nghệ tại khu vực phía Bắc. Nội dung mẫu này được seed để đội biên tập có thể mở trực tiếp trong Puck builder và tiếp tục chỉnh sửa theo đúng component hiện tại.</p>
+<p>Từ dữ liệu seed chuẩn, nhóm có thể tái sử dụng trang như một mẫu landing page cho các trang giới thiệu cấp khoa, phòng ban hoặc chương trình đào tạo.</p>
+HTML,
         ],
         [
             'title' => 'Sứ mệnh và tầm nhìn',
@@ -41,7 +58,18 @@ class NavigationSeeder extends Seeder
             'excerpt' => 'Các giá trị cốt lõi, sứ mệnh và tầm nhìn phát triển của nhà trường.',
             'seo_title' => 'Sứ mệnh và tầm nhìn',
             'seo_description' => 'Trang định hướng được dùng làm đích cho navigation demo.',
-            'body' => 'Trang này mô tả định hướng phát triển dài hạn và giá trị cốt lõi của VMU.',
+            'eyebrow' => 'Định hướng phát triển',
+            'description' => 'Giới thiệu sứ mệnh, tầm nhìn và các giá trị cốt lõi đang dẫn dắt hoạt động đào tạo, nghiên cứu và phục vụ cộng đồng của VMU.',
+            'primary_action_href' => '#su-menh',
+            'primary_action_label' => 'Đọc sứ mệnh',
+            'secondary_action_href' => '#gia-tri-cot-loi',
+            'secondary_action_label' => 'Giá trị cốt lõi',
+            'rich_text' => <<<'HTML'
+<h2>Sứ mệnh</h2>
+<p>VMU đào tạo nguồn nhân lực chất lượng cao, thúc đẩy nghiên cứu ứng dụng và phục vụ sự phát triển bền vững của ngành hàng hải, logistics và chuyển đổi số.</p>
+<h2>Tầm nhìn</h2>
+<p>Nhà trường hướng tới vị thế đại học định hướng ứng dụng hàng đầu, có năng lực kết nối mạnh với doanh nghiệp và hệ sinh thái quốc tế.</p>
+HTML,
         ],
         [
             'title' => 'Cơ cấu tổ chức',
@@ -49,7 +77,21 @@ class NavigationSeeder extends Seeder
             'excerpt' => 'Sơ đồ tổ chức, các đơn vị chức năng và đầu mối liên hệ.',
             'seo_title' => 'Cơ cấu tổ chức',
             'seo_description' => 'Trang giới thiệu sơ đồ tổ chức của VMU.',
-            'body' => 'Trang này giới thiệu sơ đồ tổ chức và các đơn vị chức năng trong nhà trường.',
+            'eyebrow' => 'Hệ thống vận hành',
+            'description' => 'Tổng hợp nhanh các khối chức năng, đầu mối phối hợp và cơ cấu điều hành để người xem hiểu cách VMU tổ chức hoạt động học thuật và quản trị.',
+            'primary_action_href' => '#co-cau',
+            'primary_action_label' => 'Xem cơ cấu',
+            'secondary_action_href' => '/cms/units',
+            'secondary_action_label' => 'Danh sách đơn vị',
+            'rich_text' => <<<'HTML'
+<h2>Khối học thuật và quản trị</h2>
+<p>Các đơn vị học thuật, phòng chức năng và đầu mối hỗ trợ được tổ chức theo hướng rõ vai trò, rõ trách nhiệm và thuận tiện phối hợp liên phòng ban.</p>
+<ul>
+  <li>Các khoa, bộ môn phụ trách đào tạo và nghiên cứu chuyên sâu.</li>
+  <li>Các phòng chức năng bảo đảm vận hành, hỗ trợ sinh viên và công tác đối ngoại.</li>
+  <li>Các trung tâm tăng cường hợp tác doanh nghiệp, thực hành và chuyển giao tri thức.</li>
+</ul>
+HTML,
         ],
     ];
 
@@ -243,7 +285,7 @@ class NavigationSeeder extends Seeder
                     'excerpt' => $pageData['excerpt'],
                     'seo_title' => $pageData['seo_title'],
                     'seo_description' => $pageData['seo_description'],
-                    'content' => $this->buildPuckJson($pageData['title'], $pageData['body']),
+                    'content' => $this->buildPuckJson($pageData),
                     'content_format' => 'puck_json',
                     'thumbnail_id' => null,
                     'author_id' => $authorId,
@@ -356,31 +398,63 @@ class NavigationSeeder extends Seeder
         return $author;
     }
 
-    private function buildPuckJson(string $title, string $body): string
+    /**
+     * @param  array{
+     *     title: string,
+     *     slug: string,
+     *     eyebrow: string,
+     *     description: string,
+     *     primary_action_href: string,
+     *     primary_action_label: string,
+     *     secondary_action_href: string,
+     *     secondary_action_label: string,
+     *     rich_text: string
+     * }  $pageData
+     */
+    private function buildPuckJson(array $pageData): string
     {
         return json_encode([
             'root' => [
                 'props' => [
-                    'title' => $title,
+                    'title' => $pageData['title'],
                 ],
-                'children' => [],
             ],
             'content' => [
                 [
-                    'type' => 'paragraph',
-                    'props' => [],
-                    'content' => [
-                        [
-                            'type' => 'text',
-                            'text' => $body,
-                            'styles' => [],
-                        ],
+                    'type' => 'HeroBanner',
+                    'props' => [
+                        'id' => "{$pageData['slug']}-hero",
+                        'eyebrow' => $pageData['eyebrow'],
+                        'title' => $pageData['title'],
+                        'description' => $pageData['description'],
+                        'primaryActionHref' => $pageData['primary_action_href'],
+                        'primaryActionLabel' => $pageData['primary_action_label'],
+                        'secondaryActionHref' => $pageData['secondary_action_href'],
+                        'secondaryActionLabel' => $pageData['secondary_action_label'],
                     ],
-                    'children' => [],
+                ],
+                [
+                    'type' => 'RichText',
+                    'props' => [
+                        'id' => "{$pageData['slug']}-rich-text",
+                        'body' => $pageData['rich_text'],
+                    ],
+                ],
+                [
+                    'type' => 'CTASection',
+                    'props' => [
+                        'id' => "{$pageData['slug']}-cta",
+                        'header' => "Khám phá thêm: {$pageData['title']}",
+                        'description' => 'Trang mẫu này được tạo bằng seed Puck chuẩn để đội ngũ biên tập có thể tiếp tục chỉnh sửa mà không phát sinh lỗi schema.',
+                        'primaryActionLabel' => 'Mở Page Builder',
+                        'primaryActionHref' => '/cms/pages',
+                        'secondaryActionLabel' => 'Xem navigation',
+                        'secondaryActionHref' => '/cms/navigation',
+                    ],
                 ],
             ],
-            'zones' => [],
-        ], JSON_THROW_ON_ERROR);
+            'zones' => new stdClass,
+        ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
 
     private function resolveModelId(Model $model): int
