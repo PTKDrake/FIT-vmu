@@ -1,5 +1,4 @@
 import {
-  DocumentTextIcon,
   HomeIcon,
   NewspaperIcon,
   ShieldCheckIcon,
@@ -37,11 +36,6 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
       { href: "/cms/media", title: "Media" },
     ],
     title: "Nội dung",
-  },
-  {
-    icon: DocumentTextIcon,
-    items: [{ href: "/cms/documents", title: "Tài liệu" }],
-    title: "Tài liệu",
   },
   {
     icon: UserCircleIcon,

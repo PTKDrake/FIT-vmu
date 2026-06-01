@@ -498,80 +498,6 @@ mediaForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 media.form = mediaForm
 
 /**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-export const documents = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: documents.url(options),
-    method: 'get',
-})
-
-documents.definition = {
-    methods: ["get","head"],
-    url: '/cms/documents',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-documents.url = (options?: RouteQueryOptions) => {
-    return documents.definition.url + queryParams(options)
-}
-
-/**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-documents.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: documents.url(options),
-    method: 'get',
-})
-
-/**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-documents.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: documents.url(options),
-    method: 'head',
-})
-
-/**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-const documentsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: documents.url(options),
-    method: 'get',
-})
-
-/**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-documentsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: documents.url(options),
-    method: 'get',
-})
-
-/**
-* @see routes/web.php:133
-* @route '/cms/documents'
-*/
-documentsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: documents.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-documents.form = documentsForm
-
-/**
 * @see \App\Http\Controllers\Cms\StaffProfilesIndexController::__invoke
 * @see app/Http/Controllers/Cms/StaffProfilesIndexController.php:28
 * @route '/cms/staff-profiles'
@@ -985,7 +911,6 @@ const cms = {
     navigation: Object.assign(navigation, navigation2b63fc),
     media: Object.assign(media, media30b75d),
     ai: Object.assign(ai, ai),
-    documents: Object.assign(documents, documents),
     staffProfiles: Object.assign(staffProfiles, staffProfilesB92b14),
     units: Object.assign(units, unitsD09b1b),
     positions: Object.assign(positions, positions7be47e),

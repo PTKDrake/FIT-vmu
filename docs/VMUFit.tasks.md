@@ -1,6 +1,6 @@
 # VMUFit - Task Plan & Collaboration Guide
 
-Tài liệu này tách riêng phần kế hoạch triển khai, tracking task và quy trình làm việc nhiều người. Guideline kiến trúc chính nằm ở `VMUFit.md`.
+Tài liệu này tách riêng phần kế hoạch triển khai, tracking task và quy trình làm việc nhiều người. Guideline kiến trúc chính nằm ở `VMUFit.md`; chiến lược render `shell -> template -> content` được tách riêng ở `docs/content-layout-strategy.md`.
 
 ## Mục lục
 
@@ -541,6 +541,7 @@ Checklist:
 
 - [ ] CRUD pages.
 - [ ] Dựng layout bằng Puck.
+- [ ] Render theo nguyên tắc `shell -> template -> content` trong `docs/content-layout-strategy.md`.
 - [ ] Lưu `pages.content` dạng Puck JSON.
 - [ ] Draft/pending/published/rejected.
 - [ ] Publish permission riêng.
@@ -557,33 +558,6 @@ Checklist:
 - [x] Hỗ trợ reorder bằng `sort_order`.
 - [x] Item có thể trỏ tới `post_category`, `page`, `post` hoặc `custom_url`.
 - [x] Chỉ render item `is_active` ở public.
-
-#### Task 5.8 - Documents module thường
-
-Checklist:
-
-- [ ] CRUD documents.
-- [ ] Upload file qua media.
-- [ ] Visibility theo guideline.
-- [ ] Download authorize ở backend.
-- [ ] Public/login/staff/student/private behavior rõ ràng.
-
-#### Task 5.9 - Excel cá nhân hóa theo student_code
-
-Checklist:
-
-- [ ] Upload Excel.
-- [ ] Parse row.
-- [ ] Normalize header.
-- [ ] Lưu `document_rows`.
-- [ ] Sinh viên chỉ xem row theo `student_code` của mình.
-- [ ] Có test với file mẫu nhỏ.
-
-Prompt mẫu:
-
-```text
-Triển khai import Excel cá nhân hóa cho documents theo VMUFit.md. Logic import đặt trong action/service riêng, không viết trong controller. Parse row theo student_code, lưu data JSON và row_index. Sinh viên chỉ xem dữ liệu theo student_code của chính mình.
-```
 
 #### Task 5.10 - Hardening luồng duyệt bài viết
 

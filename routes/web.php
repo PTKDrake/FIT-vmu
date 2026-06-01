@@ -130,9 +130,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('view admin dashboard')
             ->name('ai.blocknote');
 
-        Route::get('documents', fn () => inertia('cms/documents/index'))
-            ->can('view documents')
-            ->name('documents');
         Route::get('staff-profiles', Controllers\Cms\StaffProfilesIndexController::class)
             ->can('viewAny', StaffProfile::class)
             ->name('staff-profiles');

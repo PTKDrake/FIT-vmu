@@ -9,9 +9,10 @@ Mục tiêu:
 - phản ánh đúng kiến trúc đang có trong repo
 - ghi rõ module nào đã chạy thật, module nào mới dừng ở domain hoặc UI placeholder
 - thống nhất cách hiểu về auth, permission, CMS và content model
+- tách rõ site shell, template và content cho public render
 - giúp người mới vào dự án đọc một lần là nắm được phạm vi hiện tại
 
-Thời điểm cập nhật: `2026-05-30`
+Thời điểm cập nhật: `2026-06-01`
 
 ---
 
@@ -351,6 +352,7 @@ Hiểu ngắn gọn:
 
 - rich text dạng bài viết/mô tả dùng BlockNote JSON
 - layout page linh hoạt dùng Puck JSON
+- chiến lược render `shell -> template -> content` cho page, post và category được mô tả ở `docs/content-layout-strategy.md`
 
 Project hiện không đi theo hướng lưu HTML thuần làm nguồn dữ liệu chính cho các module này.
 
@@ -488,6 +490,12 @@ Project đã có:
 - route CMS builder cho pages
 
 Puck đang là hướng chính cho page layout linh hoạt trong CMS.
+
+Lưu ý:
+
+- Puck chỉ nên chịu trách nhiệm phần body/content của `pages`
+- header/footer và các layout theo `post`/`post_category` nên đi theo site shell + template registry
+- chi tiết chiến lược này nằm ở `docs/content-layout-strategy.md`
 
 ---
 
