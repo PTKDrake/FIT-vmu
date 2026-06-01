@@ -1,5 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
 import type { PropsWithChildren } from "react";
+import { AppLogo } from "@/components/brand/app-logo";
 import {
   create,
   destroy,
@@ -16,12 +17,12 @@ export default function AppLayout({ children }: PropsWithChildren) {
     <div className="min-h-screen bg-bg text-fg">
       <header className="border-b border-border bg-overlay">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link href={home.url()} className="font-semibold text-fg">
-            VMUFit
+          <Link href={home.url()} className="text-fg">
+            <AppLogo size="sm" />
           </Link>
           <nav className="flex items-center gap-4 text-sm text-muted-fg">
             <Link href={home.url()} className="transition hover:text-fg">
-              Home
+              Trang chủ
             </Link>
             {auth.user ? (
               <>
@@ -31,7 +32,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                   </Link>
                 ) : null}
                 <Link href={edit.url()} className="transition hover:text-fg">
-                  Settings
+                  Cài đặt
                 </Link>
                 <Link
                   href={destroy.url()}
@@ -39,19 +40,19 @@ export default function AppLayout({ children }: PropsWithChildren) {
                   as="button"
                   className="transition hover:text-fg"
                 >
-                  Logout
+                  Đăng xuất
                 </Link>
               </>
             ) : (
               <>
                 <Link href={create.url()} className="transition hover:text-fg">
-                  Login
+                  Đăng nhập
                 </Link>
                 <Link
                   href={register.url()}
                   className="transition hover:text-fg"
                 >
-                  Register
+                  Đăng ký
                 </Link>
               </>
             )}

@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 
 use App\Models\Media;
 use App\Models\Page;
+use App\Rules\ReservedPageSlug;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -21,11 +22,19 @@ class StorePageRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $title = trim($this->string('title')->toString());
-        $slug = trim($this->string('slug')->toString());
+        $slug = trim($this->string('slug')->toString(), " \t\n\r\0\x0B/");
 
         if ($slug === '' && $title !== '') {
             $this->merge([
                 'slug' => Str::slug($title),
+            ]);
+
+            return;
+        }
+
+        if ($slug !== '') {
+            $this->merge([
+                'slug' => $slug,
             ]);
         }
     }
@@ -37,7 +46,13 @@ class StorePageRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique((new Page)->getTable(), 'slug')],
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique((new Page)->getTable(), 'slug'),
+                new ReservedPageSlug,
+            ],
             'excerpt' => ['nullable', 'string'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],

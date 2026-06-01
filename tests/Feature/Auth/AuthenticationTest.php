@@ -18,6 +18,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
+    $response->assertSessionHas('message', __('auth.welcome_back'));
     $response->assertRedirect(route('home', absolute: false));
 });
 
@@ -39,11 +40,14 @@ test('users with dashboard permission are redirected to dashboard after login', 
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/login', [
+    $response = $this->post('/login', [
         'email' => $user->email,
         'password' => 'wrong-password',
     ]);
 
+    $response->assertSessionHasErrors([
+        'email' => __('auth.failed'),
+    ]);
     $this->assertGuest();
 });
 
@@ -54,4 +58,27 @@ test('users can logout', function () {
 
     $this->assertGuest();
     $response->assertRedirect('/');
+});
+
+test('authenticated users are redirected away from guest auth pages', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get('/login')
+        ->assertRedirect(route('home', absolute: false));
+
+    $this->actingAs($user)
+        ->get('/register')
+        ->assertRedirect(route('home', absolute: false));
+});
+
+test('authenticated dashboard users are redirected to cms when visiting guest auth pages', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+
+    $user = User::factory()->create();
+    $user->assignRole('staff');
+
+    $this->actingAs($user)
+        ->get('/login')
+        ->assertRedirect(route('cms.dashboard', absolute: false));
 });

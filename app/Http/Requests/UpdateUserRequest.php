@@ -49,7 +49,7 @@ class UpdateUserRequest extends FormRequest
         return [
             function (Validator $validator): void {
                 if ($this->exists('roles') && ! ($this->user()?->can('manage roles') ?? false)) {
-                    $validator->errors()->add('roles', 'You are not authorized to assign roles.');
+                    $validator->errors()->add('roles', __('auth.not_authorized_assign_roles'));
                 }
             },
         ];

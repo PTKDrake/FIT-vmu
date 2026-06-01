@@ -7,17 +7,23 @@ import SettingsLayout from "@/pages/settings/settings-layout";
 
 const options: Theme[] = ["light", "dark", "system"];
 
+const optionLabels: Record<Theme, string> = {
+  light: "Sáng",
+  dark: "Tối",
+  system: "Theo hệ thống",
+};
+
 export default function AppearancePage() {
   const { theme, updateTheme } = useTheme();
 
   return (
     <>
-      <Head title="Appearance" />
+      <Head title="Giao diện" />
       <div className="space-y-6 rounded-xl border border-border bg-overlay p-6">
         <div>
-          <h1 className="text-2xl font-semibold text-fg">Appearance</h1>
+          <h1 className="text-2xl font-semibold text-fg">Giao diện</h1>
           <p className="text-sm text-muted-fg">
-            Choose how the interface should look.
+            Chọn cách giao diện hiển thị phù hợp với bạn.
           </p>
         </div>
 
@@ -33,7 +39,7 @@ export default function AppearancePage() {
                   : "bg-muted text-muted-fg hover:text-fg"
               }`}
             >
-              {option}
+              {optionLabels[option]}
             </button>
           ))}
         </div>

@@ -61,6 +61,7 @@ test('user can delete their account', function () {
 
     $response
         ->assertSessionHasNoErrors()
+        ->assertSessionHas('message', __('auth.deleted'))
         ->assertRedirect('/');
 
     $this->assertGuest();

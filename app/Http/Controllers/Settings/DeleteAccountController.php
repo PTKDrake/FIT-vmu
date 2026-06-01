@@ -37,7 +37,7 @@ class DeleteAccountController extends Controller
         $request->session()->regenerateToken();
 
         flash(
-            __('Your account has been successfully deleted.'),
+            __('auth.deleted'),
         );
 
         return redirect('/');

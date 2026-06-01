@@ -28,5 +28,7 @@ test('password is not confirmed with invalid password', function () {
         'password' => 'wrong-password',
     ]);
 
-    $response->assertSessionHasErrors();
+    $response->assertSessionHasErrors([
+        'password' => __('auth.password'),
+    ]);
 });

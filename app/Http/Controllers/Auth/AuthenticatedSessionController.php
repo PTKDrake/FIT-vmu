@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        flash('Welcome back!');
+        flash(__('auth.welcome_back'));
 
         /** @var User $user */
         $user = $request->user();

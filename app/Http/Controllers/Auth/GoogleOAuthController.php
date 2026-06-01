@@ -21,7 +21,7 @@ class GoogleOAuthController extends Controller
     public function redirect(): RedirectResponse
     {
         if (! $this->googleLoginIsConfigured()) {
-            flash('Google login is not configured yet.', type: 'warning');
+            flash(__('auth.google_not_configured'), type: 'warning');
 
             return to_route('login');
         }
@@ -37,7 +37,7 @@ class GoogleOAuthController extends Controller
     public function callback(Request $request): RedirectResponse
     {
         if (! $this->googleLoginIsConfigured()) {
-            flash('Google login is not configured yet.', type: 'warning');
+            flash(__('auth.google_not_configured'), type: 'warning');
 
             return to_route('login');
         }
@@ -45,7 +45,7 @@ class GoogleOAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (Throwable) {
-            flash('Google authentication could not be completed. Please try again.', type: 'error');
+            flash(__('auth.google_auth_failed'), type: 'error');
 
             return to_route('login');
         }
@@ -53,7 +53,7 @@ class GoogleOAuthController extends Controller
         $email = $googleUser->getEmail();
 
         if (! is_string($email) || $email === '') {
-            flash('Your Google account did not provide a usable email address.', type: 'error');
+            flash(__('auth.google_missing_email'), type: 'error');
 
             return to_route('login');
         }
@@ -79,8 +79,8 @@ class GoogleOAuthController extends Controller
 
         flash(
             $wasRecentlyCreated
-                ? 'Your account has been created with Google.'
-                : 'Welcome back!',
+                ? __('auth.google_account_created')
+                : __('auth.welcome_back'),
         );
 
         return $this->redirectToAuthenticatedDestination($user);

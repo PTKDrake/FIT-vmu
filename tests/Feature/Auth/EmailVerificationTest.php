@@ -44,3 +44,11 @@ test('email is not verified with invalid hash', function () {
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
 });
+
+test('verification link notification uses the vietnamese status message', function () {
+    $user = User::factory()->unverified()->create();
+
+    $response = $this->actingAs($user)->post('/email/verification-notification');
+
+    $response->assertSessionHas('status', __('auth.verification_link_sent'));
+});

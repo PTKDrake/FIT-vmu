@@ -17,30 +17,29 @@ interface RegisterFieldDefinition {
 const registerFields: RegisterFieldDefinition[] = [
   {
     name: "name",
-    label: "Full Name",
+    label: "Họ và tên",
     type: "text",
-    placeholder: "John Doe",
+    placeholder: "Nguyễn Văn A",
     helper: null,
   },
   {
     name: "email",
     label: "Email",
     type: "email",
-    placeholder: "m@example.com",
-    helper:
-      "We'll use this to contact you. We will not share your email with anyone else.",
+    placeholder: "ban@vimu.edu.vn",
+    helper: "Chúng tôi dùng email để liên hệ với bạn. Email sẽ được bảo mật.",
   },
   {
     name: "password",
-    label: "Password",
+    label: "Mật khẩu",
     type: "password",
-    helper: "Must be at least 8 characters long.",
+    helper: "Mật khẩu phải có ít nhất 8 ký tự.",
   },
   {
     name: "password_confirmation",
-    label: "Confirm Password",
+    label: "Xác nhận mật khẩu",
     type: "password",
-    helper: "Please confirm your password.",
+    helper: "Vui lòng xác nhận lại mật khẩu của bạn.",
   },
 ];
 
@@ -53,7 +52,7 @@ export default function RegisterPage() {
 
   return (
     <>
-      <Head title="Register" />
+      <Head title="Đăng ký" />
       <Form {...registerStore.form()} className="space-y-6">
         {({ errors, processing }) => (
           <>
@@ -89,16 +88,14 @@ export default function RegisterPage() {
               className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-fg shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
               disabled={processing}
             >
-              Create Account
+              Tạo tài khoản
             </button>
 
             {googleEnabled ? (
               <>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <span className="text-sm text-muted-fg">
-                    Or continue with
-                  </span>
+                  <span className="text-sm text-muted-fg">Hoặc tiếp tục với</span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -107,18 +104,18 @@ export default function RegisterPage() {
                   className="inline-flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-border bg-overlay px-4 text-sm font-semibold text-fg shadow-sm transition hover:bg-muted"
                 >
                   <GoogleMark />
-                  Sign up with Google
+                  Đăng ký với Google
                 </a>
               </>
             ) : null}
 
             <p className="text-center text-sm text-muted-fg">
-              Already have an account?{" "}
+              Đã có tài khoản?{" "}
               <Link
                 href={loginCreate.url()}
                 className="font-medium text-fg underline-offset-4 hover:underline"
               >
-                Sign in
+                Đăng nhập
               </Link>
             </p>
           </>
@@ -130,8 +127,8 @@ export default function RegisterPage() {
 
 RegisterPage.layout = (page: ReactNode) => (
   <GuestLayout
-    header="Create your account"
-    description="Fill in the form below to create your account."
+    header="Tạo tài khoản"
+    description="Điền thông tin bên dưới để tạo tài khoản của bạn."
   >
     {page}
   </GuestLayout>

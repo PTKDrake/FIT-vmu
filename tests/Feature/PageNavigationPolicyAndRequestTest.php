@@ -7,6 +7,7 @@ use App\Http\Requests\StorePageRequest;
 use App\Http\Requests\StorePostCategoryRequest;
 use App\Http\Requests\UpdateNavigationItemRequest;
 use App\Http\Requests\UpdateNavigationMenuRequest;
+use App\Http\Requests\UpdatePageMetadataRequest;
 use App\Http\Requests\UpdatePageRequest;
 use App\Http\Requests\UpdatePostCategoryRequest;
 use App\Models\NavigationItem;
@@ -118,6 +119,60 @@ test('page requests validate content workflow payloads', function () {
         ], null, $page), [
             'status' => 'draft',
         ])->errors()->keys())->toContain('status');
+});
+
+test('page requests reject auth and settings slugs', function () {
+    $page = Page::factory()->create(['slug' => 'gioi-thieu-vmu']);
+
+    $storeRequest = validatePageNavigationRequest(makeStorePageRequest([
+        'title' => 'Trang tĩnh',
+        'slug' => 'auth/google/redirect',
+        'excerpt' => 'Tóm tắt trang',
+        'content' => '{"root":{"props":{"title":"VMU"}}}',
+        'content_format' => 'puck_json',
+        'status' => 'draft',
+    ]), [
+        'title' => 'Trang tĩnh',
+        'slug' => 'auth/google/redirect',
+        'excerpt' => 'Tóm tắt trang',
+        'content' => '{"root":{"props":{"title":"VMU"}}}',
+        'content_format' => 'puck_json',
+        'status' => 'draft',
+    ]);
+
+    $updateRequest = validatePageNavigationRequest(makeUpdatePageRequest([
+        'title' => 'Trang tĩnh',
+        'slug' => '/settings/profile',
+        'excerpt' => 'Tóm tắt trang',
+        'content' => '{"root":{"props":{"title":"VMU"}}}',
+        'content_format' => 'puck_json',
+        'status' => 'draft',
+    ], null, $page), [
+        'title' => 'Trang tĩnh',
+        'slug' => '/settings/profile',
+        'excerpt' => 'Tóm tắt trang',
+        'content' => '{"root":{"props":{"title":"VMU"}}}',
+        'content_format' => 'puck_json',
+        'status' => 'draft',
+    ]);
+
+    $metadataRequest = validatePageNavigationRequest(makeUpdatePageMetadataRequest([
+        'title' => 'Trang tĩnh',
+        'slug' => 'settings/appearance',
+        'excerpt' => 'Tóm tắt trang',
+        'seo_title' => 'SEO',
+        'seo_description' => 'Mô tả SEO',
+    ], null, $page), [
+        'title' => 'Trang tĩnh',
+        'slug' => 'settings/appearance',
+        'excerpt' => 'Tóm tắt trang',
+        'seo_title' => 'SEO',
+        'seo_description' => 'Mô tả SEO',
+    ]);
+
+    expect($storeRequest->errors()->keys())->toContain('slug')
+        ->and($updateRequest->errors()->keys())->toContain('slug')
+        ->and($metadataRequest->errors()->keys())->toContain('slug');
 });
 
 test('post category requests authorize and validate parent constraints', function () {
@@ -286,6 +341,16 @@ function makeUpdatePageRequest(array $data, ?User $user = null, ?Page $page = nu
 {
     /** @var UpdatePageRequest $request */
     $request = UpdatePageRequest::create('/pages/'.($page?->getKey() ?? 'page'), 'PUT', $data);
+    $request->setUserResolver(static fn (): ?User => $user);
+    $request->setRouteResolver(static fn (): object => routeParameterMap(['page' => $page]));
+
+    return $request;
+}
+
+function makeUpdatePageMetadataRequest(array $data, ?User $user = null, ?Page $page = null): UpdatePageMetadataRequest
+{
+    /** @var UpdatePageMetadataRequest $request */
+    $request = UpdatePageMetadataRequest::create('/pages/'.($page?->getKey() ?? 'page').'/metadata', 'PATCH', $data);
     $request->setUserResolver(static fn (): ?User => $user);
     $request->setRouteResolver(static fn (): object => routeParameterMap(['page' => $page]));
 

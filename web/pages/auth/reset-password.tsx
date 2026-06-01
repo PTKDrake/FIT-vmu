@@ -13,7 +13,7 @@ export default function ResetPasswordPage({
 }: ResetPasswordPageProps) {
   return (
     <>
-      <Head title="Reset Password" />
+      <Head title="Đặt lại mật khẩu" />
       <Form method="post" action="/reset-password" className="space-y-4">
         {({ errors, processing }) => (
           <>
@@ -42,11 +42,11 @@ export default function ResetPasswordPage({
                 htmlFor="password"
                 className="block text-sm font-medium text-fg"
               >
-                Password
+                Mật khẩu mới
               </label>
               <input
                 id="password"
-                aria-label="Password"
+                aria-label="Mật khẩu mới"
                 className="w-full rounded-md border border-input bg-bg px-3 py-2 text-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
                 name="password"
                 type="password"
@@ -62,11 +62,11 @@ export default function ResetPasswordPage({
                 htmlFor="password_confirmation"
                 className="block text-sm font-medium text-fg"
               >
-                Confirm Password
+                Xác nhận mật khẩu
               </label>
               <input
                 id="password_confirmation"
-                aria-label="Confirm Password"
+                aria-label="Xác nhận mật khẩu"
                 className="w-full rounded-md border border-input bg-bg px-3 py-2 text-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
                 name="password_confirmation"
                 type="password"
@@ -77,7 +77,7 @@ export default function ResetPasswordPage({
               className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
               disabled={processing}
             >
-              Reset Password
+              Đặt lại mật khẩu
             </button>
           </>
         )}
@@ -88,8 +88,8 @@ export default function ResetPasswordPage({
 
 ResetPasswordPage.layout = (page: ReactNode) => (
   <GuestLayout
-    header="Reset password"
-    description="Choose a new password for your account."
+    header="Đặt lại mật khẩu"
+    description="Chọn một mật khẩu mới cho tài khoản của bạn."
   >
     {page}
   </GuestLayout>

@@ -24,7 +24,7 @@ export default function LoginPage({
 
   return (
     <>
-      <Head title="Login" />
+      <Head title="Đăng nhập" />
       {status ? (
         <div className="mb-6 rounded-2xl border border-success-subtle bg-success-subtle px-4 py-3 text-sm text-success-subtle-fg">
           {status}
@@ -46,7 +46,7 @@ export default function LoginPage({
                 className="h-11 w-full rounded-xl border border-input bg-bg px-4 text-sm text-fg shadow-sm transition placeholder:text-muted-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
                 name="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="ban@vimu.edu.vn"
               />
               {errors.email ? (
                 <p className="text-sm text-danger-subtle-fg">{errors.email}</p>
@@ -58,20 +58,20 @@ export default function LoginPage({
                   htmlFor="password"
                   className="block text-sm font-medium text-fg"
                 >
-                  Password
+                  Mật khẩu
                 </label>
                 {canResetPassword ? (
                   <Link
                     href={forgotPasswordRequest.url()}
                     className="text-sm font-medium text-muted-fg underline-offset-4 transition hover:text-fg hover:underline"
                   >
-                    Forgot your password?
+                    Quên mật khẩu?
                   </Link>
                 ) : null}
               </div>
               <input
                 id="password"
-                aria-label="Password"
+                aria-label="Mật khẩu"
                 className="h-11 w-full rounded-xl border border-input bg-bg px-4 text-sm text-fg shadow-sm transition focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
                 name="password"
                 type="password"
@@ -87,16 +87,14 @@ export default function LoginPage({
               className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-fg shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
               disabled={processing}
             >
-              Login
+              Đăng nhập
             </button>
 
             {googleEnabled ? (
               <>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <span className="text-sm text-muted-fg">
-                    Or continue with
-                  </span>
+                  <span className="text-sm text-muted-fg">Hoặc tiếp tục với</span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -105,18 +103,18 @@ export default function LoginPage({
                   className="inline-flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-border bg-overlay px-4 text-sm font-semibold text-fg shadow-sm transition hover:bg-muted"
                 >
                   <GoogleMark />
-                  Login with Google
+                  Đăng nhập với Google
                 </a>
               </>
             ) : null}
 
             <p className="text-center text-sm text-muted-fg">
-              Don&apos;t have an account?{" "}
+              Chưa có tài khoản?{" "}
               <Link
                 href={registerCreate.url()}
                 className="font-medium text-fg underline-offset-4 hover:underline"
               >
-                Sign up
+                Đăng ký
               </Link>
             </p>
           </>
@@ -128,8 +126,8 @@ export default function LoginPage({
 
 LoginPage.layout = (page: ReactNode) => (
   <GuestLayout
-    header="Login to your account"
-    description="Enter your email below to login to your account."
+    header="Đăng nhập vào tài khoản"
+    description="Nhập email của bạn bên dưới để đăng nhập vào tài khoản."
   >
     {page}
   </GuestLayout>

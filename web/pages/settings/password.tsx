@@ -22,20 +22,20 @@ export default function PasswordPage() {
 
   return (
     <>
-      <Head title="Password" />
+      <Head title="Mật khẩu" />
       <div className="space-y-6 rounded-xl border border-border bg-overlay p-6">
         <div>
-          <h1 className="text-2xl font-semibold text-fg">Change Password</h1>
+          <h1 className="text-2xl font-semibold text-fg">Đổi mật khẩu</h1>
           <p className="text-sm text-muted-fg">
-            Update your password to keep your account secure.
+            Cập nhật mật khẩu để giữ tài khoản của bạn an toàn.
           </p>
         </div>
 
         <form className="space-y-4" onSubmit={submit}>
           {[
-            ["current_password", "Current Password"],
-            ["password", "New Password"],
-            ["password_confirmation", "Confirm Password"],
+            ["current_password", "Mật khẩu hiện tại"],
+            ["password", "Mật khẩu mới"],
+            ["password_confirmation", "Xác nhận mật khẩu"],
           ].map(([field, label]) => (
             <div key={field} className="space-y-2">
               <label
@@ -72,10 +72,10 @@ export default function PasswordPage() {
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
               disabled={form.processing}
             >
-              Save
+              Lưu thay đổi
             </button>
             {form.recentlySuccessful ? (
-              <span className="text-sm text-muted-fg">Saved.</span>
+              <span className="text-sm text-muted-fg">Đã lưu.</span>
             ) : null}
           </div>
         </form>

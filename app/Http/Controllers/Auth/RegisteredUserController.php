@@ -59,7 +59,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        flash('Your account has been successfully created.');
+        flash(__('auth.registered'));
 
         return $this->redirectToAuthenticatedDestination($user);
     }

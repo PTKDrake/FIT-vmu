@@ -11,7 +11,7 @@ export default function ForgotPasswordPage({
 }: ForgotPasswordPageProps) {
   return (
     <>
-      <Head title="Forgot Password" />
+      <Head title="Quên mật khẩu" />
       {status ? (
         <div className="mb-4 rounded-xl border border-success-subtle bg-success-subtle px-4 py-3 text-sm text-success-subtle-fg">
           {status}
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage({
               className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
               disabled={processing}
             >
-              Email Password Reset Link
+              Gửi liên kết đặt lại mật khẩu
             </button>
           </>
         )}
@@ -54,8 +54,8 @@ export default function ForgotPasswordPage({
 
 ForgotPasswordPage.layout = (page: ReactNode) => (
   <GuestLayout
-    header="Forgot password"
-    description="Enter your email address and we will send you a reset link."
+    header="Quên mật khẩu"
+    description="Nhập địa chỉ email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu."
   >
     {page}
   </GuestLayout>

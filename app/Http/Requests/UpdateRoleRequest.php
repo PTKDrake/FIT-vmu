@@ -45,7 +45,7 @@ class UpdateRoleRequest extends FormRequest
         return [
             function (Validator $validator): void {
                 if ($this->exists('permissions') && ! ($this->user()?->can('manage permissions') ?? false)) {
-                    $validator->errors()->add('permissions', 'You are not authorized to manage permissions.');
+                    $validator->errors()->add('permissions', __('auth.not_authorized_manage_permissions'));
                 }
             },
         ];

@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 
 use App\Models\Media;
 use App\Models\Page;
+use App\Rules\ReservedPageSlug;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,6 +22,17 @@ class UpdatePageRequest extends FormRequest
             : false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $slug = trim($this->string('slug')->toString(), " \t\n\r\0\x0B/");
+
+        if ($slug !== '') {
+            $this->merge([
+                'slug' => $slug,
+            ]);
+        }
+    }
+
     /**
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -31,7 +43,13 @@ class UpdatePageRequest extends FormRequest
 
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', Rule::unique((new Page)->getTable(), 'slug')->ignore($pageId)],
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique((new Page)->getTable(), 'slug')->ignore($pageId),
+                new ReservedPageSlug,
+            ],
             'excerpt' => ['nullable', 'string'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],

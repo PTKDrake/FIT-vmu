@@ -5,7 +5,7 @@ import GuestLayout from "@/layouts/guest-layout";
 export default function ConfirmPasswordPage() {
   return (
     <>
-      <Head title="Confirm Password" />
+      <Head title="Xác nhận mật khẩu" />
       <Form method="post" action="/confirm-password" className="space-y-4">
         {({ errors, processing }) => (
           <>
@@ -14,11 +14,11 @@ export default function ConfirmPasswordPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-fg"
               >
-                Password
+                Mật khẩu
               </label>
               <input
                 id="password"
-                aria-label="Password"
+                aria-label="Mật khẩu"
                 className="w-full rounded-md border border-input bg-bg px-3 py-2 text-fg focus:border-ring focus:outline-hidden focus:ring-4 focus:ring-ring/15"
                 name="password"
                 type="password"
@@ -34,7 +34,7 @@ export default function ConfirmPasswordPage() {
               className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-fg"
               disabled={processing}
             >
-              Confirm Password
+              Xác nhận mật khẩu
             </button>
           </>
         )}
@@ -45,8 +45,8 @@ export default function ConfirmPasswordPage() {
 
 ConfirmPasswordPage.layout = (page: ReactNode) => (
   <GuestLayout
-    header="Confirm password"
-    description="Please confirm your password before continuing."
+    header="Xác nhận mật khẩu"
+    description="Vui lòng xác nhận mật khẩu của bạn trước khi tiếp tục."
   >
     {page}
   </GuestLayout>
