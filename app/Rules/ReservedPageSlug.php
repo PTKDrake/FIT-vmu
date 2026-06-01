@@ -6,6 +6,7 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class ReservedPageSlug implements ValidationRule
 {
@@ -15,7 +16,7 @@ class ReservedPageSlug implements ValidationRule
     private const RESERVED_ROOT_SEGMENTS = ['auth', 'settings'];
 
     /**
-     * @param  Closure(string, string|null=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
