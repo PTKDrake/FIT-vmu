@@ -3,6 +3,13 @@ import type { Data } from "@puckeditor/core";
 export const PUCK_PAGE_CONTENT_FORMAT = "puck_json" as const;
 
 export interface VmuFitPageBuilderComponents {
+  SiteLayoutFrame: {
+    header?: any;
+    left?: any;
+    right?: any;
+    footer?: any;
+  };
+
   // 1. Layout blocks
   Section: {
     anchorId?: string;
@@ -343,6 +350,49 @@ export interface VmuFitPageBuilderComponents {
     limit: number;
     className?: string;
   };
+  NavigationMenu: {
+    title?: string;
+    menuId?: string;
+    orientation?: "horizontal" | "vertical";
+    className?: string;
+  };
+  Categories: {
+    title: string;
+    parentId?: string;
+    limit: number;
+    className?: string;
+  };
+  PageLinks: {
+    title: string;
+    limit: number;
+    className?: string;
+  };
+  LinkList: {
+    title: string;
+    links: {
+      label: string;
+      url: string;
+      openInNewTab?: boolean;
+    }[];
+    className?: string;
+  };
+  ContactInfo: {
+    title: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    className?: string;
+  };
+  AuthStatus: {
+    alignment?: "left" | "center" | "right";
+    buttonLabel?: string;
+    showName?: boolean;
+    showEmail?: boolean;
+    showRegisterLink?: boolean;
+    showCmsLink?: boolean;
+    profileVariant?: "avatar" | "avatarName" | "compact";
+    className?: string;
+  };
 }
 
 export interface PageBuilderRootProps {
@@ -525,8 +575,19 @@ const DEFAULT_PAGE_DATA: VmuFitPageBuilderData = {
   ],
 };
 
+const EMPTY_PUCK_DATA: VmuFitPageBuilderData = {
+  root: {
+    props: {},
+  },
+  content: [],
+};
+
 export function createDefaultPuckPageData(): VmuFitPageBuilderData {
   return clonePuckPageData(DEFAULT_PAGE_DATA);
+}
+
+export function createEmptyPuckData(): VmuFitPageBuilderData {
+  return clonePuckPageData(EMPTY_PUCK_DATA);
 }
 
 export type PageTemplateType =
@@ -836,6 +897,34 @@ export function parsePuckPageData(
   }
 
   return createDefaultPuckPageData();
+}
+
+export function parsePuckLayoutData(
+  value: VmuFitPageBuilderValue,
+): VmuFitPageBuilderData {
+  if (!value) {
+    return createEmptyPuckData();
+  }
+
+  if (typeof value === "string") {
+    try {
+      const parsedValue = JSON.parse(value) as unknown;
+
+      if (isPuckPageData(parsedValue)) {
+        return clonePuckPageData(parsedValue);
+      }
+    } catch {
+      return createEmptyPuckData();
+    }
+
+    return createEmptyPuckData();
+  }
+
+  if (isPuckPageData(value)) {
+    return clonePuckPageData(value);
+  }
+
+  return createEmptyPuckData();
 }
 
 export function serializePuckPageData(data: VmuFitPageBuilderData): string {

@@ -1,4 +1,5 @@
 import PingCmsRealtimeController from './PingCmsRealtimeController'
+import LayoutBuilderSourceOptionsController from './LayoutBuilderSourceOptionsController'
 import PostsIndexController from './PostsIndexController'
 import PostCreatePageController from './PostCreatePageController'
 import PostEditPageController from './PostEditPageController'
@@ -20,6 +21,15 @@ import UpdatePageMetadataController from './UpdatePageMetadataController'
 import UpdatePageContentController from './UpdatePageContentController'
 import ClonePageController from './ClonePageController'
 import DeletePageController from './DeletePageController'
+import SiteLayoutsIndexController from './SiteLayoutsIndexController'
+import SiteLayoutCreateController from './SiteLayoutCreateController'
+import StoreSiteLayoutController from './StoreSiteLayoutController'
+import SiteLayoutEditController from './SiteLayoutEditController'
+import UpdateSiteLayoutController from './UpdateSiteLayoutController'
+import PublishSiteLayoutController from './PublishSiteLayoutController'
+import DraftSiteLayoutController from './DraftSiteLayoutController'
+import SetDefaultSiteLayoutController from './SetDefaultSiteLayoutController'
+import DeleteSiteLayoutController from './DeleteSiteLayoutController'
 import NavigationMenusIndexController from './NavigationMenusIndexController'
 import NavigationMenuShowController from './NavigationMenuShowController'
 import StoreNavigationMenuController from './StoreNavigationMenuController'
@@ -63,6 +73,7 @@ import DeleteRoleController from './DeleteRoleController'
 
 const Cms = {
     PingCmsRealtimeController: Object.assign(PingCmsRealtimeController, PingCmsRealtimeController),
+    LayoutBuilderSourceOptionsController: Object.assign(LayoutBuilderSourceOptionsController, LayoutBuilderSourceOptionsController),
     PostsIndexController: Object.assign(PostsIndexController, PostsIndexController),
     PostCreatePageController: Object.assign(PostCreatePageController, PostCreatePageController),
     PostEditPageController: Object.assign(PostEditPageController, PostEditPageController),
@@ -84,6 +95,15 @@ const Cms = {
     UpdatePageContentController: Object.assign(UpdatePageContentController, UpdatePageContentController),
     ClonePageController: Object.assign(ClonePageController, ClonePageController),
     DeletePageController: Object.assign(DeletePageController, DeletePageController),
+    SiteLayoutsIndexController: Object.assign(SiteLayoutsIndexController, SiteLayoutsIndexController),
+    SiteLayoutCreateController: Object.assign(SiteLayoutCreateController, SiteLayoutCreateController),
+    StoreSiteLayoutController: Object.assign(StoreSiteLayoutController, StoreSiteLayoutController),
+    SiteLayoutEditController: Object.assign(SiteLayoutEditController, SiteLayoutEditController),
+    UpdateSiteLayoutController: Object.assign(UpdateSiteLayoutController, UpdateSiteLayoutController),
+    PublishSiteLayoutController: Object.assign(PublishSiteLayoutController, PublishSiteLayoutController),
+    DraftSiteLayoutController: Object.assign(DraftSiteLayoutController, DraftSiteLayoutController),
+    SetDefaultSiteLayoutController: Object.assign(SetDefaultSiteLayoutController, SetDefaultSiteLayoutController),
+    DeleteSiteLayoutController: Object.assign(DeleteSiteLayoutController, DeleteSiteLayoutController),
     NavigationMenusIndexController: Object.assign(NavigationMenusIndexController, NavigationMenusIndexController),
     NavigationMenuShowController: Object.assign(NavigationMenuShowController, NavigationMenuShowController),
     StoreNavigationMenuController: Object.assign(StoreNavigationMenuController, StoreNavigationMenuController),

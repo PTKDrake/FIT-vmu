@@ -28,6 +28,7 @@ class Page extends Model
         'seo_description',
         'content',
         'content_format',
+        'site_layout_id',
         'thumbnail_id',
         'author_id',
         'status',
@@ -66,6 +67,12 @@ class Page extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    /** @return BelongsTo<SiteLayout, $this> */
+    public function siteLayout(): BelongsTo
+    {
+        return $this->belongsTo(SiteLayout::class);
     }
 
     /** @return HasMany<NavigationItem, $this> */

@@ -17,6 +17,7 @@ class PageFactory extends Factory
 {
     public function definition(): array
     {
+        /** @var string $title */
         $title = fake()->randomElement([
             'Trang chu',
             'Gioi thieu',
@@ -42,6 +43,7 @@ class PageFactory extends Factory
                 'zones' => [],
             ], JSON_THROW_ON_ERROR),
             'content_format' => 'puck_json',
+            'site_layout_id' => null,
             'thumbnail_id' => Media::factory(),
             'author_id' => User::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'published', 'rejected']),

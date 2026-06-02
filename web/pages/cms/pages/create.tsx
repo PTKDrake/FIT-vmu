@@ -9,6 +9,7 @@ import { Head, useForm, Link } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
 import type { Selection } from "react-aria-components";
+import type { CmsPageCreatePageProps } from "@/components/cms/types";
 import { Button } from "@/components/ui/button";
 import {
   ChoiceBox,
@@ -24,6 +25,10 @@ import {
   Label,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  NativeSelect,
+  NativeSelectContent,
+} from "@/components/ui/native-select";
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import CmsLayout from "@/layouts/cms-layout";
@@ -47,7 +52,7 @@ function slugify(text: string): string {
     .replace(/--+/g, "-"); // replace multiple - with single -
 }
 
-export default function CreatePage() {
+export default function CreatePage({ layoutOptions }: CmsPageCreatePageProps) {
   const [selectedTemplate, setSelectedTemplate] = useState<Selection>(
     new Set(["basic"]),
   );
@@ -61,6 +66,7 @@ export default function CreatePage() {
     seo_description: "",
     content: "",
     content_format: "puck_json" as const,
+    site_layout_id: "",
     status: "draft" as const,
   });
 
@@ -212,6 +218,31 @@ export default function CreatePage() {
 
               {/* Layout Selection */}
               <div className="space-y-4 border-t border-border pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="page-site-layout">Site layout</Label>
+                  <NativeSelect>
+                    <NativeSelectContent
+                      id="page-site-layout"
+                      value={form.data.site_layout_id}
+                      onChange={(event) =>
+                        form.setData("site_layout_id", event.target.value)
+                      }
+                    >
+                      <option value="">Dùng layout mặc định</option>
+                      {layoutOptions.map((layout) => (
+                        <option key={layout.id} value={layout.id}>
+                          {layout.name}
+                          {layout.isDefault ? " (mặc định)" : ""}
+                          {layout.status === "draft" ? " - nháp" : ""}
+                        </option>
+                      ))}
+                    </NativeSelectContent>
+                  </NativeSelect>
+                  {form.errors.site_layout_id ? (
+                    <FieldError>{form.errors.site_layout_id}</FieldError>
+                  ) : null}
+                </div>
+
                 <div>
                   <h3 className="text-sm font-semibold text-fg/80">
                     Lựa chọn Bố cục (Template)

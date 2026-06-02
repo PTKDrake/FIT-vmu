@@ -7,6 +7,7 @@ use App\Models\Page;
 use App\Models\Position;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\SiteLayout;
 use App\Models\StaffProfile;
 use App\Models\Unit;
 use App\Models\User;
@@ -25,6 +26,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('realtime/ping', Controllers\Cms\PingCmsRealtimeController::class)
             ->can('view admin dashboard')
             ->name('realtime.ping');
+        Route::get('layout-builder/sources/{source}', Controllers\Cms\LayoutBuilderSourceOptionsController::class)
+            ->can('view admin dashboard')
+            ->name('layout-builder.sources');
 
         Route::get('posts', Controllers\Cms\PostsIndexController::class)
             ->can('viewAny', Post::class)
@@ -91,6 +95,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('pages/{page}', Controllers\Cms\DeletePageController::class)
             ->can('delete', 'page')
             ->name('pages.destroy');
+
+        Route::get('layouts', Controllers\Cms\SiteLayoutsIndexController::class)
+            ->can('viewAny', SiteLayout::class)
+            ->name('layouts');
+        Route::get('layouts/create', Controllers\Cms\SiteLayoutCreateController::class)
+            ->can('create', SiteLayout::class)
+            ->name('layouts.create');
+        Route::post('layouts', Controllers\Cms\StoreSiteLayoutController::class)
+            ->can('create', SiteLayout::class)
+            ->name('layouts.store');
+        Route::get('layouts/{siteLayout}/edit', Controllers\Cms\SiteLayoutEditController::class)
+            ->can('update', 'siteLayout')
+            ->name('layouts.edit');
+        Route::patch('layouts/{siteLayout}', Controllers\Cms\UpdateSiteLayoutController::class)
+            ->can('update', 'siteLayout')
+            ->name('layouts.update');
+        Route::patch('layouts/{siteLayout}/publish', Controllers\Cms\PublishSiteLayoutController::class)
+            ->can('update', 'siteLayout')
+            ->name('layouts.publish');
+        Route::patch('layouts/{siteLayout}/draft', Controllers\Cms\DraftSiteLayoutController::class)
+            ->can('update', 'siteLayout')
+            ->name('layouts.draft');
+        Route::patch('layouts/{siteLayout}/default', Controllers\Cms\SetDefaultSiteLayoutController::class)
+            ->can('update', 'siteLayout')
+            ->name('layouts.default');
+        Route::delete('layouts/{siteLayout}', Controllers\Cms\DeleteSiteLayoutController::class)
+            ->can('delete', 'siteLayout')
+            ->name('layouts.destroy');
 
         Route::get('navigation', Controllers\Cms\NavigationMenusIndexController::class)
             ->can('viewAny', NavigationMenu::class)
@@ -224,3 +256,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/dev.php';
+
+Route::get('{page:slug}', Controllers\PublicPageController::class)
+    ->where('page', '^(?!cms(?:/|$)|login$|register$|settings(?:/|$)|password(?:/|$)|auth(?:/|$)|verify-email(?:/|$)).+')
+    ->name('pages.public.show');
