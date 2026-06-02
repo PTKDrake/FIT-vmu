@@ -1,5 +1,5 @@
 {
-    "version": "1.5.6",
+    "version": "1.0.0",
     "private": true,
     "type": "module",
     "scripts": {
@@ -8,6 +8,7 @@
         "check": "pnpm doctor && pnpm typecheck",
         "dev": "vite",
         "doctor": "react-doctor -y --offline --verbose --fail-on error",
+        "doctor:staged": "react-doctor -y --offline --staged --verbose --fail-on warning",
         "doctor:strict": "react-doctor -y --offline --verbose --fail-on warning",
         "format": "prettier --write web/",
         "format:check": "prettier --check web/",
@@ -38,14 +39,15 @@
         "eslint-plugin-react-hooks": "^7.1.1",
         "globals": "^15.15.0",
         "husky": "^9.1.7",
-        "lint-staged": "^17.0.5",
+        "lint-staged": "^17.0.7",
         "oxlint": "^1.67.0",
         "oxlint-plugin-eslint": "^1.67.0",
+        "oxlint-plugin-react-doctor": "^0.2.16",
         "oxlint-tsgolint": "^0.23.0",
         "prettier": "^3.8.3",
         "prettier-plugin-tailwindcss": "^0.6.14",
-        "react-doctor": "^0.2.14",
-        "shadcn": "^4.8.3",
+        "react-doctor": "^0.2.16",
+        "shadcn": "^4.9.0",
         "tailwind-merge": "^3.6.0",
         "tailwind-variants": "^3.2.2",
         "tailwindcss": "^4.3.0",
@@ -99,7 +101,7 @@
         "react-aria-components": "^1.18.0",
         "react-dom": "^19.2.6",
         "react-dropzone": "^15.0.0",
-        "react-hook-form": "^7.76.1",
+        "react-hook-form": "^7.77.0",
         "react-stately": "^3.47.0",
         "recharts": "^3.8.1",
         "sonner": "^2.0.7",
@@ -111,7 +113,8 @@
     },
     "pnpm": {
         "minimumReleaseAgeExclude": [
-            "react-doctor"
+            "react-doctor",
+            "oxlint-plugin-react-doctor"
         ]
     }
 }

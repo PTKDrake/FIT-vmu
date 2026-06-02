@@ -11,6 +11,7 @@ import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
+import { PretextTextarea } from "@/components/cms/pretext-textarea";
 import { Button } from "@/components/ui/button";
 import { Description, FieldError, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -86,7 +87,7 @@ export function PostForm({
       },
       {
         onFinish: () => setIsPublishing(false),
-      }
+      },
     );
   };
 
@@ -112,7 +113,7 @@ export function PostForm({
           setRejectionReason("");
           setRejectionError("");
         },
-      }
+      },
     );
   };
 
@@ -128,9 +129,7 @@ export function PostForm({
     status: initialValues.status,
   });
 
-  function triggerSubmitWithStatus(
-    status: "draft" | "pending",
-  ): void {
+  function triggerSubmitWithStatus(status: "draft" | "pending"): void {
     form.setData("status", status);
     setTimeout(() => {
       document.getElementById("post-form-submit-btn")?.click();
@@ -183,20 +182,27 @@ export function PostForm({
         <div className="mb-6 p-4 rounded-xl border border-danger/30 bg-danger/5 flex items-start gap-3 w-full animate-in fade-in duration-200">
           <ExclamationTriangleIcon className="size-5 text-danger shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="text-sm font-semibold text-danger">Bài viết bị từ chối phê duyệt</h4>
+            <h4 className="text-sm font-semibold text-danger">
+              Bài viết bị từ chối phê duyệt
+            </h4>
             <p className="text-sm text-fg whitespace-pre-wrap mt-1">
-              Lý do từ chối: <span className="font-medium">{initialValues.rejection_reason}</span>
+              Lý do từ chối:{" "}
+              <span className="font-medium">
+                {initialValues.rejection_reason}
+              </span>
             </p>
             {initialValues.reviewer_name ? (
               <p className="text-xs text-muted-fg mt-1.5">
                 Người duyệt: {initialValues.reviewer_name}
-                {initialValues.reviewed_at ? ` vào ngày ${new Intl.DateTimeFormat("vi-VN", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }).format(new Date(initialValues.reviewed_at))}` : ""}
+                {initialValues.reviewed_at
+                  ? ` vào ngày ${new Intl.DateTimeFormat("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }).format(new Date(initialValues.reviewed_at))}`
+                  : ""}
               </p>
             ) : null}
           </div>
@@ -237,7 +243,10 @@ export function PostForm({
               }}
             >
               <Textarea
+                autosize
                 className="text-3xl lg:text-4xl font-extrabold py-4 px-0 border-none shadow-none focus:ring-0 placeholder:text-muted-fg/60 focus:border-none focus:outline-hidden"
+                maxRows={4}
+                rows={2}
                 placeholder="Tiêu đề bài viết..."
               />
               <FieldError>{form.errors.title}</FieldError>
@@ -330,7 +339,11 @@ export function PostForm({
             <Label className="font-semibold text-fg text-sm">
               Tóm tắt ngắn (Excerpt)
             </Label>
-            <Textarea placeholder="Nhập mô tả tóm tắt ngắn..." rows={4} />
+            <PretextTextarea
+              placeholder="Nhập mô tả tóm tắt ngắn..."
+              maxRows={10}
+              rows={4}
+            />
             <FieldError>{form.errors.excerpt}</FieldError>
           </TextField>
         </div>
@@ -361,7 +374,9 @@ export function PostForm({
               {initialValues.id ? "Lưu thay đổi" : "Yêu cầu duyệt"}
             </Button>
 
-            {initialValues.id && initialValues.status === "pending" && canPublish ? (
+            {initialValues.id &&
+            initialValues.status === "pending" &&
+            canPublish ? (
               <>
                 <div className="h-6 w-px bg-border mx-1" />
                 <Button
@@ -473,7 +488,8 @@ export function PostForm({
           <ModalHeader>
             <ModalTitle>Từ chối bài viết</ModalTitle>
             <ModalDescription>
-              Bạn sắp từ chối bài viết <strong>{initialValues.title}</strong>. Vui lòng nhập lý do từ chối để tác giả có thể chỉnh sửa lại.
+              Bạn sắp từ chối bài viết <strong>{initialValues.title}</strong>.
+              Vui lòng nhập lý do từ chối để tác giả có thể chỉnh sửa lại.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
@@ -482,9 +498,11 @@ export function PostForm({
                 <label className="text-sm font-semibold text-fg">
                   Lý do từ chối <span className="text-danger">*</span>
                 </label>
-                <textarea
-                  className="w-full min-h-24 p-3 rounded-lg border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-hidden"
+                <PretextTextarea
+                  className="min-h-24 rounded-lg border border-border bg-transparent p-3 focus:ring-2 focus:ring-primary"
+                  maxRows={12}
                   placeholder="Ví dụ: Nội dung chưa phù hợp, thiếu hình ảnh minh họa..."
+                  rows={4}
                   value={rejectionReason}
                   onChange={(e) => {
                     setRejectionReason(e.target.value);

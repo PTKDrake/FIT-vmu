@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { Textarea } from "@/components/ui/textarea";
+import { PretextTextarea } from "@/components/cms/pretext-textarea";
 import CmsLayout from "@/layouts/cms-layout";
 import {
   createPuckPageDataFromTemplate,
@@ -148,7 +148,7 @@ export default function CreatePage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="page-excerpt">Mô tả ngắn</Label>
-                    <Textarea
+                    <PretextTextarea
                       id="page-excerpt"
                       name="excerpt"
                       placeholder="Mô tả tóm tắt nội dung của trang..."
@@ -190,9 +190,10 @@ export default function CreatePage() {
                     <Label htmlFor="page-seo-description">
                       SEO Description
                     </Label>
-                    <Textarea
+                    <PretextTextarea
                       id="page-seo-description"
                       name="seo_description"
+                      maxRows={12}
                       placeholder="Mô tả hiển thị trên trang tìm kiếm Google..."
                       rows={6}
                       value={form.data.seo_description}

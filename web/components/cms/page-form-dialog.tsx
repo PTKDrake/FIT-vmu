@@ -12,7 +12,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { Textarea } from "@/components/ui/textarea";
+import { PretextTextarea } from "@/components/cms/pretext-textarea";
 import {
   createDefaultPuckPageData,
   serializePuckPageData,
@@ -124,9 +124,10 @@ export function PageFormDialog({
 
             <div className="space-y-2">
               <Label htmlFor="page-excerpt">Mô tả ngắn</Label>
-              <Textarea
+              <PretextTextarea
                 id="page-excerpt"
                 name="excerpt"
+                rows={3}
                 value={form.data.excerpt}
                 onChange={(event) =>
                   form.setData("excerpt", event.target.value)
@@ -154,9 +155,11 @@ export function PageFormDialog({
 
             <div className="space-y-2">
               <Label htmlFor="page-seo-description">SEO description</Label>
-              <Textarea
+              <PretextTextarea
                 id="page-seo-description"
                 name="seo_description"
+                maxRows={10}
+                rows={4}
                 value={form.data.seo_description}
                 onChange={(event) =>
                   form.setData("seo_description", event.target.value)

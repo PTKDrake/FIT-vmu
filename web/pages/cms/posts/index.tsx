@@ -17,6 +17,7 @@ import {
   DataTableBadge,
   DataTableActions,
 } from "@/components/cms/cms-data-table";
+import { PretextTextarea } from "@/components/cms/pretext-textarea";
 import type {
   CmsPostTableRow,
   CmsPostsPageProps,
@@ -69,7 +70,9 @@ export default function CmsPostsPage({
   );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
-  const [rejectTarget, setRejectTarget] = useState<CmsPostTableRow | null>(null);
+  const [rejectTarget, setRejectTarget] = useState<CmsPostTableRow | null>(
+    null,
+  );
   const [rejectionReason, setRejectionReason] = useState("");
   const [rejectionError, setRejectionError] = useState("");
 
@@ -87,156 +90,158 @@ export default function CmsPostsPage({
   });
 
   const columns: Array<ColumnDef<CmsPostTableRow, any>> = [
-      columnHelper.accessor("title", {
-        header: "Bài viết",
-        cell: ({ row }) => (
-          <div className="space-y-1">
-            <p className="font-medium text-fg">{row.original.title}</p>
-            <Text className="text-xs text-muted-fg font-mono block">
-              {row.original.slug}
+    columnHelper.accessor("title", {
+      header: "Bài viết",
+      cell: ({ row }) => (
+        <div className="space-y-1">
+          <p className="font-medium text-fg">{row.original.title}</p>
+          <Text className="text-xs text-muted-fg font-mono block">
+            {row.original.slug}
+          </Text>
+          {row.original.excerpt ? (
+            <Text className="line-clamp-2 text-sm text-muted-fg mt-1">
+              {row.original.excerpt}
             </Text>
-            {row.original.excerpt ? (
-              <Text className="line-clamp-2 text-sm text-muted-fg mt-1">
-                {row.original.excerpt}
-              </Text>
-            ) : null}
-            {row.original.status === "rejected" && row.original.rejectionReason ? (
-              <div className="mt-2 text-xs text-danger border border-danger/20 bg-danger/5 p-2.5 rounded-lg max-w-lg">
-                <span className="font-semibold block">Lý do từ chối:</span>
-                <p className="mt-1 whitespace-pre-wrap">{row.original.rejectionReason}</p>
-                {row.original.reviewerName ? (
-                  <span className="text-muted-fg block mt-1.5 text-[10px]">
-                    Người từ chối: {row.original.reviewerName}
-                    {row.original.reviewedAt ? ` - ${formatDate(row.original.reviewedAt)}` : ""}
-                  </span>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        ),
-      }),
-      columnHelper.accessor("categoryNames", {
-        id: "categories",
-        header: "Chuyên mục",
-        enableSorting: false,
-        cell: ({ getValue }) => {
-          const categoryNames = getValue() as string[];
-
-          if (categoryNames.length === 0) {
-            return (
-              <span className="text-xs text-muted-fg italic">
-                {t("Chưa phân loại")}
-              </span>
-            );
-          }
-
-          return (
-            <div className="flex flex-wrap gap-1 max-w-[180px]">
-              {categoryNames.map((categoryName) => (
-                <DataTableBadge key={categoryName} intent="info">
-                  {categoryName}
-                </DataTableBadge>
-              ))}
+          ) : null}
+          {row.original.status === "rejected" &&
+          row.original.rejectionReason ? (
+            <div className="mt-2 text-xs text-danger border border-danger/20 bg-danger/5 p-2.5 rounded-lg max-w-lg">
+              <span className="font-semibold block">Lý do từ chối:</span>
+              <p className="mt-1 whitespace-pre-wrap">
+                {row.original.rejectionReason}
+              </p>
+              {row.original.reviewerName ? (
+                <span className="text-muted-fg block mt-1.5 text-[10px]">
+                  Người từ chối: {row.original.reviewerName}
+                  {row.original.reviewedAt
+                    ? ` - ${formatDate(row.original.reviewedAt)}`
+                    : ""}
+                </span>
+              ) : null}
             </div>
-          );
-        },
-      }),
-      columnHelper.accessor("status", {
-        header: "Trạng thái",
-        cell: ({ getValue }) => {
-          const value = getValue() as CmsPostTableRow["status"];
+          ) : null}
+        </div>
+      ),
+    }),
+    columnHelper.accessor("categoryNames", {
+      id: "categories",
+      header: "Chuyên mục",
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const categoryNames = getValue() as string[];
 
+        if (categoryNames.length === 0) {
           return (
-            <DataTableBadge
-              intent={statusIntentMap[value]}
-              className="capitalize"
-            >
-              {statusLabelMap[value]}
-            </DataTableBadge>
+            <span className="text-xs text-muted-fg italic">
+              {t("Chưa phân loại")}
+            </span>
           );
-        },
-      }),
-      columnHelper.accessor("authorName", {
-        id: "author",
-        header: "Tác giả",
-        cell: ({ getValue }) => getValue() ?? "Chính hệ thống",
-      }),
-      columnHelper.accessor("publishedAt", {
-        id: "published_at",
-        header: "Ngày xuất bản",
-        cell: ({ getValue }) => formatDate(getValue()),
-      }),
-      columnHelper.accessor("updatedAt", {
-        header: "Cập nhật",
-        enableSorting: false,
-        cell: ({ getValue }) => formatDate(getValue()),
-      }),
-      columnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) => {
-          const showApproval =
-            can.publishPosts &&
-            row.original.status === "pending";
-          const showManage = can.managePosts;
+        }
 
-          if (!showManage && !showApproval) {
-            return null;
-          }
+        return (
+          <div className="flex flex-wrap gap-1 max-w-[180px]">
+            {categoryNames.map((categoryName) => (
+              <DataTableBadge key={categoryName} intent="info">
+                {categoryName}
+              </DataTableBadge>
+            ))}
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("status", {
+      header: "Trạng thái",
+      cell: ({ getValue }) => {
+        const value = getValue() as CmsPostTableRow["status"];
 
-          return (
-            <DataTableActions
-              triggerAriaLabel={`Tác vụ cho ${row.original.title}`}
-            >
-              {showManage ? (
+        return (
+          <DataTableBadge
+            intent={statusIntentMap[value]}
+            className="capitalize"
+          >
+            {statusLabelMap[value]}
+          </DataTableBadge>
+        );
+      },
+    }),
+    columnHelper.accessor("authorName", {
+      id: "author",
+      header: "Tác giả",
+      cell: ({ getValue }) => getValue() ?? "Chính hệ thống",
+    }),
+    columnHelper.accessor("publishedAt", {
+      id: "published_at",
+      header: "Ngày xuất bản",
+      cell: ({ getValue }) => formatDate(getValue()),
+    }),
+    columnHelper.accessor("updatedAt", {
+      header: "Cập nhật",
+      enableSorting: false,
+      cell: ({ getValue }) => formatDate(getValue()),
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) => {
+        const showApproval =
+          can.publishPosts && row.original.status === "pending";
+        const showManage = can.managePosts;
+
+        if (!showManage && !showApproval) {
+          return null;
+        }
+
+        return (
+          <DataTableActions
+            triggerAriaLabel={`Tác vụ cho ${row.original.title}`}
+          >
+            {showManage ? (
+              <MenuItem
+                onAction={() => {
+                  router.visit(postsRoutes.edit.url({ post: row.original.id }));
+                }}
+              >
+                <PencilSquareIcon />
+                Chỉnh sửa
+              </MenuItem>
+            ) : null}
+
+            {showApproval ? (
+              <>
                 <MenuItem
                   onAction={() => {
-                    router.visit(
-                      postsRoutes.edit.url({ post: row.original.id }),
-                    );
+                    handlePublishStatus(row.original.id, "published");
                   }}
+                  className="text-primary"
                 >
-                  <PencilSquareIcon />
-                  Chỉnh sửa
+                  <CheckCircleIcon className="text-primary" />
+                  Phê duyệt bài đăng
                 </MenuItem>
-              ) : null}
-
-              {showApproval ? (
-                <>
-                  <MenuItem
-                    onAction={() => {
-                      handlePublishStatus(row.original.id, "published");
-                    }}
-                    className="text-primary"
-                  >
-                    <CheckCircleIcon className="text-primary" />
-                    Phê duyệt bài đăng
-                  </MenuItem>
-                  <MenuItem
-                    intent="danger"
-                    onAction={() => {
-                      setRejectTarget(row.original);
-                    }}
-                  >
-                    <XCircleIcon className="text-danger" />
-                    Từ chối bài viết
-                  </MenuItem>
-                </>
-              ) : null}
-
-              {showManage ? (
                 <MenuItem
                   intent="danger"
-                  onAction={() => setDeleteTarget(row.original)}
+                  onAction={() => {
+                    setRejectTarget(row.original);
+                  }}
                 >
-                  <TrashIcon />
-                  Xóa bài viết
+                  <XCircleIcon className="text-danger" />
+                  Từ chối bài viết
                 </MenuItem>
-              ) : null}
-            </DataTableActions>
-          );
-        },
-      }),
+              </>
+            ) : null}
+
+            {showManage ? (
+              <MenuItem
+                intent="danger"
+                onAction={() => setDeleteTarget(row.original)}
+              >
+                <TrashIcon />
+                Xóa bài viết
+              </MenuItem>
+            ) : null}
+          </DataTableActions>
+        );
+      },
+    }),
   ];
 
   function handlePublishStatus(
@@ -358,7 +363,8 @@ export default function CmsPostsPage({
           <ModalHeader>
             <ModalTitle>Từ chối bài viết</ModalTitle>
             <ModalDescription>
-              Bạn sắp từ chối bài viết <strong>{rejectTarget.title}</strong>. Vui lòng nhập lý do từ chối để tác giả có thể chỉnh sửa lại.
+              Bạn sắp từ chối bài viết <strong>{rejectTarget.title}</strong>.
+              Vui lòng nhập lý do từ chối để tác giả có thể chỉnh sửa lại.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
@@ -367,9 +373,11 @@ export default function CmsPostsPage({
                 <label className="text-sm font-semibold text-fg">
                   Lý do từ chối <span className="text-danger">*</span>
                 </label>
-                <textarea
-                  className="w-full min-h-24 p-3 rounded-lg border border-border bg-transparent focus:ring-2 focus:ring-primary focus:outline-hidden"
+                <PretextTextarea
+                  className="min-h-24 rounded-lg border border-border bg-transparent p-3 focus:ring-2 focus:ring-primary"
+                  maxRows={12}
                   placeholder="Ví dụ: Nội dung chưa phù hợp, thiếu hình ảnh minh họa..."
+                  rows={4}
                   value={rejectionReason}
                   onChange={(e) => {
                     setRejectionReason(e.target.value);
@@ -418,7 +426,7 @@ export default function CmsPostsPage({
                       setRejectionError("");
                     },
                     preserveScroll: true,
-                  }
+                  },
                 );
               }}
             >

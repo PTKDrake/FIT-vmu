@@ -57,11 +57,12 @@
     },
     "scripts": {
         "analyse": [
-            "@php vendor/bin/phpstan analyse --memory-limit=2G --debug --no-progress"
+            "@php vendor/bin/phpstan analyse --memory-limit=2G --error-format=raw --no-progress"
         ],
         "check": [
             "@format:test",
             "@analyse",
+            "@test:prepare",
             "@test"
         ],
         "ci:check": [
@@ -81,9 +82,11 @@
         "lint:check": [
             "pint --parallel --test"
         ],
+        "test:prepare": [
+            "@php artisan config:clear --ansi"
+        ],
         "test": [
-            "@php artisan config:clear --ansi",
-            "@php artisan test"
+            "@php vendor/bin/pest --compact"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
