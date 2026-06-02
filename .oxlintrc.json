@@ -20,7 +20,7 @@
         },
         {
             "name": "react-doctor",
-            "specifier": "./node_modules/.pnpm/node_modules/oxlint-plugin-react-doctor/dist/index.js"
+            "specifier": "oxlint-plugin-react-doctor"
         }
     ],
     "options": {
