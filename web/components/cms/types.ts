@@ -111,6 +111,14 @@ export interface CmsPagesPageProps extends SharedData {
   pages: CmsPaginatedCollection<CmsPageTableRow>;
 }
 
+export interface CmsLayoutOption {
+  id: number;
+  isDefault: boolean;
+  key: string;
+  name: string;
+  status: "draft" | "published";
+}
+
 export interface CmsNavigationResourceCatalog {
   page: NavigationResourceOption[];
   post: NavigationResourceOption[];
@@ -236,6 +244,7 @@ export interface CmsUnitShowPageProps extends SharedData {
 }
 
 export interface CmsPageEditorPageProps extends SharedData {
+  layoutOptions: CmsLayoutOption[];
   page: {
     content: string | null;
     contentFormat: "puck_json";
@@ -243,11 +252,16 @@ export interface CmsPageEditorPageProps extends SharedData {
     id: number;
     seoDescription: string | null;
     seoTitle: string | null;
+    siteLayoutId: number | null;
     slug: string;
     status: "draft" | "pending" | "published" | "rejected";
     title: string;
     updatedAt: string;
   };
+}
+
+export interface CmsPageCreatePageProps extends SharedData {
+  layoutOptions: CmsLayoutOption[];
 }
 
 export interface CmsStaffProfileRow {

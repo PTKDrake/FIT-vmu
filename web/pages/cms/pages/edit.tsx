@@ -12,6 +12,10 @@ import {
   Label,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  NativeSelect,
+  NativeSelectContent,
+} from "@/components/ui/native-select";
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import CmsLayout from "@/layouts/cms-layout";
@@ -31,7 +35,10 @@ function slugify(text: string): string {
     .replace(/--+/g, "-"); // replace multiple - with single -
 }
 
-export default function EditPage({ page }: CmsPageEditorPageProps) {
+export default function EditPage({
+  layoutOptions,
+  page,
+}: CmsPageEditorPageProps) {
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(!!page.slug);
 
   const form = useForm({
@@ -40,6 +47,7 @@ export default function EditPage({ page }: CmsPageEditorPageProps) {
     excerpt: page.excerpt || "",
     seo_title: page.seoTitle || "",
     seo_description: page.seoDescription || "",
+    site_layout_id: page.siteLayoutId?.toString() ?? "",
   });
 
   function submit(event: FormEvent<HTMLFormElement>): void {
@@ -158,6 +166,31 @@ export default function EditPage({ page }: CmsPageEditorPageProps) {
                     />
                     {form.errors.excerpt ? (
                       <FieldError>{form.errors.excerpt}</FieldError>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="page-site-layout">Site layout</Label>
+                    <NativeSelect>
+                      <NativeSelectContent
+                        id="page-site-layout"
+                        value={form.data.site_layout_id}
+                        onChange={(event) =>
+                          form.setData("site_layout_id", event.target.value)
+                        }
+                      >
+                        <option value="">Dùng layout mặc định</option>
+                        {layoutOptions.map((layout) => (
+                          <option key={layout.id} value={layout.id}>
+                            {layout.name}
+                            {layout.isDefault ? " (mặc định)" : ""}
+                            {layout.status === "draft" ? " - nháp" : ""}
+                          </option>
+                        ))}
+                      </NativeSelectContent>
+                    </NativeSelect>
+                    {form.errors.site_layout_id ? (
+                      <FieldError>{form.errors.site_layout_id}</FieldError>
                     ) : null}
                   </div>
                 </div>

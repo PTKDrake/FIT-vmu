@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 const PageEditorController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ PageEditorController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 PageEditorController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ PageEditorController.url = (args: { page: number | { id: number } } | [page: num
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 PageEditorController.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ PageEditorController.get = (args: { page: number | { id: number } } | [page: num
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 PageEditorController.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ PageEditorController.head = (args: { page: number | { id: number } } | [page: nu
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 const PageEditorControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const PageEditorControllerForm = (args: { page: number | { id: number } } | [pag
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 PageEditorControllerForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ PageEditorControllerForm.get = (args: { page: number | { id: number } } | [page:
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:14
+* @see app/Http/Controllers/Cms/PageEditorController.php:15
 * @route '/cms/pages/{page}/edit'
 */
 PageEditorControllerForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

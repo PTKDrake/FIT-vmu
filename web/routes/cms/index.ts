@@ -1,8 +1,10 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 import realtime from './realtime'
+import layoutBuilder from './layout-builder'
 import postsD8dc7a from './posts'
 import postCategories09c74a from './post-categories'
 import pagesAf6a29 from './pages'
+import layoutsF4ac99 from './layouts'
 import navigation2b63fc from './navigation'
 import media30b75d from './media'
 import ai from './ai'
@@ -334,6 +336,87 @@ pagesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 pages.form = pagesForm
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+export const layouts = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: layouts.url(options),
+    method: 'get',
+})
+
+layouts.definition = {
+    methods: ["get","head"],
+    url: '/cms/layouts',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+layouts.url = (options?: RouteQueryOptions) => {
+    return layouts.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+layouts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: layouts.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+layouts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: layouts.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+const layoutsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: layouts.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+layoutsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: layouts.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @route '/cms/layouts'
+*/
+layoutsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: layouts.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+layouts.form = layoutsForm
 
 /**
 * @see \App\Http\Controllers\Cms\NavigationMenusIndexController::__invoke
@@ -905,9 +988,11 @@ rolesPermissions.form = rolesPermissionsForm
 const cms = {
     dashboard: Object.assign(dashboard, dashboard),
     realtime: Object.assign(realtime, realtime),
+    layoutBuilder: Object.assign(layoutBuilder, layoutBuilder),
     posts: Object.assign(posts, postsD8dc7a),
     postCategories: Object.assign(postCategories, postCategories09c74a),
     pages: Object.assign(pages, pagesAf6a29),
+    layouts: Object.assign(layouts, layoutsF4ac99),
     navigation: Object.assign(navigation, navigation2b63fc),
     media: Object.assign(media, media30b75d),
     ai: Object.assign(ai, ai),

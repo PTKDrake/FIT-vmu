@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 const PageShowController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ PageShowController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 PageShowController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ PageShowController.url = (args: { page: number | { id: number } } | [page: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 PageShowController.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ PageShowController.get = (args: { page: number | { id: number } } | [page: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 PageShowController.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ PageShowController.head = (args: { page: number | { id: number } } | [page: numb
 
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 const PageShowControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const PageShowControllerForm = (args: { page: number | { id: number } } | [page:
 
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 PageShowControllerForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ PageShowControllerForm.get = (args: { page: number | { id: number } } | [page: n
 
 /**
 * @see \App\Http\Controllers\Cms\PageShowController::__invoke
-* @see app/Http/Controllers/Cms/PageShowController.php:13
+* @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
 PageShowControllerForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

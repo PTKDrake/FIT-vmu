@@ -1,15 +1,29 @@
 import { Render } from "@puckeditor/core";
 import { twMerge } from "tailwind-merge";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
-import { parsePuckPageData } from "@/lib/puck/page-builder-data";
+import {
+  parsePuckLayoutData,
+  parsePuckPageData,
+} from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
+import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
 
 interface PuckPageRenderProps {
   className?: string;
+  config?: PageBuilderConfig;
   content?: VmuFitPageBuilderValue;
+  mode?: "page" | "slot";
 }
 
-export function PuckPageRender({ className, content }: PuckPageRenderProps) {
+export function PuckPageRender({
+  className,
+  config = vmuFitPageBuilderConfig,
+  content,
+  mode = "page",
+}: PuckPageRenderProps) {
+  const data =
+    mode === "slot" ? parsePuckLayoutData(content) : parsePuckPageData(content);
+
   return (
     <div
       className={twMerge(
@@ -17,10 +31,7 @@ export function PuckPageRender({ className, content }: PuckPageRenderProps) {
         className,
       )}
     >
-      <Render
-        config={vmuFitPageBuilderConfig}
-        data={parsePuckPageData(content)}
-      />
+      <Render config={config} data={data} />
     </div>
   );
 }

@@ -1,102 +1,62 @@
 ---
 name: puck-visual-editor
-description: Build, extend, and persist Puck visual editors with React. Use whenever the user mentions Puck, @puckeditor/core, visual editor, site pages, puck_data, drag-and-drop CMS, block registry, Render vs Puck, RSC, per-page component palettes, richtext, plugin rail, slots, permissions, or data migration — even if they do not say "Puck" by name.
+description: Build, extend, and persist Puck visual editors for this repository's `web/` frontend. Use when the task mentions Puck, `@puckeditor/core`, page builders, `puck_json`, drag-and-drop CMS blocks, slots, rich text, plugin rail, dynamic props or fields, external data sources, data migration, viewports, Render vs Puck, or custom editor UI.
 ---
 
 # Puck visual editor
 
-**Canonical documentation:** [https://puckeditor.com/docs](https://puckeditor.com/docs)
+## When to Apply
 
-**Release note:** Puck **0.21** adds AI (beta), **`richtext`** fields, and the **Plugin Rail**. Summary: [Puck 0.21 blog](https://puckeditor.com/blog/puck-021).
+Activate this skill when work involves any of the following:
 
----
+- Adding or changing a Puck editor in `web/`
+- Rendering stored Puck content in readonly or preview mode
+- Editing `web/lib/puck/` config, block registry, block components, or page-builder data helpers
+- Working with `puck_json`, `content_format`, Puck root props, or nested slot content
+- Building CMS pages with drag-and-drop blocks, categories, rich text, or external data pickers
+- Extending the editor with composition, plugins, overrides, custom fields, field transforms, or internal Puck hooks
+- Migrating legacy Puck payloads or renaming component types
 
-## 1. Mental model
+Use this skill together with:
 
-- **[`Config`](https://puckeditor.com/docs/api-reference/configuration/config)** — `components`, `fields`, `defaultProps`, `render`, `categories`, `root`, `resolveData`, `permissions`, …
-- **[`Data`](https://puckeditor.com/docs/api-reference/data-model/data)** — `content`, `root`, legacy `zones`. Prefer **[slots](https://puckeditor.com/docs/api-reference/fields/slot)** over DropZones ([migration guide](https://puckeditor.com/docs/guides/migrations/dropzones-to-slots)).
-- **`<Puck />`** = client editor; **`<Render />`** + [`resolveAllData`](https://puckeditor.com/docs/api-reference/functions/resolve-all-data) = RSC-friendly when config is server-safe ([Server components](https://puckeditor.com/docs/integrating-puck/server-components)).
+- `inertia-react-development` for Inertia page flow in `web/pages/`
+- `intentui` when composing UI around the editor without touching `web/components/ui`
+- `tailwindcss-development` when changing block styling
+- `wayfinder-development` when frontend code needs backend routes
+- `no-use-effect` for normal React work
 
----
+Exception:
+Puck sometimes needs DOM lifecycle hooks for iframe sync, overlay portals, or editor internals. Use that pattern only when the editor integration genuinely requires it.
 
-## 2. Official documentation index
+## Project Defaults
 
-### Getting started
+- Frontend code lives in `web/`, not `resources/js/`
+- Stored format string is `puck_json`
+- Reuse the existing Puck stack under `web/lib/puck/` and `web/components/page-builder/`
+- Parse persisted values through shared helpers, not inline `JSON.parse`
+- Prefer block modules under `web/lib/puck/blocks/`
+- Keep readonly rendering on top of `<Render />`
+- Prefer `slot` fields over legacy DropZone-style designs
 
-| Topic                      | URL                                                            |
-| -------------------------- | -------------------------------------------------------------- |
-| Introduction               | [Introduction](https://puckeditor.com/docs)                    |
-| Install and minimal editor | [Getting Started](https://puckeditor.com/docs/getting-started) |
+Read [references/project-integration.md](references/project-integration.md) before changing repo-specific Puck code.
 
-### Integrating Puck
+## Working Method
 
-| Topic                          | URL                                                                                             |
-| ------------------------------ | ----------------------------------------------------------------------------------------------- |
-| Component configuration        | [Component configuration](https://puckeditor.com/docs/integrating-puck/component-configuration) |
-| Root configuration             | [Root configuration](https://puckeditor.com/docs/integrating-puck/root-configuration)           |
-| Categories                     | [Categories](https://puckeditor.com/docs/integrating-puck/categories)                           |
-| Multi-column layouts           | [Multi-column layouts](https://puckeditor.com/docs/integrating-puck/multi-column-layouts)       |
-| Dynamic props                  | [Dynamic props](https://puckeditor.com/docs/integrating-puck/dynamic-props)                     |
-| Dynamic fields                 | [Dynamic fields](https://puckeditor.com/docs/integrating-puck/dynamic-fields)                   |
-| External data sources          | [External data sources](https://puckeditor.com/docs/integrating-puck/external-data-sources)     |
-| Server components              | [Server components](https://puckeditor.com/docs/integrating-puck/server-components)             |
-| Data migration                 | [Data migration](https://puckeditor.com/docs/integrating-puck/data-migration)                   |
-| Viewports                      | [Viewports](https://puckeditor.com/docs/integrating-puck/viewports)                             |
-| Feature toggling / permissions | [Feature toggling](https://puckeditor.com/docs/integrating-puck/feature-toggling)               |
-| Rich text editing              | [Rich text editing](https://puckeditor.com/docs/integrating-puck/rich-text-editing)             |
-| Overlay portals                | [Overlay portals](https://puckeditor.com/docs/integrating-puck/overlay-portals)                 |
+1. Identify whether the task is about editor UI, persisted data, readonly rendering, schema evolution, or editor extension.
+2. Read the smallest reference file that matches the work:
+    - `references/integrating-puck.md` for config, root, slots, rich text, dynamic props or fields, external data, RSC, migration, viewport, permissions, overlays
+    - `references/fields.md` for field selection and field-level rules
+    - `references/extending-puck.md` for composition, plugins, overrides, custom fields, field transforms, and internal API usage
+    - `references/project-integration.md` for repo conventions and concrete file locations
+3. Reuse the current config, data helpers, and editor wrappers before creating new abstractions.
+4. Keep config, block rendering, persistence, and page wiring separate.
+5. If stored payload semantics change, update normalization or migration handling instead of breaking old data.
+6. Add or update the smallest relevant test for the affected create, edit, builder, content-update, or render path.
 
-### Extending Puck
+## Non-Negotiables
 
-| Topic                 | URL                                                                               |
-| --------------------- | --------------------------------------------------------------------------------- |
-| Composition           | [Composition](https://puckeditor.com/docs/extending-puck/composition)             |
-| Custom fields         | [Custom fields](https://puckeditor.com/docs/extending-puck/custom-fields)         |
-| Field transforms      | [Field transforms](https://puckeditor.com/docs/extending-puck/field-transforms)   |
-| Internal Puck API     | [Internal Puck API](https://puckeditor.com/docs/extending-puck/internal-puck-api) |
-| Theming               | [Theming](https://puckeditor.com/docs/extending-puck/theming)                     |
-| Plugins (Plugin Rail) | [Plugin API](https://puckeditor.com/docs/extending-puck/plugins)                  |
-| UI overrides          | [UI overrides](https://puckeditor.com/docs/extending-puck/ui-overrides)           |
-
-### API reference (frequently used)
-
-| Topic                   | URL                                                                                                  |
-| ----------------------- | ---------------------------------------------------------------------------------------------------- |
-| `Config`                | [Config](https://puckeditor.com/docs/api-reference/configuration/config)                             |
-| `ComponentConfig`       | [Component config](https://puckeditor.com/docs/api-reference/configuration/component-config)         |
-| `Data` model            | [Data model](https://puckeditor.com/docs/api-reference/data-model/data)                              |
-| `<Puck />`              | [Puck](https://puckeditor.com/docs/api-reference/components/puck)                                    |
-| Puck subcomponents      | [Puck components](https://puckeditor.com/docs/api-reference/components/puck-components)              |
-| `<Render />`            | [Render](https://puckeditor.com/docs/api-reference/components/render)                                |
-| Permissions             | [Permissions](https://puckeditor.com/docs/api-reference/permissions)                                 |
-| `slot` field            | [Slot field](https://puckeditor.com/docs/api-reference/fields/slot)                                  |
-| `richtext` field        | [Richtext field](https://puckeditor.com/docs/api-reference/fields/richtext)                          |
-| RichTextMenu            | [RichTextMenu](https://puckeditor.com/docs/api-reference/components/rich-text-menu)                  |
-| `migrate()`             | [migrate](https://puckeditor.com/docs/api-reference/functions/migrate)                               |
-| `transformProps()`      | [transformProps](https://puckeditor.com/docs/api-reference/functions/transform-props)                |
-| `resolveAllData()`      | [resolveAllData](https://puckeditor.com/docs/api-reference/functions/resolve-all-data)               |
-| `registerOverlayPortal` | [registerOverlayPortal](https://puckeditor.com/docs/api-reference/functions/register-overlay-portal) |
-| Plugins API             | [Plugins](https://puckeditor.com/docs/api-reference/plugins)                                         |
-
-### Puck AI (cloud beta)
-
-| Topic               | URL                                                                       |
-| ------------------- | ------------------------------------------------------------------------- |
-| Overview            | [AI overview](https://puckeditor.com/docs/ai/overview)                    |
-| Getting started     | [AI getting started](https://puckeditor.com/docs/ai/getting-started)      |
-| AI configuration    | [AI configuration](https://puckeditor.com/docs/ai/ai-configuration)       |
-| Business context    | [Business context](https://puckeditor.com/docs/ai/business-context)       |
-| Tools               | [AI tools](https://puckeditor.com/docs/ai/tools)                          |
-| Headless generation | [Headless generation](https://puckeditor.com/docs/ai/headless-generation) |
-
----
-
-## 3. Practices (short)
-
-1. Stable `type` keys in JSON; use [Data migration](https://puckeditor.com/docs/integrating-puck/data-migration) when renaming.
-2. Per-page palettes: **filter `Config.components` and `categories`** from DB-driven allowlists — not stored inside `puck_data` alone.
-3. Slot **`allow` / `disallow`** for nested regions vs global palette ([Slot field](https://puckeditor.com/docs/api-reference/fields/slot)).
-4. `import "@puckeditor/core/puck.css"`.
-5. Rich text: follow [Rich text editing](https://puckeditor.com/docs/integrating-puck/rich-text-editing); treat public HTML carefully.
-
----
+- Do not create a second ad hoc Puck implementation elsewhere in the repo unless the user explicitly asks for a separate editor product.
+- Do not store lossy HTML snapshots as the canonical page-builder payload.
+- Do not rename component type keys without migration handling.
+- Do not put large blocks of Puck reference material directly into this file; keep it in `references/`.
+- Do not edit `web/components/ui` unless the user explicitly asks or no composition-based solution is possible.

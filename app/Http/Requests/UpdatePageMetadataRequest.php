@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\Page;
+use App\Models\SiteLayout;
 use App\Rules\ReservedPageSlug;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -60,6 +61,7 @@ class UpdatePageMetadataRequest extends FormRequest
             'excerpt' => ['nullable', 'string'],
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string'],
+            'site_layout_id' => ['nullable', 'integer', Rule::exists((new SiteLayout)->getTable(), 'id')],
         ];
     }
 }

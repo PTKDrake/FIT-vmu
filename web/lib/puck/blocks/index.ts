@@ -2,6 +2,9 @@
 export { GridComponentConfig } from "./grid";
 export { FlexComponentConfig } from "./flex";
 
+// --- SITE LAYOUT BUILDER FRAME ---
+export { SiteLayoutFrameComponentConfig } from "./site-layout-frame";
+
 // --- HERO BLOCKS ---
 export { HeroBannerComponentConfig } from "./hero-banner";
 export { HeroSplitComponentConfig } from "./hero-split";
@@ -50,4 +53,12 @@ export {
   DocumentListComponentConfig,
   RelatedPostsComponentConfig,
   RelatedDocumentsComponentConfig,
+  NavigationMenuComponentConfig,
+  CategoriesComponentConfig,
+  PageLinksComponentConfig,
+  LinkListComponentConfig,
+  ContactInfoComponentConfig,
 } from "./dynamic";
+
+// --- AUTH BLOCKS ---
+export { AuthStatusComponentConfig } from "./auth-status";

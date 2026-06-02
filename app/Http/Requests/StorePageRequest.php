@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 
 use App\Models\Media;
 use App\Models\Page;
+use App\Models\SiteLayout;
 use App\Rules\ReservedPageSlug;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -58,6 +59,7 @@ class StorePageRequest extends FormRequest
             'seo_description' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['puck_json'])],
+            'site_layout_id' => ['nullable', 'integer', Rule::exists((new SiteLayout)->getTable(), 'id')],
             'thumbnail_id' => ['nullable', 'integer', Rule::exists((new Media)->getTable(), 'id')],
             'status' => ['required', 'string', Rule::in(['draft', 'pending'])],
         ];

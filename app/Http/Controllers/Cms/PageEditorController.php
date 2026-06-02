@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use App\Models\Page;
+use App\Models\SiteLayout;
 use Carbon\CarbonInterface;
 use Inertia\Response;
 
@@ -23,9 +24,23 @@ final class PageEditorController extends Controller
                 'seoDescription' => $page->seo_description,
                 'content' => $page->content,
                 'contentFormat' => $page->content_format,
+                'siteLayoutId' => $page->site_layout_id,
                 'status' => $page->status,
                 'updatedAt' => $this->formatDateTime($page->updated_at) ?? now()->toAtomString(),
             ],
+            'layoutOptions' => SiteLayout::query()
+                ->orderByDesc('is_default')
+                ->orderBy('name')
+                ->get(['id', 'name', 'key', 'status', 'is_default'])
+                ->map(fn (SiteLayout $siteLayout): array => [
+                    'id' => $siteLayout->id,
+                    'name' => $siteLayout->name,
+                    'key' => $siteLayout->key,
+                    'status' => $siteLayout->status,
+                    'isDefault' => $siteLayout->is_default,
+                ])
+                ->values()
+                ->all(),
         ]);
     }
 
