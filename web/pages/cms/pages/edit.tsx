@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { PretextTextarea } from "@/components/cms/pretext-textarea";
+import { Textarea } from "@/components/ui/textarea";
 import CmsLayout from "@/layouts/cms-layout";
 import { pages } from "@/routes/cms";
 import pageRoutes, { builder } from "@/routes/cms/pages";
@@ -145,7 +145,8 @@ export default function EditPage({ page }: CmsPageEditorPageProps) {
 
                   <div className="space-y-2">
                     <Label htmlFor="page-excerpt">Mô tả ngắn</Label>
-                    <PretextTextarea
+                    <Textarea
+                      autosize
                       id="page-excerpt"
                       name="excerpt"
                       placeholder="Mô tả tóm tắt nội dung trang..."
@@ -187,7 +188,8 @@ export default function EditPage({ page }: CmsPageEditorPageProps) {
                     <Label htmlFor="page-seo-description">
                       SEO Description
                     </Label>
-                    <PretextTextarea
+                    <Textarea
+                      autosize
                       id="page-seo-description"
                       name="seo_description"
                       maxRows={12}

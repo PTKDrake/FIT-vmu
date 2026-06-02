@@ -9,9 +9,8 @@ import { useForm, Link, router } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
-import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
-import { PretextTextarea } from "@/components/cms/pretext-textarea";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Button } from "@/components/ui/button";
 import { Description, FieldError, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -339,7 +338,8 @@ export function PostForm({
             <Label className="font-semibold text-fg text-sm">
               Tóm tắt ngắn (Excerpt)
             </Label>
-            <PretextTextarea
+            <Textarea
+              autosize
               placeholder="Nhập mô tả tóm tắt ngắn..."
               maxRows={10}
               rows={4}
@@ -498,7 +498,8 @@ export function PostForm({
                 <label className="text-sm font-semibold text-fg">
                   Lý do từ chối <span className="text-danger">*</span>
                 </label>
-                <PretextTextarea
+                <Textarea
+                  autosize
                   className="min-h-24 rounded-lg border border-border bg-transparent p-3 focus:ring-2 focus:ring-primary"
                   maxRows={12}
                   placeholder="Ví dụ: Nội dung chưa phù hợp, thiếu hình ảnh minh họa..."

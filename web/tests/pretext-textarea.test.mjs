@@ -18,6 +18,14 @@ const postFormSource = readFileSync(
     new URL("../components/cms/post-form.tsx", import.meta.url),
     "utf8",
 );
+const pageFormDialogSource = readFileSync(
+    new URL("../components/cms/page-form-dialog.tsx", import.meta.url),
+    "utf8",
+);
+const postsIndexSource = readFileSync(
+    new URL("../pages/cms/posts/index.tsx", import.meta.url),
+    "utf8",
+);
 
 test("pretext textarea uses DOM-free multiline measurement", () => {
     assert.match(pretextTextareaSource, /@chenglou\/pretext/);
@@ -34,9 +42,10 @@ test("pretext textarea uses DOM-free multiline measurement", () => {
     assert.match(pretextTextareaSource, /autosize\?: boolean/);
 });
 
-test("cms forms opt into the pretext textarea wrapper", () => {
-    assert.match(pageCreateSource, /PretextTextarea/);
-    assert.match(pageEditSource, /PretextTextarea/);
-    assert.match(postFormSource, /PretextTextarea/);
+test("cms forms opt into textarea autosize", () => {
+    assert.match(pageFormDialogSource, /<Textarea\s+autosize/);
+    assert.match(pageCreateSource, /<Textarea\s+autosize/);
+    assert.match(pageEditSource, /<Textarea\s+autosize/);
     assert.match(postFormSource, /<Textarea\s+autosize/);
+    assert.match(postsIndexSource, /<Textarea\s+autosize/);
 });

@@ -17,7 +17,6 @@ import {
   DataTableBadge,
   DataTableActions,
 } from "@/components/cms/cms-data-table";
-import { PretextTextarea } from "@/components/cms/pretext-textarea";
 import type {
   CmsPostTableRow,
   CmsPostsPageProps,
@@ -33,6 +32,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
+import { Textarea } from "@/components/ui/textarea";
 import { Text } from "@/components/ui/text";
 import { t } from "@/lib/i18n";
 import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
@@ -373,7 +373,8 @@ export default function CmsPostsPage({
                 <label className="text-sm font-semibold text-fg">
                   Lý do từ chối <span className="text-danger">*</span>
                 </label>
-                <PretextTextarea
+                <Textarea
+                  autosize
                   className="min-h-24 rounded-lg border border-border bg-transparent p-3 focus:ring-2 focus:ring-primary"
                   maxRows={12}
                   placeholder="Ví dụ: Nội dung chưa phù hợp, thiếu hình ảnh minh họa..."
