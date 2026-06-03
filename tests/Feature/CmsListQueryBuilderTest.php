@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\Document;
 use App\Models\Post;
 use App\Models\User;
-use App\QueryBuilders\CmsDocumentsQueryBuilder;
 use App\QueryBuilders\CmsPostsQueryBuilder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\Exceptions\InvalidFilterQuery;
@@ -46,50 +44,6 @@ test('cms posts query builder applies allowed filters sorts and includes', funct
         ->and($posts->first()?->relationLoaded('author'))->toBeTrue();
 });
 
-test('cms documents query builder applies allowed filters sorts and includes', function () {
-    $matchingOwner = User::factory()->create();
-    $otherOwner = User::factory()->create();
-
-    Document::factory()->for($otherOwner, 'owner')->create([
-        'title' => 'Internal exam memo',
-        'slug' => 'internal-exam-memo',
-        'status' => 'draft',
-        'visibility' => 'private',
-        'document_type' => 'exam',
-        'document_mode' => 'preview',
-        'created_at' => now()->subDay(),
-    ]);
-
-    Document::factory()->for($matchingOwner, 'owner')->create([
-        'title' => 'Public lecture outline',
-        'slug' => 'public-lecture-outline',
-        'status' => 'published',
-        'visibility' => 'public',
-        'document_type' => 'lecture',
-        'document_mode' => 'file',
-        'created_at' => now(),
-    ]);
-
-    bindQueryBuilderRequest([
-        'filter' => [
-            'search' => 'lecture',
-            'status' => 'published',
-            'visibility' => 'public',
-            'document_type' => 'lecture',
-            'document_mode' => 'file',
-            'owner_id' => (string) $matchingOwner->getKey(),
-        ],
-        'sort' => '-created_at',
-        'include' => 'owner',
-    ]);
-
-    $documents = CmsDocumentsQueryBuilder::make()->get();
-
-    expect($documents)->toHaveCount(1)
-        ->and($documents->first()?->title)->toBe('Public lecture outline')
-        ->and($documents->first()?->relationLoaded('owner'))->toBeTrue();
-});
-
 test('cms posts query builder rejects unknown filters', function () {
     bindQueryBuilderRequest([
         'filter' => [
@@ -100,12 +54,12 @@ test('cms posts query builder rejects unknown filters', function () {
     CmsPostsQueryBuilder::make()->get();
 })->throws(InvalidFilterQuery::class);
 
-test('cms documents query builder rejects unknown sorts', function () {
+test('cms posts query builder rejects unknown sorts', function () {
     bindQueryBuilderRequest([
-        'sort' => 'author_name',
+        'sort' => 'category_name',
     ]);
 
-    CmsDocumentsQueryBuilder::make()->get();
+    CmsPostsQueryBuilder::make()->get();
 })->throws(InvalidSortQuery::class);
 
 test('cms query builders default to newest records first', function () {

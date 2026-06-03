@@ -45,7 +45,6 @@ interface RoleFormDialogProps {
 const categoryTranslations: Record<string, string> = {
   posts: "Bài viết (posts)",
   pages: "Trang (pages)",
-  documents: "Tài liệu (documents)",
   roles: "Vai trò (roles)",
   permissions: "Quyền hạn (permissions)",
   users: "Người dùng (users)",

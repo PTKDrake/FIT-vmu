@@ -60,7 +60,6 @@ final class MediaIndexController extends Controller
             ->with('uploadedBy')
             ->withCount([
                 'avatarStaffProfiles',
-                'documentFiles',
                 'postThumbnails',
                 'pageThumbnails',
             ])
@@ -164,7 +163,7 @@ final class MediaIndexController extends Controller
      *     size: int,
      *     uploadedAt: string,
      *     uploader: array{id: int, name: string}|null,
-     *     usage: array{documents: int, pages: int, posts: int, staffProfiles: int, total: int}
+     *     usage: array{pages: int, posts: int, staffProfiles: int, total: int}
      * }
      */
     private function mapMediaRow(Media $media): array
@@ -174,7 +173,6 @@ final class MediaIndexController extends Controller
         /** @var int $mediaId */
         $mediaId = $media->getKey();
         $uploaderId = $media->uploadedBy?->getKey();
-        $documentsCount = $this->normalizeCount($media->getAttribute('document_files_count'));
         $pagesCount = $this->normalizeCount($media->getAttribute('page_thumbnails_count'));
         $postsCount = $this->normalizeCount($media->getAttribute('post_thumbnails_count'));
         $staffProfilesCount = $this->normalizeCount($media->getAttribute('avatar_staff_profiles_count'));
@@ -195,11 +193,10 @@ final class MediaIndexController extends Controller
                 ]
                 : null,
             'usage' => [
-                'documents' => $documentsCount,
                 'pages' => $pagesCount,
                 'posts' => $postsCount,
                 'staffProfiles' => $staffProfilesCount,
-                'total' => $documentsCount + $pagesCount + $postsCount + $staffProfilesCount,
+                'total' => $pagesCount + $postsCount + $staffProfilesCount,
             ],
         ];
     }

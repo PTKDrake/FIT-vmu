@@ -1,7 +1,7 @@
 import {
-  DocumentDuplicateIcon,
   NewspaperIcon,
   PhotoIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 import type { DashboardOverview } from "@/components/cms/types";
 import { Text } from "@/components/ui/text";
@@ -18,10 +18,10 @@ export function DashboardStatGrid({
       value: overview.stats.find((stat) => stat.key === "posts")?.value ?? 0,
     },
     {
-      icon: DocumentDuplicateIcon,
-      label: "Tài liệu công khai",
+      icon: UsersIcon,
+      label: "Hồ sơ cán bộ công khai",
       value:
-        overview.stats.find((stat) => stat.key === "documents")?.value ?? 0,
+        overview.stats.find((stat) => stat.key === "staff")?.value ?? 0,
     },
     {
       icon: PhotoIcon,

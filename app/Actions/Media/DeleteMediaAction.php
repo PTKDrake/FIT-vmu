@@ -14,7 +14,6 @@ class DeleteMediaAction
     public function __invoke(Media $media): void
     {
         $usageCount = $media->avatarStaffProfiles()->count()
-            + $media->documentFiles()->count()
             + $media->postThumbnails()->count()
             + $media->pageThumbnails()->count();
 

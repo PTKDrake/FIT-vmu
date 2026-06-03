@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Puck;
 
-use App\Models\Document;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
 use App\Models\Page;
@@ -27,7 +26,6 @@ class BuildPuckDynamicDataAction
      *     categories: list<array{id: int, name: string, slug: string, parentId: ?int, description: ?string}>,
      *     staff: list<array{id: int, name: string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}>,
      *     units: list<array{id: int, name: string, slug: string, description: ?string, head: ?string}>,
-     *     documents: list<array{id: int, title: string, slug: string, type: string, size: ?string, date: ?string, url: ?string}>,
      *     pages: list<array{id: int, title: string, slug: string, url: string}>
      * }
      */
@@ -39,7 +37,6 @@ class BuildPuckDynamicDataAction
             'categories' => $this->categories(),
             'staff' => $this->staff(),
             'units' => $this->units(),
-            'documents' => $this->documents(),
             'pages' => $this->pages($viewer, $enforceVisibility),
         ];
     }
@@ -222,29 +219,6 @@ class BuildPuckDynamicDataAction
             ->all());
     }
 
-    /** @return list<array{id: int, title: string, slug: string, type: string, size: ?string, date: ?string, url: ?string}> */
-    private function documents(): array
-    {
-        return array_values(Document::query()
-            ->where('status', 'published')
-            ->where('visibility', 'public')
-            ->with('file')
-            ->latest('published_at')
-            ->latest()
-            ->limit(30)
-            ->get()
-            ->map(fn (Document $document): array => [
-                'id' => $document->id,
-                'title' => $document->title,
-                'slug' => $document->slug,
-                'type' => $document->document_type,
-                'size' => $document->file ? $this->formatBytes($document->file->size) : null,
-                'date' => $this->formatDate($document->published_at),
-                'url' => $document->file ? Storage::disk($document->file->disk)->url($document->file->path) : null,
-            ])
-            ->all());
-    }
-
     /** @return list<array{id: int, title: string, slug: string, url: string}> */
     private function pages(?User $viewer = null, bool $enforceVisibility = false): array
     {
@@ -348,14 +322,5 @@ class BuildPuckDynamicDataAction
             ->implode(' ');
 
         return $text !== '' ? str($text)->limit(180)->toString() : null;
-    }
-
-    private function formatBytes(int $bytes): string
-    {
-        if ($bytes >= 1_048_576) {
-            return round($bytes / 1_048_576, 1).' MB';
-        }
-
-        return round($bytes / 1024, 1).' KB';
     }
 }

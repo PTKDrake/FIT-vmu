@@ -1235,10 +1235,6 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                           value={selectedMedia.usage.pages}
                         />
                         <UsageStat
-                          label="Tài liệu"
-                          value={selectedMedia.usage.documents}
-                        />
-                        <UsageStat
                           label="Hồ sơ cán bộ"
                           value={selectedMedia.usage.staffProfiles}
                         />

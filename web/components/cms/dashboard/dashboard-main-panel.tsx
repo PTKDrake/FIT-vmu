@@ -79,32 +79,6 @@ export function DashboardMainPanel({
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-muted/40 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <p className="font-medium text-fg">Tài liệu gần đây</p>
-              <Badge intent="outline" isCircle={false}>
-                {overview.recentDocuments.length} mục
-              </Badge>
-            </div>
-            <div className="mt-4 space-y-3">
-              {overview.recentDocuments.slice(0, 3).map((document) => (
-                <div
-                  key={document.id}
-                  className="rounded-xl border border-border bg-overlay px-4 py-3"
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-medium text-fg">{document.title}</p>
-                    <Badge intent="outline" isCircle={false}>
-                      {document.documentType.replaceAll("_", " ")}
-                    </Badge>
-                  </div>
-                  <Text className="mt-1">
-                    Cập nhật ngày {formatDate(document.updatedAt)}.
-                  </Text>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
         <div className="space-y-4">

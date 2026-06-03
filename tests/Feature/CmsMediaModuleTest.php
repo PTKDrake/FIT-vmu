@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Models\Document;
 use App\Models\Media;
 use App\Models\Post;
 use App\Models\User;
@@ -357,17 +356,12 @@ test('media usage counts are exposed in the cms list payload', function () {
         'thumbnail_id' => $media->getKey(),
     ]);
 
-    Document::factory()->for($editor, 'owner')->create([
-        'file_id' => $media->getKey(),
-    ]);
-
     $this->actingAs($editor)
         ->get('/cms/media')
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('cms/media/index')
             ->where('media.data.0.usage.posts', 1)
-            ->where('media.data.0.usage.documents', 1)
-            ->where('media.data.0.usage.total', 2)
+            ->where('media.data.0.usage.total', 1)
         );
 });

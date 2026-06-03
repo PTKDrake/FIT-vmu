@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Data\DocumentData;
 use App\Data\MediaData;
 use App\Data\NavigationItemData;
 use App\Data\NavigationMenuData;
@@ -13,7 +12,6 @@ use App\Data\PostData;
 use App\Data\StaffProfileData;
 use App\Data\StudentData;
 use App\Data\UnitData;
-use App\Models\Document;
 use App\Models\Media;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
@@ -103,37 +101,30 @@ test('media data maps persisted media fields', function () {
     ]);
 });
 
-test('post document and staff profile data omit lazy relations when not loaded', function () {
+test('post page and staff profile data omit lazy relations when not loaded', function () {
     $post = Post::factory()->create();
-    $document = Document::factory()->create();
     $staffProfile = StaffProfile::factory()->create();
     $page = Page::factory()->create();
 
     expect(PostData::fromModel($post)->toArray())->not->toHaveKey('thumbnail')
-        ->and(DocumentData::fromModel($document)->toArray())->not->toHaveKey('file')
         ->and(StaffProfileData::fromModel($staffProfile)->toArray())->not->toHaveKey('avatar')
         ->and(PageData::fromModel($page)->toArray())->not->toHaveKey('thumbnail');
 });
 
-test('post document and staff profile data include loaded media relations', function () {
+test('post page and staff profile data include loaded media relations', function () {
     $post = Post::query()->with('thumbnail')->findOrFail(Post::factory()->create()->id);
-    $document = Document::query()->with('file')->findOrFail(Document::factory()->create()->id);
     $page = Page::query()->with('thumbnail')->findOrFail(Page::factory()->create()->id);
     $staffProfile = StaffProfile::query()->with('avatar')->findOrFail(
         StaffProfile::factory()->for(Media::factory(), 'avatar')->create()->id
     );
 
     $postData = PostData::fromModel($post)->toArray();
-    $documentData = DocumentData::fromModel($document)->toArray();
     $pageData = PageData::fromModel($page)->toArray();
     $staffProfileData = StaffProfileData::fromModel($staffProfile)->toArray();
 
     expect($postData['thumbnail'])->toMatchArray([
         'id' => $post->thumbnail?->id,
         'path' => $post->thumbnail?->path,
-    ])->and($documentData['file'])->toMatchArray([
-        'id' => $document->file?->id,
-        'path' => $document->file?->path,
     ])->and($pageData['thumbnail'])->toMatchArray([
         'id' => $page->thumbnail?->id,
         'path' => $page->thumbnail?->path,

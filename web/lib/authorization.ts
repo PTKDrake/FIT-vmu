@@ -1,6 +1,5 @@
 import {
   Cog6ToothIcon,
-  DocumentTextIcon,
   HomeIcon,
   NewspaperIcon,
   ShieldCheckIcon,
@@ -69,18 +68,6 @@ const ADMIN_NAVIGATION: Array<{ items: NavigationBlueprint[]; label: string }> =
       ],
     },
     {
-      label: "Tài liệu",
-      items: [
-        {
-          title: "Tài liệu",
-          description:
-            "Quản lý tài liệu công khai, hạn chế và dữ liệu theo sinh viên.",
-          icon: DocumentTextIcon,
-          requiredPermissions: ["view documents", "view own documents"],
-        },
-      ],
-    },
-    {
       label: "Nhân sự",
       items: [
         {
@@ -144,24 +131,6 @@ const PERMISSION_GROUPS = [
       "delete posts",
       "publish posts",
       "review posts",
-    ],
-  },
-  {
-    label: "Tài liệu",
-    permissions: [
-      "view documents",
-      "create documents",
-      "update documents",
-      "delete documents",
-      "publish documents",
-      "review documents",
-      "download restricted documents",
-      "view student scoped documents",
-      "view own documents",
-      "create own documents",
-      "update own documents",
-      "delete own documents",
-      "view own personalized documents",
     ],
   },
   {

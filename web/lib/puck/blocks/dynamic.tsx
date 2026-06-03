@@ -52,16 +52,6 @@ interface PuckDynamicUnit {
   slug: string;
 }
 
-interface PuckDynamicDocument {
-  date: string | null;
-  id: number;
-  size: string | null;
-  slug: string;
-  title: string;
-  type: string;
-  url: string | null;
-}
-
 interface PuckDynamicPage {
   id: number;
   slug: string;
@@ -87,7 +77,6 @@ interface PuckDynamicNavigationMenu {
 
 interface PuckDynamicData {
   categories: PuckDynamicCategory[];
-  documents: PuckDynamicDocument[];
   navigationMenus: PuckDynamicNavigationMenu[];
   pages: PuckDynamicPage[];
   posts: PuckDynamicPost[];
@@ -100,7 +89,6 @@ function usePuckDynamicData(): PuckDynamicData {
     usePage<SharedData & { dynamicData?: PuckDynamicData }>().props
       .dynamicData ?? {
       categories: [],
-      documents: [],
       navigationMenus: [],
       pages: [],
       posts: [],
@@ -650,143 +638,6 @@ function UnitListBlock({
   );
 }
 
-interface DocumentListBlockProps {
-  className?: string;
-  limit: number;
-  showIcon?: boolean;
-  title: string;
-  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
-  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
-  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
-  surfaceShadow?: "none" | "sm" | "md";
-  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
-}
-
-function DocumentListBlock({
-  title,
-  limit,
-  showIcon,
-  surfaceTone,
-  surfaceBorder,
-  surfaceRadius,
-  surfacePadding,
-  surfaceShadow,
-  className,
-}: DocumentListBlockProps) {
-  const docs = usePuckDynamicData().documents.slice(0, limit);
-
-  if (docs.length === 0) {
-    return <EmptyDynamicState label="Không có tài liệu nào để hiển thị." />;
-  }
-
-  return (
-    <section
-      className={twMerge(
-        "space-y-6 py-6 w-full relative",
-        getSurfaceClassName(
-          {
-            surfaceTone,
-            surfaceBorder,
-            surfaceRadius,
-            surfacePadding,
-            surfaceShadow,
-          },
-          "",
-        ),
-        className,
-      )}
-    >
-      <div className="flex items-end justify-between border-b border-border/60 pb-3">
-        <Heading
-          level={2}
-          className="text-2xl font-extrabold tracking-tight text-fg"
-        >
-          {title}
-        </Heading>
-        <Badge
-          intent="success"
-          isCircle={false}
-          className="text-[9px] font-bold border-success/20"
-        >
-          Tài liệu
-        </Badge>
-      </div>
-
-      <div className="grid gap-3 w-full">
-        {docs.map((doc) => (
-          <div
-            key={doc.id}
-            className={twMerge(
-              "group relative flex items-center justify-between transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs",
-              getSurfaceClassName(
-                {
-                  surfaceTone,
-                  surfaceBorder,
-                  surfaceRadius,
-                  surfacePadding,
-                  surfaceShadow,
-                },
-                "",
-              ),
-            )}
-          >
-            <div className="flex items-center gap-3.5 flex-1 min-w-0">
-              {showIcon && (
-                <div className="inline-flex size-9 items-center justify-center rounded-xl bg-danger-subtle text-danger-subtle-fg border border-danger/10 shrink-0">
-                  <svg
-                    className="size-4.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                    />
-                  </svg>
-                </div>
-              )}
-              <div className="min-w-0 flex-1 space-y-0.5">
-                <Heading
-                  level={3}
-                  className="text-xs font-bold text-fg group-hover:text-primary transition-colors truncate leading-snug"
-                >
-                  {doc.title}
-                </Heading>
-                <div className="flex items-center gap-2 text-[10px] text-muted-fg font-medium">
-                  <span>{doc.size ?? "Không rõ dung lượng"}</span>
-                  <span>•</span>
-                  <span>Cập nhật: {doc.date ?? "Chưa có ngày"}</span>
-                </div>
-              </div>
-            </div>
-            <Link
-              href={doc.url ?? "#"}
-              className="inline-flex size-8 items-center justify-center rounded-full bg-primary-subtle text-primary border border-primary/10 transition hover:bg-primary hover:text-primary-fg hover:scale-105 active:scale-95 shrink-0 shadow-xs"
-            >
-              <svg
-                className="size-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-                />
-              </svg>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 interface RelatedPostsBlockProps {
   className?: string;
   limit: number;
@@ -877,136 +728,6 @@ function RelatedPostsBlock({
               </Text>
             </CardContent>
           </Card>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-interface RelatedDocumentsBlockProps {
-  className?: string;
-  limit: number;
-  title: string;
-  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
-  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
-  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
-  surfaceShadow?: "none" | "sm" | "md";
-  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
-}
-
-function RelatedDocumentsBlock({
-  title,
-  limit,
-  surfaceTone,
-  surfaceBorder,
-  surfaceRadius,
-  surfacePadding,
-  surfaceShadow,
-  className,
-}: RelatedDocumentsBlockProps) {
-  const docs = usePuckDynamicData().documents.slice(0, limit);
-
-  if (docs.length === 0) {
-    return (
-      <EmptyDynamicState label="Không có tài liệu liên quan để hiển thị." />
-    );
-  }
-
-  return (
-    <section
-      className={twMerge(
-        "space-y-6 py-6 w-full relative",
-        getSurfaceClassName(
-          {
-            surfaceTone,
-            surfaceBorder,
-            surfaceRadius,
-            surfacePadding,
-            surfaceShadow,
-          },
-          "",
-        ),
-        className,
-      )}
-    >
-      <div className="flex items-end justify-between border-b border-border/60 pb-3">
-        <Heading level={2} className="text-xl font-bold text-fg">
-          {title}
-        </Heading>
-        <Badge
-          intent="success"
-          isCircle={false}
-          className="text-[9px] font-bold border-success/20"
-        >
-          Tài liệu đính kèm
-        </Badge>
-      </div>
-
-      <div className="grid gap-3 w-full">
-        {docs.map((doc) => (
-          <div
-            key={doc.id}
-            className={twMerge(
-              "group relative flex items-center justify-between transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs",
-              getSurfaceClassName(
-                {
-                  surfaceTone,
-                  surfaceBorder,
-                  surfaceRadius,
-                  surfacePadding,
-                  surfaceShadow,
-                },
-                "",
-              ),
-            )}
-          >
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="inline-flex size-9 items-center justify-center rounded-xl bg-danger-subtle text-danger-subtle-fg border border-danger/10 shrink-0">
-                <svg
-                  className="size-4.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                  />
-                </svg>
-              </div>
-              <div className="min-w-0 flex-1 space-y-0.5">
-                <Heading
-                  level={3}
-                  className="text-xs font-bold text-fg group-hover:text-primary transition-colors truncate leading-snug"
-                >
-                  {doc.title}
-                </Heading>
-                <span className="text-[10px] text-muted-fg font-medium block">
-                  Kích thước: {doc.size ?? "Không rõ"}
-                </span>
-              </div>
-            </div>
-            <Link
-              href={doc.url ?? "#"}
-              className="inline-flex size-8 items-center justify-center rounded-full bg-primary-subtle text-primary border border-primary/10 transition hover:bg-primary hover:text-primary-fg hover:scale-105 active:scale-95 shrink-0 shadow-xs"
-            >
-              <svg
-                className="size-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-                />
-              </svg>
-            </Link>
-          </div>
         ))}
       </div>
     </section>
@@ -1398,41 +1119,7 @@ export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
   render: (props) => <UnitListBlock {...props} />,
 };
 
-// 5. DOCUMENT LIST BLOCK
-export const DocumentListComponentConfig: PageBuilderComponentConfig<"DocumentList"> =
-{
-  label: "Danh sách tài liệu",
-  defaultProps: {
-    title: "Tải Tài Liệu & Biểu Mẫu",
-    limit: 3,
-    categoryId: "all",
-    showIcon: true,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số lượng tài liệu" },
-    categoryId: { type: "text", label: "ID danh mục (nếu có)" },
-    showIcon: {
-      type: "radio",
-      label: "Hiển thị biểu tượng file",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <DocumentListBlock {...props} />,
-};
-
-// 6. RELATED POSTS BLOCK
+// 5. RELATED POSTS BLOCK
 export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPosts"> =
 {
   label: "Tin tức liên quan",
@@ -1453,29 +1140,6 @@ export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPos
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
   render: (props) => <RelatedPostsBlock {...props} />,
-};
-
-// 7. RELATED DOCUMENTS BLOCK
-export const RelatedDocumentsComponentConfig: PageBuilderComponentConfig<"RelatedDocuments"> =
-{
-  label: "Tài liệu liên quan",
-  defaultProps: {
-    title: "Tài Liệu Chi Tiết Liên Quan",
-    limit: 2,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số tài liệu liên quan" },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <RelatedDocumentsBlock {...props} />,
 };
 
 export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"NavigationMenu"> =

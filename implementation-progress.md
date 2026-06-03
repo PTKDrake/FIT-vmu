@@ -44,9 +44,9 @@
 
 ## Dynamic Data Completion
 
-- Added `BuildPuckDynamicDataAction` to hydrate active/published navigation menus, posts, categories, staff, units, documents, and pages.
+- Added `BuildPuckDynamicDataAction` to hydrate active/published navigation menus, posts, categories, staff, units, and pages.
 - Public page rendering and CMS page preview now receive `dynamicData` Inertia props.
-- Added CMS source endpoint `GET /cms/layout-builder/sources/{source}` for `navigation-menus`, `posts`, `categories`, `staff`, `units`, `documents`, and `pages`.
+- Added CMS source endpoint `GET /cms/layout-builder/sources/{source}` for `navigation-menus`, `posts`, `categories`, `staff`, `units`, and `pages`.
 - Replaced dynamic block mock usage with live `dynamicData` reads and graceful empty states.
 - Added dynamic blocks: `NavigationMenu`, `Categories`, `PageLinks`, `LinkList`, and `ContactInfo`.
 - Updated page/header/footer/side Puck palettes to expose the right dynamic blocks per region.

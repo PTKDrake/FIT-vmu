@@ -62,12 +62,6 @@ class Media extends Model
         return $this->hasMany(StaffProfile::class, 'avatar_id');
     }
 
-    /** @return HasMany<Document, $this> */
-    public function documentFiles(): HasMany
-    {
-        return $this->hasMany(Document::class, 'file_id');
-    }
-
     /** @return HasMany<Post, $this> */
     public function postThumbnails(): HasMany
     {

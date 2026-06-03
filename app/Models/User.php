@@ -88,12 +88,6 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, 'author_id');
     }
 
-    /** @return HasMany<Document, $this> */
-    public function ownedDocuments(): HasMany
-    {
-        return $this->hasMany(Document::class, 'owner_id');
-    }
-
     /** @return HasMany<Page, $this> */
     public function authoredPages(): HasMany
     {

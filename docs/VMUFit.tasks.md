@@ -176,7 +176,7 @@ Nên chia migration theo nhóm để tránh conflict:
 - Người A: users/students/staff_profiles.
 - Người B: units/positions/staff_appointments.
 - Người C: posts/post_categories/pages/navigation.
-- Người D: documents/document_rows/media.
+- Người D: media.
 
 #### Task 2.1 - Students và Staff Profiles
 
@@ -229,21 +229,17 @@ Prompt mẫu:
 Triển khai post_categories, posts với quan hệ nhiều-nhiều category qua pivot, pages và navigation theo VMUFit.md. Pages lưu Puck JSON, posts lưu BlockNote JSON. Navigation hỗ trợ parent-child và polymorphic link tới post_category/page/post hoặc custom_url.
 ```
 
-#### Task 2.4 - Documents, Document Rows và Media
+#### Task 2.4 - Media
 
 Checklist:
 
-- [ ] Tạo migration `documents`.
-- [ ] Tạo migration `document_rows`.
 - [ ] Tạo migration `media`.
-- [ ] Description dùng LONGTEXT và `description_format`.
-- [ ] Status/visibility/document_mode dùng enum-like string rõ ràng.
 - [ ] Tạo model và relationship cơ bản.
 
 Prompt mẫu:
 
 ```text
-Triển khai documents, document_rows và media theo VMUFit.md. Tạo migration, model, relationship. Description dạng block lưu LONGTEXT kèm *_format, không lưu HTML làm source of truth.
+Triển khai media theo VMUFit.md. Tạo migration, model, relationship cơ bản và giữ schema tối giản.
 ```
 
 ### 1.4. Phase 3 - Backend actions, data objects và policy
@@ -264,7 +260,6 @@ Checklist:
 - [ ] Tạo `PostCategoryData`.
 - [ ] Tạo `PageData`.
 - [ ] Tạo `NavigationMenuData` và `NavigationItemData`.
-- [ ] Tạo `DocumentData`.
 - [ ] Tạo `StaffProfileData`.
 - [ ] Tạo `StudentData`.
 - [ ] Tạo `UnitData`.
@@ -274,7 +269,7 @@ Checklist:
 Prompt mẫu:
 
 ```text
-Tạo các Spatie Laravel Data object cho domain chính theo VMUFit.md, bao gồm posts, post categories, pages, navigation, documents, staff, students, units, positions và media. Data object chỉ chuẩn hóa dữ liệu vào/ra, không chứa business logic database phức tạp.
+Tạo các Spatie Laravel Data object cho domain chính theo VMUFit.md, bao gồm posts, post categories, pages, navigation, staff, students, units, positions và media. Data object chỉ chuẩn hóa dữ liệu vào/ra, không chứa business logic database phức tạp.
 ```
 
 #### Task 3.2 - Policy và Form Request cho Posts
@@ -294,27 +289,11 @@ Prompt mẫu:
 Triển khai policy và form request cho posts theo VMUFit.md. Mọi authorization phải check permission bằng user->can hoặc policy ability, không check role trực tiếp trong business logic.
 ```
 
-#### Task 3.3 - Policy và Form Request cho Documents
-
-Checklist:
-
-- [ ] Tạo policy cho documents.
-- [ ] Phân biệt quyền quản lý tài liệu và quyền xem/download.
-- [ ] Validate visibility/status/document_mode.
-- [ ] Không tin frontend là lớp bảo mật.
-
-Prompt mẫu:
-
-```text
-Triển khai policy và form request cho documents theo VMUFit.md. Cần validate visibility, status, document_mode và authorize ở backend. Không dựa vào frontend để bảo vệ tài nguyên.
-```
-
 #### Task 3.4 - Query Builder cho danh sách CMS
 
 Checklist:
 
 - [ ] Tạo query cho posts list.
-- [ ] Tạo query cho documents list.
 - [ ] Tạo query cho users/staff/students nếu đã có màn tương ứng.
 - [ ] Chỉ allow filter/sort/include rõ ràng.
 
@@ -415,13 +394,13 @@ Checklist:
 - [ ] Tạo wrapper/config cho Puck.
 - [ ] Input/output là Puck JSON dùng cho `pages.content`.
 - [ ] Chỉ expose component đã được kiểm soát trong config.
-- [ ] Không dùng Puck thay cho posts/documents/staff bio.
+- [ ] Không dùng Puck thay cho posts/staff bio.
 - [ ] Có chế độ preview/render cơ bản cho page published.
 
 Prompt mẫu:
 
 ```text
-Tạo Puck page builder wrapper cho VMUFit theo guideline. Component dùng cho pages.content, lưu Puck JSON, chỉ expose component đã định nghĩa trong config và không thay thế BlockNote cho posts/documents/staff bio.
+Tạo Puck page builder wrapper cho VMUFit theo guideline. Component dùng cho pages.content, lưu Puck JSON, chỉ expose component đã định nghĩa trong config và không thay thế BlockNote cho posts/staff bio.
 ```
 
 #### Task 4.6 - Navigation tree UI foundation
@@ -807,7 +786,7 @@ Quy tắc:
 Backend auth/permission: 1 người
 Backend database/migration: 1-2 người nhưng chia theo nhóm bảng
 Backend pages/navigation/categories: 1 người
-Backend documents/excel: 1 người
+Backend excel: 1 người
 Frontend layout/components nền: 1 người
 Frontend Puck/page builder: 1 người
 Frontend navigation tree: 1 người
@@ -969,7 +948,6 @@ Nên dùng conventional commit đơn giản:
 feat(auth): add permission seeder
 feat(db): add staff profile schema
 feat(cms): add posts table page
-fix(documents): enforce download policy
 chore(tasks): update project tracking
 ```
 

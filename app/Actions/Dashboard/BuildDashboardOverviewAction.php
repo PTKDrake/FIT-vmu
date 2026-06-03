@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Dashboard;
 
-use App\Models\Document;
 use App\Models\Media;
 use App\Models\Position;
 use App\Models\Post;
@@ -49,14 +48,6 @@ class BuildDashboardOverviewAction
      *         owner: string,
      *         status: string,
      *         updatedAt: string
-     *     }>,
-     *     recentDocuments: list<array{
-     *         id: string,
-     *         title: string,
-     *         documentType: string,
-     *         visibility: string,
-     *         status: string,
-     *         updatedAt: string
      *     }>
      * }
      */
@@ -65,11 +56,7 @@ class BuildDashboardOverviewAction
         $startOfMonth = now()->startOfMonth();
 
         $publishedPostsCount = Post::query()->where('status', 'published')->count();
-        $publicDocumentsCount = Document::query()
-            ->where('status', 'published')
-            ->where('visibility', 'public')
-            ->count();
-        $pendingDocumentsCount = Document::query()->where('status', 'pending')->count();
+        $pendingPostsCount = $this->countPendingPosts();
         $publicStaffProfilesCount = StaffProfile::query()->where('is_public', true)->count();
 
         return [
@@ -83,20 +70,12 @@ class BuildDashboardOverviewAction
                     'intent' => 'primary',
                 ],
                 [
-                    'key' => 'documents',
-                    'label' => 'Tài liệu công khai',
-                    'value' => $publicDocumentsCount,
-                    'helper' => $this->countPublishedDocumentsByVisibility('login_required').' tài liệu cần đăng nhập',
-                    'change' => $this->countDocumentsCreatedSince($startOfMonth),
-                    'intent' => 'info',
-                ],
-                [
                     'key' => 'pending',
-                    'label' => 'Tài liệu chờ duyệt',
-                    'value' => $pendingDocumentsCount,
-                    'helper' => $this->countPendingPosts().' bài viết đang chờ biên tập',
-                    'change' => $pendingDocumentsCount,
-                    'intent' => 'warning',
+                    'label' => 'Bài viết chờ duyệt',
+                    'value' => $pendingPostsCount,
+                    'helper' => 'Cần xử lý trước khi xuất bản',
+                    'change' => $pendingPostsCount,
+                    'intent' => 'info',
                 ],
                 [
                     'key' => 'staff',
@@ -108,14 +87,13 @@ class BuildDashboardOverviewAction
                 ],
             ],
             'workspace' => [
-                'accessibleCollections' => 7,
+                'accessibleCollections' => 6,
                 'studentRecords' => Student::query()->count(),
                 'mediaAssets' => Media::query()->count(),
                 'organizationNodes' => Unit::query()->count() + Position::query()->count() + StaffAppointment::query()->count(),
             ],
             'recentActivity' => $this->recentActivity(),
             'pendingReview' => $this->pendingReviewItems(),
-            'recentDocuments' => $this->recentDocuments(),
         ];
     }
 
@@ -127,24 +105,9 @@ class BuildDashboardOverviewAction
             ->count();
     }
 
-    private function countDocumentsCreatedSince(CarbonInterface $date): int
-    {
-        return Document::query()
-            ->where('created_at', '>=', $date)
-            ->count();
-    }
-
     private function countPendingPosts(): int
     {
         return Post::query()->where('status', 'pending')->count();
-    }
-
-    private function countPublishedDocumentsByVisibility(string $visibility): int
-    {
-        return Document::query()
-            ->where('status', 'published')
-            ->where('visibility', $visibility)
-            ->count();
     }
 
     private function countStaffProfilesCreatedSince(CarbonInterface $date): int
@@ -186,26 +149,6 @@ class BuildDashboardOverviewAction
             })
             ->all();
 
-        $documentItems = Document::query()
-            ->with('owner:id,name')
-            ->latest('updated_at')
-            ->limit(4)
-            ->get()
-            ->map(function (Document $document): array {
-                /** @var User|null $owner */
-                $owner = $document->owner;
-
-                return [
-                    'id' => 'document-'.$document->id,
-                    'kind' => 'Tài liệu',
-                    'title' => $document->title,
-                    'description' => 'Chủ sở hữu: '.($owner instanceof User ? $owner->name : 'hệ thống'),
-                    'status' => $document->status,
-                    'updatedAt' => $this->toIsoString($document->updated_at),
-                ];
-            })
-            ->all();
-
         $staffProfileItems = StaffProfile::query()
             ->latest('updated_at')
             ->limit(3)
@@ -221,7 +164,7 @@ class BuildDashboardOverviewAction
             ->all();
 
         /** @var Collection<int, array{id: string, kind: string, title: string, description: string, status: string, updatedAt: string}> $items */
-        $items = collect(array_merge($postItems, $documentItems, $staffProfileItems))
+        $items = collect(array_merge($postItems, $staffProfileItems))
             ->sortByDesc('updatedAt')
             ->take(8)
             ->values();
@@ -265,29 +208,8 @@ class BuildDashboardOverviewAction
             })
             ->all();
 
-        $pendingDocumentItems = Document::query()
-            ->with('owner:id,name')
-            ->where('status', 'pending')
-            ->latest('updated_at')
-            ->limit(4)
-            ->get()
-            ->map(function (Document $document): array {
-                /** @var User|null $owner */
-                $owner = $document->owner;
-
-                return [
-                    'id' => 'document-pending-'.$document->id,
-                    'kind' => 'Tài liệu',
-                    'title' => $document->title,
-                    'owner' => $owner instanceof User ? $owner->name : 'Hệ thống',
-                    'status' => $document->status,
-                    'updatedAt' => $this->toIsoString($document->updated_at),
-                ];
-            })
-            ->all();
-
         /** @var Collection<int, array{id: string, kind: string, title: string, owner: string, status: string, updatedAt: string}> $items */
-        $items = collect(array_merge($pendingPostItems, $pendingDocumentItems))
+        $items = collect($pendingPostItems)
             ->sortByDesc('updatedAt')
             ->take(6)
             ->values();
@@ -296,36 +218,6 @@ class BuildDashboardOverviewAction
         $pendingReviewItems = $items->all();
 
         return $pendingReviewItems;
-    }
-
-    /**
-     * @return list<array{
-     *     id: string,
-     *     title: string,
-     *     documentType: string,
-     *     visibility: string,
-     *     status: string,
-     *     updatedAt: string
-     * }>
-     */
-    private function recentDocuments(): array
-    {
-        $documents = Document::query()
-            ->latest('updated_at')
-            ->limit(6)
-            ->get()
-            ->map(fn (Document $document): array => [
-                'id' => 'document-list-'.$document->id,
-                'title' => $document->title,
-                'documentType' => $document->document_type,
-                'visibility' => $document->visibility,
-                'status' => $document->status,
-                'updatedAt' => $this->toIsoString($document->updated_at),
-            ])
-            ->all();
-
-        /** @var list<array{id: string, title: string, documentType: string, visibility: string, status: string, updatedAt: string}> $documents */
-        return $documents;
     }
 
     private function toIsoString(?CarbonInterface $date): string

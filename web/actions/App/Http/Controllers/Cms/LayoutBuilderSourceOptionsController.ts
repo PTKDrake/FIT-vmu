@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 const LayoutBuilderSourceOptionsController = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ LayoutBuilderSourceOptionsController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 LayoutBuilderSourceOptionsController.url = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,7 +43,7 @@ LayoutBuilderSourceOptionsController.url = (args: { source: string | number } | 
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 LayoutBuilderSourceOptionsController.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ LayoutBuilderSourceOptionsController.get = (args: { source: string | number } | 
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 LayoutBuilderSourceOptionsController.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -63,7 +63,7 @@ LayoutBuilderSourceOptionsController.head = (args: { source: string | number } |
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 const LayoutBuilderSourceOptionsControllerForm = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -73,7 +73,7 @@ const LayoutBuilderSourceOptionsControllerForm = (args: { source: string | numbe
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 LayoutBuilderSourceOptionsControllerForm.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -83,7 +83,7 @@ LayoutBuilderSourceOptionsControllerForm.get = (args: { source: string | number 
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 LayoutBuilderSourceOptionsControllerForm.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

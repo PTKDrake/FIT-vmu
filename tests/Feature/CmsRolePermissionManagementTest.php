@@ -44,7 +44,6 @@ test('cms roles permissions index renders current role permission matrix', funct
             ->where('can.manageRoles', true)
             ->where('can.managePermissions', true)
             ->where('roles.0.name', 'admin')
-            ->where('permissions.0.name', 'create documents')
             ->where('protectedRoleNames.0', 'super-admin')
             ->has('roles')
             ->has('permissions')

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 export const sources = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ sources.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 sources.url = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,7 +43,7 @@ sources.url = (args: { source: string | number } | [source: string | number ] | 
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 sources.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ sources.get = (args: { source: string | number } | [source: string | number ] | 
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 sources.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -63,7 +63,7 @@ sources.head = (args: { source: string | number } | [source: string | number ] |
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 const sourcesForm = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -73,7 +73,7 @@ const sourcesForm = (args: { source: string | number } | [source: string | numbe
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 sourcesForm.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -83,7 +83,7 @@ sourcesForm.get = (args: { source: string | number } | [source: string | number 
 
 /**
 * @see \App\Http\Controllers\Cms\LayoutBuilderSourceOptionsController::__invoke
-* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:24
+* @see app/Http/Controllers/Cms/LayoutBuilderSourceOptionsController.php:23
 * @route '/cms/layout-builder/sources/{source}'
 */
 sourcesForm.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Document;
 use App\Models\Media;
 use App\Models\Post;
 use App\Models\StaffProfile;
@@ -71,22 +70,6 @@ test('dashboard overview shares operational summary data', function () {
         'published_at' => null,
     ]);
 
-    Document::factory()->create([
-        'owner_id' => $user->id,
-        'file_id' => $media->id,
-        'status' => 'published',
-        'visibility' => 'public',
-        'published_at' => now(),
-    ]);
-
-    Document::factory()->create([
-        'owner_id' => $user->id,
-        'file_id' => $media->id,
-        'status' => 'pending',
-        'visibility' => 'private',
-        'published_at' => null,
-    ]);
-
     StaffProfile::factory()->create([
         'user_id' => $user->id,
         'is_public' => true,
@@ -101,10 +84,8 @@ test('dashboard overview shares operational summary data', function () {
             ->where('overview.stats.0.value', 2)
             ->where('overview.stats.1.value', 1)
             ->where('overview.stats.2.value', 1)
-            ->where('overview.stats.3.value', 1)
             ->has('overview.recentActivity')
-            ->has('overview.pendingReview', 2)
-            ->has('overview.recentDocuments', 2)
+            ->has('overview.pendingReview', 1)
         );
 });
 

@@ -21,14 +21,6 @@ export interface DashboardOverview {
     title: string;
     updatedAt: string;
   }>;
-  recentDocuments: Array<{
-    documentType: string;
-    id: string;
-    status: string;
-    title: string;
-    updatedAt: string;
-    visibility: string;
-  }>;
   stats: Array<{
     change: number;
     helper: string;
@@ -161,7 +153,6 @@ export interface CmsMediaRow {
     name: string;
   } | null;
   usage: {
-    documents: number;
     pages: number;
     posts: number;
     staffProfiles: number;

@@ -334,19 +334,7 @@ export interface VmuFitPageBuilderComponents {
     type: string;
     className?: string;
   };
-  DocumentList: PuckSurfaceStyleProps & {
-    title: string;
-    limit: number;
-    categoryId: string;
-    showIcon: boolean;
-    className?: string;
-  };
   RelatedPosts: PuckSurfaceStyleProps & {
-    title: string;
-    limit: number;
-    className?: string;
-  };
-  RelatedDocuments: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     className?: string;
@@ -465,8 +453,8 @@ const DEFAULT_PAGE_DATA: VmuFitPageBuilderData = {
         title: "Chào mừng bạn đến với Khoa Công nghệ thông tin - FIT-VMU",
         description:
           "Nơi ươm mầm tài năng công nghệ, định hình tương lai số. Khoa CNTT trường Đại học Hàng hải Việt Nam tự hào mang đến môi trường giáo dục chuẩn quốc tế, trang thiết bị tiên tiến cùng đội ngũ giảng viên giàu nhiệt huyết.",
-        primaryActionHref: "/documents",
-        primaryActionLabel: "Tài liệu Tuyển sinh",
+        primaryActionHref: "/posts",
+        primaryActionLabel: "Thông tin Tuyển sinh",
         secondaryActionHref: "/dashboard",
         secondaryActionLabel: "Quản trị CMS",
       },
@@ -608,8 +596,8 @@ const DEFAULT_PAGE_DATA: VmuFitPageBuilderData = {
           "Đăng ký ứng tuyển trực tuyến ngay hôm nay để nhận thông báo xét tuyển sớm nhất.",
         primaryActionLabel: "Xét tuyển trực tuyến",
         primaryActionHref: "https://vimaru.edu.vn",
-        secondaryActionLabel: "Tìm hiểu thêm",
-        secondaryActionHref: "/documents",
+        secondaryActionLabel: "Tin tức mới",
+        secondaryActionHref: "/posts",
       },
     },
   ],
@@ -684,8 +672,8 @@ export function createPuckPageDataFromTemplate(
             "Hãy liên hệ trực tiếp với bộ phận hỗ trợ hoặc văn phòng Khoa để được giải đáp nhanh nhất.",
           primaryActionLabel: "Liên hệ văn phòng",
           primaryActionHref: "/contact",
-          secondaryActionLabel: "Tài liệu hướng dẫn",
-          secondaryActionHref: "/documents",
+          secondaryActionLabel: "Tin tức liên quan",
+          secondaryActionHref: "/posts",
         },
       },
     ];
@@ -834,8 +822,8 @@ export function createPuckPageDataFromTemplate(
           header: "Tài liệu & Học liệu liên quan",
           description:
             "Tải về các biểu mẫu, đề cương chi tiết môn học, slide bài giảng hoặc tài liệu hướng dẫn làm đồ án tốt nghiệp.",
-          primaryActionLabel: "Truy cập tài liệu",
-          primaryActionHref: "/documents",
+          primaryActionLabel: "Xem tin tức liên quan",
+          primaryActionHref: "/posts",
           secondaryActionLabel: "Lịch tiếp SV",
           secondaryActionHref: "/appointment",
         },
@@ -874,16 +862,6 @@ export function createPuckPageDataFromTemplate(
 </ul>
 <h2>3. Quy trình thực hiện</h2>
 <p>Nộp hồ sơ trực tuyến qua cổng thông tin sinh viên -> Bộ phận một cửa tiếp nhận và thẩm định -> Hội đồng khoa xét duyệt -> Công bố danh sách tốt nghiệp tạm thời.</p>`,
-        },
-      },
-      {
-        type: "DocumentList",
-        props: {
-          id: "attachments-article",
-          title: "Tài liệu đính kèm tải về",
-          limit: 3,
-          categoryId: "",
-          showIcon: true,
         },
       },
     ];

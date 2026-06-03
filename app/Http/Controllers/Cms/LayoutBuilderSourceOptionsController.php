@@ -17,7 +17,6 @@ final class LayoutBuilderSourceOptionsController extends Controller
         'categories',
         'staff',
         'units',
-        'documents',
         'pages',
     ];
 
@@ -34,7 +33,6 @@ final class LayoutBuilderSourceOptionsController extends Controller
                 'categories' => $this->options($data['categories'], 'name'),
                 'staff' => $this->options($data['staff'], 'name'),
                 'units' => $this->options($data['units'], 'name'),
-                'documents' => $this->options($data['documents'], 'title'),
                 'pages' => $this->options($data['pages'], 'title'),
             },
         ]);
