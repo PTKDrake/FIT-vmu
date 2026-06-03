@@ -1,5 +1,4 @@
-import { prepareWithSegments, layoutNextLineRange, materializeLineRange  } from '@chenglou/pretext'
-import type {LayoutCursor} from '@chenglou/pretext';
+import { prepareWithSegments, layoutNextLineRange, materializeLineRange, type LayoutCursor } from '@chenglou/pretext'
 
 // Two-column editorial flow: text streams continuously from one column
 // into the next, like a newspaper or magazine layout.
@@ -23,13 +22,9 @@ while (true) {
   console.log(`\n--- Column ${column + 1} (x=${x}) ---`)
 
   let linesInColumn = 0
-
   while (linesInColumn < linesPerColumn) {
     const range = layoutNextLineRange(prepared, cursor, COLUMN_WIDTH)
-
-    if (range === null) {
-break
-}
+    if (range === null) break
 
     const line = materializeLineRange(prepared, range)
     const y = linesInColumn * LINE_HEIGHT
@@ -41,11 +36,7 @@ break
 
   // Check if there's more text to flow into the next column
   const nextRange = layoutNextLineRange(prepared, cursor, COLUMN_WIDTH)
-
-  if (nextRange === null) {
-break
-}
-
+  if (nextRange === null) break
   // Put cursor back — we just peeked
   column++
 }

@@ -1,5 +1,4 @@
-import { prepare, layout  } from '@chenglou/pretext'
-import type {PreparedText} from '@chenglou/pretext';
+import { prepare, layout, type PreparedText } from '@chenglou/pretext'
 
 // Prevent layout shift when new content loads above the viewport.
 // Predict exact height of incoming items before inserting them into the DOM,
@@ -20,7 +19,6 @@ function prepareItem(text: string): ChatItem {
 
 function itemHeight(item: ChatItem, width: number): number {
   const { height } = layout(item.prepared, width - BUBBLE_PADDING * 2, LINE_HEIGHT)
-
   return height + BUBBLE_PADDING
 }
 
@@ -39,7 +37,6 @@ const containerWidth = 400
 
 // Calculate total height of new items BEFORE inserting into DOM
 let insertedHeight = 0
-
 for (const item of newItems) {
   insertedHeight += itemHeight(item, containerWidth)
 }

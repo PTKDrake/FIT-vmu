@@ -10,7 +10,6 @@ const longText = 'This is a longer description\nthat has a hard break in the mid
 function tooltipWidth(text: string, font: string, maxAllowed: number): number {
   const prepared = prepareWithSegments(text, font)
   const natural = measureNaturalWidth(prepared)
-
   // Clamp to maxAllowed — if natural width fits, use it (no wrapping)
   return Math.min(natural, maxAllowed)
 }

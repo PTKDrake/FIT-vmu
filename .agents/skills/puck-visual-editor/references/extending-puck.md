@@ -2,130 +2,529 @@
 
 ## Composition
 
-Composition is the main way to build a custom editor shell.
+Build custom editor layouts by passing children to `<Puck>`:
 
-Puck exposes compositional building blocks such as:
+```tsx
+<Puck config={config} data={data}>
+  <div style={{ display: "grid", gridTemplateColumns: "250px 1fr 300px" }}>
+    <Puck.Components />
+    <Puck.Preview />
+    <Puck.Fields />
+  </div>
+</Puck>
+```
 
-- preview
-- component drawer
-- fields panel
-- outline
+### Compositional Components
 
-Use composition when:
+| Component | Description |
+|-----------|-------------|
+| `<Puck.Preview />` | Drag-and-drop preview area |
+| `<Puck.Fields />` | Fields panel for selected component |
+| `<Puck.Components />` | Draggable component list (drawer) |
+| `<Puck.Outline />` | Interactive outline/tree view |
+| `<Puck.Layout />` | Standard Puck layout (sidebar + preview + fields) |
 
-- the default editor chrome is the wrong shape
-- the project needs a custom layout around standard editor parts
-- the feature needs a custom workspace without rewriting editor internals
+### Example: Custom Layout
 
-Prefer composition over editing protected shared UI files.
+```tsx
+<Puck config={config} data={data}>
+  <div className="my-editor">
+    <header>
+      <h1>My Editor</h1>
+      {/* Custom header controls */}
+    </header>
+    <div className="my-editor-body">
+      <aside>
+        <Puck.Components />
+        <Puck.Outline />
+      </aside>
+      <main>
+        <Puck.Preview />
+      </main>
+      <aside>
+        <Puck.Fields />
+      </aside>
+    </div>
+  </div>
+</Puck>
+```
+
+### Example: Drawer with Custom Items
+
+```tsx
+import { Drawer } from "@puckeditor/core";
+
+<Puck config={config} data={data}>
+  <Drawer>
+    <Drawer.Item name="HeadingBlock" />
+    <Drawer.Item name="TextBlock" />
+    {/* Custom non-Puck items between */}
+    <div className="my-divider" />
+    <Drawer.Item name="ImageBlock" />
+  </Drawer>
+  <Puck.Preview />
+  <Puck.Fields />
+</Puck>
+```
 
 ## Helper Components
 
-Puck also exposes lower-level helpers for deeper editor customization.
+### Drawer
 
-Use them only when compositional primitives are not enough.
+A draggable list of components:
+
+```tsx
+import { Drawer } from "@puckeditor/core";
+
+<Drawer>
+  <Drawer.Item name="HeadingBlock" />
+  <Drawer.Item name="TextBlock" />
+</Drawer>
+```
+
+### FieldLabel
+
+Styled label for custom fields:
+
+```tsx
+import { FieldLabel } from "@puckeditor/core";
+
+<FieldLabel label="Color" icon={<PaletteIcon />} />
+```
+
+### AutoField
+
+Renders the appropriate field UI for a field definition:
+
+```tsx
+import { AutoField } from "@puckeditor/core";
+
+<AutoField
+  field={{ type: "text", label: "Title" }}
+  name="title"
+  value="Hello"
+  onChange={(value) => console.log(value)}
+/>
+```
+
+### ActionBar
+
+Action bar for custom component actions (used in overrides):
+
+```tsx
+import { ActionBar } from "@puckeditor/core";
+
+<ActionBar>
+  <ActionBar.Group>
+    <ActionBar.Label>My Component</ActionBar.Label>
+    <ActionBar.Action onClick={handleEdit}>Edit</ActionBar.Action>
+    <ActionBar.Separator />
+    <ActionBar.Action onClick={handleDelete}>Delete</ActionBar.Action>
+  </ActionBar.Group>
+</ActionBar>
+```
 
 ## Plugins
 
-Plugins are for reusable editor extensions with dedicated UI space.
+Plugins are reusable editor extensions with dedicated UI space in the plugin rail.
 
-Typical plugin responsibilities:
+### Plugin Structure
 
-- tool UIs in the plugin rail
-- shared editor utilities
-- extra override registration
-- field transform registration
+```tsx
+const myPlugin = {
+  name: "my-plugin",
+  label: "My Plugin",
+  icon: <PluginIcon />,
+  render: () => <MyPluginUI />,
+  fieldTransforms: {
+    text: ({ value }) => <span>{value}</span>,
+  },
+  overrides: {
+    header: ({ children }) => <div>{children}</div>,
+  },
+  mobilePanelHeight: 300,
+};
+```
 
-Use a plugin when the feature is editor-wide and persistent, not when it is just one local button.
+### Plugin Params
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `name` | string | **Required.** Unique plugin identifier |
+| `label` | string | Display label in plugin rail |
+| `icon` | ReactNode | Icon in plugin rail |
+| `render` | Function | Plugin UI component |
+| `fieldTransforms` | Object | Field transform definitions |
+| `overrides` | Object | UI overrides |
+| `mobilePanelHeight` | number | Panel height on mobile |
+
+### Usage
+
+```tsx
+<Puck
+  plugins={[myPlugin, anotherPlugin]}
+  config={config}
+  data={data}
+/>
+```
+
+### Official Plugins
+
+| Plugin | Import | Description |
+|--------|--------|-------------|
+| `blocksPlugin` | `@puckeditor/plugin-blocks` | Block management utilities |
+| `fieldsPlugin` | `@puckeditor/plugin-fields` | Enhanced field capabilities |
+| `outlinePlugin` | `@puckeditor/plugin-outline` | Interactive outline view |
+| `legacySideBarPlugin` | `@puckeditor/core` | Legacy sidebar compatibility |
 
 ## UI Overrides
 
-Overrides alter the default Puck interface.
+Overrides alter default Puck interface surfaces. Marked as experimental.
 
-Use overrides when:
+### Available Overrides
 
-- one default surface needs a custom presentation
-- header actions need repo-specific controls
-- drawer or field rendering needs small but important changes
+| Override | Description |
+|----------|-------------|
+| `actionBar` | Component action bar |
+| `componentOverlay` | Overlay on component selection |
+| `drawer` | Component drawer |
+| `drawerItem` | Individual drawer items |
+| `fieldLabel` | Field labels |
+| `fields` | Fields panel wrapper |
+| `fieldTypes` | Per-field-type rendering |
+| `header` | Editor header |
+| `headerActions` | Header action buttons |
+| `iframe` | Preview iframe wrapper |
+| `outline` | Outline panel |
+| `preview` | Preview area wrapper |
+| `puck` | Entire Puck wrapper |
 
-Rules:
+### Usage via Puck prop
 
-- Overrides are experimental and more fragile than ordinary component work.
-- Prefer small, local overrides.
-- If the override surface becomes broad, move to composition instead.
+```tsx
+<Puck
+  overrides={{
+    header: () => (
+      <div style={{ background: "navy", color: "white", padding: 16 }}>
+        Custom Header
+      </div>
+    ),
+    headerActions: ({ children }) => (
+      <div>
+        {children}
+        <button onClick={handleExport}>Export</button>
+      </div>
+    ),
+    actionBar: ({ children, itemSelector }) => (
+      <ActionBar>
+        <ActionBar.Group>
+          {children}
+          <ActionBar.Action onClick={() => customAction(itemSelector)}>
+            Custom
+          </ActionBar.Action>
+        </ActionBar.Group>
+      </ActionBar>
+    ),
+  }}
+  config={config}
+  data={data}
+/>
+```
+
+### Override Function Signature
+
+Overrides receive the default rendering as a function and can wrap or replace it:
+
+```tsx
+overrides: {
+  header: ({ children, dispatch, appState }) => {
+    // children: default header content
+    // dispatch: PuckApi.dispatch for actions
+    // appState: current AppState
+    return <MyCustomHeader />;
+  },
+}
+```
+
+### Rules
+
+- Overrides are experimental and may change between versions
+- Prefer small, local overrides over broad replacements
+- If the override surface becomes broad, consider composition instead
+- Overrides can also be provided via plugins
 
 ## Custom Fields
 
-Custom fields are appropriate when the input UX is unique enough that built-in fields are a poor fit.
+When built-in fields cannot express the desired UX. See [fields.md](fields.md) for the complete custom field API.
 
-Rules:
+### Strategy
 
-- Keep their value contract predictable.
-- Avoid coupling a custom field to too many unrelated app concerns.
+1. Check if a built-in field can be configured to meet the need
+2. Check if `resolveFields` can conditionally adjust existing fields
+3. Only then implement a custom field
+
+### Example: Color Picker
+
+```tsx
+fields: {
+  backgroundColor: {
+    type: "custom",
+    render: ({ value, onChange, field }) => (
+      <div>
+        <FieldLabel label={field.label || "Background Color"} />
+        <input
+          type="color"
+          value={value || "#ffffff"}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        <span>{value || "#ffffff"}</span>
+      </div>
+    ),
+  },
+}
+```
 
 ## Field Transforms
 
-Field transforms modify props before editor rendering.
+Modify field prop values before editor rendering. Apply only in `<Puck>`, not `<Render>`.
 
-Use them for editor-only behavior such as:
+### Basic Usage
 
-- inline editing behavior
-- field-type-specific render adaptation
+```tsx
+<Puck
+  fieldTransforms={{
+    text: ({ value, field, name }) => {
+      // Transform all text field values
+      return <span style={{ color: "blue" }}>{value}</span>;
+    },
+  }}
+  config={config}
+  data={data}
+/>
+```
 
-Rules:
+### Transform Signature
 
-- Field transforms apply in `<Puck>`, not `<Render>`.
-- Do not rely on them for persisted frontend runtime behavior.
+```tsx
+type FieldTransform = ({
+  value,     // Current field value
+  field,     // Field definition
+  name,      // Field name/key
+}) => ReactNode
+```
+
+### Combining with Overlay Portals
+
+Field transforms can render interactive elements that work with overlay portals:
+
+```tsx
+fieldTransforms={{
+  text: ({ value }) => (
+    <span
+      onClick={() => { /* inline edit */ }}
+      style={{ cursor: "text" }}
+    >
+      {value}
+    </span>
+  ),
+}}
+```
+
+### Distribution via Plugins
+
+Field transforms can be distributed through plugins for reuse:
+
+```tsx
+const myPlugin = {
+  name: "inline-editing",
+  fieldTransforms: {
+    text: ({ value }) => <EditableText value={value} />,
+  },
+};
+```
 
 ## Internal Puck API
 
-Internal hooks expose current editor state and operations.
+### usePuck
 
-Use them when:
+Access editor state inside custom components or overrides:
 
-- custom header actions need current data
-- compositional or custom editor pieces need direct editor access
-- an extension cannot be expressed with normal props and callbacks
+```tsx
+import { usePuck } from "@puckeditor/core";
 
-Rules:
+function MyCustomPanel() {
+  const { appState, dispatch, history } = usePuck();
+  const { data, ui } = appState;
 
-- Keep internal API usage small and contained.
-- Treat it as tighter coupling to editor internals than normal config-based work.
+  return (
+    <div>
+      <p>Components: {data.content.length}</p>
+      <button onClick={() => history.back()}>Undo</button>
+    </div>
+  );
+}
+```
+
+### createUsePuck (Selector)
+
+Create a selector-based hook for optimized re-renders:
+
+```tsx
+import { createUsePuck } from "@puckeditor/core";
+
+const useContentLength = createUsePuck(
+  (state) => state.appState.data.content.length
+);
+
+function MyBadge() {
+  const count = useContentLength();
+  return <span>{count} blocks</span>;
+}
+```
+
+### useGetPuck
+
+Get the current Puck context (useful for nested components):
+
+```tsx
+import { useGetPuck } from "@puckeditor/core";
+
+function MyNestedComponent() {
+  const puck = useGetPuck();
+  return <div>{puck.appState.data.content.length} items</div>;
+}
+```
+
+### PuckApi Methods
+
+| Method | Description |
+|--------|-------------|
+| `dispatch(action)` | Dispatch an editor action |
+| `history.back()` | Undo |
+| `history.forward()` | Redo |
+| `history.set(histories, index)` | Set history state |
+| `getPermissions(itemSelector)` | Get permissions for a component |
+| `resolveDataById(id)` | Resolve data for a specific component |
+
+### Actions
+
+Dispatch editor state changes:
+
+```tsx
+// Replace all data
+dispatch({ type: "setData", data: newData });
+
+// Update UI state
+dispatch({ type: "setUi", ui: { leftSideBarVisible: false } });
+
+// Generic set (partial data update)
+dispatch({ type: "set", state: { data: { root: { props: { title: "New" } } } } });
+```
+
+### ItemSelector
+
+Reference a specific component in the tree:
+
+```tsx
+const selector = {
+  index: 0,                    // Position in parent's content array
+  zone: "default-zone",        // Zone name (slot name or "default-zone")
+};
+```
 
 ## Theming
 
-Puck theming is intentionally limited.
+### CSS Custom Properties
 
-Supported theming work is mainly about:
+```css
+:root {
+  --puck-font-family: "Inter", sans-serif;
+  --puck-color-heading: #1a1a1a;
+  --puck-color-body: #333333;
+  --puck-color-link: #0066cc;
+}
+```
 
-- fonts
-- limited theme-level adjustments
+### CSS Bundles
 
-Prefer composition and overrides for larger interface changes.
+| Bundle | Description |
+|--------|-------------|
+| `@puckeditor/core/dist/puck.css` | Full styles with external font loading |
+| `@puckeditor/core/dist/puck-no-external.css` | Styles without external font requests |
 
-## Fonts
+### Font Loading
 
-Puck defaults to an externally loaded Inter setup.
+Puck defaults to externally loaded Inter. To self-host:
 
-If the project must self-host or avoid external font loading:
+1. Use the `puck-no-external.css` bundle
+2. Provide your own font loading
+3. Set `--puck-font-family` to your font stack
 
-- switch from the primary CSS bundle to the no-external bundle
+### Iframe Style Sync
 
-In this repo, editor iframe font synchronization already exists. Reuse the existing approach before inventing another one.
+The preview iframe syncs host styles by default. Configure:
+
+```tsx
+<Puck
+  iframe={{
+    syncHostStyles: true,   // Mirror host styles (default: true)
+    waitForStyles: true,    // Wait for styles before preview (default: true)
+  }}
+/>
+```
+
+Set `syncHostStyles: false` to fully isolate the iframe from host styles and `html`/`body` attributes.
+
+## Overlay Portals
+
+Make specific preview elements interactive while the editor overlay is active.
+
+```tsx
+import { registerOverlayPortal } from "@puckeditor/core";
+import { useEffect, useRef } from "react";
+
+function InteractiveButton() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const cleanup = registerOverlayPortal({
+      element: ref.current,
+      onMount: () => {},
+      onUnmount: () => {},
+    });
+    return cleanup;
+  }, []);
+
+  return <button ref={ref} onClick={handleClick}>Click me</button>;
+}
+```
+
+### When to Use
+
+- A button inside preview must stay clickable
+- Custom controls would otherwise be blocked by the editor overlay
+- Interactive widgets need direct user interaction
+
+### Rules
+
+- Register only elements that truly need it
+- Keep portal usage local and deliberate
+- Clean up on unmount
 
 ## Extension Strategy
 
 Reach for extension points in this order:
 
-1. ordinary component config
-2. built-in fields
-3. root config
-4. slots
-5. `resolveData` or `resolveFields`
-6. composition
-7. small local overrides
-8. plugins
-9. custom fields
-10. internal API
+1. **Component config** — fields, defaultProps, render
+2. **Built-in fields** — text, number, select, slot, etc.
+3. **Root config** — wrapper, metadata, page-level fields
+4. **Slots** — nesting, multi-column, fluid layouts
+5. **resolveData / resolveFields** — dynamic behavior
+6. **Composition** — custom editor layout
+7. **Small overrides** — header, actionBar modifications
+8. **Plugins** — editor-wide extensions with rail UI
+9. **Custom fields** — bespoke input UIs
+10. **Internal API** — usePuck, dispatch, direct state access
 
 If you are reaching for a later step too early, re-check whether a simpler built-in mechanism already solves the problem.

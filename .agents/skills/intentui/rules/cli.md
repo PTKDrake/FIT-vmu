@@ -26,12 +26,12 @@ IMPORTANT: Never add or modify the `registries` key in `components.json`. Just r
 
 The registry has two types of items:
 
-- **`registry:ui`** — foundational components (button, tabs, modal, etc.) installed to `web/components/ui/` through the project's `@/components/ui` alias
+- **`registry:ui`** — foundational components (button, tabs, modal, etc.) installed to `src/components/ui/`
 - **`registry:block`** — ready-made page sections and patterns (sign-in forms, settings pages, dashboards, shopping carts, etc.)
 
 ### Searching for components
 
-If you need a component that doesn't exist in `web/components/ui/`, search the registry directly with what you need:
+If you need a component that doesn't exist in `src/components/ui/`, search the registry directly with what you need:
 
 ```bash
 # Pattern: <runner> shadcn@latest search <registry> -q "<query>"
@@ -71,7 +71,7 @@ bunx --bun shadcn@latest add @intentui/sign-in-and-registration-05
 
 ## Full example — installing a component
 
-Suppose you need `<Menu>` but `web/components/ui/menu.tsx` doesn't exist:
+Suppose you need `<Menu>` but `src/components/ui/menu.tsx` doesn't exist:
 
 1. Check lockfile → `bun.lock` exists → use `bunx --bun`
 2. Read `components.json` → registries key is `@irsyad` → use `@irsyad`
@@ -92,8 +92,18 @@ User asks: "I need a login page"
 
 ## Important
 
-- Always check `web/components/ui/` first — only install components if the file doesn't exist
+- Always check `src/components/ui/` first — only install components if the file doesn't exist
 - Always read `components.json` for the registry name — never hardcode it
-- Always check the lockfile for the correct runner — never assume `npx` or `bunx`
+- Always check the lockfile for the correct runner — never assume `npx` or `pnpx`
 - After installing, verify the file was created before importing it
 - When searching for blocks, try multiple keyword variations if the first search doesn't match
+
+## Key patterns
+
+1. **Detect the runner first**: `bun.lock`/`bun.lockb` → `pnpx --bun`, `pnpm-lock.yaml` → `pnpx`, `package-lock.json` → `npx`, `yarn.lock` → `npx`.
+2. **Detect the registry**: read `components.json` — if `registries` is present, use its first key; otherwise default to `@intentui`. Do **not** modify `components.json`.
+3. **Search, then install**: `shadcn@latest search @<registry> -q "<term>"` to find the item, then `shadcn@latest add @<registry>/<name>` to install.
+4. **`registry:ui` = components** (installed to `src/components/ui/`); **`registry:block` = ready-made page sections** (sign-in forms, dashboards, etc.).
+5. **When the user asks for a page or feature** ("login page", "dashboard", "settings page"), search with their exact terms and prefer `registry:block` results.
+6. **Never install blind**: verify the file does not already exist in `src/components/ui/` before running `add`.
+7. **Verify after install**: confirm the file was created and the import path resolves before using the component.

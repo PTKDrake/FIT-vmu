@@ -5,14 +5,6 @@ description: DOM-free multiline text measurement and layout using @chenglou/pret
 
 # Pretext – DOM-Free Text Measurement & Layout
 
-## Project-Specific Structure
-
-- `@chenglou/pretext` is installed in this repository as a frontend dependency.
-- The active frontend lives under `web/`. Use this skill for text measurement and custom text layout work in `web/pages`, `web/layouts`, `web/components`, or shared helpers under `web/lib`.
-- Activate this skill together with `inertia-react-development` when the feature lives in an Inertia page flow.
-- Activate this skill together with `intentui` when the measured or laid out text is rendered through shared UI primitives in `web/components/ui`.
-- Prefer Pretext over DOM measurement patterns such as `getBoundingClientRect()` or `offsetHeight` when the goal is multiline text sizing or line breaking.
-
 Pretext is a pure-JavaScript/TypeScript library that measures and lays out multiline text without touching the DOM. It uses the browser's own font engine (via canvas `measureText`) as ground truth, then does all line-breaking and height calculation in pure arithmetic. Supports rendering to DOM, Canvas, SVG, and (eventually) server-side.
 
 ## Why This Matters
@@ -26,7 +18,7 @@ The result is pixel-perfect across browsers (7680/7680 on Chrome, Safari, and Fi
 ## Installation
 
 ```sh
-pnpm add @chenglou/pretext
+npm install @chenglou/pretext
 ```
 
 ## Two Paths: Pick the Simpler One
@@ -212,7 +204,6 @@ type RichInlineLine = {
 
 - **Cache `prepared` handles.** Same text + same font = reuse the handle. Only call `prepare()` again if the text or font actually changed. On resize, just re-call `layout()`.
 - **Match your CSS exactly.** The `font` string must match your CSS `font` shorthand (size, weight, style, family). The `lineHeight` must match your CSS `line-height`. Mismatches produce wrong heights.
-- **Keep the implementation in `web/`.** If you add shared helpers for Pretext, prefer colocating them in `web/lib` or beside the consuming UI in `web/components` rather than introducing a new frontend root.
 - **Use `{ whiteSpace: 'pre-wrap' }` for textareas** where spaces, tabs, and newlines should be preserved. Tabs follow default browser-style `tab-size: 8` stops.
 - **Use `{ wordBreak: 'keep-all' }` for CJK/Hangul** when you want to avoid breaking within words.
 - **Avoid `system-ui` on macOS** — canvas and DOM can resolve to different fonts (SF Pro Text vs SF Pro Display), breaking accuracy. Use a named font.

@@ -1,147 +1,576 @@
 # Fields
 
-## Field Selection
+Complete field type reference with all API parameters.
 
-Choose the smallest field that matches the real data shape.
+## Field Selection Guide
 
-- `text`: short scalar strings
-- `textarea`: longer plain text
-- `number`: numeric values
-- `radio`: small fixed mutually exclusive options
-- `select`: larger fixed option sets
-- `object`: grouped nested props
-- `array`: repeatable item lists
-- `slot`: nested drag-and-drop content
-- `richtext`: formatted content
-- `external`: async record selection
-- `custom`: bespoke editor UI
+| Need | Field Type |
+|------|------------|
+| Short scalar string | `text` |
+| Multi-line plain text | `textarea` |
+| Numeric value | `number` |
+| Small fixed exclusive options | `radio` |
+| Larger option set | `select` |
+| Grouped nested props | `object` |
+| Repeatable structured items | `array` |
+| Nested drag-and-drop content | `slot` |
+| Formatted rich content | `richtext` |
+| Async record selection | `external` |
+| Bespoke editor UI | `custom` |
 
-## Base Field Rules
+## Base Field Params (all fields)
 
-All fields share common metadata such as:
+All field types share these optional parameters:
 
-- label
-- label icon
-- metadata
-- visibility
+| Param | Type | Description |
+|-------|------|-------------|
+| `label` | string | Display label (defaults to field key) |
+| `labelIcon` | ReactNode | Icon next to label |
+| `metadata` | Object | Additional data for the field |
+| `visible` | boolean | Show/hide the field (default: true) |
 
-Use these to make the editor readable before reaching for custom UI.
+```tsx
+fields: {
+  title: {
+    type: "text",
+    label: "Page Title",
+    labelIcon: <TitleIcon />,
+    metadata: { helpText: "Used in SEO" },
+    visible: true,
+  },
+}
+```
 
-## Textual Fields
+## Text Field
 
-Use these when the data is fundamentally simple:
+Single-line text input.
 
-- `text`
-- `textarea`
-- `number`
-- `radio`
-- `select`
+```tsx
+fields: {
+  title: {
+    type: "text",
+    placeholder: "Enter title...",
+    contentEditable: false,
+  },
+}
+```
 
-Rules:
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "text" | **Required** |
+| `contentEditable` | boolean | Inline editing in preview (default: false) |
+| `placeholder` | string | Placeholder text |
 
-- Prefer explicit options for enums rather than freeform text.
-- Use `number` only for actual numbers, not dimension strings with units, unless the component genuinely needs numeric editing.
+**contentEditable warning:** When `true`, string props become ReactNode objects inside `<Puck>`. Use `string | ReactNode` in TypeScript.
 
-## Object Fields
+## Textarea Field
 
-Use `object` when several props belong together conceptually.
+Multi-line text input.
 
-Good fits:
+```tsx
+fields: {
+  description: {
+    type: "textarea",
+    placeholder: "Enter description...",
+    contentEditable: false,
+  },
+}
+```
 
-- CTA objects
-- image metadata
-- nested configuration groups
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "textarea" | **Required** |
+| `contentEditable` | boolean | Inline editing in preview (default: false) |
+| `placeholder` | string | Placeholder text |
 
-Rules:
+Same contentEditable warning as text field applies.
 
-- Use `objectFields` to keep the structure explicit.
-- Prefer object fields over manually encoding JSON inside a string prop.
+## Number Field
 
-## Array Fields
+Numeric input.
 
-Use `array` when authors repeat a structured item shape.
+```tsx
+fields: {
+  count: {
+    type: "number",
+    min: 0,
+    max: 100,
+    step: 1,
+    placeholder: "0",
+  },
+}
+```
 
-Good fits:
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "number" | **Required** |
+| `min` | number | Minimum value |
+| `max` | number | Maximum value |
+| `step` | number | Stepping interval |
+| `placeholder` | string | Placeholder text |
 
-- button lists
-- badges
-- features
-- stats
-- FAQs
+## Radio Field
 
-Rules:
+Mutually exclusive options.
 
-- Keep each item schema focused.
-- Avoid deeply nested arrays unless the content model truly requires it.
-- Use array fields rather than a series of numbered sibling props.
+```tsx
+fields: {
+  textAlign: {
+    type: "radio",
+    options: [
+      { label: "Left", value: "left" },
+      { label: "Center", value: "center" },
+      { label: "Right", value: "right" },
+    ],
+  },
+}
+```
 
-## Slot Fields
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "radio" | **Required** |
+| `options` | `{ label: string, value: string \| number \| boolean }[]` | **Required.** Option list |
 
-Slots define nested component regions.
+## Select Field
 
-Important behavior:
+Dropdown option list.
 
-- they store an array of nested component data
-- they are transformed before being handed to the renderer
-- they do not render a standard form control in the fields panel
+```tsx
+fields: {
+  size: {
+    type: "select",
+    options: [
+      { label: "Small", value: "sm" },
+      { label: "Medium", value: "md" },
+      { label: "Large", value: "lg" },
+    ],
+  },
+}
+```
 
-Good fits:
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "select" | **Required** |
+| `options` | `{ label: string, value: string \| number \| boolean }[]` | **Required.** Option list |
 
-- container children
-- multi-column regions
-- section internals
+## Object Field
 
-Rules:
+Grouped sub-fields. Useful for CTA objects, image metadata, nested config groups.
 
-- Use slots for layout structure, not for arbitrary data blobs.
-- Restrict allowed blocks where editor safety matters.
+```tsx
+fields: {
+  cta: {
+    type: "object",
+    objectFields: {
+      label: { type: "text" },
+      href: { type: "text" },
+      variant: {
+        type: "select",
+        options: [
+          { label: "Primary", value: "primary" },
+          { label: "Secondary", value: "secondary" },
+        ],
+      },
+    },
+  },
+}
+```
 
-## Richtext Fields
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "object" | **Required** |
+| `objectFields` | Object | **Required.** Sub-field definitions |
 
-Richtext is the built-in formatted content field.
+### Data shape
 
-It supports:
+```json
+{
+  "cta": {
+    "label": "Learn more",
+    "href": "/about",
+    "variant": "primary"
+  }
+}
+```
 
-- optional inline editing
-- configurable initial height
-- configurable menu rendering
-- configurable inline menu rendering
-- configurable Tiptap extensions and selectors
+### Render access
 
-Rules:
+```tsx
+render: ({ cta }) => (
+  <a href={cta.href}>{cta.label}</a>
+)
+```
 
-- Prefer richtext over custom fields for editorial formatting.
-- Use custom fields only when built-in menus and extension points still do not fit the requirement.
+## Array Field
 
-## External Fields
+Repeatable structured items. Good for button lists, badges, features, stats, FAQs.
 
-External fields let the editor select data from an async source.
+```tsx
+fields: {
+  items: {
+    type: "array",
+    arrayFields: {
+      label: { type: "text" },
+      href: { type: "text" },
+    },
+    defaultItemProps: {
+      label: "New Item",
+      href: "#",
+    },
+    min: 1,
+    max: 10,
+    getItemSummary: (item, index) => item.label || `Item ${index + 1}`,
+  },
+}
+```
 
-Typical use cases:
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "array" | **Required** |
+| `arrayFields` | Object | **Required.** Item field definitions |
+| `defaultItemProps` | Object | Default props for new items |
+| `min` | number | Minimum item count |
+| `max` | number | Maximum item count |
+| `getItemSummary` | `(item, index) => string` | Display label for each item |
 
-- choosing a post
-- choosing a document
-- choosing a staff profile
-- selecting content from a third-party API
+### Data shape
 
-Rules:
+```json
+{
+  "items": [
+    { "label": "First", "href": "/first" },
+    { "label": "Second", "href": "/second" }
+  ]
+}
+```
 
-- Treat them as selection UIs.
-- Avoid hiding your whole data fetching architecture inside the field itself.
-- Persist only what the renderer truly needs when possible.
+### Render access
 
-## Custom Fields
+```tsx
+render: ({ items }) => (
+  <ul>
+    {items.map((item, i) => (
+      <li key={i}><a href={item.href}>{item.label}</a></li>
+    ))}
+  </ul>
+)
+```
 
-Use `custom` only when built-in fields cannot express the desired UX.
+## Slot Field
 
-Good fits:
+Nested component region. Replaces the deprecated `<DropZone>`.
 
-- media pickers
-- specialized design token pickers
-- bespoke structured editors
+```tsx
+fields: {
+  content: {
+    type: "slot",
+    allow: ["Card", "TextBlock"],
+    disallow: ["HeroBanner"],
+  },
+}
+```
 
-Rules:
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "slot" | **Required** |
+| `allow` | string[] | Only allow these component types |
+| `disallow` | string[] | Block these component types |
+| `style` | CSSProperties | CSS for the slot container |
+| `className` | string | CSS class for the slot container |
+| `collisionAxis` | "x" \| "y" | Drag collision detection axis |
+| `as` | string | HTML element type (default: "div") |
+| `ref` | Ref | React ref for the slot element |
+| `minEmptyHeight` | number | Minimum height when slot is empty |
 
-- Keep the custom field API narrow.
-- Reuse shared repo UI around the field when possible without editing protected base UI files.
-- Prefer plain, robust data contracts over overly magical field state.
+### Data shape
+
+Slot values are `ComponentData[]` in the stored payload:
+
+```json
+{
+  "content": [
+    { "type": "Card", "props": { "id": "Card-1" } },
+    { "type": "TextBlock", "props": { "id": "TextBlock-1" } }
+  ]
+}
+```
+
+### Render access
+
+Slots are transformed from arrays to render functions at render time:
+
+```tsx
+render: ({ content: Content }) => (
+  <div style={{ padding: 32 }}>
+    <Content />
+  </div>
+)
+```
+
+With style/className:
+
+```tsx
+render: ({ content: Content }) => (
+  <Content
+    style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
+    className="my-slot"
+  />
+)
+```
+
+### No form control
+
+Slots do not render a standard form control in the fields panel. Content is edited via drag-and-drop in the preview.
+
+### Rules
+
+- Use slots for layout structure, not for arbitrary data blobs
+- Restrict allowed blocks where editor safety matters via `allow`/`disallow`
+- Use `inline: true` on child components that need CSS grid/flex direct-child behavior
+- Prefer slots over the deprecated `<DropZone>` component
+
+## Richtext Field
+
+Tiptap-based rich text editor.
+
+```tsx
+fields: {
+  body: {
+    type: "richtext",
+    placeholder: "Write something...",
+    contentEditable: false,
+    options: {
+      disableExtensions: ["heading"],
+      configureExtensions: {
+        link: { openOnClick: false },
+        image: { allowBase64: true },
+      },
+    },
+    renderMenu: ({ children }) => (
+      <RichTextMenu>
+        <RichTextMenu.Group>{children}</RichTextMenu.Group>
+      </RichTextMenu>
+    ),
+    renderInlineMenu: ({ children }) => (
+      <RichTextMenu>{children}</RichTextMenu>
+    ),
+    tiptap: {
+      extensions: [MyCustomExtension],
+      selector: ".my-editor",
+    },
+  },
+}
+```
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "richtext" | **Required** |
+| `contentEditable` | boolean | Inline editing in preview |
+| `placeholder` | string | Placeholder text |
+| `options.disableExtensions` | string[] | Disable Tiptap extensions |
+| `options.configureExtensions` | Object | Configure Tiptap extension options |
+| `renderMenu` | Function | Custom toolbar menu |
+| `renderInlineMenu` | Function | Custom inline (selection) menu |
+| `tiptap.extensions` | Extension[] | Additional Tiptap extensions |
+| `tiptap.selector` | string | CSS selector for inline editing container |
+
+### RichTextMenu Components
+
+```tsx
+import { RichTextMenu } from "@puckeditor/core";
+
+<RichTextMenu>
+  <RichTextMenu.Group>
+    <RichTextMenu.Control name="bold" />
+    <RichTextMenu.Control name="italic" />
+  </RichTextMenu.Group>
+  <RichTextMenu.Group>
+    <RichTextMenu.Control name="custom-action">
+      <MyCustomButton />
+    </RichTextMenu.Control>
+  </RichTextMenu.Group>
+</RichTextMenu>
+```
+
+### contentEditable
+
+When `true`, the richtext is editable directly in the preview canvas. String props become ReactNode inside `<Puck>`.
+
+## External Field
+
+Async record selection from external data sources.
+
+```tsx
+fields: {
+  product: {
+    type: "external",
+    fetchList: async ({ query, filters }) => {
+      const params = new URLSearchParams({ q: query, type: filters.type });
+      const res = await fetch(`/api/products?${params}`);
+      return res.json();
+    },
+    mapProp: (item) => ({
+      productId: item.id,
+      productTitle: item.title,
+      productImage: item.image,
+    }),
+    mapRow: (item) => ({
+      title: item.title,
+      subtitle: `$${item.price}`,
+    }),
+    getItemSummary: (item) => item.title,
+    showSearch: true,
+    filterFields: {
+      type: {
+        type: "select",
+        options: [
+          { label: "All", value: "" },
+          { label: "Electronics", value: "electronics" },
+        ],
+      },
+    },
+    cache: true,
+    renderFooter: ({ items, selectedItems }) => (
+      <div>{selectedItems.length} selected of {items.length}</div>
+    ),
+  },
+}
+```
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `fetchList` | `({ query, filters }) => Promise<Item[]>` | **Required.** Async fetch |
+| `mapProp` | `(item) => Object` | Transform item to component prop |
+| `mapRow` | `(item) => Object` | Transform item to table row display |
+| `getItemSummary` | `(item) => string` | Summary text for selected items |
+| `showSearch` | boolean | Enable search input |
+| `filterFields` | Object | Additional filter field definitions |
+| `cache` | boolean | Cache results (default: true) |
+| `renderFooter` | `({ items, selectedItems }) => ReactNode` | Custom modal footer |
+
+### Data flow
+
+1. `fetchList` returns raw items from the API
+2. `mapRow` transforms items for display in the selection table
+3. `mapProp` transforms the selected item into the component's prop value
+4. `getItemSummary` provides text for the selected item badge
+
+### Best practices
+
+- Store only stable selectors (IDs/slugs), not full data, in the Puck payload
+- Use `resolveData` to hydrate full data at render time if needed
+- Keep the external field focused on selection, not on the entire data fetching architecture
+
+## Custom Field
+
+Bespoke field UI when built-in fields are insufficient.
+
+```tsx
+fields: {
+  color: {
+    type: "custom",
+    render: ({ name, value, onChange, field }) => (
+      <div>
+        <FieldLabel label={field.label || name} />
+        <input
+          type="color"
+          value={value || "#000000"}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </div>
+    ),
+  },
+}
+```
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `type` | "custom" | **Required** |
+| `render` | `({ name, value, onChange, field }) => ReactNode` | **Required.** Custom render |
+| `contentEditable` | boolean | Inline editing in preview |
+
+### Render args
+
+| Arg | Type | Description |
+|-----|------|-------------|
+| `name` | string | Field name/key |
+| `value` | any | Current field value |
+| `onChange` | `(value, ui?) => void` | Update value; optional `ui` param for editor state |
+| `field` | Object | The full field definition |
+
+### onChange with UI state
+
+```tsx
+onChange(newValue, { itemSelector: { index: 0, zone: "default-zone" } })
+```
+
+### Key prop for remounting
+
+Use a `key` prop derived from relevant state to force remount when the field needs to reset:
+
+```tsx
+render: ({ value, onChange }) => (
+  <MyEditor key={value.version} initialValue={value} onSave={onChange} />
+)
+```
+
+### FieldLabel helper
+
+Use `<FieldLabel>` from Puck for consistent label styling:
+
+```tsx
+import { FieldLabel } from "@puckeditor/core";
+
+<FieldLabel label="My Field" icon={<Icon />} />
+```
+
+### Best practices
+
+- Keep the custom field value contract predictable (plain objects, not complex class instances)
+- Reuse shared repo UI around the field without editing protected base UI files
+- Prefer built-in fields before reaching for custom
+- Custom fields are appropriate for: media pickers, design token pickers, specialized editors
+
+## AutoField Component
+
+Render the appropriate field UI for any field definition. Useful in custom fields or custom editor UIs:
+
+```tsx
+import { AutoField } from "@puckeditor/core";
+
+<AutoField
+  field={{ type: "text", label: "Title" }}
+  name="title"
+  value="Hello"
+  onChange={(value) => console.log(value)}
+/>
+```
+
+## Field Visibility
+
+Control field visibility dynamically:
+
+```tsx
+fields: {
+  advancedMode: { type: "radio", options: [
+    { label: "Off", value: false },
+    { label: "On", value: true },
+  ]},
+  advancedOption: {
+    type: "text",
+    visible: false, // controlled by resolveFields
+  },
+}
+```
+
+Then use `resolveFields` to toggle:
+
+```tsx
+resolveFields: (data) => ({
+  advancedMode: { /* ... */ },
+  advancedOption: {
+    type: "text",
+    visible: data.props.advancedMode === true,
+  },
+})
+```

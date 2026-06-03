@@ -1,8 +1,10 @@
 # Styling Rules
 
+Intent UI uses a semantic color-token system built on top of Tailwind v4. Always use semantic tokens — never raw Tailwind colors. Compose class names with the right utility depending on the element type.
+
 ## NEVER use raw Tailwind colors
 
-Never use raw Tailwind color utilities. This includes ANY color from: red, orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink, rose, slate, gray, zinc, neutral, stone.
+Never use raw Tailwind color utilities. This includes ANY color from: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`, `slate`, `gray`, `zinc`, `neutral`, `stone`.
 
 ### Forbidden patterns
 
@@ -16,18 +18,20 @@ Never use raw Tailwind color utilities. This includes ANY color from: red, orang
 ❌ shadow-blue-500/50
 ```
 
-## Use semantic color tokens instead
+Raw colors break the theme system, are not dark-mode aware, and defeat accessibility tokens. Replace every occurrence with a semantic token.
+
+## Semantic color tokens
 
 ### Text colors
 
 | For | Use |
 |---|---|
 | Default text | `text-fg` |
-| Muted/secondary text | `text-muted-fg` |
+| Muted / secondary text | `text-muted-fg` |
 | Primary colored text | `text-primary` |
 | Primary subtle text | `text-primary-subtle-fg` |
 | Success text | `text-success` or `text-success-subtle-fg` |
-| Danger/error text | `text-danger` or `text-danger-subtle-fg` |
+| Danger / error text | `text-danger` or `text-danger-subtle-fg` |
 | Warning text | `text-warning` or `text-warning-subtle-fg` |
 | Info text | `text-info` or `text-info-subtle-fg` |
 | Foreground on primary bg | `text-primary-fg` |
@@ -46,7 +50,7 @@ Never use raw Tailwind color utilities. This includes ANY color from: red, orang
 | Secondary background | `bg-secondary` |
 | Muted background | `bg-muted` |
 | Accent background | `bg-accent` |
-| Overlay/modal background | `bg-overlay` |
+| Overlay / modal background | `bg-overlay` |
 | Success background | `bg-success` or `bg-success-subtle` |
 | Danger background | `bg-danger` or `bg-danger-subtle` |
 | Warning background | `bg-warning` or `bg-warning-subtle` |
@@ -60,9 +64,38 @@ Never use raw Tailwind color utilities. This includes ANY color from: red, orang
 | Input border | `border-input` |
 | Focus ring | `ring-ring` |
 
-### All available semantic tokens
+### Full list of semantic tokens
 
-`primary`, `primary-fg`, `primary-subtle`, `primary-subtle-fg`, `secondary`, `secondary-fg`, `accent`, `accent-fg`, `success`, `success-fg`, `success-subtle`, `success-subtle-fg`, `danger`, `danger-fg`, `danger-subtle`, `danger-subtle-fg`, `warning`, `warning-fg`, `warning-subtle`, `warning-subtle-fg`, `info`, `info-fg`, `info-subtle`, `info-subtle-fg`, `muted`, `muted-fg`, `overlay`, `overlay-fg`, `navbar`, `navbar-fg`, `sidebar`, `sidebar-fg`, `sidebar-primary`, `sidebar-primary-fg`, `sidebar-accent`, `sidebar-accent-fg`, `sidebar-border`, `sidebar-ring`, `bg`, `fg`, `border`, `input`, `ring`, `chart-1` through `chart-5`
+The following tokens are defined in the theme. Each is usable as `text-*`, `bg-*`, `border-*`, `ring-*`, or in CSS via `var(--color-<token>)`:
+
+- `primary`, `primary-fg`, `primary-subtle`, `primary-subtle-fg`
+- `secondary`, `secondary-fg`
+- `accent`, `accent-fg`
+- `success`, `success-fg`, `success-subtle`, `success-subtle-fg`
+- `danger`, `danger-fg`, `danger-subtle`, `danger-subtle-fg`
+- `warning`, `warning-fg`, `warning-subtle`, `warning-subtle-fg`
+- `info`, `info-fg`, `info-subtle`, `info-subtle-fg`
+- `muted`, `muted-fg`
+- `overlay`, `overlay-fg`
+- `navbar`, `navbar-fg`
+- `sidebar`, `sidebar-fg`, `sidebar-primary`, `sidebar-primary-fg`, `sidebar-accent`, `sidebar-accent-fg`, `sidebar-border`, `sidebar-ring`
+- `bg`, `fg`, `border`, `input`, `ring`
+- `chart-1`, `chart-2`, `chart-3`, `chart-4`, `chart-5`
+
+## CSS variable access
+
+You can access any semantic token directly in custom CSS or arbitrary values via `var(--color-<token>)`:
+
+```tsx
+<div style={{ color: "var(--color-primary)" }} />
+<div className="bg-[var(--color-success-subtle)]" />
+```
+
+For color-mix or overlays, combine with `color-mix()`:
+
+```tsx
+<div className="bg-[color-mix(in_oklab,var(--color-primary)_10%,var(--color-bg)_90%)]" />
+```
 
 ## Tailwind shorthand utilities
 
@@ -87,13 +120,13 @@ This also applies to arbitrary values:
 // ❌ w-[32px] h-[32px]
 ```
 
-## className utility
+## Class name utilities — `cx`, `twMerge`, `twJoin`
 
-Use the right utility depending on whether the component is a react-aria component or a regular HTML element:
+Use the right utility depending on the element:
 
-- **`cx`** from `@/lib/primitive` — ONLY for react-aria-components that need `composeRenderProps` (e.g. `Button`, `TextField`, `Select`, etc. from `react-aria-components`)
-- **`twMerge`** from `tailwind-merge` — for regular HTML elements (`div`, `p`, `span`, `strong`, `code`, etc.)
-- **`twJoin`** from `tailwind-merge` — when you just need to join classes without conflict resolution
+- **`cx`** from `@/lib/primitive` — for `react-aria-components` that need `composeRenderProps`. Use on any Intent UI primitive (`Button`, `TextField`, `Select`, etc.) and any wrapper you pass to `composeRenderProps`.
+- **`twMerge`** from `tailwind-merge` — for regular HTML elements (`div`, `p`, `span`, `strong`, `code`, etc.) where you want conflict resolution.
+- **`twJoin`** from `tailwind-merge` — when you just need to join classes without conflict resolution (conditional classes).
 
 ```tsx
 // ✅ cx — for react-aria components
@@ -120,9 +153,11 @@ import clsx from "clsx"
 import classNames from "classnames"
 ```
 
-## Variant naming
+When in doubt: prefer `cx` inside Intent UI components, `twMerge` on plain HTML in your pages, and `twJoin` for conditional class lists that don't conflict.
 
-Use `intent` for color variant props, not `variant` or `color`.
+## Variant naming — use `intent`
+
+Use `intent` for color variant props, never `variant` or `color`.
 
 ```tsx
 // ✅ Correct
@@ -135,9 +170,11 @@ Use `intent` for color variant props, not `variant` or `color`.
 <Badge color="danger">Error</Badge>
 ```
 
+Available `intent` values on most components: `primary`, `secondary`, `warning`, `danger`, `success`, `outline`, `plain`. Some components (e.g. `Badge`, `Note`) also support `info`.
+
 ## Component styling with tailwind-variants
 
-Use `tv` from `tailwind-variants` for component variant styles:
+When building or extending Intent UI components, use `tv` from `tailwind-variants` for variant styles:
 
 ```tsx
 import { tv } from "tailwind-variants"
@@ -149,9 +186,43 @@ const styles = tv({
       primary: "...",
       danger: "...",
     },
+    size: {
+      sm: "...",
+      md: "...",
+      lg: "...",
+    },
   },
   defaultVariants: {
     intent: "primary",
+    size: "md",
   },
 })
+
+export function MyComponent({ intent, size, className, ...props }) {
+  return <div className={cx(styles({ intent, size }), className)} {...props} />
+}
 ```
+
+Use array-form base styles for readability, and keep CSS-variable tokens consistent with the semantic token list above.
+
+## Dark mode
+
+Intent UI tokens resolve differently in light and dark mode automatically. Do **not** add `dark:bg-gray-900` or similar raw color overrides. The semantic tokens already switch. If a component needs a different behavior in dark mode, prefer:
+
+```tsx
+// ✅ Token already adapts to dark mode
+<div className="bg-primary text-primary-fg" />
+
+// ✅ For forced schemes, use Tailwind v4's scheme-* utilities
+<div className="dark:scheme-dark" />
+```
+
+## Key patterns
+
+1. **Never use raw Tailwind color classes** — always use semantic tokens (`text-fg`, `bg-primary`, `border-border`, `ring-ring`).
+2. **Use `size-*` shorthand** when width equals height.
+3. **Use `cx` for react-aria components, `twMerge` for plain HTML, `twJoin` for conditional lists.** Never use `cn`, `clsx`, or `classNames`.
+4. **Use `intent` for color variants**, not `variant` or `color`.
+5. **Use `tv` from `tailwind-variants`** when building or extending Intent UI components.
+6. **Rely on tokens for dark mode** — do not add raw `dark:*` color overrides.
+7. **Access tokens in CSS** via `var(--color-<token>)` when you need arbitrary values.

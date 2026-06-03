@@ -17,7 +17,6 @@ console.log(`${lineCount} lines, widest = ${maxLineWidth}px`)
 // Walk lines and materialize fragments for rendering
 walkRichInlineLineRanges(prepared, 320, range => {
   const line = materializeRichInlineLineRange(prepared, range)
-
   for (const frag of line.fragments) {
     // frag.itemIndex — which source item this came from
     // frag.text — the text slice for this fragment

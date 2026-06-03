@@ -15,9 +15,7 @@ function layoutBubble(bubble: Bubble) {
   // Step 1: find the widest line — that's the shrink-wrap width
   let shrinkWidth = 0
   walkLineRanges(prepared, bubble.maxWidth, line => {
-    if (line.width > shrinkWidth) {
-shrinkWidth = line.width
-}
+    if (line.width > shrinkWidth) shrinkWidth = line.width
   })
 
   // Round up to avoid sub-pixel rounding issues in CSS
@@ -38,7 +36,6 @@ const messages = [
 for (const msg of messages) {
   const { shrinkWidth, height, lines } = layoutBubble(msg)
   console.log(`Bubble: ${shrinkWidth}px x ${height}px, ${lines.length} line(s)`)
-
   for (const line of lines) {
     console.log(`  "${line.text}"`)
   }

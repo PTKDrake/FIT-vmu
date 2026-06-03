@@ -69,22 +69,23 @@ function Example(props) {
 import {
   Autocomplete as AriaAutocomplete,
   type AutocompleteProps as AriaAutocompleteProps,
-  useFilter,
+  useFilter
 } from 'react-aria-components/Autocomplete';
-import { type MenuProps as AriaMenuProps } from 'react-aria-components/Menu';
-import { Dialog } from 'react-aria-components/Dialog';
+import {type MenuProps as AriaMenuProps} from 'react-aria-components/Menu';
+import {Dialog} from 'react-aria-components/Dialog';
 import {Menu} from './Menu';
 import {SearchField} from './SearchField';
-import { Modal } from './Modal';
-import { useEffect } from 'react';
+import {Modal} from './Modal';
+import {useEffect} from 'react';
 import './CommandPalette.css';
 
-export interface CommandPaletteProps<T extends object> extends Omit<AriaAutocompleteProps, 'children'>, AriaMenuProps<T> {
-  isOpen: boolean,
-  onOpenChange: (isOpen?: boolean) => void
+export interface CommandPaletteProps<T>
+  extends Omit<AriaAutocompleteProps, 'children'>, AriaMenuProps<T> {
+  isOpen: boolean;
+  onOpenChange: (isOpen?: boolean) => void;
 }
 
-export function CommandPalette<T extends object>(props: CommandPaletteProps<T>) {
+export function CommandPalette<T>(props: CommandPaletteProps<T>) {
   let {isOpen, onOpenChange} = props;
   let {contains} = useFilter({sensitivity: 'base'});
 
@@ -108,13 +109,8 @@ export function CommandPalette<T extends object>(props: CommandPaletteProps<T>) 
     <Modal isDismissable isOpen={isOpen} onOpenChange={onOpenChange}>
       <Dialog className="command-palette-dialog">
         <AriaAutocomplete filter={contains} {...props}>
-          <SearchField
-            autoFocus
-            aria-label="Search commands"
-            placeholder="Search commands" />
-          <Menu
-            {...props}
-            renderEmptyState={() => 'No results found.'} />
+          <SearchField autoFocus aria-label="Search commands" placeholder="Search commands" />
+          <Menu {...props} renderEmptyState={() => 'No results found.'} />
         </AriaAutocomplete>
       </Dialog>
     </Modal>
@@ -126,7 +122,7 @@ export function CommandPalette<T extends object>(props: CommandPaletteProps<T>) 
 ### CommandPalette.css
 
 ```css
-@import "./theme.css";
+@import './theme.css';
 
 .command-palette-dialog {
   width: min(90vw, 500px);
@@ -191,21 +187,22 @@ function Example(props) {
 import {
   Autocomplete as AriaAutocomplete,
   type AutocompleteProps as AriaAutocompleteProps,
-  useFilter,
+  useFilter
 } from 'react-aria-components/Autocomplete';
-import { type MenuProps as AriaMenuProps } from 'react-aria-components/Menu';
-import { Dialog } from 'react-aria-components/Dialog';
+import {type MenuProps as AriaMenuProps} from 'react-aria-components/Menu';
+import {Dialog} from 'react-aria-components/Dialog';
 import {Menu} from './Menu';
 import {SearchField} from './SearchField';
 import {Modal} from './Modal';
 import React, {useEffect} from 'react';
 
-export interface CommandPaletteProps<T extends object> extends Omit<AriaAutocompleteProps, 'children'>, AriaMenuProps<T> {
-  isOpen: boolean,
-  onOpenChange: (isOpen?: boolean) => void
+export interface CommandPaletteProps<T>
+  extends Omit<AriaAutocompleteProps, 'children'>, AriaMenuProps<T> {
+  isOpen: boolean;
+  onOpenChange: (isOpen?: boolean) => void;
 }
 
-export function CommandPalette<T extends object>(props: CommandPaletteProps<T>) {
+export function CommandPalette<T>(props: CommandPaletteProps<T>) {
   let {isOpen, onOpenChange} = props;
   let {contains} = useFilter({sensitivity: 'base'});
 
@@ -233,11 +230,13 @@ export function CommandPalette<T extends object>(props: CommandPaletteProps<T>) 
             autoFocus
             aria-label="Search commands"
             placeholder="Search commands"
-            className="m-2" />
+            className="m-2"
+          />
           <Menu
             {...props}
             className="flex-1 min-h-0"
-            renderEmptyState={() => 'No results found.'} />
+            renderEmptyState={() => 'No results found.'}
+          />
         </AriaAutocomplete>
       </Dialog>
     </Modal>

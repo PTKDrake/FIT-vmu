@@ -7,9 +7,7 @@ const prepared = prepareWithSegments(text, '16px Inter')
 // Great for shrink-wrap, balanced text, or binary-searching an optimal width.
 let maxLineWidth = 0
 walkLineRanges(prepared, 9999, line => {
-  if (line.width > maxLineWidth) {
-maxLineWidth = line.width
-}
+  if (line.width > maxLineWidth) maxLineWidth = line.width
 })
 console.log(`Shrink-wrap width: ${maxLineWidth}px`)
 
