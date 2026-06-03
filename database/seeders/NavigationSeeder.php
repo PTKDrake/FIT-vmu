@@ -419,7 +419,7 @@ HTML,
                     'title' => $pageData['title'],
                 ],
             ],
-            'content' => [
+            'content' => $this->assignBlockIds([
                 [
                     'type' => 'HeroBanner',
                     'props' => [
@@ -452,9 +452,76 @@ HTML,
                         'secondaryActionHref' => '/cms/navigation',
                     ],
                 ],
-            ],
+            ], $pageData['slug']),
             'zones' => new stdClass,
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $blocks
+     * @return list<array<string, mixed>>
+     */
+    private function assignBlockIds(array $blocks, string $prefix): array
+    {
+        /** @var list<array<string, mixed>> $blocksWithIds */
+        $blocksWithIds = array_map(
+            fn (array $block, int $index): array => $this->assignBlockIdsToNode($block, "{$prefix}-".($index + 1)),
+            $blocks,
+            array_keys($blocks),
+        );
+
+        return $blocksWithIds;
+    }
+
+    /**
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>
+     */
+    private function assignBlockIdsToNode(array $block, string $prefix): array
+    {
+        if (! is_string($block['type'] ?? null)) {
+            return [];
+        }
+
+        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
+
+        if (! isset($props['id']) || ! is_string($props['id']) || $props['id'] === '') {
+            $props['id'] = "{$prefix}-".Str::slug($block['type']);
+        }
+
+        $block['id'] = $props['id'];
+
+        foreach ($props as $key => $value) {
+            if (! is_array($value) || ! $this->isBlockList($value)) {
+                continue;
+            }
+
+            $props[$key] = $this->assignBlockIds($value, "{$props['id']}-{$key}");
+        }
+
+        $block['props'] = $props;
+
+        return $block;
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $value
+     *
+     * @phpstan-assert-if-true list<array<string, mixed>> $value
+     */
+    private function isBlockList(array $value): bool
+    {
+        if (! array_is_list($value) || $value === []) {
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if (! is_array($item) || ! is_string($item['type'] ?? null)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function resolveModelId(Model $model): int

@@ -15,15 +15,14 @@ export function CmsTopbar({ currentUrl }: { currentUrl: string }) {
   const props = page.props;
   const currentNavigationMenuTitle =
     props.navigationMenuName ?? findCmsNavigationMenuTitle(currentUrl);
+  const normalizedUrl = currentUrl.split("?")[0];
 
   // Identify if the current URL is a subpage of the current item (resource)
   let subpageTitle = "";
   let parentHref = "";
 
-  if (currentItem && currentUrl.split("?")[0] !== currentItem.href) {
+  if (currentItem && normalizedUrl !== currentItem.href) {
     parentHref = currentItem.href;
-
-    const normalizedUrl = currentUrl.split("?")[0];
 
     if (currentNavigationMenuTitle) {
       subpageTitle = currentNavigationMenuTitle;
@@ -65,14 +64,18 @@ export function CmsTopbar({ currentUrl }: { currentUrl: string }) {
         )}
 
         <Breadcrumbs>
-          <Breadcrumbs.Item href={cmsDashboardHref}>Dashboard</Breadcrumbs.Item>
+          <Breadcrumbs.Item href={cmsDashboardHref}>
+            Bảng điều khiển
+          </Breadcrumbs.Item>
           {currentItem && currentItem.href !== cmsDashboardHref ? (
             <Breadcrumbs.Item href={parentHref ? currentItem.href : undefined}>
               {currentItem.title}
             </Breadcrumbs.Item>
           ) : null}
           {subpageTitle ? (
-            <Breadcrumbs.Item>{subpageTitle}</Breadcrumbs.Item>
+            <Breadcrumbs.Item href={normalizedUrl}>
+              {subpageTitle}
+            </Breadcrumbs.Item>
           ) : null}
         </Breadcrumbs>
       </div>

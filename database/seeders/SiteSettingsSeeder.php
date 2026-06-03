@@ -16,7 +16,8 @@ class SiteSettingsSeeder extends Seeder
 
         $homepage = Page::query()
             ->where('status', 'published')
-            ->orderByRaw("slug = 'gioi-thieu-vmu' desc")
+            ->whereIn('slug', ['trang-chu-vmu', 'gioi-thieu-vmu'])
+            ->orderByRaw("slug = 'trang-chu-vmu' desc")
             ->orderBy('id')
             ->first();
 

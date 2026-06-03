@@ -52,6 +52,25 @@ export function ActionLink({
   );
 }
 
+export function getPuckBlockDomId(
+  id?: string,
+  anchorId?: string,
+): string | undefined {
+  return id?.trim() || anchorId?.trim() || undefined;
+}
+
+export function isPuckEditorPreview(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
 export function HighlightCard({
   body,
   title,

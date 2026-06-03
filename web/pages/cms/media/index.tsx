@@ -278,7 +278,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
   const filterSections = [
     {
       id: "type",
-      label: "Loại media",
+      label: "Loại tệp",
       options: typeFilterOptions.map((opt) => ({
         label: opt.label,
         value: opt.value,
@@ -458,7 +458,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
   return (
     <>
-      <Head title="Media" />
+      <Head title="Thư viện media" />
       {flash?.message ? (
         <MediaFlashToast
           key={`${flash.type}:${flash.message}`}
@@ -473,7 +473,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-2">
                 <p className="text-lg font-semibold text-fg">
-                  {t("Media Management")}
+                  {t("Quản lý media")}
                 </p>
                 <p className="max-w-3xl text-sm text-muted-fg">
                   {t(
@@ -546,7 +546,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 }}
                 className="w-full sm:w-64"
               >
-                <SearchInput placeholder="Tìm theo tên tệp hoặc MIME type" />
+                <SearchInput placeholder="Tìm theo tên tệp hoặc kiểu MIME" />
               </SearchField>
             </div>
           </div>
@@ -554,13 +554,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <div className="space-y-4 px-5 py-4">
             <div className="flex items-center justify-between gap-3">
               <Text className="text-sm text-muted-fg">
-                {mediaMeta.total} media
+                {mediaMeta.total} tệp media
                 {mediaList.isLoading ? " · đang làm mới" : ""}
               </Text>
 
               <Select
                 className="w-36 min-w-36"
-                aria-label="Số media mỗi trang"
+                aria-label="Số tệp media mỗi trang"
                 selectedKey={String(mediaMeta.perPage)}
                 onSelectionChange={(key) => {
                   if (key !== null) {
@@ -769,7 +769,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             <div className="flex flex-col gap-3 border-t border-border pt-4 md:flex-row md:items-center md:justify-between">
               <Text className="text-sm text-muted-fg">
                 {t("Hiển thị")} {mediaMeta.from ?? 0}-{mediaMeta.to ?? 0}{" "}
-                {t("trên")} {mediaMeta.total} media
+                {t("trên")} {mediaMeta.total} tệp media
               </Text>
 
               <Pagination>
@@ -827,13 +827,14 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
           <ModalBody>
             <Fieldset>
-              <Legend>{t("Dropzone media")}</Legend>
+              <Legend>{t("Khu vực thả media")}</Legend>
               <Text>
                 {t("Hỗ trợ")} <Code>{t("JPG")}</Code>, <Code>{t("PNG")}</Code>,{" "}
-                <Code>{t("WEBP")}</Code>, <Code>{t("GIF")}</Code>, <Code>{t("MP4")}</Code>,{" "}
-                <Code>{t("WEBM")}</Code>, <Code>{t("MOV")}</Code>, <Code>{t("MP3")}</Code>,{" "}
-                <Code>{t("WAV")}</Code>, <Code>{t("M4A")}</Code>, <Code>{t("OGG")}</Code>.{" "}
-                {t("Tối đa 20 MB mỗi tệp.")}
+                <Code>{t("WEBP")}</Code>, <Code>{t("GIF")}</Code>,{" "}
+                <Code>{t("MP4")}</Code>, <Code>{t("WEBM")}</Code>,{" "}
+                <Code>{t("MOV")}</Code>, <Code>{t("MP3")}</Code>,{" "}
+                <Code>{t("WAV")}</Code>, <Code>{t("M4A")}</Code>,{" "}
+                <Code>{t("OGG")}</Code>. {t("Tối đa 20 MB mỗi tệp.")}
               </Text>
 
               <FieldGroup className="pb-2">
@@ -951,7 +952,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     className="rounded-2xl border border-danger-subtle-fg/30 bg-danger-subtle/20 px-4 py-4"
                   >
                     <Strong className="text-fg">
-                      Tệp bị từ chối ở frontend
+                      Tệp bị từ chối ở phía trình duyệt
                     </Strong>
                     <div className="mt-3 space-y-2">
                       {clientRejections.map(({ errors, file }) => (
@@ -1105,7 +1106,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                 <div className="rounded-xl border border-border/70 bg-overlay/95 px-5 py-2 shadow-xl">
                   <div className="flex flex-wrap items-center gap-2">
                     <Button
-                      aria-label="Thu nhỏ preview"
+                      aria-label="Thu nhỏ bản xem trước"
                       intent="outline"
                       size="sq-sm"
                       isDisabled={previewScale <= 0.5}
@@ -1121,7 +1122,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                       <MagnifyingGlassMinusIcon />
                     </Button>
                     <Button
-                      aria-label="Phóng to preview"
+                      aria-label="Phóng to bản xem trước"
                       intent="outline"
                       size="sq-sm"
                       isDisabled={previewScale >= 3}
@@ -1192,7 +1193,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                           value={getKindLabel(selectedMedia.kind)}
                         />
                         <MetadataRow
-                          label="MIME type"
+                          label="Kiểu MIME"
                           value={selectedMedia.mimeType}
                         />
                         <MetadataRow
@@ -1204,7 +1205,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                           value={formatBytes(selectedMedia.size)}
                         />
                         <MetadataRow
-                          label="Bộ nhớ đã dùng"
+                          label="Dung lượng đã dùng"
                           value={formatBytes(selectedMedia.size)}
                         />
                         <MetadataRow
@@ -1243,7 +1244,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                         />
                       </div>
                       <Text className="text-sm text-muted-fg">
-                        Tổng số nơi đang dùng media này:{" "}
+                        Tổng số nơi đang dùng tệp media này:{" "}
                         {selectedMedia.usage.total}.
                       </Text>
                     </section>
@@ -1270,10 +1271,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           size="md"
         >
           <ModalHeader>
-            <ModalTitle>Xóa media này?</ModalTitle>
+            <ModalTitle>Xóa tệp media này?</ModalTitle>
             <ModalDescription>
               Hành động này sẽ xóa tệp đã lưu khỏi thư viện media. Bạn chỉ nên
-              tiếp tục khi chắc chắn media này không còn cần dùng.
+              tiếp tục khi chắc chắn tệp media này không còn cần dùng.
             </ModalDescription>
           </ModalHeader>
 
@@ -1288,7 +1289,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               </Text>
               {deleteTargetMedia.usage.total > 0 ? (
                 <Text className="mt-3 text-sm text-warning-subtle-fg">
-                  {t("Media này đang được dùng ở")}{" "}
+                  {t("Tệp media này đang được dùng ở")}{" "}
                   {deleteTargetMedia.usage.total}{" "}
                   {t("nơi nên hiện chưa thể xóa.")}
                 </Text>

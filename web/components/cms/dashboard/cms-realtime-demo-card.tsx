@@ -121,14 +121,14 @@ export function CmsRealtimeDemoCard() {
   return (
     <Card className="border-border bg-overlay/70">
       <CardHeader>
-        <CardTitle>{t("Realtime demo")}</CardTitle>
+        <CardTitle>{t("Mẫu realtime")}</CardTitle>
         <CardDescription>
-          {t("Kiểm tra private channel Reverb cho tài khoản CMS hiện tại.")}
+          {t("Kiểm tra kênh riêng Reverb cho tài khoản CMS hiện tại.")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-xl border border-border bg-muted/40 p-4">
-          <p className="text-sm font-medium text-fg">{t("Private channel")}</p>
+          <p className="text-sm font-medium text-fg">{t("Kênh riêng")}</p>
           <Text className="mt-1 font-mono text-xs">{channelName}</Text>
         </div>
 
@@ -144,11 +144,11 @@ export function CmsRealtimeDemoCard() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-h-5 text-sm text-muted-fg">
             {requestMessage ??
-              "Bấm nút để gửi một broadcast test về chính bạn."}
+              "Bấm nút để gửi một bản kiểm tra broadcast về chính bạn."}
           </div>
 
           <Button isDisabled={isSubmitting} onPress={triggerRealtimePing}>
-            {isSubmitting ? "Đang gửi..." : "Test realtime"}
+            {isSubmitting ? "Đang gửi..." : "Kiểm tra realtime"}
           </Button>
         </div>
       </CardContent>

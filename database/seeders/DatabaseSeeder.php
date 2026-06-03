@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             MediaSeeder::class,
             PostCategorySeeder::class,
             PostSeeder::class,
+            PublicSiteSeeder::class,
             NavigationSeeder::class,
             StudentGroupSeeder::class,
             SiteSettingsSeeder::class,

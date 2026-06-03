@@ -1,12 +1,18 @@
+import {
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { Render } from "@puckeditor/core";
 import { twMerge } from "tailwind-merge";
+import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
   parsePuckLayoutData,
   parsePuckPageData,
 } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
-import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
 
 interface PuckPageRenderProps {
   className?: string;
@@ -23,15 +29,54 @@ export function PuckPageRender({
 }: PuckPageRenderProps) {
   const data =
     mode === "slot" ? parsePuckLayoutData(content) : parsePuckPageData(content);
+  const publicConfig = createPublicRenderConfig(config);
 
   return (
     <div
       className={twMerge(
-        "vmu-puck-page-render rounded-3xl border border-border bg-overlay p-4 shadow-xs sm:p-6",
+        "vmu-puck-page-render bg-overlay p-4 shadow-xs sm:p-6",
         className,
       )}
     >
-      <Render config={config} data={data} />
+      <Render config={publicConfig} data={data} />
     </div>
   );
+}
+
+function createPublicRenderConfig(
+  config: PageBuilderConfig,
+): PageBuilderConfig {
+  return {
+    ...config,
+    components: Object.fromEntries(
+      Object.entries(config.components).map(
+        ([componentName, componentConfig]) => [
+          componentName,
+          {
+            ...componentConfig,
+            render: (props: Record<string, unknown>) =>
+              mergePublicBlockClassName(
+                componentConfig.render(props as never),
+                (props as { className?: string }).className,
+              ),
+          },
+        ],
+      ),
+    ) as unknown as PageBuilderConfig["components"],
+  };
+}
+
+function mergePublicBlockClassName(node: ReactNode, blockClassName?: string) {
+  if (!blockClassName?.trim() || !isValidElement(node)) {
+    return node;
+  }
+
+  const existingClassName =
+    typeof (node.props as { className?: unknown }).className === "string"
+      ? (node.props as { className?: string }).className
+      : undefined;
+
+  return cloneElement(node as ReactElement<{ className?: string }>, {
+    className: twMerge(existingClassName, blockClassName),
+  });
 }

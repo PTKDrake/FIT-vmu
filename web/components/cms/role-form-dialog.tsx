@@ -53,7 +53,7 @@ const categoryTranslations: Record<string, string> = {
   "staff-profiles": "Hồ sơ cán bộ (staff profiles)",
   staff: "Cán bộ (staff)",
   units: "Đơn vị (units)",
-  media: "Thư viện Media (media)",
+  media: "Thư viện media (media)",
   navigation: "Menu điều hướng (navigation)",
   "navigation menus": "Menu điều hướng (navigation)",
   positions: "Chức vụ (positions)",

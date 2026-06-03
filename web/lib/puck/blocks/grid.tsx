@@ -1,11 +1,15 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { twMerge } from "tailwind-merge";
 import {
   getHideOnClass,
   getGapAxisClass,
   getAlignItemsClass,
   getJustifyItemsClass,
 } from "./layouts";
+import {
+  getPuckBlockDomId,
+  isPuckEditorPreview,
+} from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
@@ -114,24 +118,26 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       label: "Nội dung",
     },
   },
-  render: ({
-    columns,
-    mobileColumns,
-    tabletColumns,
-    desktopColumns,
-    gap,
-    gapX,
-    gapY,
-    alignItems,
-    justifyItems,
-    anchorId,
-    hideOn,
-    className,
-    children: Children,
-  }) => {
-    if (!Children) {
-      return <></>;
-    }
+  render: (props) => {
+    const {
+      columns,
+      mobileColumns,
+      tabletColumns,
+      desktopColumns,
+      gap,
+      gapX,
+      gapY,
+      alignItems,
+      justifyItems,
+      anchorId,
+      hideOn,
+      className,
+      children: Children,
+    } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
 
     // Backwards compatibility for old columns count
     const finalDesktopCols =
@@ -174,26 +180,34 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
 
     // For inline style gap backwards compatibility
     const gapStyle = typeof gap === "number" ? { gap: `${gap}px` } : undefined;
+    const emptyPreviewClass = isPuckEditorPreview()
+      ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
+      : "";
+
+    const resolvedClassName = twMerge(
+      "grid min-h-16 w-full py-2",
+      mobileColsClass,
+      tabletColsClass,
+      desktopColsClass,
+      typeof gap === "number"
+        ? undefined
+        : twMerge(
+            getGapAxisClass("x", gapX ?? gap),
+            getGapAxisClass("y", gapY ?? gap),
+          ),
+      emptyPreviewClass,
+      getAlignItemsClass(alignItems),
+      getJustifyItemsClass(justifyItems),
+      getHideOnClass(hideOn),
+      className,
+    );
 
     return (
       <Children
-        id={anchorId || undefined}
-        className={cn(
-          "grid min-h-16 w-full py-2",
-          mobileColsClass,
-          tabletColsClass,
-          desktopColsClass,
-          typeof gap === "number"
-            ? undefined
-            : cn(
-                getGapAxisClass("x", gapX ?? gap),
-                getGapAxisClass("y", gapY ?? gap),
-              ),
-          getAlignItemsClass(alignItems),
-          getJustifyItemsClass(justifyItems),
-          getHideOnClass(hideOn),
-          className,
-        )}
+        collisionAxis="dynamic"
+        id={id}
+        className={resolvedClassName}
+        minEmptyHeight={96}
         style={gapStyle}
       />
     );

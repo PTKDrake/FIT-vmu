@@ -70,11 +70,18 @@ test("page builder data types stay aligned with the new layout fields", () => {
 });
 
 test("site layout builder uses one frame with four puck slots", () => {
-    assert.match(dataSource, /SiteLayoutFrame: \{/);
+    assert.match(dataSource, /SiteLayoutFrame: PuckSurfaceStyleProps & \{/);
+    assert.match(siteLayoutFrameSource, /defaultProps: \{/);
+    assert.match(siteLayoutFrameSource, /surfacePadding: "md"/);
     assert.match(siteLayoutFrameSource, /header: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /left: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /right: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /footer: \{\s+type: "slot"/);
+    assert.match(siteLayoutFrameSource, /rounded-\[inherit\]/);
+    assert.match(
+        siteLayoutFrameSource,
+        /rounded-none border-border\/70 bg-overlay\/80 shadow-none/,
+    );
     assert.match(layoutConfigsSource, /export const layoutBuilderConfig/);
     assert.match(layoutConfigsSource, /components: \["SiteLayoutFrame"\]/);
 });

@@ -31,7 +31,7 @@ export default function CmsDashboardPage() {
 
   return (
     <>
-      <Head title="Dashboard" />
+      <Head title="Bảng điều khiển" />
       <DashboardOverviewPanel overview={overview} />
     </>
   );

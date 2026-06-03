@@ -1,5 +1,8 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { twMerge } from "tailwind-merge";
+import { Separator } from "@/components/ui/separator";
+import { Text } from "@/components/ui/text";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 // --- HELPER CLASSES & FUNCTIONS ---
@@ -99,11 +102,15 @@ export function getBackgroundClass(background?: string) {
   const bgClasses: Record<string, string> = {
     transparent: "bg-transparent text-fg",
     none: "bg-transparent text-fg",
-    primarySubtle: "bg-primary-subtle/10 border-y border-primary/5 text-fg",
-    "primary-subtle": "bg-primary-subtle/10 border-y border-primary/5 text-fg",
-    infoSubtle: "bg-info-subtle/10 border-y border-info/5 text-fg",
-    "info-subtle": "bg-info-subtle/10 border-y border-info/5 text-fg",
-    dark: "bg-zinc-900 text-zinc-100 dark:bg-black",
+    primarySubtle:
+      "bg-primary-subtle/10 border border-primary-subtle/20 text-fg shadow-xs",
+    "primary-subtle":
+      "bg-primary-subtle/10 border border-primary-subtle/20 text-fg shadow-xs",
+    infoSubtle:
+      "bg-info-subtle/10 border border-info-subtle/20 text-fg shadow-xs",
+    "info-subtle":
+      "bg-info-subtle/10 border border-info-subtle/20 text-fg shadow-xs",
+    dark: "bg-sidebar text-sidebar-fg shadow-sm",
   };
 
   return background
@@ -127,11 +134,9 @@ export function getOverlayClass(
 ) {
   const overlayClasses = {
     none: "",
-    light:
-      "absolute inset-0 bg-white/70 dark:bg-black/70 z-0 pointer-events-none",
-    dark: "absolute inset-0 bg-black/50 z-0 pointer-events-none",
-    primary:
-      "absolute inset-0 bg-primary/20 dark:bg-primary/40 z-0 pointer-events-none",
+    light: "absolute inset-0 bg-bg/70 z-0 pointer-events-none",
+    dark: "absolute inset-0 bg-fg/45 z-0 pointer-events-none",
+    primary: "absolute inset-0 bg-primary/15 z-0 pointer-events-none",
   };
 
   return overlay ? overlayClasses[overlay] : "";
@@ -319,46 +324,51 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
       label: "Nội dung",
     },
   },
-  render: ({
-    background,
-    paddingTop,
-    paddingBottom,
-    paddingY,
-    paddingX,
-    minHeight,
-    backgroundImage,
-    backgroundPosition,
-    backgroundSize,
-    overlay,
-    contentAlign,
-    borderRadius,
-    anchorId,
-    hideOn,
-    className,
-    children: Children,
-  }) => {
-    if (!Children) {
-      return <></>;
-    }
+  render: (props) => {
+    const {
+      background,
+      paddingTop,
+      paddingBottom,
+      paddingY,
+      paddingX,
+      minHeight,
+      backgroundImage,
+      backgroundPosition,
+      backgroundSize,
+      overlay,
+      contentAlign,
+      borderRadius,
+      anchorId,
+      hideOn,
+      className,
+      children: Children,
+    } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
 
     // Backward compatibility for paddingY
     const pt = paddingTop ?? paddingY ?? "md";
     const pb = paddingBottom ?? paddingY ?? "md";
+    const emptyPreviewClass = isPuckEditorPreview()
+      ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
+      : "";
 
     const alignClass =
       minHeight && minHeight !== "auto"
         ? {
-            top: "justify-start",
-            center: "justify-center",
-            bottom: "justify-end",
-          }[contentAlign || "top"]
+          top: "justify-start",
+          center: "justify-center",
+          bottom: "justify-end",
+        }[contentAlign || "top"]
         : "";
 
     return (
       <section
-        id={anchorId || undefined}
-        className={cn(
-          "w-full transition-colors duration-300 relative overflow-hidden",
+        id={id}
+        className={twMerge(
+          "relative w-full border-border/60 bg-overlay/40 shadow-xs transition-colors duration-300",
           getBackgroundClass(background),
           getPaddingTopClass(pt),
           getPaddingBottomClass(pb),
@@ -373,11 +383,11 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
         style={
           backgroundImage
             ? {
-                backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: backgroundSize || "cover",
-                backgroundPosition: backgroundPosition || "center",
-                backgroundRepeat: "no-repeat",
-              }
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: backgroundSize || "cover",
+              backgroundPosition: backgroundPosition || "center",
+              backgroundRepeat: "no-repeat",
+            }
             : undefined
         }
       >
@@ -385,14 +395,17 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
           <div className={getOverlayClass(overlay)} />
         )}
         <div
-          className={cn(
-            "w-full min-h-12 relative z-10",
+          className={twMerge(
+            "relative z-10 w-full min-h-12",
             minHeight && minHeight !== "auto"
-              ? "flex flex-col grow h-full"
+              ? "flex h-full flex-col grow"
               : "",
           )}
         >
-          <Children className="w-full h-full" />
+          <Children
+            className={twMerge("h-full w-full", emptyPreviewClass)}
+            minEmptyHeight={96}
+          />
         </div>
       </section>
     );
@@ -401,71 +414,72 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
 
 // 2. CONTAINER LAYOUT BLOCK
 export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
-  {
-    label: "Giới hạn chiều rộng (Container)",
-    defaultProps: {
-      maxWidth: "lg",
-      horizontalPadding: "md",
-      align: "center",
-      hideOn: "none",
-      className: "",
+{
+  label: "Giới hạn chiều rộng (Container)",
+  defaultProps: {
+    maxWidth: "lg",
+    horizontalPadding: "md",
+    align: "center",
+    hideOn: "none",
+    className: "",
+  },
+  fields: {
+    anchorId: {
+      type: "text",
+      label: "ID điều hướng",
     },
-    fields: {
-      anchorId: {
-        type: "text",
-        label: "ID điều hướng",
-      },
-      maxWidth: {
-        type: "select",
-        label: "Chiều rộng tối đa",
-        options: [
-          { label: "Nhỏ", value: "sm" },
-          { label: "Vừa", value: "md" },
-          { label: "Lớn", value: "lg" },
-          { label: "Rất lớn", value: "xl" },
-          { label: "Cực lớn", value: "2xl" },
-          { label: "Tràn màn hình", value: "full" },
-        ],
-      },
-      horizontalPadding: {
-        type: "select",
-        label: "Khoảng đệm ngang",
-        options: [
-          { label: "Không", value: "none" },
-          { label: "Nhỏ", value: "sm" },
-          { label: "Vừa", value: "md" },
-          { label: "Lớn", value: "lg" },
-        ],
-      },
-      align: {
-        type: "select",
-        label: "Canh container",
-        options: [
-          { label: "Giữa", value: "center" },
-          { label: "Trái", value: "left" },
-          { label: "Phải", value: "right" },
-        ],
-      },
-      hideOn: {
-        type: "select",
-        label: "Ẩn theo thiết bị",
-        options: [
-          { label: "Không ẩn", value: "none" },
-          { label: "Di động", value: "mobile" },
-          { label: "Máy tính bảng", value: "tablet" },
-          { label: "Máy tính", value: "desktop" },
-        ],
-      },
-      className: {
-        type: "text",
-        label: "CSS class bổ sung",
-      },
-      children: {
-        type: "slot",
-        label: "Nội dung",
-      },
+    maxWidth: {
+      type: "select",
+      label: "Chiều rộng tối đa",
+      options: [
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+        { label: "Rất lớn", value: "xl" },
+        { label: "Cực lớn", value: "2xl" },
+        { label: "Tràn màn hình", value: "full" },
+      ],
     },
-    render: ({
+    horizontalPadding: {
+      type: "select",
+      label: "Khoảng đệm ngang",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
+    align: {
+      type: "select",
+      label: "Canh container",
+      options: [
+        { label: "Giữa", value: "center" },
+        { label: "Trái", value: "left" },
+        { label: "Phải", value: "right" },
+      ],
+    },
+    hideOn: {
+      type: "select",
+      label: "Ẩn theo thiết bị",
+      options: [
+        { label: "Không ẩn", value: "none" },
+        { label: "Di động", value: "mobile" },
+        { label: "Máy tính bảng", value: "tablet" },
+        { label: "Máy tính", value: "desktop" },
+      ],
+    },
+    className: {
+      type: "text",
+      label: "CSS class bổ sung",
+    },
+    children: {
+      type: "slot",
+      label: "Nội dung",
+    },
+  },
+  render: (props) => {
+    const {
       anchorId,
       maxWidth,
       paddingX,
@@ -474,139 +488,147 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       hideOn,
       className,
       children: Children,
-    }) => {
-      if (!Children) {
-        return <></>;
-      }
+    } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
 
-      const widthClass = {
-        sm: "max-w-3xl",
-        md: "max-w-5xl",
-        lg: "max-w-7xl",
-        xl: "max-w-[1440px]",
-        "2xl": "max-w-[1680px]",
-        full: "max-w-full",
-      }[maxWidth || "lg"];
+    const widthClass = {
+      sm: "max-w-3xl",
+      md: "max-w-5xl",
+      lg: "max-w-7xl",
+      xl: "max-w-[1440px]",
+      "2xl": "max-w-[1680px]",
+      full: "max-w-full",
+    }[maxWidth || "lg"];
 
-      const alignClass = {
-        center: "mx-auto",
-        left: "mr-auto ml-0",
-        right: "ml-auto mr-0",
-      }[align || "center"];
+    const alignClass = {
+      center: "mx-auto",
+      left: "mr-auto ml-0",
+      right: "ml-auto mr-0",
+    }[align || "center"];
 
-      const resolvedHorizontalPadding =
-        horizontalPadding ??
-        (paddingX === false || paddingX === "no"
-          ? "none"
-          : paddingX === true || paddingX === "yes" || paddingX === undefined
-            ? "md"
-            : "none");
+    const resolvedHorizontalPadding =
+      horizontalPadding ??
+      (paddingX === false || paddingX === "no"
+        ? "none"
+        : paddingX === true || paddingX === "yes" || paddingX === undefined
+          ? "md"
+          : "none");
+    const emptyPreviewClass = isPuckEditorPreview()
+      ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
+      : "";
 
-      return (
-        <div
-          id={anchorId || undefined}
-          className={cn(
-            "w-full",
-            alignClass,
-            widthClass,
-            getPaddingXClass(resolvedHorizontalPadding),
-            getHideOnClass(hideOn),
-            className,
-          )}
-        >
-          <Children className="w-full min-h-12" />
-        </div>
-      );
-    },
-  };
+    return (
+      <div
+        id={id}
+        className={twMerge(
+          "w-full",
+          alignClass,
+          widthClass,
+          getPaddingXClass(resolvedHorizontalPadding),
+          getHideOnClass(hideOn),
+          className,
+        )}
+      >
+        <Children
+          className={twMerge("w-full min-h-12", emptyPreviewClass)}
+          minEmptyHeight={96}
+        />
+      </div>
+    );
+  },
+};
 
 // 3. TWO COLUMNS LAYOUT BLOCK
 export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns"> =
-  {
-    label: "2 cột nội dung",
-    defaultProps: {
-      columnRatio: "equal",
-      gap: "lg",
-      stackOnMobile: true,
-      reverseOnMobile: false,
-      verticalAlign: "center",
-      hideOn: "none",
-      className: "",
+{
+  label: "2 cột nội dung",
+  defaultProps: {
+    columnRatio: "equal",
+    gap: "lg",
+    stackOnMobile: true,
+    reverseOnMobile: false,
+    verticalAlign: "center",
+    hideOn: "none",
+    className: "",
+  },
+  fields: {
+    anchorId: {
+      type: "text",
+      label: "ID điều hướng",
     },
-    fields: {
-      anchorId: {
-        type: "text",
-        label: "ID điều hướng",
-      },
-      columnRatio: {
-        type: "select",
-        label: "Tỷ lệ 2 cột",
-        options: [
-          { label: "Đều nhau", value: "equal" },
-          { label: "Trái rộng", value: "leftWide" },
-          { label: "Phải rộng", value: "rightWide" },
-        ],
-      },
-      gap: {
-        type: "select",
-        label: "Khoảng cách giữa 2 cột",
-        options: [
-          { label: "Nhỏ", value: "sm" },
-          { label: "Vừa", value: "md" },
-          { label: "Lớn", value: "lg" },
-          { label: "Rất lớn", value: "xl" },
-        ],
-      },
-      stackOnMobile: {
-        type: "radio",
-        label: "Xếp thành 1 cột trên mobile",
-        options: [
-          { label: "Có", value: true as any },
-          { label: "Không", value: false as any },
-        ],
-      },
-      reverseOnMobile: {
-        type: "radio",
-        label: "Đảo thứ tự trên mobile",
-        options: [
-          { label: "Có", value: true as any },
-          { label: "Không", value: false as any },
-        ],
-      },
-      verticalAlign: {
-        type: "select",
-        label: "Canh 2 cột theo chiều dọc",
-        options: [
-          { label: "Trên", value: "top" },
-          { label: "Giữa", value: "center" },
-          { label: "Dưới", value: "bottom" },
-          { label: "Kéo giãn", value: "stretch" },
-        ],
-      },
-      hideOn: {
-        type: "select",
-        label: "Ẩn theo thiết bị",
-        options: [
-          { label: "Không ẩn", value: "none" },
-          { label: "Di động", value: "mobile" },
-          { label: "Máy tính bảng", value: "tablet" },
-          { label: "Máy tính", value: "desktop" },
-        ],
-      },
-      className: {
-        type: "text",
-        label: "CSS class bổ sung",
-      },
-      left: {
-        type: "slot",
-        label: "Nội dung cột trái",
-      },
-      right: {
-        type: "slot",
-        label: "Nội dung cột phải",
-      },
+    columnRatio: {
+      type: "select",
+      label: "Tỷ lệ 2 cột",
+      options: [
+        { label: "Đều nhau", value: "equal" },
+        { label: "Trái rộng", value: "leftWide" },
+        { label: "Phải rộng", value: "rightWide" },
+      ],
     },
-    render: ({
+    gap: {
+      type: "select",
+      label: "Khoảng cách giữa 2 cột",
+      options: [
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+        { label: "Rất lớn", value: "xl" },
+      ],
+    },
+    stackOnMobile: {
+      type: "radio",
+      label: "Xếp thành 1 cột trên mobile",
+      options: [
+        { label: "Có", value: true as any },
+        { label: "Không", value: false as any },
+      ],
+    },
+    reverseOnMobile: {
+      type: "radio",
+      label: "Đảo thứ tự trên mobile",
+      options: [
+        { label: "Có", value: true as any },
+        { label: "Không", value: false as any },
+      ],
+    },
+    verticalAlign: {
+      type: "select",
+      label: "Canh 2 cột theo chiều dọc",
+      options: [
+        { label: "Trên", value: "top" },
+        { label: "Giữa", value: "center" },
+        { label: "Dưới", value: "bottom" },
+        { label: "Kéo giãn", value: "stretch" },
+      ],
+    },
+    hideOn: {
+      type: "select",
+      label: "Ẩn theo thiết bị",
+      options: [
+        { label: "Không ẩn", value: "none" },
+        { label: "Di động", value: "mobile" },
+        { label: "Máy tính bảng", value: "tablet" },
+        { label: "Máy tính", value: "desktop" },
+      ],
+    },
+    className: {
+      type: "text",
+      label: "CSS class bổ sung",
+    },
+    left: {
+      type: "slot",
+      label: "Nội dung cột trái",
+    },
+    right: {
+      type: "slot",
+      label: "Nội dung cột phải",
+    },
+  },
+  render: (props) => {
+    const {
       columnRatio,
       gap,
       stackOnMobile,
@@ -617,74 +639,79 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
       className,
       left: Left,
       right: Right,
-    }) => {
-      const ratioClass = {
-        equal: "grid-cols-1 md:grid-cols-2",
-        leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr]",
-        rightWide: "grid-cols-1 md:grid-cols-[1fr_2fr]",
-        // Backwards compatibility mappings:
-        "1:1": "grid-cols-1 md:grid-cols-2",
-        "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr]",
-        "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr]",
-      }[columnRatio || "equal"];
+    } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
 
-      const isStack = stackOnMobile !== false;
-      const isReverse = reverseOnMobile === true;
+    const ratioClass = {
+      equal: "grid-cols-1 md:grid-cols-2",
+      leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr]",
+      rightWide: "grid-cols-1 md:grid-cols-[1fr_2fr]",
+      // Backwards compatibility mappings:
+      "1:1": "grid-cols-1 md:grid-cols-2",
+      "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr]",
+      "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr]",
+    }[columnRatio || "equal"];
 
-      const gapStyle =
-        typeof gap === "number" ? { gap: `${gap}px` } : undefined;
+    const isStack = stackOnMobile !== false;
+    const isReverse = reverseOnMobile === true;
 
-      const wrapperClass = cn(
-        "w-full",
-        isStack
-          ? cn(
-              "flex",
-              isReverse ? "flex-col-reverse" : "flex-col",
-              "md:grid",
-              ratioClass,
-            )
-          : cn("grid", ratioClass),
-        typeof gap === "number" ? undefined : getGapClass(gap),
-        verticalAlign
-          ? {
-              top: "items-start",
-              center: "items-center",
-              bottom: "items-end",
-              stretch: "items-stretch",
-            }[verticalAlign]
-          : "items-center",
-        getHideOnClass(hideOn),
-        className,
-      );
+    const gapStyle =
+      typeof gap === "number" ? { gap: `${gap}px` } : undefined;
 
-      return (
-        <div
-          id={anchorId || undefined}
-          className={wrapperClass}
-          style={gapStyle}
-        >
-          <div className="flex flex-col h-full w-full">
-            {Left ? (
-              <Left className="w-full min-h-16 rounded-2xl border border-dashed border-border/60 p-3" />
-            ) : (
-              <div className="h-16 w-full rounded-2xl border border-dashed border-border/40 bg-muted/20 flex items-center justify-center text-xs text-muted-fg">
-                Cột trái
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col h-full w-full">
-            {Right ? (
-              <Right className="w-full min-h-16 rounded-2xl border border-dashed border-border/60 p-3" />
-            ) : (
-              <div className="h-16 w-full rounded-2xl border border-dashed border-border/40 bg-muted/20 flex items-center justify-center text-xs text-muted-fg">
-                Cột phải
-              </div>
-            )}
-          </div>
+    const wrapperClass = twMerge(
+      "grid w-full items-start gap-6 md:gap-8",
+      isStack
+        ? twMerge(
+          "flex",
+          isReverse ? "flex-col-reverse" : "flex-col",
+          "md:grid",
+          ratioClass,
+        )
+        : twMerge("grid", ratioClass),
+      typeof gap === "number" ? undefined : getGapClass(gap),
+      verticalAlign
+        ? {
+          top: "items-start",
+          center: "items-center",
+          bottom: "items-end",
+          stretch: "items-stretch",
+        }[verticalAlign]
+        : "items-center",
+      getHideOnClass(hideOn),
+      className,
+    );
+
+    return (
+      <div
+        id={id}
+        className={wrapperClass}
+        style={gapStyle}
+      >
+        <div className="flex h-full w-full flex-col">
+          {Left ? (
+            <Left className="w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs" />
+          ) : (
+            <Text className="flex min-h-20 w-full items-center justify-center rounded-2xl border border-dashed border-border/50 bg-muted/20 px-4 text-center text-sm text-muted-fg">
+              Cột trái
+            </Text>
+          )}
         </div>
-      );
-    },
-  };
+        <div className="flex h-full w-full flex-col">
+          {Right ? (
+            <Right className="w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs" />
+          ) : (
+            <Text className="flex min-h-20 w-full items-center justify-center rounded-2xl border border-dashed border-border/50 bg-muted/20 px-4 text-center text-sm text-muted-fg">
+              Cột phải
+            </Text>
+          )}
+        </div>
+      </div>
+    );
+  },
+};
 
 // 4. SPACER LAYOUT BLOCK
 export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
@@ -737,7 +764,13 @@ export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
       label: "CSS class bổ sung",
     },
   },
-  render: ({ anchorId, height, mobileHeight, hideOn, className }) => {
+  render: (props) => {
+    const { anchorId, height, mobileHeight, hideOn, className } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
+
     const desktopHeightClass = {
       xs: "sm:h-4",
       sm: "sm:h-8",
@@ -757,8 +790,8 @@ export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
 
     return (
       <div
-        id={anchorId || undefined}
-        className={cn(
+        id={id}
+        className={twMerge(
           "w-full clear-both",
           mobileHeightClass,
           desktopHeightClass,
@@ -848,28 +881,28 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
       label: "CSS class bổ sung",
     },
   },
-  render: ({
-    type,
-    color,
-    spacingY,
-    width,
-    align,
-    anchorId,
-    hideOn,
-    className,
-  }) => {
-    const borderTypeClass = {
-      solid: "border-solid",
-      dashed: "border-dashed",
-      dotted: "border-dotted",
-    }[type || "solid"];
+  render: (props) => {
+    const {
+      type,
+      color,
+      spacingY,
+      width,
+      align,
+      anchorId,
+      hideOn,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
 
     const activeColor =
       (color as string) === "border" ? "default" : color || "default";
     const borderColorClass = {
-      default: "border-border",
-      primary: "border-primary/45",
-      muted: "border-border/30",
+      default: "bg-border",
+      primary: "bg-primary/45",
+      muted: "bg-border/30",
     }[activeColor];
 
     const spacingYClass = {
@@ -893,21 +926,22 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
 
     return (
       <div
-        id={anchorId || undefined}
-        className={cn(
+        id={id}
+        className={twMerge(
           "w-full",
           spacingYClass,
           getHideOnClass(hideOn),
           className,
         )}
       >
-        <hr
-          className={cn(
-            "border-t w-full",
-            borderTypeClass,
+        <Separator
+          className={twMerge(
+            "h-px border-0",
             borderColorClass,
             widthClass,
             width === "short" ? alignClass : "",
+            type === "dashed" && "bg-transparent border-t border-dashed",
+            type === "dotted" && "bg-transparent border-t border-dotted",
           )}
         />
       </div>

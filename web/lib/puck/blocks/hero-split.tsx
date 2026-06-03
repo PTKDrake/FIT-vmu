@@ -1,5 +1,6 @@
 import { HeroSplit } from "@/components/ui/hero-split";
 import { LucideIconRenderer } from "./shared";
+import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const HeroSplitComponentConfig: PageBuilderComponentConfig<"HeroSplit"> =
@@ -42,18 +43,23 @@ export const HeroSplitComponentConfig: PageBuilderComponentConfig<"HeroSplit"> =
       },
       className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    render: ({
-      title,
-      description,
-      imageUrl,
-      primaryActionLabel,
-      primaryActionHref,
-      secondaryActionLabel,
-      secondaryActionHref,
-      stats,
-      className,
-    }) => (
+    render: (props) => {
+      const {
+        title,
+        description,
+        imageUrl,
+        primaryActionLabel,
+        primaryActionHref,
+        secondaryActionLabel,
+        secondaryActionHref,
+        stats,
+        className,
+      } = props;
+      const id = getPuckBlockDomId((props as { id?: string }).id);
+
+      return (
       <HeroSplit
+        id={id}
         className={className}
         title={title}
         description={description}
@@ -72,5 +78,6 @@ export const HeroSplitComponentConfig: PageBuilderComponentConfig<"HeroSplit"> =
           label: stat.subtitle,
         }))}
       />
-    ),
+      );
+    },
   };

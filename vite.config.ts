@@ -41,6 +41,8 @@ export default defineConfig({
             "@blocknote/react",
             "@blocknote/shadcn",
             "@blocknote/xl-ai",
+            "framer-motion",
+            "motion",
             "prosemirror-model",
             "prosemirror-state",
             "prosemirror-transform",

@@ -7,8 +7,8 @@ import { countNavigationItems } from "@/lib/navigation/tree";
 import { show } from "@/routes/cms/navigation";
 
 const locationLabels: Record<string, string> = {
-  footer: "Footer",
-  header: "Header",
+  footer: "Chân trang",
+  header: "Đầu trang",
 };
 
 export default function CmsNavigationIndexPage({
@@ -16,12 +16,12 @@ export default function CmsNavigationIndexPage({
 }: CmsNavigationPageProps) {
   return (
     <>
-      <Head title="Navigation" />
+      <Head title="Điều hướng" />
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="rounded-2xl border border-border bg-overlay">
           <div className="border-b border-border px-5 py-4">
-            <p className="text-lg font-semibold text-fg">Navigation</p>
+            <p className="text-lg font-semibold text-fg">Điều hướng</p>
             <p className="text-sm text-muted-fg">
               Chọn một menu để chỉnh cấu trúc điều hướng.
             </p>

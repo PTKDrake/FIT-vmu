@@ -89,7 +89,7 @@ test('navigation seeder seeds a stable header and footer tree', function () {
 
     /** @var array{
      *     root: array{props: array{title: string}},
-     *     content: list<array{type: string, props: array{id: string}}>,
+     *     content: list<array{id: string, type: string, props: array{id: string}}>,
      *     zones: array<string, mixed>
      * } $pageContent
      */
@@ -112,5 +112,61 @@ test('navigation seeder seeds a stable header and footer tree', function () {
             'gioi-thieu-vmu-rich-text',
             'gioi-thieu-vmu-cta',
         ])
+        ->and(collect($pageContent['content'])->pluck('id')->all())->toBe([
+            'gioi-thieu-vmu-hero',
+            'gioi-thieu-vmu-rich-text',
+            'gioi-thieu-vmu-cta',
+        ])
+        ->and(collect($pageContent['content'])->pluck('props.id')->every(
+            fn (mixed $id): bool => is_string($id) && $id !== '',
+        ))->toBeTrue()
+        ->and(allBlocksHaveMatchingNodeIds($pageContent['content']))->toBeTrue()
         ->and($pageContent['zones'])->toBe([]);
 });
+
+/**
+ * @param  list<array<string, mixed>>  $blocks
+ */
+function allBlocksHaveMatchingNodeIds(array $blocks): bool
+{
+    foreach ($blocks as $block) {
+        if (! is_array($block)) {
+            return false;
+        }
+
+        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
+        $nodeId = $block['id'] ?? null;
+        $propId = $props['id'] ?? null;
+
+        if (! is_string($nodeId) || $nodeId === '' || $nodeId !== $propId) {
+            return false;
+        }
+
+        foreach ($props as $value) {
+            if (! isBlockList($value)) {
+                continue;
+            }
+
+            if (! allBlocksHaveMatchingNodeIds($value)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+function isBlockList(mixed $value): bool
+{
+    if (! is_array($value) || ! array_is_list($value) || $value === []) {
+        return false;
+    }
+
+    foreach ($value as $item) {
+        if (! is_array($item) || ! is_string($item['type'] ?? null)) {
+            return false;
+        }
+    }
+
+    return true;
+}

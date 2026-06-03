@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { PuckPageRender } from "@/components/page-builder/puck-page-render";
 import {
   footerConfig,
@@ -6,7 +7,6 @@ import {
 } from "@/lib/puck/page-builder-config";
 import { parsePuckLayoutData } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
-import type { ReactNode } from "react";
 
 export interface SiteLayoutShellData {
   footerData?: VmuFitPageBuilderValue;
@@ -29,9 +29,8 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
   return (
     <div className="min-h-dvh bg-bg text-fg">
       {hasHeader ? (
-        <header className="border-b border-border bg-overlay/80">
+        <header className="bg-overlay/80">
           <PuckPageRender
-            className="mx-auto max-w-7xl rounded-none border-0 bg-transparent p-4 shadow-none sm:p-5"
             config={headerConfig}
             content={layout?.headerData}
             mode="slot"
@@ -39,11 +38,10 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
         </header>
       ) : null}
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:items-start sm:px-6">
+      <div className="mx-auto flex w-full flex-col gap-6 lg:flex-row lg:items-start sm:px-6">
         {hasLeft ? (
           <aside className="w-full shrink-0 lg:w-72">
             <PuckPageRender
-              className="rounded-2xl border-border bg-overlay p-4 shadow-xs"
               config={sideConfig}
               content={layout?.leftData}
               mode="slot"
@@ -56,7 +54,6 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
         {hasRight ? (
           <aside className="w-full shrink-0 lg:w-72">
             <PuckPageRender
-              className="rounded-2xl border-border bg-overlay p-4 shadow-xs"
               config={sideConfig}
               content={layout?.rightData}
               mode="slot"
@@ -68,7 +65,6 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
       {hasFooter ? (
         <footer className="border-t border-border bg-overlay/80">
           <PuckPageRender
-            className="mx-auto max-w-7xl rounded-none border-0 bg-transparent p-4 shadow-none sm:p-5"
             config={footerConfig}
             content={layout?.footerData}
             mode="slot"

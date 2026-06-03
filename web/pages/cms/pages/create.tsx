@@ -241,7 +241,7 @@ export default function CreatePage({
                   </h3>
 
                   <div className="space-y-2">
-                    <Label htmlFor="page-seo-title">SEO Title</Label>
+                    <Label htmlFor="page-seo-title">Tiêu đề SEO</Label>
                     <Input
                       id="page-seo-title"
                       name="seo_title"
@@ -257,9 +257,7 @@ export default function CreatePage({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="page-seo-description">
-                      SEO Description
-                    </Label>
+                    <Label htmlFor="page-seo-description">Mô tả SEO</Label>
                     <Textarea
                       autosize
                       id="page-seo-description"
@@ -282,7 +280,7 @@ export default function CreatePage({
               {/* Layout Selection */}
               <div className="space-y-4 border-t border-border pt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="page-site-layout">Site layout</Label>
+                  <Label htmlFor="page-site-layout">Bố cục trang</Label>
                   <NativeSelect>
                     <NativeSelectContent
                       id="page-site-layout"
@@ -308,7 +306,7 @@ export default function CreatePage({
 
                 <div>
                   <h3 className="text-sm font-semibold text-fg/80">
-                    Lựa chọn Bố cục (Template)
+                    Lựa chọn mẫu bố cục
                   </h3>
                   <Text className="text-xs text-muted-fg mt-1">
                     Bố cục khởi đầu sẽ tự động tạo sẵn các khối nội dung mẫu khi
@@ -324,59 +322,62 @@ export default function CreatePage({
                   onSelectionChange={setSelectedTemplate}
                   className="w-full"
                 >
-                  <ChoiceBoxItem id="basic" textValue="Basic Page Layout">
+                  <ChoiceBoxItem id="basic" textValue="Bố cục trang cơ bản">
                     <DocumentTextIcon className="text-primary size-5" />
                     <div className="flex flex-col">
-                      <ChoiceBoxLabel>Basic Page Layout</ChoiceBoxLabel>
+                      <ChoiceBoxLabel>Bố cục trang cơ bản</ChoiceBoxLabel>
                       <ChoiceBoxDescription>
-                        Phù hợp cho Giới thiệu, Quy định, Liên hệ. Bao gồm Hero
-                        đơn giản → Nội dung chính → CTA cuối trang.
+                        Phù hợp cho Giới thiệu, Quy định, Liên hệ. Bao gồm khối
+                        đầu trang đơn giản → nội dung chính → nút kêu gọi hành
+                        động cuối trang.
                       </ChoiceBoxDescription>
                     </div>
                   </ChoiceBoxItem>
 
-                  <ChoiceBoxItem id="landing" textValue="Landing Page Layout">
+                  <ChoiceBoxItem id="landing" textValue="Bố cục trang đích">
                     <RocketLaunchIcon className="text-amber-500 size-5" />
                     <div className="flex flex-col">
-                      <ChoiceBoxLabel>Landing Page Layout</ChoiceBoxLabel>
+                      <ChoiceBoxLabel>Bố cục trang đích</ChoiceBoxLabel>
                       <ChoiceBoxDescription>
-                        Phù hợp cho tuyển sinh, sự kiện, workshop. Hero lớn →
-                        Điểm nổi bật → Nội dung chính → Số liệu → FAQ → CTA.
+                        Phù hợp cho tuyển sinh, sự kiện, workshop. Khối đầu
+                        trang lớn → điểm nổi bật → nội dung chính → số liệu →
+                        câu hỏi thường gặp → nút kêu gọi hành động.
                       </ChoiceBoxDescription>
                     </div>
                   </ChoiceBoxItem>
 
-                  <ChoiceBoxItem id="academic" textValue="Academic Unit Layout">
+                  <ChoiceBoxItem
+                    id="academic"
+                    textValue="Bố cục đơn vị học thuật"
+                  >
                     <AcademicCapIcon className="text-indigo-500 size-5" />
                     <div className="flex flex-col">
-                      <ChoiceBoxLabel>Academic Unit Layout</ChoiceBoxLabel>
+                      <ChoiceBoxLabel>Bố cục đơn vị học thuật</ChoiceBoxLabel>
                       <ChoiceBoxDescription>
-                        Dùng cho bộ môn, phòng ban. Hero đơn vị → Giới thiệu →
-                        Chuyên môn → Cán bộ → Tin tức → Tài liệu.
+                        Dùng cho bộ môn, phòng ban. Khối đầu trang của đơn vị →
+                        giới thiệu → Chuyên môn → Cán bộ → Tin tức → Tài liệu.
                       </ChoiceBoxDescription>
                     </div>
                   </ChoiceBoxItem>
 
-                  <ChoiceBoxItem id="article" textValue="Article-like Layout">
+                  <ChoiceBoxItem id="article" textValue="Bố cục dạng bài viết">
                     <BookOpenIcon className="text-emerald-500 size-5" />
                     <div className="flex flex-col">
-                      <ChoiceBoxLabel>Article-like Layout</ChoiceBoxLabel>
+                      <ChoiceBoxLabel>Bố cục dạng bài viết</ChoiceBoxLabel>
                       <ChoiceBoxDescription>
-                        Bố cục giống bài viết dài. Hero tiêu đề → Metadata → Nội
-                        dung chi tiết → Mục lục → Tài liệu đính kèm.
+                        Bố cục giống bài viết dài. Khối tiêu đề → siêu dữ liệu →
+                        nội dung chi tiết → mục lục → tài liệu đính kèm.
                       </ChoiceBoxDescription>
                     </div>
                   </ChoiceBoxItem>
 
                   <ChoiceBoxItem
                     id="empty"
-                    textValue="Trang trống (Build từ đầu)"
+                    textValue="Trang trống (tạo từ đầu)"
                   >
                     <DocumentIcon className="text-muted-fg size-5" />
                     <div className="flex flex-col">
-                      <ChoiceBoxLabel>
-                        Trang trống (Build từ đầu)
-                      </ChoiceBoxLabel>
+                      <ChoiceBoxLabel>Trang trống (tạo từ đầu)</ChoiceBoxLabel>
                       <ChoiceBoxDescription>
                         Khởi tạo một trang trống hoàn toàn không có nội dung mẫu
                         để bạn tự do biên tập, lắp ghép từ đầu.
@@ -396,7 +397,7 @@ export default function CreatePage({
                 Hủy
               </Link>
               <Button isDisabled={form.processing} type="submit">
-                {form.processing ? "Đang tạo..." : "Tạo trang & mở trình dựng"}
+                {form.processing ? "Đang tạo..." : "Tạo trang và mở trình dựng"}
               </Button>
             </div>
           </Fieldset>

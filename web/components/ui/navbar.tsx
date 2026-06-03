@@ -1,5 +1,7 @@
 import { Bars2Icon } from "@heroicons/react/20/solid";
 import { LayoutGroup, motion } from "motion/react";
+import { mergeProps } from "react-aria";
+import { useHover } from "react-aria/useHover";
 import { createContext, use, useId, useState } from "react";
 import { twJoin, twMerge } from "tailwind-merge";
 import { Link, type LinkProps } from "@/components/ui/link";
@@ -17,11 +19,27 @@ interface NavbarContextProps {
 }
 
 const NavbarContext = createContext<NavbarContextProps | null>(null);
+interface NavbarMenuContextProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const NavbarMenuContext = createContext<NavbarMenuContextProps | null>(null);
 
 const useNavbar = () => {
   const context = use(NavbarContext);
   if (!context) {
     throw new Error("useNavbar must be used within a NavbarProvider.");
+  }
+
+  return context;
+};
+
+const useNavbarMenu = () => {
+  const context = use(NavbarMenuContext);
+
+  if (!context) {
+    throw new Error("useNavbarMenu must be used within a NavbarMenu.");
   }
 
   return context;
@@ -259,6 +277,64 @@ const NavbarSpacer = ({
   );
 };
 
+interface NavbarMenuProps extends React.ComponentProps<"div"> {
+  defaultOpen?: boolean;
+}
+
+const NavbarMenu = ({
+  children,
+  className,
+  defaultOpen = false,
+  ...props
+}: NavbarMenuProps) => {
+  const [open, setOpen] = useState(defaultOpen);
+  const { hoverProps } = useHover({
+    onHoverChange: setOpen,
+  });
+
+  return (
+    <NavbarMenuContext value={{ open, setOpen }}>
+      <div
+        {...mergeProps(hoverProps, {
+          onFocusCapture: () => {
+            setOpen(true);
+          },
+          onBlurCapture: (event: React.FocusEvent<HTMLDivElement>) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              setOpen(false);
+            }
+          },
+        })}
+        className={twMerge("relative min-w-0", className)}
+        {...props}
+      >
+        {children}
+      </div>
+    </NavbarMenuContext>
+  );
+};
+
+const NavbarSubmenu = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
+  const { open } = useNavbarMenu();
+
+  return (
+    <div
+      className={twMerge(
+        [
+          "mt-2 flex flex-col gap-2 ps-3",
+          "md:left-0 md:top-full md:z-20 md:min-w-52 md:rounded-xl md:border md:border-border/80 md:bg-overlay md:p-2 md:ps-2 md:shadow-lg md:ring-1 md:ring-muted-fg/10",
+          open ? "md:absolute md:flex" : "md:hidden",
+        ],
+        className,
+      )}
+      {...props}
+    />
+  );
+};
+
 const NavbarStart = ({
   className,
   ref,
@@ -393,12 +469,14 @@ export {
   NavbarInset,
   NavbarItem,
   NavbarLabel,
+  NavbarMenu,
   NavbarMobile,
   NavbarProvider,
   NavbarSection,
   NavbarSeparator,
   NavbarSpacer,
   NavbarStart,
+  NavbarSubmenu,
   NavbarTrigger,
   useNavbar,
 };

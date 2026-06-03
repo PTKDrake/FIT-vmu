@@ -1,4 +1,5 @@
 import { HeroBanner } from "@/components/ui/hero-banner";
+import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const HeroBannerComponentConfig: PageBuilderComponentConfig<"HeroBanner"> =
@@ -24,17 +25,22 @@ export const HeroBannerComponentConfig: PageBuilderComponentConfig<"HeroBanner">
       secondaryActionHref: { type: "text", label: "Link phụ" },
       className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    render: ({
-      eyebrow,
-      title,
-      description,
-      primaryActionHref,
-      primaryActionLabel,
-      secondaryActionHref,
-      secondaryActionLabel,
-      className,
-    }) => (
+    render: (props) => {
+      const {
+        eyebrow,
+        title,
+        description,
+        primaryActionHref,
+        primaryActionLabel,
+        secondaryActionHref,
+        secondaryActionLabel,
+        className,
+      } = props;
+      const id = getPuckBlockDomId((props as { id?: string }).id);
+
+      return (
       <HeroBanner
+        id={id}
         className={className}
         eyebrow={eyebrow}
         title={title}
@@ -48,5 +54,6 @@ export const HeroBannerComponentConfig: PageBuilderComponentConfig<"HeroBanner">
           href: secondaryActionHref,
         }}
       />
-    ),
+      );
+    },
   };
