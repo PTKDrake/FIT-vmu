@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cms;
 
+use App\Actions\StudentGroup\BuildAccessibleStudentGroupOptionsAction;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\SiteLayout;
@@ -12,8 +13,10 @@ use Inertia\Response;
 
 final class PageEditorController extends Controller
 {
-    public function __invoke(Page $page): Response
+    public function __invoke(Page $page, BuildAccessibleStudentGroupOptionsAction $buildStudentGroupOptions): Response
     {
+        $page->loadMissing('studentGroups');
+
         return inertia('cms/pages/edit', [
             'page' => [
                 'id' => $page->getKey(),
@@ -24,6 +27,8 @@ final class PageEditorController extends Controller
                 'seoDescription' => $page->seo_description,
                 'content' => $page->content,
                 'contentFormat' => $page->content_format,
+                'visibility' => $page->visibility,
+                'studentGroupIds' => $page->studentGroupIds(),
                 'siteLayoutId' => $page->site_layout_id,
                 'status' => $page->status,
                 'updatedAt' => $this->formatDateTime($page->updated_at) ?? now()->toAtomString(),
@@ -41,6 +46,7 @@ final class PageEditorController extends Controller
                 ])
                 ->values()
                 ->all(),
+            'studentGroupOptions' => $buildStudentGroupOptions(request()->user()),
         ]);
     }
 

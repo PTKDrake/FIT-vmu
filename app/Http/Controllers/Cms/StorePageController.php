@@ -26,6 +26,8 @@ final class StorePageController extends Controller
          *     seo_description?: ?string,
          *     content: string,
          *     content_format: string,
+         *     visibility: string,
+         *     student_group_ids?: list<int>,
          *     site_layout_id?: ?int,
          *     thumbnail_id?: ?int,
          *     status: string

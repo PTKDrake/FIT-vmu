@@ -12,6 +12,12 @@ interface PostCreatePageProps {
     value: string;
     label: string;
   }>;
+  studentGroupOptions: Array<{
+    value: string;
+    label: string;
+    code: string;
+    scope: "global" | "private";
+  }>;
 }
 
 const defaultValues: PostFormValues = {
@@ -21,13 +27,22 @@ const defaultValues: PostFormValues = {
   excerpt: "",
   slug: "",
   status: "draft",
+  student_group_ids: [],
   thumbnail_id: null,
   title: "",
+  visibility: "public",
 };
 
-export default function PostCreatePage({ categories }: PostCreatePageProps) {
+export default function PostCreatePage({
+  categories,
+  studentGroupOptions,
+}: PostCreatePageProps) {
   const { auth } = usePage<SharedData>().props;
   const canPublish = hasPermission(auth.permissions, "publish posts");
+  const canCreateGlobalGroup = hasPermission(
+    auth.permissions,
+    "manage shared student groups",
+  );
 
   function handleSubmit(data: PostFormValues, form: any): void {
     form.post(postsRoutes.store.url());
@@ -39,7 +54,9 @@ export default function PostCreatePage({ categories }: PostCreatePageProps) {
       <div className="p-4">
         <PostForm
           initialValues={defaultValues}
+          allowGlobalGroupCreation={canCreateGlobalGroup}
           categories={categories}
+          studentGroupOptions={studentGroupOptions}
           onSubmit={handleSubmit}
           submitLabel="Tạo bài viết"
           cancelHref="/cms/posts"

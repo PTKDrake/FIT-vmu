@@ -100,6 +100,12 @@ class User extends Authenticatable
         return $this->hasMany(Page::class, 'author_id');
     }
 
+    /** @return HasMany<StudentGroup, $this> */
+    public function ownedStudentGroups(): HasMany
+    {
+        return $this->hasMany(StudentGroup::class, 'owner_id');
+    }
+
     /** @return HasMany<Media, $this> */
     public function uploadedMedia(): HasMany
     {

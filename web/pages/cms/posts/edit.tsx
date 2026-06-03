@@ -13,11 +13,25 @@ interface PostEditPageProps {
     value: string;
     label: string;
   }>;
+  studentGroupOptions: Array<{
+    value: string;
+    label: string;
+    code: string;
+    scope: "global" | "private";
+  }>;
 }
 
-export default function PostEditPage({ post, categories }: PostEditPageProps) {
+export default function PostEditPage({
+  post,
+  categories,
+  studentGroupOptions,
+}: PostEditPageProps) {
   const { auth } = usePage<SharedData>().props;
   const canPublish = hasPermission(auth.permissions, "publish posts");
+  const canCreateGlobalGroup = hasPermission(
+    auth.permissions,
+    "manage shared student groups",
+  );
 
   function handleSubmit(data: PostFormValues, form: any): void {
     if (!post.id) {
@@ -33,7 +47,9 @@ export default function PostEditPage({ post, categories }: PostEditPageProps) {
       <div className="p-4">
         <PostForm
           initialValues={post}
+          allowGlobalGroupCreation={canCreateGlobalGroup}
           categories={categories}
+          studentGroupOptions={studentGroupOptions}
           onSubmit={handleSubmit}
           submitLabel="Lưu thay đổi"
           cancelHref="/cms/posts"

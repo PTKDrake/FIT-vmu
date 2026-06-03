@@ -254,10 +254,13 @@ Lưu ý quan trọng:
 
 - public page theo slug đã có qua `PublicPageController`
 - route slug có regex để tránh đè namespace như `cms`, `settings`, `login`, `register`, `auth`, `password`, `verify-email`
-- page chỉ public khi `status = published`
+- page chỉ render khi `status = published`
+- `Page` hiện có `visibility`: `public`, `authenticated`, `students`, `student_groups`
+- guest truy cập page bị giới hạn sẽ bị chuyển sang login; user đã đăng nhập nhưng không đủ quyền sẽ nhận `403`
 - nếu page gắn `site_layout_id` nhưng layout đó chưa publish, hệ thống fallback sang default published layout
+- `/` không còn hardcode `home/page`; route này resolve qua `site_settings.homepage_page_id`, nếu chưa cấu hình mới fallback về `inertia('home/page')`
+- 404 có thể render qua `site_settings.not_found_page_id` nếu page tương ứng đã publish và user hiện tại có quyền xem
 - hiện chưa có public route riêng cho post, unit, staff profile hoặc document
-- `HomeController` hiện trả về `inertia('home/page')`
 
 ### 7.2. Protected routes
 
@@ -307,6 +310,10 @@ Schema SQLite hiện có các bảng nghiệp vụ chính:
 - `site_layouts`
 - `navigation_menus`
 - `navigation_items`
+- `site_settings`
+- `student_groups`
+- `student_group_members`
+- `content_student_group_access`
 - `documents`
 - `document_rows`
 - bảng role/permission của Spatie
@@ -343,6 +350,29 @@ Thiết kế này tách auth khỏi dữ liệu nghiệp vụ.
 - `document_type`: `lecture`, `exercise`, `exam`, `form`, `score`, `announcement`, `other`
 - `visibility`: `public`, `login_required`, `students`, `staff`, `private`, `student_code`
 - `document_mode`: `file`, `preview`, `student_table`
+
+### 8.5. System pages và site settings
+
+- `site_settings` hiện là bảng tối giản để gắn page cho các route/hành vi public đặc biệt
+- các cột đã có:
+  - `homepage_page_id`
+  - `not_found_page_id`
+  - `student_home_page_id`
+- các cột này đều là nullable foreign key tới `pages`
+- hướng hiện tại là typed columns, không dùng bảng key/value generic cho phase này
+
+### 8.6. Student groups cho phân quyền xem nội dung
+
+- `student_groups`: nhóm sinh viên, có `name`, `code`, `owner_id`
+- `student_group_members`: danh sách `student_code` thuộc từng group
+- `content_student_group_access`: bảng morph để gắn group vào `Page` hoặc `Post`
+
+Rule đang dùng trong code:
+
+- `Page` và `Post` có `visibility`: `public`, `authenticated`, `students`, `student_groups`
+- không còn gắn list `student_code` trực tiếp vào `page` hoặc `post`
+- nếu `visibility = student_groups`, quyền xem được quyết định qua group đã gắn vào content
+- `student_code` trong group hiện được normalize theo hướng chỉ chấp nhận chữ số, và không yêu cầu phải có tài khoản tương ứng trong DB
 
 ---
 
@@ -450,6 +480,18 @@ Hiện trạng:
 - controller đã đọc dữ liệu menu thật từ DB và trả resource catalog từ page/post/category đã publish
 - UI quản lý cây menu đã có thể thao tác trên dữ liệu thật, nhưng lớp public render menu từ DB vẫn chưa hoàn tất đồng bộ toàn site
 
+#### Student groups
+
+Hiện trạng:
+
+- đã có schema `student_groups`, `student_group_members`, `content_student_group_access`
+- đã có policy, request, action, factory, seeder và test
+- đã có CMS route `/cms/student-groups`
+- đã có màn quản lý group trong CMS
+- đã có reusable picker để gắn group vào form `Page` và `Post`
+- form tạo nhanh chấp nhận paste danh sách `student_code` theo nhiều định dạng như khoảng trắng, dấu phẩy, chấm phẩy và xuống dòng
+- `student_code` chỉ chấp nhận chuỗi số, không cần map sẵn với tài khoản `users`
+
 #### Users / Roles / Permissions
 
 Hiện trạng:
@@ -468,6 +510,14 @@ Public-facing website hiện mới ở mức:
 
 - trang chủ `/`
 - public page theo slug cho `Page` đã publish
+- resolve system page qua `site_settings` cho homepage và 404
+- enforce visibility cho page theo user hiện tại, bao gồm `student_groups`
+
+Chưa hoàn tất:
+
+- public route riêng cho post/category
+- public route riêng cho staff profile và unit
+- public navigation resolver dùng chung cho toàn site shell
 - fallback default site layout khi cần
 - một số shared component UI và Puck renderer
 
@@ -576,7 +626,8 @@ VMUFit hiện không còn là một bản thiết kế MVP thuần ý tưởng. 
 Tuy vậy, cần hiểu đúng trạng thái hiện tại:
 
 - phần CMS cho `posts`, `pages`, `media`, `staff profiles`, `units`, `positions` đã đi khá xa
+- `student groups` và `site settings` đã có mặt trong kiến trúc hiện tại
 - `documents`, `navigation`, `users`, `roles-permissions` mới hoàn thiện một phần
-- public website vẫn còn ở giai đoạn đầu, chưa nối đầy đủ với content trong DB
+- public website đã có system page resolution và visibility cho public pages, nhưng vẫn chưa nối đầy đủ với toàn bộ content trong DB
 
 Khi cập nhật tiếp tài liệu này, ưu tiên mô tả theo những gì đang có trong code và route, không ghi theo kế hoạch dự kiến nếu chưa được triển khai.

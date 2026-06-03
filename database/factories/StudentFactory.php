@@ -20,7 +20,7 @@ class StudentFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'student_code' => fake()->unique()->bothify('SV######'),
+            'student_code' => fake()->unique()->numerify('######'),
             'class_name' => fake()->randomElement(['CNTT1', 'CNTT2', 'KTPM1', 'HTTT1']),
             'major' => fake()->randomElement(['Cong nghe thong tin', 'Ky thuat phan mem', 'He thong thong tin']),
         ];

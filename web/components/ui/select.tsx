@@ -2,6 +2,7 @@ import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Button } from "react-aria-components/Button";
 import { ListBox, type ListBoxProps } from "react-aria-components/ListBox";
 import type { PopoverProps } from "react-aria-components/Popover";
+import type { Key } from "react-aria-components/Select";
 import {
   Select as SelectPrimitive,
   type SelectProps as SelectPrimitiveProps,
@@ -22,19 +23,25 @@ import { PopoverContent } from "./popover";
 interface SelectProps<
   T extends object,
   M extends "single" | "multiple" = "single",
-> extends SelectPrimitiveProps<T, M> {
+> extends Omit<SelectPrimitiveProps<T, M>, "value" | "onChange"> {
   items?: Iterable<T, M>;
+  value?: Key | null;
+  onChange?: (value: Key | null) => void;
 }
 
 const Select = <T extends object, M extends "single" | "multiple" = "single">({
   className,
+  value,
+  onChange,
   ...props
 }: SelectProps<T, M>) => {
   return (
     <SelectPrimitive
+      {...props}
       data-slot="control"
       className={cx(fieldStyles({ className: "group/select" }), className)}
-      {...props}
+      selectedKey={value !== undefined ? value : props.selectedKey}
+      onSelectionChange={onChange ?? props.onSelectionChange}
     />
   );
 };

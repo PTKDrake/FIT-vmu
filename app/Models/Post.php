@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasContentVisibility;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
+    use HasContentVisibility;
+
     /** @use HasFactory<PostFactory> */
     use HasFactory;
 
@@ -27,6 +30,7 @@ class Post extends Model
         'excerpt',
         'content',
         'content_format',
+        'visibility',
         'thumbnail_id',
         'author_id',
         'reviewed_by_id',
@@ -43,6 +47,7 @@ class Post extends Model
      */
     protected $attributes = [
         'content_format' => 'blocknote_json',
+        'visibility' => 'public',
         'status' => 'draft',
     ];
 

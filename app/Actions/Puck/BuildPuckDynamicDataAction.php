@@ -12,7 +12,10 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\StaffProfile;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Storage;
 
 class BuildPuckDynamicDataAction
@@ -28,16 +31,16 @@ class BuildPuckDynamicDataAction
      *     pages: list<array{id: int, title: string, slug: string, url: string}>
      * }
      */
-    public function __invoke(): array
+    public function __invoke(?User $viewer = null, bool $enforceVisibility = false): array
     {
         return [
             'navigationMenus' => $this->navigationMenus(),
-            'posts' => $this->posts(),
+            'posts' => $this->posts($viewer, $enforceVisibility),
             'categories' => $this->categories(),
             'staff' => $this->staff(),
             'units' => $this->units(),
             'documents' => $this->documents(),
-            'pages' => $this->pages(),
+            'pages' => $this->pages($viewer, $enforceVisibility),
         ];
     }
 
@@ -106,14 +109,21 @@ class BuildPuckDynamicDataAction
     }
 
     /** @return list<array{id: int, title: string, slug: string, excerpt: ?string, date: ?string, author: ?string, categoryIds: list<int>, categoryNames: list<string>}> */
-    private function posts(): array
+    private function posts(?User $viewer = null, bool $enforceVisibility = false): array
     {
-        return array_values(Post::query()
-            ->where('status', 'published')
+        $query = Post::query()
             ->with(['author', 'categories'])
             ->latest('published_at')
             ->latest()
-            ->limit(30)
+            ->limit(30);
+
+        if ($enforceVisibility) {
+            $this->applyPublishedVisibilityConstraints($query, $viewer);
+        } else {
+            $query->where('status', 'published');
+        }
+
+        return array_values($query
             ->get()
             ->map(function (Post $post): array {
                 $categoryIds = array_values(
@@ -236,12 +246,19 @@ class BuildPuckDynamicDataAction
     }
 
     /** @return list<array{id: int, title: string, slug: string, url: string}> */
-    private function pages(): array
+    private function pages(?User $viewer = null, bool $enforceVisibility = false): array
     {
-        return array_values(Page::query()
-            ->where('status', 'published')
+        $query = Page::query()
             ->orderBy('title')
-            ->limit(50)
+            ->limit(50);
+
+        if ($enforceVisibility) {
+            $this->applyPublishedVisibilityConstraints($query, $viewer);
+        } else {
+            $query->where('status', 'published');
+        }
+
+        return array_values($query
             ->get(['id', 'title', 'slug'])
             ->map(fn (Page $page): array => [
                 'id' => $page->id,
@@ -250,6 +267,53 @@ class BuildPuckDynamicDataAction
                 'url' => '/'.$page->slug,
             ])
             ->all());
+    }
+
+    /**
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  Builder<TModel>  $query
+     */
+    private function applyPublishedVisibilityConstraints(Builder $query, ?User $viewer): void
+    {
+        $query->where('status', 'published');
+
+        if (! $viewer instanceof User) {
+            $query->where('visibility', 'public');
+
+            return;
+        }
+
+        $studentCode = $viewer->student?->student_code;
+        $modelClass = $query->getModel()::class;
+        $qualifiedIdColumn = $query->getModel()->qualifyColumn('id');
+
+        $query->where(function (Builder $visibilityQuery) use ($modelClass, $qualifiedIdColumn, $studentCode): void {
+            $visibilityQuery->whereIn('visibility', ['public', 'authenticated']);
+
+            if ($studentCode !== null && trim($studentCode) !== '') {
+                $visibilityQuery
+                    ->orWhere('visibility', 'students')
+                    ->orWhere(function (Builder $allowlistQuery) use ($modelClass, $qualifiedIdColumn, $studentCode): void {
+                        $allowlistQuery
+                            ->where('visibility', 'student_groups')
+                            ->whereExists(function (QueryBuilder $existsQuery) use ($modelClass, $qualifiedIdColumn, $studentCode): void {
+                                $existsQuery
+                                    ->selectRaw('1')
+                                    ->from('content_student_group_access')
+                                    ->join(
+                                        'student_group_members',
+                                        'student_group_members.student_group_id',
+                                        '=',
+                                        'content_student_group_access.student_group_id',
+                                    )
+                                    ->whereColumn('content_student_group_access.accessible_id', $qualifiedIdColumn)
+                                    ->where('content_student_group_access.accessible_type', $modelClass)
+                                    ->where('student_group_members.student_code', trim($studentCode));
+                            });
+                    });
+            }
+        });
     }
 
     private function formatDate(mixed $value): ?string

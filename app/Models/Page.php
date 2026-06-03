@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasContentVisibility;
 use Database\Factories\PageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Page extends Model
 {
+    use HasContentVisibility;
+
     /** @use HasFactory<PageFactory> */
     use HasFactory;
 
@@ -28,6 +31,7 @@ class Page extends Model
         'seo_description',
         'content',
         'content_format',
+        'visibility',
         'site_layout_id',
         'thumbnail_id',
         'author_id',
@@ -42,6 +46,7 @@ class Page extends Model
      */
     protected $attributes = [
         'content_format' => 'puck_json',
+        'visibility' => 'public',
         'status' => 'draft',
     ];
 

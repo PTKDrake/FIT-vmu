@@ -43,6 +43,7 @@ class PageFactory extends Factory
                 'zones' => [],
             ], JSON_THROW_ON_ERROR),
             'content_format' => 'puck_json',
+            'visibility' => 'public',
             'site_layout_id' => null,
             'thumbnail_id' => Media::factory(),
             'author_id' => User::factory(),

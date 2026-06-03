@@ -9,6 +9,7 @@ import { useForm, Link, router } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
+import { StudentGroupPicker } from "@/components/cms/student-group-picker";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,8 @@ export interface PostFormValues {
   title: string;
   slug: string;
   category_ids: number[];
+  visibility: "public" | "authenticated" | "students" | "student_groups";
+  student_group_ids: number[];
   thumbnail_url?: string | null;
   excerpt: string;
   content: string;
@@ -54,6 +57,13 @@ interface PostFormProps {
     value: string;
     label: string;
   }>;
+  studentGroupOptions: Array<{
+    value: string;
+    label: string;
+    code: string;
+    scope: "global" | "private";
+  }>;
+  allowGlobalGroupCreation: boolean;
   onSubmit: (data: PostFormValues, formHelper: any) => void;
   submitLabel: string;
   cancelHref: string;
@@ -63,6 +73,8 @@ interface PostFormProps {
 export function PostForm({
   initialValues,
   categories,
+  studentGroupOptions,
+  allowGlobalGroupCreation,
   onSubmit,
   submitLabel,
   cancelHref,
@@ -121,6 +133,8 @@ export function PostForm({
     title: initialValues.title,
     slug: initialValues.slug,
     category_ids: initialValues.category_ids,
+    visibility: initialValues.visibility,
+    student_group_ids: initialValues.student_group_ids,
     excerpt: initialValues.excerpt,
     content: initialValues.content,
     content_format: "blocknote_json",
@@ -294,6 +308,37 @@ export function PostForm({
           </TextField>
 
           <div className="space-y-2">
+            <Label className="font-semibold text-fg text-sm" htmlFor="post-visibility">
+              Phạm vi xem
+            </Label>
+            <select
+              id="post-visibility"
+              className="w-full rounded-xl border border-input bg-overlay px-3 py-2 text-sm text-fg shadow-xs"
+              value={form.data.visibility}
+              onChange={(event) =>
+                form.setData("visibility", event.target.value as PostFormValues["visibility"])
+              }
+            >
+              <option value="public">Công khai</option>
+              <option value="authenticated">Cần đăng nhập</option>
+              <option value="students">Mọi sinh viên</option>
+              <option value="student_groups">Nhóm sinh viên</option>
+            </select>
+            <Description>Chọn phạm vi xem sau khi bài viết được xuất bản.</Description>
+            <FieldError>{form.errors.visibility}</FieldError>
+          </div>
+
+          {form.data.visibility === "student_groups" ? (
+            <StudentGroupPicker
+              allowGlobalScope={allowGlobalGroupCreation}
+              error={form.errors.student_group_ids}
+              onChange={(groupIds) => form.setData("student_group_ids", groupIds)}
+              options={studentGroupOptions}
+              selectedIds={form.data.student_group_ids}
+            />
+          ) : null}
+
+          <div className="space-y-2">
             <MultipleSelect
               className="space-y-2"
               placeholder="Chọn danh mục bài viết..."
@@ -304,7 +349,7 @@ export function PostForm({
                   keys
                     .map((key) => Number(key))
                     .filter((value) => Number.isInteger(value)),
-                );
+                )
               }}
             >
               <Label className="font-semibold text-fg text-sm">

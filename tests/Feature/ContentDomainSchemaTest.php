@@ -30,6 +30,7 @@ test('content domain tables expose the expected domain columns', function () {
             'excerpt',
             'content',
             'content_format',
+            'visibility',
             'thumbnail_id',
             'author_id',
             'status',
@@ -83,6 +84,7 @@ test('post and document defaults follow the blocknote-first content convention',
 
     expect($post->content)->toBeNull()
         ->and($post->content_format)->toBe('blocknote_json')
+        ->and($post->visibility)->toBe('public')
         ->and($post->status)->toBe('draft')
         ->and($post->published_at)->toBeNull()
         ->and($document->description)->toBeNull()
@@ -106,9 +108,9 @@ test('content models resolve ownership file and row relationships', function () 
 
     $document = Document::factory()->for($owner, 'owner')->for($file, 'file')->create();
     $row = DocumentRow::factory()->for($document)->create([
-        'student_code' => 'SV123456',
+        'student_code' => '123456',
         'data' => [
-            'student_code' => 'SV123456',
+            'student_code' => '123456',
             'score' => 95,
         ],
         'row_index' => 12,
@@ -128,7 +130,7 @@ test('content models resolve ownership file and row relationships', function () 
         ->and($document->rows)->toHaveCount(1)
         ->and($row->document->is($document))->toBeTrue()
         ->and($row->data)->toBe([
-            'student_code' => 'SV123456',
+            'student_code' => '123456',
             'score' => 95,
         ])
         ->and($row->row_index)->toBe(12)

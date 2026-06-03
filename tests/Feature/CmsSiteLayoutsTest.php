@@ -115,6 +115,7 @@ final class CmsSiteLayoutsTest extends TestCase
             'seo_description' => null,
             'content' => '{"root":{"props":{"title":"Trang public"}},"content":[]}',
             'content_format' => 'puck_json',
+            'visibility' => 'public',
             'site_layout_id' => $draftLayout->getKey(),
             'status' => 'draft',
         ])->assertRedirect();

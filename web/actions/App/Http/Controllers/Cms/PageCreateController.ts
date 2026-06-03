@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 const PageCreateController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ PageCreateController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 PageCreateController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ PageCreateController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 PageCreateController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ PageCreateController.get = (options?: RouteQueryOptions): RouteDefinition<'get'>
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 PageCreateController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ PageCreateController.head = (options?: RouteQueryOptions): RouteDefinition<'head
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 const PageCreateControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const PageCreateControllerForm = (options?: RouteQueryOptions): RouteFormDefinit
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 PageCreateControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ PageCreateControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinitio
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:13
+* @see app/Http/Controllers/Cms/PageCreateController.php:15
 * @route '/cms/pages/create'
 */
 PageCreateControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

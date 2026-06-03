@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cms;
 
+use App\Actions\StudentGroup\BuildAccessibleStudentGroupOptionsAction;
 use App\Http\Controllers\Controller;
 use App\Models\SiteLayout;
+use Illuminate\Http\Request;
 use Inertia\Response;
 
 final class PageCreateController extends Controller
 {
-    public function __invoke(): Response
+    public function __invoke(Request $request, BuildAccessibleStudentGroupOptionsAction $buildStudentGroupOptions): Response
     {
         return inertia('cms/pages/create', [
             'layoutOptions' => SiteLayout::query()
@@ -26,6 +28,7 @@ final class PageCreateController extends Controller
                 ])
                 ->values()
                 ->all(),
+            'studentGroupOptions' => $buildStudentGroupOptions($request->user()),
         ]);
     }
 }

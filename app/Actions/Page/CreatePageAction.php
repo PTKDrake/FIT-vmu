@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Page;
 
+use App\Actions\Content\SyncContentStudentGroupsAction;
 use App\Events\CmsContentChanged;
 use App\Models\Page;
 use App\Models\User;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class CreatePageAction
 {
+    public function __construct(
+        private readonly SyncContentStudentGroupsAction $syncContentStudentGroups,
+    ) {}
+
     /**
      * @param array{
      *     title: string,
@@ -20,6 +25,8 @@ class CreatePageAction
      *     seo_description?: ?string,
      *     content: string,
      *     content_format: string,
+     *     visibility: string,
+     *     student_group_ids?: list<int>,
      *     site_layout_id?: ?int,
      *     thumbnail_id?: ?int,
      *     status: string
@@ -37,11 +44,19 @@ class CreatePageAction
                 'seo_description' => $attributes['seo_description'] ?? null,
                 'content' => $attributes['content'],
                 'content_format' => $attributes['content_format'],
+                'visibility' => $attributes['visibility'],
                 'site_layout_id' => $attributes['site_layout_id'] ?? null,
                 'thumbnail_id' => $attributes['thumbnail_id'] ?? null,
                 'author_id' => $author->getKey(),
                 'status' => $attributes['status'],
             ]);
+
+            ($this->syncContentStudentGroups)(
+                $page,
+                $attributes['visibility'] === 'student_groups'
+                    ? ($attributes['student_group_ids'] ?? [])
+                    : [],
+            );
 
             event(CmsContentChanged::forPage($page, 'created', 'Đã tạo trang mới.'));
 
