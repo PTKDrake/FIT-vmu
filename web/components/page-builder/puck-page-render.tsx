@@ -1,10 +1,6 @@
-import {
-  cloneElement,
-  isValidElement,
-  type ReactElement,
-  type ReactNode,
-} from "react";
 import { Render } from "@puckeditor/core";
+import { cloneElement, isValidElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
@@ -34,7 +30,7 @@ export function PuckPageRender({
   return (
     <div
       className={twMerge(
-        "vmu-puck-page-render bg-overlay p-4 shadow-xs sm:p-6",
+        "vmu-puck-page-render",
         className,
       )}
     >

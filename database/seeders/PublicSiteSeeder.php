@@ -44,7 +44,6 @@ class PublicSiteSeeder extends Seeder
                                     'props' => [
                                         'id' => 'public-header-container',
                                         'maxWidth' => 'xl',
-                                        'paddingX' => true,
                                         'horizontalPadding' => 'md',
                                         'children' => [
                                             [
@@ -56,8 +55,8 @@ class PublicSiteSeeder extends Seeder
                                                     'justifyContent' => 'between',
                                                     'alignItems' => 'center',
                                                     'gapX' => 'lg',
-                                                    'gapY' => 'md',
-                                                    'wrap' => true,
+                                                    'gapY' => 'sm',
+                                                    'wrap' => false,
                                                     'childWidth' => 'auto',
                                                     'children' => [
                                                         [
@@ -65,7 +64,7 @@ class PublicSiteSeeder extends Seeder
                                                             'props' => [
                                                                 'title' => 'Khoa Công nghệ thông tin',
                                                                 'subtitle' => 'Trường Đại học Hàng hải Việt Nam',
-                                                                'level' => 3,
+                                                                'level' => 4,
                                                                 'alignment' => 'left',
                                                             ],
                                                         ],
@@ -73,8 +72,11 @@ class PublicSiteSeeder extends Seeder
                                                             'type' => 'NavigationMenu',
                                                             'props' => [
                                                                 'title' => '',
-                                                                'menuId' => '',
+                                                                'menuId' => '1',
                                                                 'orientation' => 'horizontal',
+                                                                'className' => 'flex-1 max-w-2xl',
+                                                                'surfaceBorder' => 'none',
+                                                                'surfaceShadow' => 'sm',
                                                             ],
                                                         ],
                                                         [
@@ -106,73 +108,112 @@ class PublicSiteSeeder extends Seeder
                             'id' => 'public-footer-section',
                             'background' => 'transparent',
                             'paddingTop' => 'lg',
-                            'paddingBottom' => 'lg',
+                            'paddingBottom' => 'none',
                             'children' => [
                                 [
                                     'type' => 'Container',
                                     'props' => [
                                         'id' => 'public-footer-container',
-                                        'maxWidth' => 'xl',
-                                        'paddingX' => true,
-                                        'horizontalPadding' => 'md',
+                                        'maxWidth' => 'full',
+                                        'horizontalPadding' => 'none',
                                         'children' => [
                                             [
-                                                'type' => 'Grid',
+                                                'type' => 'Flex',
                                                 'props' => [
-                                                    'id' => 'public-footer-grid',
-                                                    'mobileColumns' => 1,
-                                                    'tabletColumns' => 2,
-                                                    'desktopColumns' => 4,
-                                                    'gapX' => 'lg',
-                                                    'gapY' => 'lg',
+                                                    'flexDirection' => 'row',
+                                                    'mobileDirection' => 'column',
+                                                    'justifyContent' => 'evenly',
+                                                    'alignItems' => 'start',
+                                                    'gapX' => 'md',
+                                                    'gapY' => 'md',
+                                                    'wrap' => false,
+                                                    'childWidth' => 'full',
+                                                    'hideOn' => 'none',
+                                                    'className' => '',
                                                     'children' => [
                                                         [
                                                             'type' => 'ContactInfo',
                                                             'props' => [
                                                                 'title' => 'Liên hệ',
-                                                                'address' => "Phòng 402, Nhà A5\nSố 484 Lạch Tray, Kênh Dương, Lê Chân, Hải Phòng",
+                                                                'address' => "Phòng 301, Nhà A3\nSố 484 Lạch Tray, Kênh Dương, \nLê Chân, Hải Phòng",
                                                                 'phone' => '0225.3735138',
                                                                 'email' => 'fit@vimaru.edu.vn',
+                                                                'className' => 'max-w-sm',
                                                             ],
                                                         ],
                                                         [
                                                             'type' => 'NavigationMenu',
                                                             'props' => [
                                                                 'title' => 'Điều hướng',
-                                                                'menuId' => '',
+                                                                'menuId' => '2',
                                                                 'orientation' => 'vertical',
                                                             ],
                                                         ],
+                                                    ],
+                                                ],
+                                            ],
+                                            [
+                                                'type' => 'Divider',
+                                                'props' => [
+                                                    'id' => 'public-footer-divider',
+                                                    'type' => 'solid',
+                                                    'color' => 'primary',
+                                                    'spacingY' => 'sm',
+                                                    'width' => 'xl',
+                                                    'align' => 'center',
+                                                ],
+                                            ],
+                                            [
+                                                'type' => 'SocialLinks',
+                                                'props' => [
+                                                    'links' => [
                                                         [
-                                                            'type' => 'LinkList',
-                                                            'props' => [
-                                                                'title' => 'Liên kết nhanh',
-                                                                'links' => [
-                                                                    [
-                                                                        'label' => 'Website VMU',
-                                                                        'url' => 'https://vimaru.edu.vn',
-                                                                        'openInNewTab' => true,
-                                                                    ],
-                                                                    [
-                                                                        'label' => 'Trang FIT gốc',
-                                                                        'url' => 'https://fit.vimaru.edu.vn/vi',
-                                                                        'openInNewTab' => true,
-                                                                    ],
-                                                                ],
-                                                            ],
+                                                            'platform' => 'facebook',
+                                                            'url' => 'https://www.facebook.com/groups/fit.vimaru/',
+                                                            'label' => 'Facebook Group',
                                                         ],
                                                         [
-                                                            'type' => 'TagList',
-                                                            'props' => [
-                                                                'tags' => [
-                                                                    ['text' => 'Công nghệ thông tin'],
-                                                                    ['text' => 'Công nghệ phần mềm'],
-                                                                    ['text' => 'Hệ thống thông tin'],
-                                                                    ['text' => 'Mạng máy tính'],
-                                                                ],
-                                                            ],
+                                                            'platform' => 'facebook',
+                                                            'url' => 'https://www.facebook.com/khoacntt.dhhhvn/',
+                                                            'label' => 'Fanpage Khoa CNTT',
+                                                        ],
+                                                        [
+                                                            'platform' => 'email',
+                                                            'url' => 'mailto:fit@vimaru.edu.vn',
+                                                            'label' => 'fit@vimaru.edu.vn',
                                                         ],
                                                     ],
+                                                    'layout' => 'horizontal',
+                                                    'iconSize' => 'md',
+                                                    'showLabels' => true,
+                                                    'surfaceTone' => 'transparent',
+                                                    'surfaceBorder' => 'none',
+                                                    'surfaceRadius' => 'none',
+                                                    'surfacePadding' => 'none',
+                                                    'surfaceShadow' => 'none',
+                                                    'className' => 'flex items-center justify-center',
+                                                ],
+                                            ],
+                                            [
+                                                'type' => 'CopyrightBar',
+                                                'props' => [
+                                                    'text' => '© {year} Faculty of Information Technology, VMU. All rights reserved.',
+                                                    'links' => [
+                                                        [
+                                                            'label' => 'Chính sách bảo mật',
+                                                            'url' => '#',
+                                                        ],
+                                                        [
+                                                            'label' => 'Điều khoản sử dụng',
+                                                            'url' => '#',
+                                                        ],
+                                                    ],
+                                                    'surfaceTone' => 'transparent',
+                                                    'surfaceBorder' => 'none',
+                                                    'surfaceRadius' => 'none',
+                                                    'surfacePadding' => 'md',
+                                                    'surfaceShadow' => 'none',
+                                                    'className' => '',
                                                 ],
                                             ],
                                         ],
@@ -201,142 +242,421 @@ class PublicSiteSeeder extends Seeder
                 'seo_description' => 'Homepage được seed từ dữ liệu thật của FIT-VMU, đi qua CMS page builder và site layout builder.',
                 'content' => $this->buildPageData([
                     [
-                        'type' => 'HeroBanner',
+                        'type' => 'Container',
                         'props' => [
-                            'id' => 'homepage-hero',
-                            'eyebrow' => 'Khoa Công nghệ thông tin - Trường Đại học Hàng hải Việt Nam',
-                            'title' => 'Đào tạo, nghiên cứu và đổi mới vì ngành hàng hải số',
-                            'description' => 'Khoa Công nghệ thông tin xây dựng chương trình đào tạo gắn thực tiễn, phát triển năng lực công nghệ, nghiên cứu ứng dụng và kết nối doanh nghiệp.',
-                            'primaryActionHref' => '/gioi-thieu-vmu',
-                            'primaryActionLabel' => 'Giới thiệu khoa',
-                            'secondaryActionHref' => '/su-menh-va-tam-nhin',
-                            'secondaryActionLabel' => 'Sứ mệnh và tầm nhìn',
-                        ],
-                    ],
-                    [
-                        'type' => 'AboutSection',
-                        'props' => [
-                            'id' => 'homepage-about',
-                            'badge' => 'Tổng quan',
-                            'header' => 'Khoa Công nghệ thông tin',
-                            'description' => 'Đơn vị đào tạo, nghiên cứu và chuyển giao tri thức trong các lĩnh vực công nghệ phần mềm, hệ thống thông tin và truyền thông mạng máy tính.',
-                            'unitName' => 'Khoa Công nghệ thông tin - Trường Đại học Hàng hải Việt Nam',
-                            'address' => 'Phòng 402, Nhà A5, Số 484 Lạch Tray, Kênh Dương, Lê Chân, Hải Phòng',
-                            'phone' => '0225.3735138',
-                            'email' => 'fit@vimaru.edu.vn',
-                            'imageUrl' => '',
-                        ],
-                    ],
-                    [
-                        'type' => 'FeatureGrid',
-                        'props' => [
-                            'id' => 'homepage-features',
-                            'badge' => 'Chương trình',
-                            'header' => 'Các hướng đào tạo nổi bật',
-                            'description' => 'Dữ liệu seed mô phỏng cấu trúc thông tin trên site gốc để đội biên tập tiếp tục tinh chỉnh bằng Puck.',
-                            'columns' => 3,
-                            'features' => [
+                            'maxWidth' => 'xl',
+                            'horizontalPadding' => 'md',
+                            'align' => 'center',
+                            'hideOn' => 'none',
+                            'className' => '',
+                            'children' => [
                                 [
-                                    'icon' => 'GraduationCap',
-                                    'title' => 'Công nghệ thông tin chất lượng cao',
-                                    'description' => 'Chương trình định hướng thực hành, tăng cường ngoại ngữ và kỹ năng nghề nghiệp.',
-                                ],
-                                [
-                                    'icon' => 'Laptop',
-                                    'title' => 'Công nghệ phần mềm',
-                                    'description' => 'Trang bị tư duy thiết kế, triển khai và vận hành hệ thống phần mềm hiện đại.',
-                                ],
-                                [
-                                    'icon' => 'Globe',
-                                    'title' => 'Hệ thống thông tin',
-                                    'description' => 'Tập trung vào dữ liệu, quy trình nghiệp vụ và các nền tảng số cho doanh nghiệp.',
+                                    'type' => 'HeroSplit',
+                                    'props' => [
+                                        'id' => 'homepage-hero',
+                                        'title' => 'Đào tạo, nghiên cứu và đổi mới vì ngành hàng hải số',
+                                        'description' => 'Khoa Công nghệ thông tin xây dựng chương trình đào tạo gắn thực tiễn, phát triển năng lực công nghệ, nghiên cứu ứng dụng và kết nối doanh nghiệp.',
+                                        'imageUrl' => '',
+                                        'primaryActionLabel' => 'Giới thiệu khoa',
+                                        'primaryActionHref' => '/gioi-thieu-khoa-cong-nghe-thong-tin',
+                                        'secondaryActionLabel' => 'Sứ mệnh và tầm nhìn',
+                                        'secondaryActionHref' => '/su-menh-va-tam-nhin',
+                                        'stats' => [
+                                            ['title' => '1997', 'subtitle' => 'Năm thành lập'],
+                                            ['title' => '5', 'subtitle' => 'Hướng đào tạo'],
+                                            ['title' => '30+', 'subtitle' => 'Năm phát triển'],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
                     ],
                     [
-                        'type' => 'StatsSection',
+                        'type' => 'Section',
                         'props' => [
-                            'id' => 'homepage-stats',
-                            'badge' => 'Số liệu nhanh',
-                            'header' => 'Những mốc đáng chú ý',
-                            'description' => 'Một số con số và cột mốc được trích từ nội dung tham khảo và dữ liệu seed của dự án.',
-                            'stats' => [
+                            'id' => 'homepage-features-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'children' => [
                                 [
-                                    'value' => '1997',
-                                    'label' => 'Năm thành lập Khoa CNTT',
-                                    'trendValue' => '18/12',
-                                    'isPositive' => true,
-                                ],
-                                [
-                                    'value' => '5',
-                                    'label' => 'Hướng đào tạo nổi bật',
-                                    'trendValue' => 'Đại học + sau đại học',
-                                    'isPositive' => true,
-                                ],
-                                [
-                                    'value' => '30+',
-                                    'label' => 'Năm phát triển và tích lũy',
-                                    'trendValue' => 'Đào tạo - nghiên cứu - phục vụ',
-                                    'isPositive' => true,
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-features-container',
+                                        'maxWidth' => 'xl',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'FeatureGrid',
+                                                'props' => [
+                                                    'id' => 'homepage-features',
+                                                    'badge' => 'Chương trình đào tạo',
+                                                    'header' => 'Các hướng đào tạo nổi bật',
+                                                    'description' => 'Chương trình đào tạo được thiết kế hiện đại, cập nhật liên tục theo xu hướng công nghệ toàn cầu và nhu cầu thị trường lao động.',
+                                                    'columns' => 3,
+                                                    'features' => [
+                                                        [
+                                                            'icon' => 'GraduationCap',
+                                                            'title' => 'Công nghệ thông tin chất lượng cao',
+                                                            'description' => 'Chương trình định hướng thực hành, tăng cường ngoại ngữ và kỹ năng nghề nghiệp.',
+                                                        ],
+                                                        [
+                                                            'icon' => 'Cpu',
+                                                            'title' => 'Công nghệ phần mềm',
+                                                            'description' => 'Trang bị tư duy thiết kế, triển khai và vận hành hệ thống phần mềm hiện đại.',
+                                                        ],
+                                                        [
+                                                            'icon' => 'Globe',
+                                                            'title' => 'Hệ thống thông tin',
+                                                            'description' => 'Tập trung vào dữ liệu, quy trình nghiệp vụ và các nền tảng số cho doanh nghiệp.',
+                                                        ],
+                                                        [
+                                                            'icon' => 'Shield',
+                                                            'title' => 'An toàn thông tin',
+                                                            'description' => 'Đào tạo chuyên sâu về bảo mật hệ thống, kiểm thử xâm nhập và quản trị rủi ro.',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
                     ],
                     [
-                        'type' => 'TimelineSection',
+                        'type' => 'Section',
                         'props' => [
-                            'id' => 'homepage-timeline',
-                            'badge' => 'Hành trình',
-                            'header' => 'Các cột mốc phát triển',
-                            'description' => 'Lộ trình khái quát hóa dữ liệu để homepage có chiều sâu nội dung ngay từ seed.',
-                            'steps' => [
+                            'id' => 'homepage-about-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'children' => [
                                 [
-                                    'title' => '1996 - 1997',
-                                    'description' => 'Hình thành nền tảng đào tạo CNTT và phát triển thành Khoa Công nghệ thông tin.',
-                                ],
-                                [
-                                    'title' => 'Giai đoạn mở rộng',
-                                    'description' => 'Mở rộng các hướng đào tạo, tăng cường gắn kết với doanh nghiệp và nghiên cứu ứng dụng.',
-                                ],
-                                [
-                                    'title' => 'Hiện tại',
-                                    'description' => 'Đẩy mạnh chuyển đổi số, chuẩn hóa dữ liệu và vận hành toàn bộ nội dung qua CMS.',
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-about-container',
+                                        'maxWidth' => 'xl',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'AboutSection',
+                                                'props' => [
+                                                    'id' => 'homepage-about',
+                                                    'badge' => 'Từ năm 1997',
+                                                    'header' => 'Khoa Công nghệ thông tin',
+                                                    'description' => 'Thành lập ngày 18/12/1997, tiền thân là Trung tâm CNTT (17/9/1996). Khoa là một trong 6 khoa CNTT được thành lập sớm nhất cả nước, hiện đào tạo 3 chuyên ngành đại học chính quy và thạc sỹ với 5 bộ môn chuyên môn.',
+                                                    'unitName' => 'Khoa Công nghệ thông tin - Trường Đại học Hàng hải Việt Nam',
+                                                    'address' => 'Phòng 301, Nhà A3, Số 484 Lạch Tray, Kênh Dương, Lê Chân, Hải Phòng',
+                                                    'phone' => '0225.3735725',
+                                                    'email' => 'fit@vimaru.edu.vn',
+                                                    'imageUrl' => '',
+                                                    'surfaceTone' => 'overlay',
+                                                    'surfaceBorder' => 'subtle',
+                                                    'surfaceRadius' => '3xl',
+                                                    'surfacePadding' => 'xl',
+                                                    'surfaceShadow' => 'sm',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
                     ],
                     [
-                        'type' => 'LatestPosts',
+                        'type' => 'Container',
                         'props' => [
-                            'id' => 'homepage-latest-posts',
-                            'title' => 'Tin tức mới nhất',
-                            'limit' => 4,
-                            'categoryId' => 'all',
-                            'layout' => 'grid',
-                            'showCTA' => true,
+                            'maxWidth' => 'xl',
+                            'horizontalPadding' => 'md',
+                            'align' => 'center',
+                            'hideOn' => 'none',
+                            'className' => '',
+                            'children' => [
+                                [
+                                    'type' => 'StatsSection',
+                                    'props' => [
+                                        'id' => 'homepage-stats',
+                                        'badge' => 'Số liệu nhanh',
+                                        'header' => 'Những mốc đáng chú ý',
+                                        'description' => 'Những con số phản ánh hành trình phát triển bền vững và những thành tựu nổi bật của Khoa.',
+                                        'stats' => [
+                                            [
+                                                'value' => '1997',
+                                                'label' => 'Năm thành lập Khoa CNTT',
+                                                'trendValue' => '18/12/1997',
+                                                'isPositive' => true,
+                                            ],
+                                            [
+                                                'value' => '1.050',
+                                                'label' => 'Sinh viên đang theo học',
+                                                'trendValue' => '3 chuyên ngành ĐH + Thạc sỹ',
+                                                'isPositive' => true,
+                                            ],
+                                            [
+                                                'value' => '400+',
+                                                'label' => 'Máy tính & thiết bị',
+                                                'trendValue' => 'Phục vụ thực hành, thí nghiệm',
+                                                'isPositive' => true,
+                                            ],
+                                            [
+                                                'value' => '28',
+                                                'label' => 'Năm phát triển',
+                                                'trendValue' => '1997 — 2025',
+                                                'isPositive' => true,
+                                            ],
+                                        ],
+                                        'surfaceTone' => 'transparent',
+                                        'surfaceBorder' => 'none',
+                                        'surfaceRadius' => 'none',
+                                        'surfacePadding' => 'lg',
+                                        'surfaceShadow' => 'none',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     [
-                        'type' => 'LatestAnnouncements',
+                        'type' => 'Section',
                         'props' => [
-                            'id' => 'homepage-latest-announcements',
-                            'title' => 'Thông báo nổi bật',
-                            'limit' => 4,
-                            'layout' => 'list',
-                            'showCTA' => true,
+                            'id' => 'homepage-timeline-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'children' => [
+                                [
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-timeline-container',
+                                        'maxWidth' => 'xl',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'TimelineSection',
+                                                'props' => [
+                                                    'id' => 'homepage-timeline',
+                                                    'badge' => 'Hành trình',
+                                                    'header' => 'Các cột mốc phát triển',
+                                                    'description' => 'Từ những ngày đầu thành lập đến hành trình chuyển đổi số toàn diện.',
+                                                    'steps' => [
+                                                        [
+                                                            'title' => '1996 — 1997: Trung tâm CNTT & thành lập Khoa',
+                                                            'description' => 'Ngày 17/9/1996 thành lập Trung tâm CNTT, đào tạo hệ Cao đẳng và giảng Tin học đại cương. Ngày 18/12/1997 chính thức thành lập Khoa CNTT, là một trong 6 khoa CNTT sớm nhất cả nước.',
+                                                        ],
+                                                        [
+                                                            'title' => '1998 — 2007: Khóa đại học đầu tiên & dừng hệ Cao đẳng',
+                                                            'description' => 'Khóa đại học chính quy đầu tiên CNT39ĐH (1998-2002). Đến năm 2007-2008, Khoa dừng tuyển sinh Cao đẳng, tập trung vào Đại học chính quy với quy mô 2-3 lớp/năm.',
+                                                        ],
+                                                        [
+                                                            'title' => '2012 — 2013: Đào tạo theo 3 chuyên ngành hẹp',
+                                                            'description' => 'Từ khóa K54, Khoa đào tạo theo 3 chuyên ngành: Công nghệ Thông tin, Kỹ thuật Phần mềm, Kỹ thuật Truyền thông & Mạng máy tính; quy mô tuyển sinh đạt 200 sinh viên/năm.',
+                                                        ],
+                                                        [
+                                                            'title' => '2013 — 2017: Đào tạo Thạc sỹ & Chất lượng cao',
+                                                            'description' => 'Từ 2013, với 11 Tiến sĩ, Khoa mở hệ Thạc sỹ ngành CNTT. Năm 2016-2017 đưa vào tuyển sinh hệ Đại học chính quy chất lượng cao. Năm 2017-2018 rút ngắn thời gian đào tạo còn 4 năm theo chuẩn CDIO.',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     [
-                        'type' => 'CTASection',
+                        'type' => 'Section',
                         'props' => [
-                            'id' => 'homepage-cta',
-                            'header' => 'Sẵn sàng khám phá hệ sinh thái FIT-VMU?',
-                            'description' => 'Toàn bộ homepage đã được seed bằng layout và page chuẩn để đội biên tập có thể tiếp tục hoàn thiện nội dung thật trong CMS.',
-                            'primaryActionLabel' => 'Xem trang giới thiệu',
-                            'primaryActionHref' => '/gioi-thieu-vmu',
-                            'secondaryActionLabel' => 'Xem website gốc',
-                            'secondaryActionHref' => 'https://fit.vimaru.edu.vn/vi',
+                            'id' => 'homepage-news-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'children' => [
+                                [
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-news-container',
+                                        'maxWidth' => 'xl',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'TwoColumns',
+                                                'props' => [
+                                                    'id' => 'homepage-news-columns',
+                                                    'columnRatio' => 'equal',
+                                                    'gap' => 'lg',
+                                                    'stackOnMobile' => true,
+                                                    'left' => [
+                                                        [
+                                                            'type' => 'LatestPosts',
+                                                            'props' => [
+                                                                'id' => 'homepage-latest-posts',
+                                                                'title' => 'Tin tức mới nhất',
+                                                                'limit' => 3,
+                                                                'categoryId' => 'all',
+                                                                'layout' => 'list',
+                                                                'showCTA' => true,
+                                                                'surfaceTone' => 'transparent',
+                                                                'surfaceBorder' => 'none',
+                                                                'surfaceRadius' => 'none',
+                                                                'surfacePadding' => 'none',
+                                                                'surfaceShadow' => 'none',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                    'right' => [
+                                                        [
+                                                            'type' => 'LatestAnnouncements',
+                                                            'props' => [
+                                                                'id' => 'homepage-latest-announcements',
+                                                                'title' => 'Thông báo nổi bật',
+                                                                'limit' => 3,
+                                                                'layout' => 'list',
+                                                                'showCTA' => true,
+                                                                'surfaceTone' => 'transparent',
+                                                                'surfaceBorder' => 'none',
+                                                                'surfaceRadius' => 'none',
+                                                                'surfacePadding' => 'none',
+                                                                'surfaceShadow' => 'none',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'Section',
+                        'props' => [
+                            'id' => 'homepage-faq-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'children' => [
+                                [
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-faq-container',
+                                        'maxWidth' => 'lg',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'FAQSection',
+                                                'props' => [
+                                                    'id' => 'homepage-faq',
+                                                    'title' => 'Câu Hỏi Thường Gặp',
+                                                    'description' => 'Giải đáp những thắc mắc phổ biến từ học sinh, sinh viên và phụ huynh.',
+                                                    'items' => [
+                                                        [
+                                                            'question' => 'Khoa CNTT tuyển sinh theo phương thức nào?',
+                                                            'answer' => 'Khoa tuyển sinh theo các phương thức: xét tuyển dựa trên kết quả thi THPT Quốc gia, xét tuyển học bạ và xét tuyển thẳng theo quy định của Bộ GD&ĐT.',
+                                                        ],
+                                                        [
+                                                            'question' => 'Tỷ lệ sinh viên có việc làm sau tốt nghiệp ra sao?',
+                                                            'answer' => 'Trên 95% sinh viên Khoa CNTT có việc làm đúng chuyên ngành trong vòng 6 tháng sau tốt nghiệp, tại các tập đoàn công nghệ hàng đầu như FPT, Viettel, VNPT.',
+                                                        ],
+                                                        [
+                                                            'question' => 'Chương trình đào tạo có thực hành không?',
+                                                            'answer' => 'Chương trình chú trọng thực hành với các đồ án môn học, thực tập doanh nghiệp từ năm 3, và các phòng thí nghiệm hiện đại phục vụ nghiên cứu.',
+                                                        ],
+                                                        [
+                                                            'question' => 'Có cơ hội học bổng không?',
+                                                            'answer' => 'Sinh viên có nhiều cơ hội nhận học bổng: học bổng khuyến khích học tập, học bổng doanh nghiệp tài trợ, và học bổng nghiên cứu khoa học với tổng giá trị hàng trăm triệu đồng mỗi năm.',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'Section',
+                        'props' => [
+                            'id' => 'homepage-testimonials-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'children' => [
+                                [
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-testimonials-container',
+                                        'maxWidth' => 'xl',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'TestimonialSection',
+                                                'props' => [
+                                                    'id' => 'homepage-testimonials',
+                                                    'badge' => 'Cựu Sinh Viên',
+                                                    'header' => 'Cựu sinh viên nói gì về FIT-VMU?',
+                                                    'description' => 'Những chia sẻ chân thực từ các thế hệ sinh viên đã trưởng thành từ Khoa Công nghệ thông tin.',
+                                                    'testimonials' => [
+                                                        [
+                                                            'name' => 'Phạm Văn Minh',
+                                                            'roleAndCompany' => 'Senior Software Engineer — FPT Software',
+                                                            'content' => 'Những năm tháng học tập tại FIT-VMU giúp tôi xây dựng nền tảng tư duy vững chắc và tự tin hòa nhập vào môi trường công nghệ toàn cầu.',
+                                                            'avatar' => '',
+                                                        ],
+                                                        [
+                                                            'name' => 'Nguyễn Thị Mai',
+                                                            'roleAndCompany' => 'Data Analyst — Viettel Telecom',
+                                                            'content' => 'Giảng viên cực kỳ nhiệt tình, luôn thúc đẩy sinh viên tham gia nghiên cứu khoa học và các dự án thực tế. Đó là bước đệm quan trọng nhất.',
+                                                            'avatar' => '',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'type' => 'Section',
+                        'props' => [
+                            'id' => 'homepage-cta-section',
+                            'background' => 'transparent',
+                            'paddingTop' => 'sm',
+                            'paddingBottom' => 'sm',
+                            'borderRadius' => '2xl',
+                            'children' => [
+                                [
+                                    'type' => 'Container',
+                                    'props' => [
+                                        'id' => 'homepage-cta-container',
+                                        'maxWidth' => 'lg',
+                                        'horizontalPadding' => 'md',
+                                        'children' => [
+                                            [
+                                                'type' => 'CTASection',
+                                                'props' => [
+                                                    'id' => 'homepage-cta',
+                                                    'header' => 'Sẵn sàng khám phá hệ sinh thái FIT-VMU?',
+                                                    'description' => 'Bắt đầu hành trình trở thành kỹ sư CNTT chất lượng cao ngay hôm nay.',
+                                                    'primaryActionLabel' => 'Xét tuyển trực tuyến',
+                                                    'primaryActionHref' => '/gioi-thieu-vmu',
+                                                    'secondaryActionLabel' => 'Tải cẩm nang tuyển sinh',
+                                                    'secondaryActionHref' => '#',
+                                                    'surfaceTone' => 'overlay',
+                                                    'surfaceBorder' => 'subtle',
+                                                    'surfaceRadius' => '3xl',
+                                                    'surfacePadding' => 'xl',
+                                                    'surfaceShadow' => 'sm',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ]),

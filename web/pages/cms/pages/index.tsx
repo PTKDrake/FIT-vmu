@@ -12,7 +12,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { t } from "@/lib/i18n";
 import {
   CmsDataTable,
   DataTableBadge,
@@ -36,6 +35,7 @@ import {
 import { Text } from "@/components/ui/text";
 import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import CmsLayout from "@/layouts/cms-layout";
+import { t } from "@/lib/i18n";
 import {
   clone,
   destroy,

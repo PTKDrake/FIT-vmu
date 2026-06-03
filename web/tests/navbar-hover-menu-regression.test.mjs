@@ -10,7 +10,9 @@ const navbarSource = readFileSync(
 test("Navbar shared primitives expose hover-driven submenu support", () => {
   assert.match(navbarSource, /from "react-aria\/useHover"/);
   assert.match(navbarSource, /const NavbarMenu =/);
-  assert.match(navbarSource, /onHoverChange:\s*setOpen/);
+  assert.match(navbarSource, /onHoverChange:\s*handleOpenState/);
   assert.match(navbarSource, /const NavbarSubmenu =/);
   assert.match(navbarSource, /onFocusCapture:/);
+  assert.match(navbarSource, /delayCloseMs/);
+  assert.match(navbarSource, /scheduleClose/);
 });

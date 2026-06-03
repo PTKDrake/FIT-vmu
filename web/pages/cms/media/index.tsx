@@ -45,7 +45,6 @@ import type { CmsMediaPageProps, CmsMediaRow } from "@/components/cms/types";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { t } from "@/lib/i18n";
 import { DropZone } from "@/components/ui/drop-zone";
 import {
   FieldError,
@@ -90,6 +89,7 @@ import { Code, Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
+import { t } from "@/lib/i18n";
 import mediaRoutes from "@/routes/cms/media";
 import type { FlashData } from "@/types/shared";
 

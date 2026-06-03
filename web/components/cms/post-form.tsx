@@ -9,12 +9,20 @@ import { useForm, Link, router } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
+import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
-import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Button } from "@/components/ui/button";
 import { Description, FieldError, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
 import {
   MultipleSelect,
   MultipleSelectContent,
@@ -25,14 +33,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import postsRoutes from "@/routes/cms/posts";
-import {
-  ModalBody,
-  ModalContent,
-  ModalDescription,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle,
-} from "@/components/ui/modal";
 export interface PostFormValues {
   id?: number;
   title: string;
@@ -90,6 +90,7 @@ export function PostForm({
     if (!initialValues.id) {
       return;
     }
+
     setIsPublishing(true);
     router.patch(
       postsRoutes.publish.url({ post: initialValues.id }),
@@ -105,11 +106,14 @@ export function PostForm({
   const handleReject = () => {
     if (!rejectionReason.trim()) {
       setRejectionError("Lý do từ chối là bắt buộc.");
+
       return;
     }
+
     if (!initialValues.id) {
       return;
     }
+
     setIsPublishing(true);
     router.patch(
       postsRoutes.publish.url({ post: initialValues.id }),
@@ -552,6 +556,7 @@ export function PostForm({
                   value={rejectionReason}
                   onChange={(e) => {
                     setRejectionReason(e.target.value);
+
                     if (e.target.value.trim()) {
                       setRejectionError("");
                     }

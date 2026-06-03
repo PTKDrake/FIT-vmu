@@ -2,8 +2,8 @@ import { ArrowLeftIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
-import type { CmsPageEditorPageProps } from "@/components/cms/types";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
+import type { CmsPageEditorPageProps } from "@/components/cms/types";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,

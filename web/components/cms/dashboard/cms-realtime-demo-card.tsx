@@ -10,9 +10,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
-import { t } from "@/lib/i18n";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { echo } from "@/lib/echo";
+import { t } from "@/lib/i18n";
 import realtimeRoutes from "@/routes/cms/realtime";
 import type { SharedData } from "@/types/shared";
 

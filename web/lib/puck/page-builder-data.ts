@@ -79,7 +79,7 @@ export interface VmuFitPageBuilderComponents {
     type?: "solid" | "dashed" | "dotted";
     color?: "default" | "primary" | "muted";
     spacingY?: "none" | "sm" | "md" | "lg";
-    width?: "full" | "container" | "short";
+    width?: "full" | "container" | "xl" | "lg" | "md" | "sm" | "short";
     align?: "left" | "center" | "right";
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
@@ -382,6 +382,45 @@ export interface VmuFitPageBuilderComponents {
     address?: string;
     phone?: string;
     email?: string;
+    className?: string;
+  };
+  SocialLinks: PuckSurfaceStyleProps & {
+    links: {
+      platform:
+        | "facebook"
+        | "youtube"
+        | "linkedin"
+        | "twitter"
+        | "instagram"
+        | "github"
+        | "tiktok"
+        | "zalo"
+        | "email"
+        | "phone"
+        | "website";
+      url: string;
+      label?: string;
+    }[];
+    layout?: "horizontal" | "vertical";
+    iconSize?: "sm" | "md" | "lg";
+    showLabels?: boolean;
+    className?: string;
+  };
+  NewsletterForm: PuckSurfaceStyleProps & {
+    title: string;
+    description: string;
+    placeholder: string;
+    buttonLabel: string;
+    actionUrl: string;
+    layout?: "inline" | "stacked";
+    className?: string;
+  };
+  CopyrightBar: PuckSurfaceStyleProps & {
+    text: string;
+    links: {
+      label: string;
+      url: string;
+    }[];
     className?: string;
   };
   AuthStatus: PuckSurfaceStyleProps & {

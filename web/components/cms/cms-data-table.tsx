@@ -78,6 +78,7 @@ export function DataTableBadge({
   title,
 }: DataTableBadgeProps) {
   let dotColorClass = "bg-primary";
+
   switch (intent) {
     case "primary":
       dotColorClass = "bg-primary";
@@ -217,9 +218,11 @@ export function DataTableFilterButton({
     if (id === "__proto__" || id === "constructor" || id === "prototype") {
       return;
     }
+
     const safeId = `section_${id}`;
     setExpandedSections((prev) => {
       const currentVal = prev[safeId] ?? false;
+
       return {
         ...prev,
         [safeId]: !currentVal,

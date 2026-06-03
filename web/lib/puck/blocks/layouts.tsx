@@ -1,7 +1,5 @@
-import React from "react";
 import { twMerge } from "tailwind-merge";
 import { Separator } from "@/components/ui/separator";
-import { Text } from "@/components/ui/text";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
@@ -110,7 +108,7 @@ export function getBackgroundClass(background?: string) {
       "bg-info-subtle/10 border border-info-subtle/20 text-fg shadow-xs",
     "info-subtle":
       "bg-info-subtle/10 border border-info-subtle/20 text-fg shadow-xs",
-    dark: "bg-sidebar text-sidebar-fg shadow-sm",
+    dark: "bg-accent-subtle-fg text-bg shadow-sm",
   };
 
   return background
@@ -368,7 +366,7 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
       <section
         id={id}
         className={twMerge(
-          "relative w-full border-border/60 bg-overlay/40 shadow-xs transition-colors duration-300",
+          "relative w-full transition-colors duration-300",
           getBackgroundClass(background),
           getPaddingTopClass(pt),
           getPaddingBottomClass(pb),
@@ -684,6 +682,10 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
       className,
     );
 
+    const emptyPreviewClass = isPuckEditorPreview()
+      ? "empty:min-h-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20 empty:flex empty:items-center empty:justify-center"
+      : "";
+
     return (
       <div
         id={id}
@@ -691,22 +693,22 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
         style={gapStyle}
       >
         <div className="flex h-full w-full flex-col">
-          {Left ? (
-            <Left className="w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs" />
-          ) : (
-            <Text className="flex min-h-20 w-full items-center justify-center rounded-2xl border border-dashed border-border/50 bg-muted/20 px-4 text-center text-sm text-muted-fg">
-              Cột trái
-            </Text>
-          )}
+          <Left
+            className={twMerge(
+              "w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs",
+              emptyPreviewClass,
+            )}
+            minEmptyHeight={96}
+          />
         </div>
         <div className="flex h-full w-full flex-col">
-          {Right ? (
-            <Right className="w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs" />
-          ) : (
-            <Text className="flex min-h-20 w-full items-center justify-center rounded-2xl border border-dashed border-border/50 bg-muted/20 px-4 text-center text-sm text-muted-fg">
-              Cột phải
-            </Text>
-          )}
+          <Right
+            className={twMerge(
+              "w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs",
+              emptyPreviewClass,
+            )}
+            minEmptyHeight={96}
+          />
         </div>
       </div>
     );
@@ -852,9 +854,12 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
       type: "select",
       label: "Độ dài đường kẻ",
       options: [
-        { label: "Đầy đủ", value: "full" },
-        { label: "Theo khung", value: "container" },
-        { label: "Ngắn", value: "short" },
+        { label: "Đầy đủ (100%)", value: "full" },
+        { label: "Rất lớn (max-w-5xl)", value: "xl" },
+        { label: "Lớn (max-w-3xl)", value: "lg" },
+        { label: "Vừa (max-w-xl)", value: "md" },
+        { label: "Nhỏ (max-w-sm)", value: "sm" },
+        { label: "Ngắn (w-24)", value: "short" },
       ],
     },
     align: {
@@ -915,6 +920,10 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
     const widthClass = {
       full: "w-full",
       container: "max-w-7xl mx-auto px-4 sm:px-6 md:px-8",
+      xl: "max-w-5xl mx-auto",
+      lg: "max-w-3xl mx-auto",
+      md: "max-w-xl mx-auto",
+      sm: "max-w-sm mx-auto",
       short: "w-24",
     }[width || "full"];
 

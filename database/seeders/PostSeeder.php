@@ -30,7 +30,7 @@ class PostSeeder extends Seeder
         [
             'title' => 'VMU khai trương chuỗi hoạt động chào đón tân sinh viên',
             'slug' => 'vmu-khai-truong-chuoi-hoat-dong-chao-don-tan-sinh-vien',
-            'category_slugs' => ['tin-tuc', 'su-kien', 'sinh-vien'],
+            'category_slugs' => ['thong-bao', 'tin-don-vi', 'doan-thanh-nien'],
             'excerpt' => 'Nhà trường khởi động tuần sinh hoạt công dân và các chương trình kết nối cho khóa mới.',
             'paragraphs' => [
                 'Tuần lễ chào đón tân sinh viên được tổ chức với nhiều hoạt động định hướng, giao lưu và hướng dẫn học tập.',
@@ -42,7 +42,7 @@ class PostSeeder extends Seeder
         [
             'title' => 'Thông báo điều chỉnh lịch học các lớp buổi tối',
             'slug' => 'thong-bao-dieu-chinh-lich-hoc-cac-lop-buoi-toi',
-            'category_slugs' => ['thong-bao', 'dao-tao'],
+            'category_slugs' => ['thong-bao', 'thoi-khoa-bieu'],
             'excerpt' => 'Phòng Đào tạo cập nhật lịch học buổi tối cho một số học phần trong tháng này.',
             'paragraphs' => [
                 'Sinh viên cần theo dõi thông báo mới trên cổng thông tin để cập nhật phòng học và khung giờ học chính xác.',
@@ -66,7 +66,7 @@ class PostSeeder extends Seeder
         [
             'title' => 'Cập nhật học liệu mở cho học phần Logistics và Quản lý chuỗi cung ứng',
             'slug' => 'cap-nhat-hoc-lieu-mo-cho-hoc-phan-logistics-va-quan-ly-chuoi-cung-ung',
-            'category_slugs' => ['dao-tao', 'thong-bao'],
+            'category_slugs' => ['thoi-khoa-bieu', 'thong-bao'],
             'excerpt' => 'Khoa chuyên môn bổ sung tài liệu tham khảo và bài tập tình huống trên LMS.',
             'paragraphs' => [
                 'Học liệu mới được chuẩn hóa theo từng chủ đề để sinh viên dễ dàng theo dõi và tự học.',
@@ -78,7 +78,7 @@ class PostSeeder extends Seeder
         [
             'title' => 'Nhóm nghiên cứu sinh viên công bố giải pháp mô phỏng cảng thông minh',
             'slug' => 'nhom-nghien-cuu-sinh-vien-cong-bo-giai-phap-mo-phong-cang-thong-minh',
-            'category_slugs' => ['nghien-cuu-khoa-hoc', 'tin-tuc', 'sinh-vien'],
+            'category_slugs' => ['cau-lac-bo-nghien-cuu-khoa-hoc', 'nghien-cuu-khoa-hoc', 'tin-don-vi'],
             'excerpt' => 'Đề tài hướng đến tối ưu luồng hàng và khai thác dữ liệu thời gian thực trong logistics.',
             'paragraphs' => [
                 'Mô hình thử nghiệm giúp đánh giá năng lực khai thác cầu bến và mức độ ùn tắc theo nhiều kịch bản.',
@@ -90,7 +90,7 @@ class PostSeeder extends Seeder
         [
             'title' => 'Chuỗi workshop kỹ năng học tập và nghiệp vụ dành cho sinh viên năm nhất',
             'slug' => 'chuoi-workshop-ky-nang-hoc-tap-va-nghiep-vu-danh-cho-sinh-vien-nam-nhat',
-            'category_slugs' => ['sinh-vien', 'dao-tao', 'su-kien'],
+            'category_slugs' => ['doan-thanh-nien', 'hoc-bong', 'co-hoi-viec-lam'],
             'excerpt' => 'Trung tâm hỗ trợ người học mở rộng chuỗi workshop về kỹ năng mềm và phương pháp học đại học.',
             'paragraphs' => [
                 'Nội dung workshop tập trung vào kỹ năng ghi chú, thuyết trình, hợp tác nhóm và quản lý thời gian.',

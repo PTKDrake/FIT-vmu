@@ -1,8 +1,8 @@
-import type { SharedData } from "@/types/shared";
 import type {
   NavigationMenuDraft,
   NavigationResourceOption,
 } from "@/lib/navigation/tree";
+import type { SharedData } from "@/types/shared";
 
 export interface DashboardOverview {
   recentActivity: Array<{

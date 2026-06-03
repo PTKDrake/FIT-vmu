@@ -37,14 +37,15 @@ test('public homepage is seeded through site layout and page data', function () 
 
     expect($pageContent['root']['props']['title'])->toBe('Trang chủ VMU')
         ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
-            'HeroBanner',
-            'AboutSection',
-            'FeatureGrid',
-            'StatsSection',
-            'TimelineSection',
-            'LatestPosts',
-            'LatestAnnouncements',
-            'CTASection',
+            'Container',
+            'Section',
+            'Section',
+            'Container',
+            'Section',
+            'Section',
+            'Section',
+            'Section',
+            'Section',
         ])
         ->and(collect(collectHomepageBlockIds($pageContent['content']))->filter()->isNotEmpty())->toBeTrue();
 

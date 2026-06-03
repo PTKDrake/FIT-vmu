@@ -1,7 +1,8 @@
 import {
-  type AnchorNavigationCandidate,
-  shouldInterceptInternalAnchorNavigation,
+  
+  shouldInterceptInternalAnchorNavigation
 } from "../lib/navigation/anchor-navigation";
+import type {AnchorNavigationCandidate} from "../lib/navigation/anchor-navigation";
 
 export type UnsavedAnchorNavigationCandidate = AnchorNavigationCandidate;
 

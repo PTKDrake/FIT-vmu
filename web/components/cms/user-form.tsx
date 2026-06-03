@@ -1,5 +1,4 @@
 import { Link } from "@inertiajs/react";
-import { t } from "@/lib/i18n";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxGroup } from "@/components/ui/checkbox";
@@ -15,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+import { t } from "@/lib/i18n";
 
 export interface UserFormValues {
   id?: number;

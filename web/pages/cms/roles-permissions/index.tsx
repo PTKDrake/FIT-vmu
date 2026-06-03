@@ -9,7 +9,8 @@ import {
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { Head } from "@inertiajs/react";
-import { Fragment, useDeferredValue, useState, type ReactNode } from "react";
+import { Fragment, useDeferredValue, useState  } from "react";
+import type {ReactNode} from "react";
 import { toast } from "sonner";
 import { RoleActionDialog } from "@/components/cms/role-action-dialog";
 import { RoleFormDialog } from "@/components/cms/role-form-dialog";

@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/menu";
 import { edit } from "@/routes/profile";
 import type { SharedData } from "@/types/shared";
-import { getPuckBlockDomId } from "./shared";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const AuthStatusComponentConfig: PageBuilderComponentConfig<"AuthStatus"> =
@@ -234,14 +234,3 @@ function AuthStatusBlock({
   );
 }
 
-export function isPuckEditorPreview(): boolean {
-  if (typeof window === "undefined") {
-    return false;
-  }
-
-  try {
-    return window.self !== window.top;
-  } catch {
-    return true;
-  }
-}

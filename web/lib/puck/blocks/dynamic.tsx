@@ -9,8 +9,8 @@ import { NavbarItem, NavbarMenu, NavbarSubmenu } from "@/components/ui/navbar";
 import { Text } from "@/components/ui/text";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
 import type { SharedData } from "@/types/shared";
-import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import { getPuckBlockDomId } from "./shared";
+import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
 interface PuckDynamicPost {
@@ -1074,17 +1074,14 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
       ) : null}
       <nav
         aria-label={menu.name}
-        className={twMerge(
-          "w-full rounded-2xl border border-border/70 bg-bg/80 p-3 shadow-xs",
-          orientation === "vertical" ? "max-w-full" : "",
-        )}
+        className="w-full"
       >
         <div
           className={twMerge(
-            "flex gap-2",
+            "flex justify-between",
             orientation === "vertical"
               ? "flex-col items-stretch"
-              : "flex-wrap items-start",
+              : "flex-wrap items-center",
           )}
         >
           {menu.items.map((item) => (
@@ -1264,118 +1261,118 @@ function PageLinksBlock(props: PageLinksBlockProps) {
 
 // 1. LATEST POSTS BLOCK
 export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts"> =
-  {
-    label: "Tin tức mới nhất",
-    defaultProps: {
-      title: "Tin Tức & Hoạt Động Mới",
-      limit: 3,
-      categoryId: "all",
-      layout: "grid",
-      showCTA: true,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
+{
+  label: "Tin tức mới nhất",
+  defaultProps: {
+    title: "Tin Tức & Hoạt Động Mới",
+    limit: 3,
+    categoryId: "all",
+    layout: "grid",
+    showCTA: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng tin tức" },
+    categoryId: {
+      type: "text",
+      label: "ID Danh mục (để trống nếu lấy tất cả)",
     },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng tin tức" },
-      categoryId: {
-        type: "text",
-        label: "ID Danh mục (để trống nếu lấy tất cả)",
-      },
-      layout: {
-        type: "select",
-        label: "Kiểu bố cục",
-        options: [
-          { label: "Dạng lưới", value: "grid" },
-          { label: "Dạng danh sách", value: "list" },
-        ],
-      },
-      showCTA: {
-        type: "radio",
-        label: "Hiển thị nút 'Xem tất cả'",
-        options: [
-          { label: "Có", value: true },
-          { label: "Không", value: false },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
+    layout: {
+      type: "select",
+      label: "Kiểu bố cục",
+      options: [
+        { label: "Dạng lưới", value: "grid" },
+        { label: "Dạng danh sách", value: "list" },
+      ],
     },
-    render: (props) => <LatestPostsBlock {...props} />,
-  };
+    showCTA: {
+      type: "radio",
+      label: "Hiển thị nút 'Xem tất cả'",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <LatestPostsBlock {...props} />,
+};
 
 // 2. LATEST ANNOUNCEMENTS BLOCK
 export const LatestAnnouncementsComponentConfig: PageBuilderComponentConfig<"LatestAnnouncements"> =
-  {
-    label: "Thông báo mới",
-    defaultProps: {
-      title: "Thông Báo Quan Trọng",
-      limit: 3,
-      layout: "list",
-      showCTA: true,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
+{
+  label: "Thông báo mới",
+  defaultProps: {
+    title: "Thông Báo Quan Trọng",
+    limit: 3,
+    layout: "list",
+    showCTA: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng thông báo" },
+    layout: {
+      type: "select",
+      label: "Kiểu bố cục",
+      options: [
+        { label: "Dạng danh sách", value: "list" },
+        { label: "Dạng lưới", value: "grid" },
+      ],
     },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng thông báo" },
-      layout: {
-        type: "select",
-        label: "Kiểu bố cục",
-        options: [
-          { label: "Dạng danh sách", value: "list" },
-          { label: "Dạng lưới", value: "grid" },
-        ],
-      },
-      showCTA: {
-        type: "radio",
-        label: "Hiển thị nút 'Xem tất cả'",
-        options: [
-          { label: "Có", value: true },
-          { label: "Không", value: false },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
+    showCTA: {
+      type: "radio",
+      label: "Hiển thị nút 'Xem tất cả'",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
     },
-    render: (props) => <LatestAnnouncementsBlock {...props} />,
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <LatestAnnouncementsBlock {...props} />,
+};
 
 // 3. STAFF GRID BLOCK
 export const StaffGridComponentConfig: PageBuilderComponentConfig<"StaffGrid"> =
-  {
-    label: "Đội ngũ giảng viên",
-    defaultProps: {
-      title: "Đội Ngũ Cán Bộ Giảng Viên",
-      limit: 3,
-      departmentId: "all",
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
+{
+  label: "Đội ngũ giảng viên",
+  defaultProps: {
+    title: "Đội Ngũ Cán Bộ Giảng Viên",
+    limit: 3,
+    departmentId: "all",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng giảng viên tối đa" },
+    departmentId: {
+      type: "text",
+      label: "ID Bộ môn (để trống nếu lấy tất cả)",
     },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng giảng viên tối đa" },
-      departmentId: {
-        type: "text",
-        label: "ID Bộ môn (để trống nếu lấy tất cả)",
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <StaffGridBlock {...props} />,
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <StaffGridBlock {...props} />,
+};
 
 // 4. UNIT LIST BLOCK
 export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
@@ -1403,171 +1400,171 @@ export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
 
 // 5. DOCUMENT LIST BLOCK
 export const DocumentListComponentConfig: PageBuilderComponentConfig<"DocumentList"> =
-  {
-    label: "Danh sách tài liệu",
-    defaultProps: {
-      title: "Tải Tài Liệu & Biểu Mẫu",
-      limit: 3,
-      categoryId: "all",
-      showIcon: true,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
+{
+  label: "Danh sách tài liệu",
+  defaultProps: {
+    title: "Tải Tài Liệu & Biểu Mẫu",
+    limit: 3,
+    categoryId: "all",
+    showIcon: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng tài liệu" },
+    categoryId: { type: "text", label: "ID danh mục (nếu có)" },
+    showIcon: {
+      type: "radio",
+      label: "Hiển thị biểu tượng file",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
     },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng tài liệu" },
-      categoryId: { type: "text", label: "ID danh mục (nếu có)" },
-      showIcon: {
-        type: "radio",
-        label: "Hiển thị biểu tượng file",
-        options: [
-          { label: "Có", value: true },
-          { label: "Không", value: false },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <DocumentListBlock {...props} />,
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <DocumentListBlock {...props} />,
+};
 
 // 6. RELATED POSTS BLOCK
 export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPosts"> =
-  {
-    label: "Tin tức liên quan",
-    defaultProps: {
-      title: "Bài Viết Liên Quan",
-      limit: 2,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
-    },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số bài viết liên quan" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <RelatedPostsBlock {...props} />,
-  };
+{
+  label: "Tin tức liên quan",
+  defaultProps: {
+    title: "Bài Viết Liên Quan",
+    limit: 2,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số bài viết liên quan" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <RelatedPostsBlock {...props} />,
+};
 
 // 7. RELATED DOCUMENTS BLOCK
 export const RelatedDocumentsComponentConfig: PageBuilderComponentConfig<"RelatedDocuments"> =
-  {
-    label: "Tài liệu liên quan",
-    defaultProps: {
-      title: "Tài Liệu Chi Tiết Liên Quan",
-      limit: 2,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
-    },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số tài liệu liên quan" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <RelatedDocumentsBlock {...props} />,
-  };
+{
+  label: "Tài liệu liên quan",
+  defaultProps: {
+    title: "Tài Liệu Chi Tiết Liên Quan",
+    limit: 2,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số tài liệu liên quan" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <RelatedDocumentsBlock {...props} />,
+};
 
 export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"NavigationMenu"> =
-  {
-    label: "Menu điều hướng",
-    defaultProps: {
-      title: "",
-      menuId: "",
-      orientation: "horizontal",
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
+{
+  label: "Menu điều hướng",
+  defaultProps: {
+    title: "",
+    menuId: "",
+    orientation: "horizontal",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề phụ" },
+    menuId: {
+      type: "select",
+      label: "Menu điều hướng",
+      options: [{ label: "Menu đầu tiên khả dụng", value: "" }],
     },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề phụ" },
+    orientation: {
+      type: "select",
+      label: "Hướng hiển thị",
+      options: [
+        { label: "Ngang", value: "horizontal" },
+        { label: "Dọc", value: "vertical" },
+      ],
+    },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  resolveFields: async (_data, { fields, lastFields }) => {
+    const lastMenuField = lastFields.menuId;
+
+    if (
+      lastMenuField &&
+      "options" in lastMenuField &&
+      Array.isArray(lastMenuField.options) &&
+      lastMenuField.options.length > 1
+    ) {
+      return lastFields;
+    }
+
+    const response = await fetch(
+      layoutBuilderRoutes.sources.url("navigation-menus"),
+      {
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return fields;
+    }
+
+    const payload = (await response.json()) as {
+      data?: Array<{
+        id: number;
+        label: string;
+        meta?: {
+          location?: string | null;
+        };
+      }>;
+    };
+
+    return {
+      ...fields,
       menuId: {
         type: "select",
         label: "Menu điều hướng",
-        options: [{ label: "Menu đầu tiên khả dụng", value: "" }],
-      },
-      orientation: {
-        type: "select",
-        label: "Hướng hiển thị",
         options: [
-          { label: "Ngang", value: "horizontal" },
-          { label: "Dọc", value: "vertical" },
+          { label: "Menu đầu tiên khả dụng", value: "" },
+          ...(payload.data ?? []).map((item) => ({
+            label: item.meta?.location
+              ? `${item.label} (${item.meta.location})`
+              : item.label,
+            value: item.id.toString(),
+          })),
         ],
       },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    resolveFields: async (_data, { fields, lastFields }) => {
-      const lastMenuField = lastFields.menuId;
-
-      if (
-        lastMenuField &&
-        "options" in lastMenuField &&
-        Array.isArray(lastMenuField.options) &&
-        lastMenuField.options.length > 1
-      ) {
-        return lastFields;
-      }
-
-      const response = await fetch(
-        layoutBuilderRoutes.sources.url("navigation-menus"),
-        {
-          credentials: "same-origin",
-          headers: {
-            Accept: "application/json",
-          },
-        },
-      );
-
-      if (!response.ok) {
-        return fields;
-      }
-
-      const payload = (await response.json()) as {
-        data?: Array<{
-          id: number;
-          label: string;
-          meta?: {
-            location?: string | null;
-          };
-        }>;
-      };
-
-      return {
-        ...fields,
-        menuId: {
-          type: "select",
-          label: "Menu điều hướng",
-          options: [
-            { label: "Menu đầu tiên khả dụng", value: "" },
-            ...(payload.data ?? []).map((item) => ({
-              label: item.meta?.location
-                ? `${item.label} (${item.meta.location})`
-                : item.label,
-              value: item.id.toString(),
-            })),
-          ],
-        },
-      };
-    },
-    render: (props) => <NavigationMenuBlock {...props} />,
-  };
+    };
+  },
+  render: (props) => <NavigationMenuBlock {...props} />,
+};
 
 function NavigationMenuEntry({
   currentPath,
@@ -1588,6 +1585,7 @@ function NavigationMenuEntry({
         "group/menu-item",
         isVertical ? "w-full" : "flex max-w-full flex-col",
       )}
+      delayCloseMs={isVertical ? 0 : 150}
     >
       <NavbarItem
         className={twMerge(
@@ -1676,50 +1674,50 @@ function normalizeNavigationPath(value: string): string {
 }
 
 export const CategoriesComponentConfig: PageBuilderComponentConfig<"Categories"> =
-  {
-    label: "Danh mục bài viết",
-    defaultProps: {
-      title: "Danh mục",
-      parentId: "",
-      limit: 8,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
-    },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
-      limit: { type: "number", label: "Số danh mục tối đa" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <CategoriesBlock {...props} />,
-  };
+{
+  label: "Danh mục bài viết",
+  defaultProps: {
+    title: "Danh mục",
+    parentId: "",
+    limit: 8,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
+    limit: { type: "number", label: "Số danh mục tối đa" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <CategoriesBlock {...props} />,
+};
 
 export const PageLinksComponentConfig: PageBuilderComponentConfig<"PageLinks"> =
-  {
-    label: "Liên kết trang",
-    defaultProps: {
-      title: "Trang liên quan",
-      limit: 8,
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
-    },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số trang tối đa" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <PageLinksBlock {...props} />,
-  };
+{
+  label: "Liên kết trang",
+  defaultProps: {
+    title: "Trang liên quan",
+    limit: 8,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số trang tối đa" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <PageLinksBlock {...props} />,
+};
 
 export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
   label: "Danh sách link tùy chỉnh",
@@ -1812,77 +1810,77 @@ export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
 };
 
 export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo"> =
-  {
-    label: "Thông tin liên hệ",
-    defaultProps: {
-      title: "Liên hệ",
-      address: "",
-      phone: "",
-      email: "",
-      surfaceTone: "transparent",
-      surfaceBorder: "none",
-      surfaceRadius: "none",
-      surfacePadding: "none",
-      surfaceShadow: "none",
-      className: "",
-    },
-    fields: {
-      ...puckSurfaceFields,
-      title: { type: "text", label: "Tiêu đề" },
-      address: { type: "textarea", label: "Địa chỉ" },
-      phone: { type: "text", label: "Số điện thoại" },
-      email: { type: "text", label: "Email" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => {
-      const {
-        title,
-        address,
-        phone,
-        email,
-        surfaceTone,
-        surfaceBorder,
-        surfaceRadius,
-        surfacePadding,
-        surfaceShadow,
-        className,
-      } = props;
-      const id = getPuckBlockDomId((props as { id?: string }).id);
+{
+  label: "Thông tin liên hệ",
+  defaultProps: {
+    title: "Liên hệ",
+    address: "",
+    phone: "",
+    email: "",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề" },
+    address: { type: "textarea", label: "Địa chỉ" },
+    phone: { type: "text", label: "Số điện thoại" },
+    email: { type: "text", label: "Email" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => {
+    const {
+      title,
+      address,
+      phone,
+      email,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId((props as { id?: string }).id);
 
-      return (
-        <section
-          id={id}
-          className={twMerge(
-            "space-y-3 text-sm",
-            getSurfaceClassName(
-              {
-                surfaceTone,
-                surfaceBorder,
-                surfaceRadius,
-                surfacePadding,
-                surfaceShadow,
-              },
-              "",
-            ),
-            className,
-          )}
-        >
-          <Heading level={3} className="text-base font-bold text-fg">
-            {title}
-          </Heading>
-          <div className="space-y-2 text-muted-fg">
-            {address ? <p>{address}</p> : null}
-            {phone ? <p>Điện thoại: {phone}</p> : null}
-            {email ? (
-              <p>
-                Email:{" "}
-                <Link className="text-primary" href={`mailto:${email}`}>
-                  {email}
-                </Link>
-              </p>
-            ) : null}
-          </div>
-        </section>
-      );
-    },
-  };
+    return (
+      <section
+        id={id}
+        className={twMerge(
+          "space-y-3 text-sm",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
+        <Heading level={3} className="text-base font-bold text-fg">
+          {title}
+        </Heading>
+        <div className="space-y-2 text-muted-fg">
+          {address ? <p className="whitespace-pre-line">{address}</p> : null}
+          {phone ? <p>Điện thoại: {phone}</p> : null}
+          {email ? (
+            <p>
+              Email:{" "}
+              <Link className="text-primary" href={`mailto:${email}`}>
+                {email}
+              </Link>
+            </p>
+          ) : null}
+        </div>
+      </section>
+    );
+  },
+};

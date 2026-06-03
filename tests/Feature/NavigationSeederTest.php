@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
 use App\Models\Page;
-use App\Models\Post;
 use App\Models\PostCategory;
 use Database\Seeders\NavigationSeeder;
 use Database\Seeders\PostCategorySeeder;
@@ -29,7 +28,7 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->firstOrFail();
 
     expect(NavigationMenu::query()->count())->toBe(2)
-        ->and(NavigationItem::query()->count())->toBe(12)
+        ->and(NavigationItem::query()->count())->toBe(49)
         ->and(NavigationItem::query()
             ->where('menu_id', $headerMenu->getKey())
             ->whereNull('parent_id')
@@ -37,10 +36,16 @@ test('navigation seeder seeds a stable header and footer tree', function () {
             ->pluck('title')
             ->all())->toBe([
                 'Trang chủ',
-                'Giới thiệu',
-                'Tin tức',
+                'Đơn vị',
+                'Chuyên ngành',
+                'NCKH',
                 'Tuyển sinh',
+                'Tuyển dụng',
+                'Tài liệu',
+                'Cựu SV',
+                'Tin tức',
                 'Liên hệ',
+                'Hoạt động cộng đồng',
             ])
         ->and(NavigationItem::query()
             ->where('menu_id', $footerMenu->getKey())
@@ -50,13 +55,13 @@ test('navigation seeder seeds a stable header and footer tree', function () {
             ->all())->toBe([
                 'Sinh viên',
                 'Đào tạo',
-                'Bài viết nổi bật',
+                'Liên hệ',
                 'Thông báo',
             ]);
 
-    $gioiThieuItem = NavigationItem::query()
+    $donViItem = NavigationItem::query()
         ->where('menu_id', $headerMenu->getKey())
-        ->where('title', 'Giới thiệu')
+        ->where('title', 'Đơn vị')
         ->firstOrFail();
 
     $tinTucItem = NavigationItem::query()
@@ -64,27 +69,43 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->where('title', 'Tin tức')
         ->firstOrFail();
 
-    $baiVietNoiBatItem = NavigationItem::query()
+    $thongBaoItem = NavigationItem::query()
         ->where('menu_id', $footerMenu->getKey())
-        ->where('title', 'Bài viết nổi bật')
+        ->where('title', 'Thông báo')
         ->firstOrFail();
 
-    expect($gioiThieuItem->linkable_type)->toBe(Page::class)
-        ->and($gioiThieuItem->linkable?->slug)->toBe('gioi-thieu-vmu')
-        ->and($gioiThieuItem->children->pluck('title')->all())->toBe([
-            'Sứ mệnh và tầm nhìn',
-            'Cơ cấu tổ chức',
+    expect($donViItem->linkable_type)->toBe(Page::class)
+        ->and($donViItem->linkable?->slug)->toBe('gioi-thieu-khoa-cong-nghe-thong-tin')
+        ->and($donViItem->children->pluck('title')->all())->toBe([
+            'Ban chủ nhiệm khoa',
+            'Bộ môn Hệ thống thông tin',
+            'Bộ môn Khoa học máy tính',
+            'Bộ môn Kỹ thuật máy tính',
+            'Bộ môn Tin học đại cương',
+            'Bộ môn Truyền thông và Mạng máy tính',
+            'Ban chấp hành Công đoàn',
+            'Liên chi đoàn Khoa CNTT',
         ])
         ->and($tinTucItem->linkable_type)->toBe(PostCategory::class)
-        ->and($tinTucItem->linkable?->slug)->toBe('tin-tuc')
+        ->and($tinTucItem->linkable?->slug)->toBe('tin-don-vi')
         ->and($tinTucItem->children->pluck('title')->all())->toBe([
+            'Cao học',
             'Thông báo',
+            'Thời khóa biểu',
+            'Tin đơn vị',
+            'Kết nối doanh nghiệp',
+            'Đoàn thanh niên',
+            'Câu lạc bộ tin học',
+            'Câu lạc bộ nghiên cứu khoa học',
+            'Hoạt động thể thao văn nghệ',
+            'Học bổng',
+            'Cơ hội việc làm',
         ])
-        ->and($baiVietNoiBatItem->linkable_type)->toBe(Post::class)
-        ->and($baiVietNoiBatItem->linkable?->slug)->toBe('vmu-khai-truong-chuoi-hoat-dong-chao-don-tan-sinh-vien');
+        ->and($thongBaoItem->linkable_type)->toBe(PostCategory::class)
+        ->and($thongBaoItem->linkable?->slug)->toBe('thong-bao');
 
     $seededPage = Page::query()
-        ->where('slug', 'gioi-thieu-vmu')
+        ->where('slug', 'gioi-thieu-khoa-cong-nghe-thong-tin')
         ->firstOrFail();
 
     /** @var array{
@@ -96,26 +117,26 @@ test('navigation seeder seeds a stable header and footer tree', function () {
     $pageContent = json_decode($seededPage->content ?? '', true, flags: JSON_THROW_ON_ERROR);
 
     expect(Page::query()->whereIn('slug', [
-        'gioi-thieu-vmu',
+        'gioi-thieu-khoa-cong-nghe-thong-tin',
         'su-menh-va-tam-nhin',
         'co-cau-to-chuc',
     ])->count())->toBe(3)
         ->and($seededPage->content_format)->toBe('puck_json')
-        ->and($pageContent['root']['props']['title'])->toBe('Giới thiệu VMU')
+        ->and($pageContent['root']['props']['title'])->toBe('Giới thiệu Khoa Công nghệ thông tin')
         ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
             'HeroBanner',
             'RichText',
             'CTASection',
         ])
         ->and(collect($pageContent['content'])->pluck('props.id')->all())->toBe([
-            'gioi-thieu-vmu-hero',
-            'gioi-thieu-vmu-rich-text',
-            'gioi-thieu-vmu-cta',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-hero',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-rich-text',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-cta',
         ])
         ->and(collect($pageContent['content'])->pluck('id')->all())->toBe([
-            'gioi-thieu-vmu-hero',
-            'gioi-thieu-vmu-rich-text',
-            'gioi-thieu-vmu-cta',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-hero',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-rich-text',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-cta',
         ])
         ->and(collect($pageContent['content'])->pluck('props.id')->every(
             fn (mixed $id): bool => is_string($id) && $id !== '',

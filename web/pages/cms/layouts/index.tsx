@@ -7,8 +7,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Head, router } from "@inertiajs/react";
 import type { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import { Text } from "@/components/ui/text";
 import CmsLayout from "@/layouts/cms-layout";

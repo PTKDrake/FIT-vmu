@@ -29,7 +29,7 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
   return (
     <div className="min-h-dvh bg-bg text-fg">
       {hasHeader ? (
-        <header className="bg-overlay/80">
+        <header>
           <PuckPageRender
             config={headerConfig}
             content={layout?.headerData}
@@ -38,7 +38,7 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
         </header>
       ) : null}
 
-      <div className="mx-auto flex w-full flex-col gap-6 lg:flex-row lg:items-start sm:px-6">
+      <div className="mx-auto flex w-full flex-col lg:flex-row lg:items-start">
         {hasLeft ? (
           <aside className="w-full shrink-0 lg:w-72">
             <PuckPageRender
@@ -63,7 +63,7 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
       </div>
 
       {hasFooter ? (
-        <footer className="border-t border-border bg-overlay/80">
+        <footer>
           <PuckPageRender
             config={footerConfig}
             content={layout?.footerData}

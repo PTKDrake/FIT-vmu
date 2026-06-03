@@ -1,4 +1,5 @@
 import { Link, router, useForm } from "@inertiajs/react";
+import { PuckLayoutBuilder } from "@/components/layout-builder/puck-layout-builder";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,
@@ -14,13 +15,12 @@ import {
 } from "@/components/ui/native-select";
 import { Switch } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
-import { PuckLayoutBuilder } from "@/components/layout-builder/puck-layout-builder";
+import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
   createEmptyPuckData,
   serializePuckPageData,
 } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderData } from "@/lib/puck/page-builder-data";
-import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
   createCombinedSiteLayoutData,
   splitCombinedSiteLayoutData,

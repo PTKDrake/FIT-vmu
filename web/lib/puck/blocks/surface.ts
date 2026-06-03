@@ -108,12 +108,12 @@ export function getSurfaceToneClass(surfaceTone?: PuckSurfaceTone): string {
   const toneClasses: Record<PuckSurfaceTone, string> = {
     transparent: "bg-transparent",
     bg: "bg-bg",
-    overlay: "bg-overlay",
+    overlay: "bg-overlay/90",
     muted: "bg-muted/40",
     subtle: "bg-muted/20",
   };
 
-  return toneClasses[surfaceTone ?? "overlay"];
+  return toneClasses[surfaceTone ?? "transparent"];
 }
 
 export function getSurfaceBorderClass(
@@ -127,7 +127,7 @@ export function getSurfaceBorderClass(
     dashed: "border border-dashed border-border/60",
   };
 
-  return borderClasses[surfaceBorder ?? "default"];
+  return borderClasses[surfaceBorder ?? "none"];
 }
 
 export function getSurfaceRadiusClass(
@@ -144,7 +144,7 @@ export function getSurfaceRadiusClass(
     full: "rounded-full",
   };
 
-  return radiusClasses[surfaceRadius ?? "3xl"];
+  return radiusClasses[surfaceRadius ?? "none"];
 }
 
 export function getSurfacePaddingClass(
@@ -159,7 +159,7 @@ export function getSurfacePaddingClass(
     xl: "p-8",
   };
 
-  return paddingClasses[surfacePadding ?? "lg"];
+  return paddingClasses[surfacePadding ?? "none"];
 }
 
 export function getSurfaceShadowClass(
@@ -171,7 +171,7 @@ export function getSurfaceShadowClass(
     md: "shadow-sm",
   };
 
-  return shadowClasses[surfaceShadow ?? "sm"];
+  return shadowClasses[surfaceShadow ?? "none"];
 }
 
 export function getSurfaceClassName(

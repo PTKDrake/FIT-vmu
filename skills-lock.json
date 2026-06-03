@@ -30,6 +30,12 @@
       "sourceType": "well-known",
       "computedHash": "bb2a848e42ac9637d7601c61ec51c75b58ca963201ae7b2c65eae68e40644f23"
     },
+    "shadcn": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "8f8bcc9024aa068245fac646d654a18c80280e4b06112ccd3e691a8c96cd66bd"
+    },
     "tanstack-table": {
       "source": "tanstack-skills/tanstack-skills",
       "sourceType": "github",

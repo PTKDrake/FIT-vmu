@@ -11,7 +11,6 @@ import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label, Description, FieldError } from "@/components/ui/field";
-import { t } from "@/lib/i18n";
 import {
   ModalContent,
   ModalBody,
@@ -29,6 +28,7 @@ import {
   PaginationGap,
 } from "@/components/ui/pagination";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
+import { t } from "@/lib/i18n";
 import cmsRoutes from "@/routes/cms";
 
 interface MediaSelectorProps {

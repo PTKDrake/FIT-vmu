@@ -9,8 +9,8 @@ import { Head, useForm, Link, usePage } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
 import type { Selection } from "react-aria-components";
-import type { CmsPageCreatePageProps } from "@/components/cms/types";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
+import type { CmsPageCreatePageProps } from "@/components/cms/types";
 import { Button } from "@/components/ui/button";
 import {
   ChoiceBox,

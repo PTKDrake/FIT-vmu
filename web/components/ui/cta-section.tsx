@@ -28,7 +28,7 @@ export function CTASection({
     <section
       data-slot="cta-section"
       className={twMerge(
-        "space-y-8 rounded-3xl bg-primary p-8 text-center text-primary-fg shadow-xs sm:p-12 relative overflow-hidden",
+        "dark space-y-8 rounded-3xl bg-primary p-8 text-center text-primary-fg shadow-xs sm:p-12 relative overflow-hidden",
         className,
       )}
       {...props}

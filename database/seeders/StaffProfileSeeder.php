@@ -19,8 +19,9 @@ class StaffProfileSeeder extends Seeder
         $unitKcntt = Unit::query()->where('slug', 'khoa-cong-nghe-thong-tin')->first();
         $unitKhmt = Unit::query()->where('slug', 'bo-mon-khoa-hoc-may-tinh')->first();
         $unitHttt = Unit::query()->where('slug', 'bo-mon-he-thong-thong-tin')->first();
-        $unitMmt = Unit::query()->where('slug', 'bo-mon-truyen-thong-va-mang-may-tinh')->first();
-        $unitVpk = Unit::query()->where('slug', 'van-phong-khoa')->first();
+        $unitTtmm = Unit::query()->where('slug', 'bo-mon-truyen-thong-va-mang-may-tinh')->first();
+        $unitKtmt = Unit::query()->where('slug', 'bo-mon-ky-thuat-may-tinh')->first();
+        $unitThdc = Unit::query()->where('slug', 'bo-mon-tin-hoc-dai-cuong')->first();
 
         // Fetch seeded positions
         $posTk = Position::query()->where('slug', 'truong-khoa')->first();
@@ -28,17 +29,16 @@ class StaffProfileSeeder extends Seeder
         $posTbm = Position::query()->where('slug', 'truong-bo-mon')->first();
         $posPtbm = Position::query()->where('slug', 'pho-truong-bo-mon')->first();
         $posGv = Position::query()->where('slug', 'giang-vien')->first();
-        $posTldt = Position::query()->where('slug', 'tro-ly-dao-tao')->first();
 
         if (! $unitKcntt || ! $posTk) {
             return;
         }
 
-        // 1. NGƯỜI DÙNG 1: TRƯỞNG KHOA & GIẢNG VIÊN KHMT
+        // 1. TS. Nguyễn Công Toàn — Trưởng Khoa
         $user1 = User::query()->updateOrCreate(
-            ['email' => 'nguyenvana@vimaru.edu.vn'],
+            ['email' => 'toannc@vimaru.edu.vn'],
             [
-                'name' => 'PGS.TS. Nguyễn Văn A',
+                'name' => 'TS. Nguyễn Công Toàn',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
             ]
@@ -49,13 +49,12 @@ class StaffProfileSeeder extends Seeder
             ['user_id' => $user1->id],
             [
                 'full_name' => $user1->name,
-                'slug' => 'pgs-ts-nguyen-van-a',
+                'slug' => 'ts-nguyen-cong-toan',
                 'email' => $user1->email,
-                'phone' => '0912345678',
+                'phone' => '0225.3735138',
                 'is_public' => true,
                 'bio' => $this->blockNote([
-                    'PGS.TS. Nguyễn Văn A là Trưởng khoa Công nghệ thông tin từ năm 2022.',
-                    'Ông tốt nghiệp Tiến sĩ ngành Khoa học máy tính tại Pháp năm 2012 và có nhiều công trình nghiên cứu về Trí tuệ nhân tạo và Thị giác máy tính.',
+                    'Trưởng Khoa Công nghệ thông tin đương nhiệm.',
                 ]),
             ]
         );
@@ -66,29 +65,15 @@ class StaffProfileSeeder extends Seeder
                 'position_id' => $posTk->id,
             ],
             [
-                'start_date' => '2022-09-01',
-                'note' => 'Quyết định bổ nhiệm số 888/QĐ-ĐHHP',
+                'start_date' => now()->toDateString(),
             ]
         );
 
-        if ($unitKhmt && $posGv) {
-            $profile1->appointments()->updateOrCreate(
-                [
-                    'unit_id' => $unitKhmt->id,
-                    'position_id' => $posGv->id,
-                ],
-                [
-                    'start_date' => '2012-10-01',
-                    'note' => 'Giảng viên cơ hữu bộ môn',
-                ]
-            );
-        }
-
-        // 2. NGƯỜI DÙNG 2: PHÓ TRƯỞNG KHOA & TRƯỞNG BỘ MÔN HTTT
+        // 2. TS. Nguyễn Trung Đức — Phó Trưởng Khoa
         $user2 = User::query()->updateOrCreate(
-            ['email' => 'tranthib@vimaru.edu.vn'],
+            ['email' => 'duc.nguyentrung@gmail.com'],
             [
-                'name' => 'TS. Trần Thị B',
+                'name' => 'TS. Nguyễn Trung Đức',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
             ]
@@ -99,13 +84,12 @@ class StaffProfileSeeder extends Seeder
             ['user_id' => $user2->id],
             [
                 'full_name' => $user2->name,
-                'slug' => 'ts-tran-thi-b',
+                'slug' => 'ts-nguyen-trung-duc',
                 'email' => $user2->email,
-                'phone' => '0987654321',
+                'phone' => '0225.3735138',
                 'is_public' => true,
                 'bio' => $this->blockNote([
-                    'TS. Trần Thị B hiện là Phó Trưởng khoa phụ trách Đào tạo và kiêm nhiệm Trưởng bộ môn Hệ thống thông tin.',
-                    'Lĩnh vực nghiên cứu chính: Cơ sở dữ liệu lớn, Phân tích nghiệp vụ thông minh và Hệ quản trị thông tin doanh nghiệp.',
+                    'Phó Trưởng Khoa phụ trách đào tạo.',
                 ]),
             ]
         );
@@ -117,70 +101,54 @@ class StaffProfileSeeder extends Seeder
                     'position_id' => $posPtk->id,
                 ],
                 [
-                    'start_date' => '2023-03-15',
-                    'note' => 'Quyết định bổ nhiệm số 222/QĐ-ĐHHP',
+                    'start_date' => now()->toDateString(),
                 ]
             );
         }
 
-        if ($unitHttt && $posTbm) {
-            $profile2->appointments()->updateOrCreate(
-                [
-                    'unit_id' => $unitHttt->id,
-                    'position_id' => $posTbm->id,
-                ],
-                [
-                    'start_date' => '2020-01-01',
-                    'note' => 'Quyết định kiêm nhiệm số 111/QĐ-KCNTT',
-                ]
-            );
-        }
+        // 3. TS. Nguyễn Thị Giang — Phó Trưởng Khoa
+        $user3 = User::query()->updateOrCreate(
+            ['email' => 'giangnt@vimaru.edu.vn'],
+            [
+                'name' => 'TS. Nguyễn Thị Giang',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $user3->assignRole('staff');
 
-        // 3. NGƯỜI DÙNG 3: TRƯỞNG BỘ MÔN MẠNG & TRUYỀN THÔNG
-        if ($unitMmt && $posTbm) {
-            $user3 = User::query()->updateOrCreate(
-                ['email' => 'lehoangc@vimaru.edu.vn'],
-                [
-                    'name' => 'ThS. Lê Hoàng C',
-                    'password' => bcrypt('password'),
-                    'email_verified_at' => now(),
-                ]
-            );
-            $user3->assignRole('staff');
+        $profile3 = StaffProfile::query()->updateOrCreate(
+            ['user_id' => $user3->id],
+            [
+                'full_name' => $user3->name,
+                'slug' => 'ts-nguyen-thi-giang',
+                'email' => $user3->email,
+                'phone' => '0225.3735138',
+                'is_public' => true,
+                'bio' => $this->blockNote([
+                    'Phó Trưởng Khoa.',
+                ]),
+            ]
+        );
 
-            $profile3 = StaffProfile::query()->updateOrCreate(
-                ['user_id' => $user3->id],
-                [
-                    'full_name' => $user3->name,
-                    'slug' => 'ths-le-hoang-c',
-                    'email' => $user3->email,
-                    'phone' => '0905678912',
-                    'is_public' => true,
-                    'bio' => $this->blockNote([
-                        'ThS. Lê Hoàng C là Trưởng bộ môn Truyền thông và mạng máy tính.',
-                        'Hướng nghiên cứu: An toàn thông tin mạng, Điện toán đám mây và IoT hàng hải.',
-                    ]),
-                ]
-            );
-
+        if ($posPtk) {
             $profile3->appointments()->updateOrCreate(
                 [
-                    'unit_id' => $unitMmt->id,
-                    'position_id' => $posTbm->id,
+                    'unit_id' => $unitKcntt->id,
+                    'position_id' => $posPtk->id,
                 ],
                 [
-                    'start_date' => '2021-08-01',
-                    'note' => 'Quyết định bổ nhiệm số 555/QĐ-ĐHHP',
+                    'start_date' => now()->toDateString(),
                 ]
             );
         }
 
-        // 4. NGƯỜI DÙNG 4: TRỢ LÝ ĐÀO TẠO VĂN PHÒNG KHOA
-        if ($unitVpk && $posTldt) {
+        // 4. TS. Nguyễn Hạnh Phúc — Trưởng BM Khoa học máy tính & Giảng viên Khoa CNTT
+        if ($unitKhmt && $posTbm) {
             $user4 = User::query()->updateOrCreate(
-                ['email' => 'phamthid@vimaru.edu.vn'],
+                ['email' => 'phucnh@vimaru.edu.vn'],
                 [
-                    'name' => 'Bà Phạm Thị D',
+                    'name' => 'TS. Nguyễn Hạnh Phúc',
                     'password' => bcrypt('password'),
                     'email_verified_at' => now(),
                 ]
@@ -191,25 +159,183 @@ class StaffProfileSeeder extends Seeder
                 ['user_id' => $user4->id],
                 [
                     'full_name' => $user4->name,
-                    'slug' => 'ba-pham-thi-d',
+                    'slug' => 'ts-nguyen-hanh-phuc',
                     'email' => $user4->email,
-                    'phone' => '0919998887',
+                    'phone' => '0225.3735138',
                     'is_public' => true,
                     'bio' => $this->blockNote([
-                        'Bà Phạm Thị D là Chuyên viên Trợ lý Đào tạo hành chính tại Văn phòng khoa Công nghệ thông tin.',
-                        'Hỗ trợ đắc lực công tác quản lý lịch học, giáo vụ và điều phối sinh viên Khoa.',
+                        'Trưởng Bộ môn Khoa học máy tính.',
                     ]),
                 ]
             );
 
             $profile4->appointments()->updateOrCreate(
                 [
-                    'unit_id' => $unitVpk->id,
-                    'position_id' => $posTldt->id,
+                    'unit_id' => $unitKhmt->id,
+                    'position_id' => $posTbm->id,
                 ],
                 [
-                    'start_date' => '2018-05-01',
-                    'note' => 'Phân công nhân sự VP Khoa',
+                    'start_date' => now()->toDateString(),
+                ]
+            );
+
+            if ($posGv) {
+                $profile4->appointments()->updateOrCreate(
+                    [
+                        'unit_id' => $unitKcntt->id,
+                        'position_id' => $posGv->id,
+                    ],
+                    [
+                        'start_date' => now()->toDateString(),
+                    ]
+                );
+            }
+        }
+
+        // 5. TS. Lê Quyết Tiến — Trưởng BM Hệ thống thông tin
+        if ($unitHttt && $posTbm) {
+            $user5 = User::query()->updateOrCreate(
+                ['email' => 'tienlq@vimaru.edu.vn'],
+                [
+                    'name' => 'TS. Lê Quyết Tiến',
+                    'password' => bcrypt('password'),
+                    'email_verified_at' => now(),
+                ]
+            );
+            $user5->assignRole('staff');
+
+            $profile5 = StaffProfile::query()->updateOrCreate(
+                ['user_id' => $user5->id],
+                [
+                    'full_name' => $user5->name,
+                    'slug' => 'ts-le-quyet-tien',
+                    'email' => $user5->email,
+                    'phone' => '0225.3735138',
+                    'is_public' => true,
+                    'bio' => $this->blockNote([
+                        'Trưởng Bộ môn Hệ thống thông tin.',
+                    ]),
+                ]
+            );
+
+            $profile5->appointments()->updateOrCreate(
+                [
+                    'unit_id' => $unitHttt->id,
+                    'position_id' => $posTbm->id,
+                ],
+                [
+                    'start_date' => now()->toDateString(),
+                ]
+            );
+        }
+
+        // 6. TS. Hồ Thị Hương Thơm — Trưởng BM Truyền thông và Mạng máy tính
+        if ($unitTtmm && $posTbm) {
+            $user6 = User::query()->updateOrCreate(
+                ['email' => 'thomhth@vimaru.edu.vn'],
+                [
+                    'name' => 'TS. Hồ Thị Hương Thơm',
+                    'password' => bcrypt('password'),
+                    'email_verified_at' => now(),
+                ]
+            );
+            $user6->assignRole('staff');
+
+            $profile6 = StaffProfile::query()->updateOrCreate(
+                ['user_id' => $user6->id],
+                [
+                    'full_name' => $user6->name,
+                    'slug' => 'ts-ho-thi-huong-thom',
+                    'email' => $user6->email,
+                    'phone' => '0225.3735138',
+                    'is_public' => true,
+                    'bio' => $this->blockNote([
+                        'Trưởng Bộ môn Truyền thông và Mạng máy tính.',
+                    ]),
+                ]
+            );
+
+            $profile6->appointments()->updateOrCreate(
+                [
+                    'unit_id' => $unitTtmm->id,
+                    'position_id' => $posTbm->id,
+                ],
+                [
+                    'start_date' => now()->toDateString(),
+                ]
+            );
+        }
+
+        // 7. ThS. Phạm Trung Minh — Phó Trưởng BM Kỹ thuật máy tính
+        if ($unitKtmt && $posPtbm) {
+            $user7 = User::query()->updateOrCreate(
+                ['email' => 'minhpt@vimaru.edu.vn'],
+                [
+                    'name' => 'ThS. Phạm Trung Minh',
+                    'password' => bcrypt('password'),
+                    'email_verified_at' => now(),
+                ]
+            );
+            $user7->assignRole('staff');
+
+            $profile7 = StaffProfile::query()->updateOrCreate(
+                ['user_id' => $user7->id],
+                [
+                    'full_name' => $user7->name,
+                    'slug' => 'ths-pham-trung-minh',
+                    'email' => $user7->email,
+                    'phone' => '0225.3735138',
+                    'is_public' => true,
+                    'bio' => $this->blockNote([
+                        'Phó Trưởng Bộ môn Kỹ thuật máy tính.',
+                    ]),
+                ]
+            );
+
+            $profile7->appointments()->updateOrCreate(
+                [
+                    'unit_id' => $unitKtmt->id,
+                    'position_id' => $posPtbm->id,
+                ],
+                [
+                    'start_date' => now()->toDateString(),
+                ]
+            );
+        }
+
+        // 8. ThS. Nguyễn Kim Anh — Phó Trưởng BM Tin học đại cương
+        if ($unitThdc && $posPtbm) {
+            $user8 = User::query()->updateOrCreate(
+                ['email' => 'anhkimnguyen@vimaru.edu.vn'],
+                [
+                    'name' => 'ThS. Nguyễn Kim Anh',
+                    'password' => bcrypt('password'),
+                    'email_verified_at' => now(),
+                ]
+            );
+            $user8->assignRole('staff');
+
+            $profile8 = StaffProfile::query()->updateOrCreate(
+                ['user_id' => $user8->id],
+                [
+                    'full_name' => $user8->name,
+                    'slug' => 'ths-nguyen-kim-anh',
+                    'email' => $user8->email,
+                    'phone' => '0225.3735138',
+                    'is_public' => true,
+                    'bio' => $this->blockNote([
+                        'Phó Trưởng Bộ môn Tin học đại cương.',
+                    ]),
+                ]
+            );
+
+            $profile8->appointments()->updateOrCreate(
+                [
+                    'unit_id' => $unitThdc->id,
+                    'position_id' => $posPtbm->id,
+                ],
+                [
+                    'start_date' => now()->toDateString(),
                 ]
             );
         }

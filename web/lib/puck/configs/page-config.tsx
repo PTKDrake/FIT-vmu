@@ -40,6 +40,9 @@ import {
   LinkListComponentConfig,
   ContactInfoComponentConfig,
   SiteLayoutFrameComponentConfig,
+  SocialLinksComponentConfig,
+  NewsletterFormComponentConfig,
+  CopyrightBarComponentConfig,
 } from "../blocks";
 import type { PageBuilderConfig } from "../blocks/types";
 
@@ -70,6 +73,9 @@ export const pageConfig: PageBuilderConfig = {
         "Note",
         "BadgeList",
         "TagList",
+        "SocialLinks",
+        "NewsletterForm",
+        "CopyrightBar",
       ],
     },
     section_blocks: {
@@ -157,6 +163,9 @@ export const pageConfig: PageBuilderConfig = {
     PageLinks: PageLinksComponentConfig,
     LinkList: LinkListComponentConfig,
     ContactInfo: ContactInfoComponentConfig,
+    SocialLinks: SocialLinksComponentConfig,
+    NewsletterForm: NewsletterFormComponentConfig,
+    CopyrightBar: CopyrightBarComponentConfig,
     AuthStatus: AuthStatusComponentConfig,
   },
 };
