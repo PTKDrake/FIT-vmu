@@ -1,5 +1,5 @@
 import { useForm } from "@inertiajs/react";
-import { type FormEvent } from "react";
+import type {FormEvent} from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -67,6 +67,7 @@ export function RoleActionDialog({
         },
         preserveScroll: true,
       });
+
       return;
     }
 
@@ -81,6 +82,7 @@ export function RoleActionDialog({
         },
         preserveScroll: true,
       });
+
       return;
     }
 
@@ -95,6 +97,7 @@ export function RoleActionDialog({
         },
         preserveScroll: true,
       });
+
       return;
     }
   }

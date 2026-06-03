@@ -5,6 +5,8 @@ import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
 import { Note as NoteUI } from "@/components/ui/note";
 import { Text } from "@/components/ui/text";
+import { getPuckBlockDomId } from "./shared";
+import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
 // 1. HEADING BLOCK
@@ -41,7 +43,9 @@ export const HeadingComponentConfig: PageBuilderComponentConfig<"Heading"> = {
     },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ title, subtitle, level, alignment, className }) => {
+  render: (props) => {
+    const { title, subtitle, level, alignment, className } = props;
+    const id = getPuckBlockDomId(props.id);
     const alignClass = {
       left: "text-left",
       center: "text-center mx-auto",
@@ -49,7 +53,10 @@ export const HeadingComponentConfig: PageBuilderComponentConfig<"Heading"> = {
     }[alignment];
 
     return (
-      <div className={twMerge("space-y-1.5 w-full", alignClass, className)}>
+      <div
+        id={id}
+        className={twMerge("space-y-1.5", alignClass, className)}
+      >
         <Heading
           level={level}
           className={twMerge(
@@ -83,9 +90,13 @@ export const RichTextComponentConfig: PageBuilderComponentConfig<"RichText"> = {
     body: { type: "textarea", label: "Nội dung" },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ body, className }) => {
+  render: (props) => {
+    const { body, className } = props;
+    const id = getPuckBlockDomId((props as { id?: string }).id);
+
     return (
       <div
+        id={id}
         className={twMerge(
           "prose prose-sm sm:prose max-w-full text-fg leading-relaxed *:mb-4 last:*:mb-0 focus:outline-hidden",
           className,
@@ -105,9 +116,15 @@ export const ImageComponentConfig: PageBuilderComponentConfig<"Image"> = {
     caption: "",
     objectFit: "cover",
     rounded: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "default",
+    surfaceRadius: "3xl",
+    surfacePadding: "none",
+    surfaceShadow: "none",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     imageUrl: { type: "text", label: "Đường dẫn ảnh" },
     alt: { type: "text", label: "Mô tả ảnh" },
     caption: { type: "text", label: "Chú thích ảnh" },
@@ -129,15 +146,41 @@ export const ImageComponentConfig: PageBuilderComponentConfig<"Image"> = {
     },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ imageUrl, alt, caption, objectFit, rounded, className }) => {
+  render: (props) => {
+    const {
+      imageUrl,
+      alt,
+      caption,
+      objectFit,
+      rounded,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(props.id);
+    const imageRadius = surfaceRadius ?? (rounded ? "3xl" : "none");
+
     return (
       <figure
+        id={id}
         className={twMerge("w-full text-center space-y-2 group", className)}
       >
         <div
           className={twMerge(
-            "relative overflow-hidden border border-border/80 bg-muted/30 mx-auto aspect-video max-h-[480px] w-full",
-            rounded ? "rounded-3xl" : "rounded-none",
+            "relative mx-auto aspect-video max-h-[480px] w-full overflow-hidden bg-muted/30",
+            getSurfaceClassName(
+              {
+                surfaceTone,
+                surfaceBorder,
+                surfaceRadius: imageRadius,
+                surfacePadding,
+                surfaceShadow,
+              },
+              "",
+            ),
           )}
         >
           {imageUrl ? (
@@ -182,95 +225,130 @@ export const ImageComponentConfig: PageBuilderComponentConfig<"Image"> = {
 
 // 4. IMAGE & TEXT BLOCK
 export const ImageTextComponentConfig: PageBuilderComponentConfig<"ImageText"> =
-  {
-    label: "Ảnh kèm văn bản",
-    defaultProps: {
-      imageUrl: "",
-      alt: "Hình ảnh",
-      title: "Tiêu đề khối nội dung",
-      description:
-        "Nhập nội dung mô tả chi tiết đi kèm với hình ảnh ở bên cạnh.",
-      imagePosition: "left",
-      className: "",
+{
+  label: "Ảnh kèm văn bản",
+  defaultProps: {
+    imageUrl: "",
+    alt: "Hình ảnh",
+    title: "Tiêu đề khối nội dung",
+    description:
+      "Nhập nội dung mô tả chi tiết đi kèm với hình ảnh ở bên cạnh.",
+    imagePosition: "left",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    imageUrl: { type: "text", label: "Đường dẫn ảnh" },
+    alt: { type: "text", label: "Mô tả ảnh" },
+    title: { type: "text", label: "Tiêu đề" },
+    description: { type: "textarea", label: "Nội dung văn bản" },
+    imagePosition: {
+      type: "select",
+      label: "Vị trí ảnh",
+      options: [
+        { label: "Bên trái", value: "left" },
+        { label: "Bên phải", value: "right" },
+      ],
     },
-    fields: {
-      imageUrl: { type: "text", label: "Đường dẫn ảnh" },
-      alt: { type: "text", label: "Mô tả ảnh" },
-      title: { type: "text", label: "Tiêu đề" },
-      description: { type: "textarea", label: "Nội dung văn bản" },
-      imagePosition: {
-        type: "select",
-        label: "Vị trí ảnh",
-        options: [
-          { label: "Bên trái", value: "left" },
-          { label: "Bên phải", value: "right" },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: ({
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => {
+    const {
       imageUrl,
       alt,
       title,
       description,
       imagePosition,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
       className,
-    }) => {
-      return (
+    } = props;
+    const id = getPuckBlockDomId(props.id);
+
+    return (
+      <div
+        id={id}
+        className={twMerge(
+          "grid items-center gap-8 md:grid-cols-2 py-4",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
         <div
           className={twMerge(
-            "grid items-center gap-8 md:grid-cols-2 py-4",
-            className,
+            "space-y-4",
+            imagePosition === "right" ? "md:order-1" : "md:order-2",
           )}
         >
-          <div
-            className={twMerge(
-              "space-y-4",
-              imagePosition === "right" ? "md:order-1" : "md:order-2",
-            )}
-          >
-            <Heading level={3} className="text-2xl font-bold text-fg">
-              {title}
-            </Heading>
-            <Text className="text-sm/relaxed text-muted-fg leading-relaxed whitespace-pre-line">
-              {description}
-            </Text>
-          </div>
-
-          <div
-            className={twMerge(
-              "relative w-full aspect-video md:aspect-[4/3] rounded-3xl overflow-hidden border border-border/80 bg-muted/20 shadow-xs group",
-              imagePosition === "right" ? "md:order-2" : "md:order-1",
-            )}
-          >
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={alt || title}
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-muted-fg">
-                <svg
-                  className="size-16 opacity-30"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                  />
-                </svg>
-              </div>
-            )}
-          </div>
+          <Heading level={3} className="text-2xl font-bold text-fg">
+            {title}
+          </Heading>
+          <Text className="text-sm/relaxed text-muted-fg leading-relaxed whitespace-pre-line">
+            {description}
+          </Text>
         </div>
-      );
-    },
-  };
+
+        <div
+          className={twMerge(
+            "relative w-full aspect-video md:aspect-[4/3] overflow-hidden bg-muted/20 group",
+            getSurfaceClassName(
+              {
+                surfaceTone,
+                surfaceBorder,
+                surfaceRadius,
+                surfacePadding,
+                surfaceShadow,
+              },
+              "",
+            ),
+            imagePosition === "right" ? "md:order-2" : "md:order-1",
+          )}
+        >
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={alt || title}
+              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-muted-fg">
+              <svg
+                className="size-16 opacity-30"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                />
+              </svg>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  },
+};
 
 // 5. BUTTON BLOCK
 export const ButtonComponentConfig: PageBuilderComponentConfig<"Button"> = {
@@ -281,9 +359,15 @@ export const ButtonComponentConfig: PageBuilderComponentConfig<"Button"> = {
     variant: "primary",
     size: "md",
     openInNewTab: false,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "full",
+    surfacePadding: "none",
+    surfaceShadow: "none",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     text: { type: "text", label: "Nhãn nút" },
     url: { type: "text", label: "Đường dẫn" },
     variant: {
@@ -315,7 +399,21 @@ export const ButtonComponentConfig: PageBuilderComponentConfig<"Button"> = {
     },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ text, url, variant, size, openInNewTab, className }) => {
+  render: (props) => {
+    const {
+      text,
+      url,
+      variant,
+      size,
+      openInNewTab,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(props.id);
     const variantClass = {
       primary: "bg-primary text-primary-fg hover:bg-primary/95",
       secondary: "bg-secondary text-secondary-fg hover:bg-secondary/90",
@@ -330,7 +428,23 @@ export const ButtonComponentConfig: PageBuilderComponentConfig<"Button"> = {
     }[size];
 
     return (
-      <div className={twMerge("inline-block py-1", className)}>
+      <div
+        id={id}
+        className={twMerge(
+          "inline-block py-1",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
         <Link
           href={url || "#"}
           target={openInNewTab ? "_blank" : undefined}
@@ -350,109 +464,137 @@ export const ButtonComponentConfig: PageBuilderComponentConfig<"Button"> = {
 
 // 6. BUTTON GROUP BLOCK
 export const ButtonGroupComponentConfig: PageBuilderComponentConfig<"ButtonGroup"> =
-  {
-    label: "Nhóm nút",
-    defaultProps: {
-      buttons: [
-        {
-          text: "Đăng ký tuyển sinh",
-          url: "#",
-          variant: "primary",
-          size: "md",
-          openInNewTab: false,
+{
+  label: "Nhóm nút",
+  defaultProps: {
+    buttons: [
+      {
+        text: "Đăng ký tuyển sinh",
+        url: "#",
+        variant: "primary",
+        size: "md",
+        openInNewTab: false,
+      },
+      {
+        text: "Tìm hiểu thêm",
+        url: "#",
+        variant: "outline",
+        size: "md",
+        openInNewTab: false,
+      },
+    ],
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "full",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    buttons: {
+      type: "array",
+      label: "Danh sách nút nhấn",
+      getItemSummary: (item) => item.text || "Nút bấm",
+      arrayFields: {
+        text: { type: "text", label: "Nhãn nút" },
+        url: { type: "text", label: "Đường dẫn" },
+        variant: {
+          type: "select",
+          label: "Kiểu dáng",
+          options: [
+            { label: "Nổi bật", value: "primary" },
+            { label: "Phụ", value: "secondary" },
+            { label: "Viền", value: "outline" },
+            { label: "Phẳng", value: "plain" },
+          ],
         },
-        {
-          text: "Tìm hiểu thêm",
-          url: "#",
-          variant: "outline",
-          size: "md",
-          openInNewTab: false,
+        size: {
+          type: "select",
+          label: "Kích thước",
+          options: [
+            { label: "Nhỏ", value: "sm" },
+            { label: "Vừa", value: "md" },
+            { label: "Lớn", value: "lg" },
+          ],
         },
-      ],
-      className: "",
-    },
-    fields: {
-      buttons: {
-        type: "array",
-        label: "Danh sách nút nhấn",
-        getItemSummary: (item) => item.text || "Nút bấm",
-        arrayFields: {
-          text: { type: "text", label: "Nhãn nút" },
-          url: { type: "text", label: "Đường dẫn" },
-          variant: {
-            type: "select",
-            label: "Kiểu dáng",
-            options: [
-              { label: "Nổi bật", value: "primary" },
-              { label: "Phụ", value: "secondary" },
-              { label: "Viền", value: "outline" },
-              { label: "Phẳng", value: "plain" },
-            ],
-          },
-          size: {
-            type: "select",
-            label: "Kích thước",
-            options: [
-              { label: "Nhỏ", value: "sm" },
-              { label: "Vừa", value: "md" },
-              { label: "Lớn", value: "lg" },
-            ],
-          },
-          openInNewTab: {
-            type: "radio",
-            label: "Mở trong tab mới",
-            options: [
-              { label: "Có", value: true },
-              { label: "Không", value: false },
-            ],
-          },
+        openInNewTab: {
+          type: "radio",
+          label: "Mở trong tab mới",
+          options: [
+            { label: "Có", value: true },
+            { label: "Không", value: false },
+          ],
         },
       },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    render: ({ buttons, className }) => {
-      return (
-        <div
-          className={twMerge(
-            "flex flex-wrap gap-3 items-center py-2",
-            className,
-          )}
-        >
-          {buttons.map((btn, index) => {
-            const variantClass = {
-              primary: "bg-primary text-primary-fg hover:bg-primary/95",
-              secondary: "bg-secondary text-secondary-fg hover:bg-secondary/90",
-              outline: "border border-border bg-bg text-fg hover:bg-secondary",
-              plain:
-                "text-primary hover:underline bg-transparent px-2 min-h-0 py-0",
-            }[btn.variant];
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => {
+    const {
+      buttons,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(props.id);
 
-            const sizeClass = {
-              sm: "px-3 py-1.5 text-xs rounded-lg min-h-9",
-              md: "px-5 py-2.5 text-sm rounded-full min-h-11",
-              lg: "px-7 py-3 text-base rounded-full min-h-[50px] font-semibold",
-            }[btn.size];
+    return (
+      <div
+        id={id}
+        className={twMerge(
+          "flex flex-wrap gap-3 items-center py-2",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
+        {buttons.map((btn, index) => {
+          const variantClass = {
+            primary: "bg-primary text-primary-fg hover:bg-primary/95",
+            secondary: "bg-secondary text-secondary-fg hover:bg-secondary/90",
+            outline: "border border-border bg-bg text-fg hover:bg-secondary",
+            plain:
+              "text-primary hover:underline bg-transparent px-2 min-h-0 py-0",
+          }[btn.variant];
 
-            return (
-              <Link
-                key={index}
-                href={btn.url || "#"}
-                target={btn.openInNewTab ? "_blank" : undefined}
-                rel={btn.openInNewTab ? "noopener noreferrer" : undefined}
-                className={twMerge(
-                  "inline-flex items-center justify-center font-medium transition duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xs shrink-0",
-                  variantClass,
-                  sizeClass,
-                )}
-              >
-                {btn.text}
-              </Link>
-            );
-          })}
-        </div>
-      );
-    },
-  };
+          const sizeClass = {
+            sm: "px-3 py-1.5 text-xs rounded-lg min-h-9",
+            md: "px-5 py-2.5 text-sm rounded-full min-h-11",
+            lg: "px-7 py-3 text-base rounded-full min-h-[50px] font-semibold",
+          }[btn.size];
+
+          return (
+            <Link
+              key={index}
+              href={btn.url || "#"}
+              target={btn.openInNewTab ? "_blank" : undefined}
+              rel={btn.openInNewTab ? "noopener noreferrer" : undefined}
+              className={twMerge(
+                "inline-flex items-center justify-center font-medium transition duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-xs shrink-0",
+                variantClass,
+                sizeClass,
+              )}
+            >
+              {btn.text}
+            </Link>
+          );
+        })}
+      </div>
+    );
+  },
+};
 
 // 7. CARD BLOCK
 export const CardComponentConfig: PageBuilderComponentConfig<"Card"> = {
@@ -463,9 +605,15 @@ export const CardComponentConfig: PageBuilderComponentConfig<"Card"> = {
     imageUrl: "",
     linkUrl: "#",
     linkLabel: "Xem chi tiết",
+    surfaceTone: "overlay",
+    surfaceBorder: "default",
+    surfaceRadius: "3xl",
+    surfacePadding: "lg",
+    surfaceShadow: "sm",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     title: { type: "text", label: "Tiêu đề thẻ" },
     description: { type: "textarea", label: "Mô tả ngắn" },
     imageUrl: { type: "text", label: "Ảnh đại diện (URL)" },
@@ -473,11 +621,37 @@ export const CardComponentConfig: PageBuilderComponentConfig<"Card"> = {
     linkLabel: { type: "text", label: "Nhãn hành động" },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ title, description, imageUrl, linkUrl, linkLabel, className }) => {
+  render: (props) => {
+    const {
+      title,
+      description,
+      imageUrl,
+      linkUrl,
+      linkLabel,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(props.id);
+
     return (
       <CardUI
+        id={id}
         className={twMerge(
-          "max-w-md w-full overflow-hidden rounded-3xl border border-border bg-overlay py-0 shadow-xs transition duration-300 hover:shadow-md hover:border-primary/15 group",
+          "max-w-md w-full overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
           className,
         )}
       >
@@ -541,9 +715,15 @@ export const NoteComponentConfig: PageBuilderComponentConfig<"Note"> = {
     title: "Thông báo quan trọng",
     body: "Vui lòng hoàn thiện đúng thời hạn quy định học thuật của Nhà trường.",
     intent: "info",
+    surfaceTone: "overlay",
+    surfaceBorder: "default",
+    surfaceRadius: "2xl",
+    surfacePadding: "md",
+    surfaceShadow: "none",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     title: { type: "text", label: "Tiêu đề ghi chú" },
     body: { type: "textarea", label: "Nội dung ghi chú" },
     intent: {
@@ -558,12 +738,39 @@ export const NoteComponentConfig: PageBuilderComponentConfig<"Note"> = {
     },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ title, body, intent, className }) => {
+  render: (props) => {
+    const {
+      title,
+      body,
+      intent,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(props.id);
+
     return (
       <NoteUI
+        id={id}
         intent={intent}
         indicator={true}
-        className={twMerge("my-2", className)}
+        className={twMerge(
+          "my-2",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
       >
         <div className="space-y-1">
           {title && (
@@ -578,57 +785,90 @@ export const NoteComponentConfig: PageBuilderComponentConfig<"Note"> = {
 
 // 9. BADGE LIST BLOCK
 export const BadgeListComponentConfig: PageBuilderComponentConfig<"BadgeList"> =
-  {
-    label: "Danh sách nhãn",
-    defaultProps: {
-      badges: [
-        { text: "Tuyển sinh 2026", intent: "primary" },
-        { text: "Chính quy", intent: "success" },
-        { text: "Hot", intent: "danger" },
-      ],
-      className: "",
-    },
-    fields: {
-      badges: {
-        type: "array",
-        label: "Danh sách các nhãn",
-        getItemSummary: (item) => item.text || "Nhãn",
-        arrayFields: {
-          text: { type: "text", label: "Văn bản nhãn" },
-          intent: {
-            type: "select",
-            label: "Màu nhãn",
-            options: [
-              { label: "Xanh dương", value: "primary" },
-              { label: "Màu xám", value: "secondary" },
-              { label: "Xanh lá", value: "success" },
-              { label: "Màu trời", value: "info" },
-              { label: "Màu cam", value: "warning" },
-              { label: "Màu đỏ", value: "danger" },
-              { label: "Không nền", value: "outline" },
-            ],
-          },
+{
+  label: "Danh sách nhãn",
+  defaultProps: {
+    badges: [
+      { text: "Tuyển sinh 2026", intent: "primary" },
+      { text: "Chính quy", intent: "success" },
+      { text: "Hot", intent: "danger" },
+    ],
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "full",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    badges: {
+      type: "array",
+      label: "Danh sách các nhãn",
+      getItemSummary: (item) => item.text || "Nhãn",
+      arrayFields: {
+        text: { type: "text", label: "Văn bản nhãn" },
+        intent: {
+          type: "select",
+          label: "Màu nhãn",
+          options: [
+            { label: "Xanh dương", value: "primary" },
+            { label: "Màu xám", value: "secondary" },
+            { label: "Xanh lá", value: "success" },
+            { label: "Màu trời", value: "info" },
+            { label: "Màu cam", value: "warning" },
+            { label: "Màu đỏ", value: "danger" },
+            { label: "Không nền", value: "outline" },
+          ],
         },
       },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    render: ({ badges, className }) => {
-      return (
-        <div className={twMerge("flex flex-wrap gap-2 py-2", className)}>
-          {badges.map((badge, index) => (
-            <Badge
-              key={index}
-              intent={badge.intent}
-              isCircle={false}
-              className="px-3 py-1 font-semibold uppercase tracking-wider text-[10px]"
-            >
-              {badge.text}
-            </Badge>
-          ))}
-        </div>
-      );
-    },
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => {
+    const {
+      badges,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId(props.id);
+
+    return (
+      <div
+        id={id}
+        className={twMerge(
+          "flex flex-wrap gap-2 py-2",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
+        {badges.map((badge, index) => (
+          <Badge
+            key={index}
+            intent={badge.intent}
+            isCircle={false}
+            className="px-3 py-1 font-semibold uppercase tracking-wider text-[10px]"
+          >
+            {badge.text}
+          </Badge>
+        ))}
+      </div>
+    );
+  },
+};
 
 // 10. TAG LIST BLOCK
 export const TagListComponentConfig: PageBuilderComponentConfig<"TagList"> = {
@@ -639,9 +879,15 @@ export const TagListComponentConfig: PageBuilderComponentConfig<"TagList"> = {
       { text: "Tuyển sinh" },
       { text: "Hải Phòng" },
     ],
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "full",
+    surfacePadding: "none",
+    surfaceShadow: "none",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     tags: {
       type: "array",
       label: "Danh sách các tag",
@@ -652,9 +898,36 @@ export const TagListComponentConfig: PageBuilderComponentConfig<"TagList"> = {
     },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ tags, className }) => {
+  render: (props) => {
+    const {
+      tags,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId((props as { id?: string }).id);
+
     return (
-      <div className={twMerge("flex flex-wrap gap-1.5 py-2", className)}>
+      <div
+        id={id}
+        className={twMerge(
+          "flex flex-wrap gap-1.5 py-2",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
         {tags.map((tag, index) => (
           <span
             key={index}

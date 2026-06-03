@@ -167,7 +167,7 @@ export function PuckPageBuilder({
   return (
     <div
       className={twMerge(
-        "vmu-puck-page-builder overflow-hidden rounded-3xl border border-border shadow-xs",
+        "vmu-puck-page-builder",
         className,
       )}
     >

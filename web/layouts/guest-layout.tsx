@@ -3,8 +3,8 @@ import { Link } from "@inertiajs/react";
 import type { PropsWithChildren, ReactNode } from "react";
 import { AppLogo } from "@/components/brand/app-logo";
 import { Button } from "@/components/ui/button";
-import { home } from "@/routes";
 import { useTheme } from "@/hooks/use-theme";
+import { home } from "@/routes";
 
 interface GuestLayoutProps {
   description?: ReactNode;
@@ -31,6 +31,7 @@ export default function GuestLayout({
               onClick={() => {
                 if (window.history.length > 1) {
                   window.history.back();
+
                   return;
                 }
 

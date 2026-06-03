@@ -5,8 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
+import { NavbarItem, NavbarMenu, NavbarSubmenu } from "@/components/ui/navbar";
 import { Text } from "@/components/ui/text";
+import layoutBuilderRoutes from "@/routes/cms/layout-builder";
 import type { SharedData } from "@/types/shared";
+import { getPuckBlockDomId } from "./shared";
+import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
 interface PuckDynamicPost {
@@ -131,16 +135,28 @@ interface LatestPostsBlockProps {
   limit: number;
   showCTA?: boolean;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
-function LatestPostsBlock({
-  title,
-  limit,
-  categoryId,
-  layout,
-  showCTA,
-  className,
-}: LatestPostsBlockProps) {
+function LatestPostsBlock(props: LatestPostsBlockProps) {
+  const {
+    title,
+    limit,
+    categoryId,
+    layout,
+    showCTA,
+    surfaceTone,
+    surfaceBorder,
+    surfaceRadius,
+    surfacePadding,
+    surfaceShadow,
+    className,
+  } = props;
+  const id = getPuckBlockDomId((props as { id?: string }).id);
   const dynamicData = usePuckDynamicData();
   const selectedCategoryId = parseOptionalId(categoryId);
   const posts = dynamicData.posts
@@ -154,8 +170,24 @@ function LatestPostsBlock({
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
-      <div className="flex items-end justify-between border-b border-border/60 pb-3">
+    <section
+      id={id}
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
+      <div className="flex items-end justify-between pb-3">
         <Heading
           level={2}
           className="text-2xl font-extrabold tracking-tight text-fg"
@@ -180,7 +212,19 @@ function LatestPostsBlock({
         {posts.map((post) => (
           <Card
             key={post.id}
-            className="overflow-hidden rounded-3xl border border-border bg-overlay py-0 shadow-xs transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between"
+            className={twMerge(
+              "overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center justify-between">
@@ -231,15 +275,27 @@ interface LatestAnnouncementsBlockProps {
   limit: number;
   showCTA?: boolean;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
-function LatestAnnouncementsBlock({
-  title,
-  limit,
-  layout,
-  showCTA,
-  className,
-}: LatestAnnouncementsBlockProps) {
+function LatestAnnouncementsBlock(props: LatestAnnouncementsBlockProps) {
+  const {
+    title,
+    limit,
+    layout,
+    showCTA,
+    surfaceTone,
+    surfaceBorder,
+    surfaceRadius,
+    surfacePadding,
+    surfaceShadow,
+    className,
+  } = props;
+  const id = getPuckBlockDomId((props as { id?: string }).id);
   const announcements = usePuckDynamicData()
     .posts.filter((post) =>
       post.categoryNames.some((category) =>
@@ -253,7 +309,23 @@ function LatestAnnouncementsBlock({
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
+    <section
+      id={id}
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <div className="flex items-end justify-between border-b border-border/60 pb-3">
         <Heading
           level={2}
@@ -279,7 +351,19 @@ function LatestAnnouncementsBlock({
         {announcements.map((ann) => (
           <div
             key={ann.id}
-            className="group relative flex items-start gap-4 rounded-2xl border border-border/60 bg-overlay/50 p-4 transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs"
+            className={twMerge(
+              "group relative flex items-start gap-4 transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-warning-subtle text-warning-subtle-fg border border-warning/10 font-bold text-xs uppercase">
               {(ann.categoryNames[0] ?? "TB").substring(0, 2)}
@@ -320,12 +404,22 @@ interface StaffGridBlockProps {
   departmentId?: string;
   limit: number;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
 function StaffGridBlock({
   title,
   limit,
   departmentId,
+  surfaceTone,
+  surfaceBorder,
+  surfaceRadius,
+  surfacePadding,
+  surfaceShadow,
   className,
 }: StaffGridBlockProps) {
   const selectedUnitId = parseOptionalId(departmentId);
@@ -340,7 +434,22 @@ function StaffGridBlock({
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
+    <section
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <div className="flex items-end justify-between border-b border-border/60 pb-3">
         <Heading
           level={2}
@@ -361,7 +470,19 @@ function StaffGridBlock({
         {staff.map((st) => (
           <Card
             key={st.id}
-            className="rounded-3xl border-border bg-overlay py-0 shadow-none hover:shadow-md transition-shadow duration-300 group"
+            className={twMerge(
+              "py-0 shadow-none hover:shadow-md transition-shadow duration-300 group",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <CardContent className="p-6 space-y-4 flex flex-col items-center text-center">
               <Avatar
@@ -413,9 +534,23 @@ interface UnitListBlockProps {
   className?: string;
   limit: number;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
-function UnitListBlock({ title, limit, className }: UnitListBlockProps) {
+function UnitListBlock({
+  title,
+  limit,
+  surfaceTone,
+  surfaceBorder,
+  surfaceRadius,
+  surfacePadding,
+  surfaceShadow,
+  className,
+}: UnitListBlockProps) {
   const units = usePuckDynamicData().units.slice(0, limit);
 
   if (units.length === 0) {
@@ -423,7 +558,22 @@ function UnitListBlock({ title, limit, className }: UnitListBlockProps) {
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
+    <section
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <div className="flex items-end justify-between border-b border-border/60 pb-3">
         <Heading
           level={2}
@@ -444,7 +594,19 @@ function UnitListBlock({ title, limit, className }: UnitListBlockProps) {
         {units.map((un) => (
           <Card
             key={un.id}
-            className="overflow-hidden rounded-3xl border border-border bg-overlay py-0 shadow-xs transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between"
+            className={twMerge(
+              "overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
@@ -493,12 +655,22 @@ interface DocumentListBlockProps {
   limit: number;
   showIcon?: boolean;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
 function DocumentListBlock({
   title,
   limit,
   showIcon,
+  surfaceTone,
+  surfaceBorder,
+  surfaceRadius,
+  surfacePadding,
+  surfaceShadow,
   className,
 }: DocumentListBlockProps) {
   const docs = usePuckDynamicData().documents.slice(0, limit);
@@ -508,7 +680,22 @@ function DocumentListBlock({
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
+    <section
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <div className="flex items-end justify-between border-b border-border/60 pb-3">
         <Heading
           level={2}
@@ -529,7 +716,19 @@ function DocumentListBlock({
         {docs.map((doc) => (
           <div
             key={doc.id}
-            className="group relative flex items-center justify-between rounded-2xl border border-border/60 bg-overlay/50 p-4 transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs"
+            className={twMerge(
+              "group relative flex items-center justify-between transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <div className="flex items-center gap-3.5 flex-1 min-w-0">
               {showIcon && (
@@ -592,11 +791,21 @@ interface RelatedPostsBlockProps {
   className?: string;
   limit: number;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
 function RelatedPostsBlock({
   title,
   limit,
+  surfaceTone,
+  surfaceBorder,
+  surfaceRadius,
+  surfacePadding,
+  surfaceShadow,
   className,
 }: RelatedPostsBlockProps) {
   const related = usePuckDynamicData().posts.slice(0, limit);
@@ -606,7 +815,22 @@ function RelatedPostsBlock({
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
+    <section
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <div className="flex items-end justify-between border-b border-border/60 pb-3">
         <Heading level={2} className="text-xl font-bold text-fg">
           {title}
@@ -624,7 +848,19 @@ function RelatedPostsBlock({
         {related.map((post) => (
           <Card
             key={post.id}
-            className="rounded-3xl border-border bg-overlay py-0 shadow-none hover:shadow-md transition-shadow group flex flex-col justify-between"
+            className={twMerge(
+              "py-0 shadow-none hover:shadow-md transition-shadow group flex flex-col justify-between",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <CardContent className="p-5 space-y-3">
               <span className="text-[10px] text-primary font-bold uppercase tracking-wider block">
@@ -651,21 +887,48 @@ interface RelatedDocumentsBlockProps {
   className?: string;
   limit: number;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
 function RelatedDocumentsBlock({
   title,
   limit,
+  surfaceTone,
+  surfaceBorder,
+  surfaceRadius,
+  surfacePadding,
+  surfaceShadow,
   className,
 }: RelatedDocumentsBlockProps) {
   const docs = usePuckDynamicData().documents.slice(0, limit);
 
   if (docs.length === 0) {
-    return <EmptyDynamicState label="Không có tài liệu liên quan để hiển thị." />;
+    return (
+      <EmptyDynamicState label="Không có tài liệu liên quan để hiển thị." />
+    );
   }
 
   return (
-    <section className={twMerge("space-y-6 py-6 w-full relative", className)}>
+    <section
+      className={twMerge(
+        "space-y-6 py-6 w-full relative",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <div className="flex items-end justify-between border-b border-border/60 pb-3">
         <Heading level={2} className="text-xl font-bold text-fg">
           {title}
@@ -683,7 +946,19 @@ function RelatedDocumentsBlock({
         {docs.map((doc) => (
           <div
             key={doc.id}
-            className="group relative flex items-center justify-between rounded-2xl border border-border/60 bg-overlay/50 p-4 transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs"
+            className={twMerge(
+              "group relative flex items-center justify-between transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
           >
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="inline-flex size-9 items-center justify-center rounded-xl bg-danger-subtle text-danger-subtle-fg border border-danger/10 shrink-0">
@@ -743,42 +1018,83 @@ interface NavigationMenuBlockProps {
   menuId?: string;
   orientation?: string;
   title?: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
-function NavigationMenuBlock({
-  title,
-  menuId,
-  orientation,
-  className,
-}: NavigationMenuBlockProps) {
+function NavigationMenuBlock(props: NavigationMenuBlockProps) {
+  const {
+    title,
+    menuId,
+    orientation,
+    surfaceTone,
+    surfaceBorder,
+    surfaceRadius,
+    surfacePadding,
+    surfaceShadow,
+    className,
+  } = props;
+  const id = getPuckBlockDomId((props as { id?: string }).id);
   const selectedMenuId = parseOptionalId(menuId);
   const menu =
     usePuckDynamicData().navigationMenus.find((navigationMenu) =>
       selectedMenuId ? navigationMenu.id === selectedMenuId : true,
     ) ?? null;
+  const pageUrl = usePage().url;
 
   if (!menu || menu.items.length === 0) {
     return <EmptyDynamicState label="Không có menu điều hướng để hiển thị." />;
   }
 
   return (
-    <nav className={twMerge("space-y-3", className)} aria-label={menu.name}>
+    <section
+      id={id}
+      className={twMerge(
+        "space-y-3",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       {title ? (
         <Heading level={3} className="text-sm font-bold text-fg">
           {title}
         </Heading>
       ) : null}
-      <div
-        className={twMerge(
-          "flex gap-2",
-          orientation === "vertical" ? "flex-col" : "flex-row flex-wrap",
-        )}
+      <nav
+        aria-label={menu.name}
+        className="w-full"
       >
-        {menu.items.map((item) => (
-          <NavigationMenuLink item={item} key={item.id} />
-        ))}
-      </div>
-    </nav>
+        <div
+          className={twMerge(
+            "flex justify-between",
+            orientation === "vertical"
+              ? "flex-col items-stretch"
+              : "flex-wrap items-center",
+          )}
+        >
+          {menu.items.map((item) => (
+            <NavigationMenuEntry
+              currentPath={pageUrl}
+              item={item}
+              key={item.id}
+              orientation={orientation}
+            />
+          ))}
+        </div>
+      </nav>
+    </section>
   );
 }
 
@@ -787,14 +1103,26 @@ interface CategoriesBlockProps {
   limit: number;
   parentId?: string;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
-function CategoriesBlock({
-  title,
-  parentId,
-  limit,
-  className,
-}: CategoriesBlockProps) {
+function CategoriesBlock(props: CategoriesBlockProps) {
+  const {
+    title,
+    parentId,
+    limit,
+    surfaceTone,
+    surfaceBorder,
+    surfaceRadius,
+    surfacePadding,
+    surfaceShadow,
+    className,
+  } = props;
+  const id = getPuckBlockDomId((props as { id?: string }).id);
   const selectedParentId = parseOptionalId(parentId);
   const categories = usePuckDynamicData()
     .categories.filter((category) =>
@@ -807,14 +1135,42 @@ function CategoriesBlock({
   }
 
   return (
-    <section className={twMerge("space-y-4", className)}>
+    <section
+      id={id}
+      className={twMerge(
+        "space-y-4",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <Heading level={3} className="text-base font-bold text-fg">
         {title}
       </Heading>
       <div className="flex flex-wrap gap-2">
         {categories.map((category) => (
           <Link
-            className="inline-flex min-h-9 items-center rounded-full border border-border bg-bg px-3 text-xs font-semibold text-fg hover:bg-muted/60"
+            className={twMerge(
+              "inline-flex min-h-9 items-center text-xs font-semibold text-fg hover:bg-muted/60",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
             href={`/post-categories/${category.slug}`}
             key={category.id}
           >
@@ -830,9 +1186,25 @@ interface PageLinksBlockProps {
   className?: string;
   limit: number;
   title: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
-function PageLinksBlock({ title, limit, className }: PageLinksBlockProps) {
+function PageLinksBlock(props: PageLinksBlockProps) {
+  const {
+    title,
+    limit,
+    surfaceTone,
+    surfaceBorder,
+    surfaceRadius,
+    surfacePadding,
+    surfaceShadow,
+    className,
+  } = props;
+  const id = getPuckBlockDomId((props as { id?: string }).id);
   const pages = usePuckDynamicData().pages.slice(0, limit);
 
   if (pages.length === 0) {
@@ -840,14 +1212,42 @@ function PageLinksBlock({ title, limit, className }: PageLinksBlockProps) {
   }
 
   return (
-    <section className={twMerge("space-y-3", className)}>
+    <section
+      id={id}
+      className={twMerge(
+        "space-y-3",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
       <Heading level={3} className="text-base font-bold text-fg">
         {title}
       </Heading>
       <div className="grid gap-2">
         {pages.map((page) => (
           <Link
-            className="rounded-lg border border-border bg-bg px-3 py-2 text-sm font-semibold text-fg hover:bg-muted/60"
+            className={twMerge(
+              "px-3 py-2 text-sm font-semibold text-fg hover:bg-muted/60",
+              getSurfaceClassName(
+                {
+                  surfaceTone,
+                  surfaceBorder,
+                  surfaceRadius,
+                  surfacePadding,
+                  surfaceShadow,
+                },
+                "",
+              ),
+            )}
             href={page.url}
             key={page.id}
           >
@@ -861,100 +1261,118 @@ function PageLinksBlock({ title, limit, className }: PageLinksBlockProps) {
 
 // 1. LATEST POSTS BLOCK
 export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts"> =
-  {
-    label: "Tin tức mới nhất",
-    defaultProps: {
-      title: "Tin Tức & Hoạt Động Mới",
-      limit: 3,
-      categoryId: "all",
-      layout: "grid",
-      showCTA: true,
-      className: "",
+{
+  label: "Tin tức mới nhất",
+  defaultProps: {
+    title: "Tin Tức & Hoạt Động Mới",
+    limit: 3,
+    categoryId: "all",
+    layout: "grid",
+    showCTA: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng tin tức" },
+    categoryId: {
+      type: "text",
+      label: "ID Danh mục (để trống nếu lấy tất cả)",
     },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng tin tức" },
-      categoryId: {
-        type: "text",
-        label: "ID Danh mục (để trống nếu lấy tất cả)",
-      },
-      layout: {
-        type: "select",
-        label: "Kiểu bố cục",
-        options: [
-          { label: "Dạng lưới", value: "grid" },
-          { label: "Dạng danh sách", value: "list" },
-        ],
-      },
-      showCTA: {
-        type: "radio",
-        label: "Hiển thị nút 'Xem tất cả'",
-        options: [
-          { label: "Có", value: true },
-          { label: "Không", value: false },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
+    layout: {
+      type: "select",
+      label: "Kiểu bố cục",
+      options: [
+        { label: "Dạng lưới", value: "grid" },
+        { label: "Dạng danh sách", value: "list" },
+      ],
     },
-    render: (props) => <LatestPostsBlock {...props} />,
-  };
+    showCTA: {
+      type: "radio",
+      label: "Hiển thị nút 'Xem tất cả'",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <LatestPostsBlock {...props} />,
+};
 
 // 2. LATEST ANNOUNCEMENTS BLOCK
 export const LatestAnnouncementsComponentConfig: PageBuilderComponentConfig<"LatestAnnouncements"> =
-  {
-    label: "Thông báo mới",
-    defaultProps: {
-      title: "Thông Báo Quan Trọng",
-      limit: 3,
-      layout: "list",
-      showCTA: true,
-      className: "",
+{
+  label: "Thông báo mới",
+  defaultProps: {
+    title: "Thông Báo Quan Trọng",
+    limit: 3,
+    layout: "list",
+    showCTA: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng thông báo" },
+    layout: {
+      type: "select",
+      label: "Kiểu bố cục",
+      options: [
+        { label: "Dạng danh sách", value: "list" },
+        { label: "Dạng lưới", value: "grid" },
+      ],
     },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng thông báo" },
-      layout: {
-        type: "select",
-        label: "Kiểu bố cục",
-        options: [
-          { label: "Dạng danh sách", value: "list" },
-          { label: "Dạng lưới", value: "grid" },
-        ],
-      },
-      showCTA: {
-        type: "radio",
-        label: "Hiển thị nút 'Xem tất cả'",
-        options: [
-          { label: "Có", value: true },
-          { label: "Không", value: false },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
+    showCTA: {
+      type: "radio",
+      label: "Hiển thị nút 'Xem tất cả'",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
     },
-    render: (props) => <LatestAnnouncementsBlock {...props} />,
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <LatestAnnouncementsBlock {...props} />,
+};
 
 // 3. STAFF GRID BLOCK
 export const StaffGridComponentConfig: PageBuilderComponentConfig<"StaffGrid"> =
-  {
-    label: "Đội ngũ giảng viên",
-    defaultProps: {
-      title: "Đội Ngũ Cán Bộ Giảng Viên",
-      limit: 3,
-      departmentId: "all",
-      className: "",
+{
+  label: "Đội ngũ giảng viên",
+  defaultProps: {
+    title: "Đội Ngũ Cán Bộ Giảng Viên",
+    limit: 3,
+    departmentId: "all",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng giảng viên tối đa" },
+    departmentId: {
+      type: "text",
+      label: "ID Bộ môn (để trống nếu lấy tất cả)",
     },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng giảng viên tối đa" },
-      departmentId: {
-        type: "text",
-        label: "ID Bộ môn (để trống nếu lấy tất cả)",
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <StaffGridBlock {...props} />,
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <StaffGridBlock {...props} />,
+};
 
 // 4. UNIT LIST BLOCK
 export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
@@ -963,9 +1381,15 @@ export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
     title: "Các Bộ Môn Trực Thuộc Khoa",
     limit: 3,
     type: "academic",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     title: { type: "text", label: "Tiêu đề khối" },
     limit: { type: "number", label: "Số bộ môn tối đa" },
     type: { type: "text", label: "Loại đơn vị (để trống nếu lấy tất cả)" },
@@ -976,109 +1400,220 @@ export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
 
 // 5. DOCUMENT LIST BLOCK
 export const DocumentListComponentConfig: PageBuilderComponentConfig<"DocumentList"> =
-  {
-    label: "Danh sách tài liệu",
-    defaultProps: {
-      title: "Tải Tài Liệu & Biểu Mẫu",
-      limit: 3,
-      categoryId: "all",
-      showIcon: true,
-      className: "",
+{
+  label: "Danh sách tài liệu",
+  defaultProps: {
+    title: "Tải Tài Liệu & Biểu Mẫu",
+    limit: 3,
+    categoryId: "all",
+    showIcon: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số lượng tài liệu" },
+    categoryId: { type: "text", label: "ID danh mục (nếu có)" },
+    showIcon: {
+      type: "radio",
+      label: "Hiển thị biểu tượng file",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
     },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số lượng tài liệu" },
-      categoryId: { type: "text", label: "ID danh mục (nếu có)" },
-      showIcon: {
-        type: "radio",
-        label: "Hiển thị biểu tượng file",
-        options: [
-          { label: "Có", value: true },
-          { label: "Không", value: false },
-        ],
-      },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <DocumentListBlock {...props} />,
-  };
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <DocumentListBlock {...props} />,
+};
 
 // 6. RELATED POSTS BLOCK
 export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPosts"> =
-  {
-    label: "Tin tức liên quan",
-    defaultProps: {
-      title: "Bài Viết Liên Quan",
-      limit: 2,
-      className: "",
-    },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số bài viết liên quan" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <RelatedPostsBlock {...props} />,
-  };
+{
+  label: "Tin tức liên quan",
+  defaultProps: {
+    title: "Bài Viết Liên Quan",
+    limit: 2,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số bài viết liên quan" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <RelatedPostsBlock {...props} />,
+};
 
 // 7. RELATED DOCUMENTS BLOCK
 export const RelatedDocumentsComponentConfig: PageBuilderComponentConfig<"RelatedDocuments"> =
-  {
-    label: "Tài liệu liên quan",
-    defaultProps: {
-      title: "Tài Liệu Chi Tiết Liên Quan",
-      limit: 2,
-      className: "",
-    },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số tài liệu liên quan" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <RelatedDocumentsBlock {...props} />,
-  };
+{
+  label: "Tài liệu liên quan",
+  defaultProps: {
+    title: "Tài Liệu Chi Tiết Liên Quan",
+    limit: 2,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số tài liệu liên quan" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <RelatedDocumentsBlock {...props} />,
+};
 
 export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"NavigationMenu"> =
-  {
-    label: "Menu điều hướng",
-    defaultProps: {
-      title: "",
-      menuId: "",
-      orientation: "horizontal",
-      className: "",
+{
+  label: "Menu điều hướng",
+  defaultProps: {
+    title: "",
+    menuId: "",
+    orientation: "horizontal",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề phụ" },
+    menuId: {
+      type: "select",
+      label: "Menu điều hướng",
+      options: [{ label: "Menu đầu tiên khả dụng", value: "" }],
     },
-    fields: {
-      title: { type: "text", label: "Tiêu đề phụ" },
-      menuId: {
-        type: "text",
-        label: "ID menu điều hướng (để trống lấy menu đầu tiên)",
+    orientation: {
+      type: "select",
+      label: "Hướng hiển thị",
+      options: [
+        { label: "Ngang", value: "horizontal" },
+        { label: "Dọc", value: "vertical" },
+      ],
+    },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  resolveFields: async (_data, { fields, lastFields }) => {
+    const lastMenuField = lastFields.menuId;
+
+    if (
+      lastMenuField &&
+      "options" in lastMenuField &&
+      Array.isArray(lastMenuField.options) &&
+      lastMenuField.options.length > 1
+    ) {
+      return lastFields;
+    }
+
+    const response = await fetch(
+      layoutBuilderRoutes.sources.url("navigation-menus"),
+      {
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+        },
       },
-      orientation: {
+    );
+
+    if (!response.ok) {
+      return fields;
+    }
+
+    const payload = (await response.json()) as {
+      data?: Array<{
+        id: number;
+        label: string;
+        meta?: {
+          location?: string | null;
+        };
+      }>;
+    };
+
+    return {
+      ...fields,
+      menuId: {
         type: "select",
-        label: "Hướng hiển thị",
+        label: "Menu điều hướng",
         options: [
-          { label: "Ngang", value: "horizontal" },
-          { label: "Dọc", value: "vertical" },
+          { label: "Menu đầu tiên khả dụng", value: "" },
+          ...(payload.data ?? []).map((item) => ({
+            label: item.meta?.location
+              ? `${item.label} (${item.meta.location})`
+              : item.label,
+            value: item.id.toString(),
+          })),
         ],
       },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <NavigationMenuBlock {...props} />,
-  };
+    };
+  },
+  render: (props) => <NavigationMenuBlock {...props} />,
+};
 
-function NavigationMenuLink({ item }: { item: PuckDynamicNavigationItem }) {
+function NavigationMenuEntry({
+  currentPath,
+  item,
+  orientation,
+}: {
+  currentPath: string;
+  item: PuckDynamicNavigationItem;
+  orientation?: string;
+}) {
+  const isVertical = orientation === "vertical";
+  const isCurrent = isNavigationBranchCurrent(item, currentPath);
+  const hasChildren = item.children.length > 0;
+
   return (
-    <div className="group/menu-item relative">
-      <Link
+    <NavbarMenu
+      className={twMerge(
+        "group/menu-item",
+        isVertical ? "w-full" : "flex max-w-full flex-col",
+      )}
+      delayCloseMs={isVertical ? 0 : 150}
+    >
+      <NavbarItem
+        className={twMerge(
+          "min-h-10",
+          isVertical ? "w-full justify-start" : "w-full md:w-auto",
+        )}
         href={item.url}
+        isCurrent={isCurrent}
         target={item.target === "_blank" ? "_blank" : undefined}
-        className="inline-flex min-h-9 items-center rounded-lg px-3 text-sm font-semibold text-fg transition hover:bg-muted/60"
       >
         {item.title}
-      </Link>
-      {item.children.length > 0 ? (
-        <div className="mt-1 flex flex-col gap-1 pl-3">
+      </NavbarItem>
+      {hasChildren ? (
+        <NavbarSubmenu
+          className={twMerge(
+            isVertical
+              ? "md:static md:min-w-0 md:border-0 md:bg-transparent md:p-0 md:shadow-none md:ring-0"
+              : "",
+          )}
+        >
           {item.children.map((child) => (
             <Link
-              className="text-xs font-medium text-muted-fg hover:text-fg"
+              className={twMerge(
+                "rounded-lg px-3 py-2 text-xs font-medium transition",
+                isNavigationItemCurrent(child.url, currentPath)
+                  ? "bg-muted text-fg"
+                  : "text-muted-fg hover:bg-muted/60 hover:text-fg",
+              )}
               href={child.url}
               key={child.id}
               target={child.target === "_blank" ? "_blank" : undefined}
@@ -1086,45 +1621,103 @@ function NavigationMenuLink({ item }: { item: PuckDynamicNavigationItem }) {
               {child.title}
             </Link>
           ))}
-        </div>
+        </NavbarSubmenu>
       ) : null}
-    </div>
+    </NavbarMenu>
   );
 }
 
+function isNavigationBranchCurrent(
+  item: PuckDynamicNavigationItem,
+  currentPath: string,
+): boolean {
+  return (
+    isNavigationItemCurrent(item.url, currentPath) ||
+    item.children.some((child) =>
+      isNavigationItemCurrent(child.url, currentPath),
+    )
+  );
+}
+
+function isNavigationItemCurrent(
+  itemUrl: string,
+  currentPath: string,
+): boolean {
+  const normalizedCurrentPath = normalizeNavigationPath(currentPath);
+  const normalizedItemPath = normalizeNavigationPath(itemUrl);
+
+  if (!normalizedCurrentPath || !normalizedItemPath) {
+    return false;
+  }
+
+  if (normalizedItemPath === "/") {
+    return normalizedCurrentPath === "/";
+  }
+
+  return (
+    normalizedCurrentPath === normalizedItemPath ||
+    normalizedCurrentPath.startsWith(`${normalizedItemPath}/`)
+  );
+}
+
+function normalizeNavigationPath(value: string): string {
+  try {
+    const url = value.startsWith("http")
+      ? new URL(value)
+      : new URL(value, "https://fit-vmu.local");
+    const pathname = url.pathname.replace(/\/+$/, "");
+
+    return pathname === "" ? "/" : pathname;
+  } catch {
+    return value.replace(/\/+$/, "") || "/";
+  }
+}
+
 export const CategoriesComponentConfig: PageBuilderComponentConfig<"Categories"> =
-  {
-    label: "Danh mục bài viết",
-    defaultProps: {
-      title: "Danh mục",
-      parentId: "",
-      limit: 8,
-      className: "",
-    },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
-      limit: { type: "number", label: "Số danh mục tối đa" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <CategoriesBlock {...props} />,
-  };
+{
+  label: "Danh mục bài viết",
+  defaultProps: {
+    title: "Danh mục",
+    parentId: "",
+    limit: 8,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
+    limit: { type: "number", label: "Số danh mục tối đa" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <CategoriesBlock {...props} />,
+};
 
 export const PageLinksComponentConfig: PageBuilderComponentConfig<"PageLinks"> =
-  {
-    label: "Liên kết trang",
-    defaultProps: {
-      title: "Trang liên quan",
-      limit: 8,
-      className: "",
-    },
-    fields: {
-      title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số trang tối đa" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: (props) => <PageLinksBlock {...props} />,
-  };
+{
+  label: "Liên kết trang",
+  defaultProps: {
+    title: "Trang liên quan",
+    limit: 8,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề khối" },
+    limit: { type: "number", label: "Số trang tối đa" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => <PageLinksBlock {...props} />,
+};
 
 export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
   label: "Danh sách link tùy chỉnh",
@@ -1137,9 +1730,15 @@ export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
         openInNewTab: true,
       },
     ],
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
     className: "",
   },
   fields: {
+    ...puckSurfaceFields,
     title: { type: "text", label: "Tiêu đề khối" },
     links: {
       type: "array",
@@ -1159,51 +1758,118 @@ export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
     },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
-  render: ({ title, links, className }) => (
-    <section className={twMerge("space-y-3", className)}>
-      <Heading level={3} className="text-base font-bold text-fg">
-        {title}
-      </Heading>
-      <div className="grid gap-2">
-        {(links ?? []).map((link, index) => (
-          <Link
-            className="text-sm font-semibold text-muted-fg hover:text-fg"
-            href={link.url || "#"}
-            key={`${link.label}-${index}`}
-            target={link.openInNewTab ? "_blank" : undefined}
-          >
-            {link.label || link.url}
-          </Link>
-        ))}
-      </div>
-    </section>
-  ),
+  render: (props) => {
+    const {
+      title,
+      links,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId((props as { id?: string }).id);
+
+    return (
+      <section
+        id={id}
+        className={twMerge(
+          "space-y-3",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
+        <Heading level={3} className="text-base font-bold text-fg">
+          {title}
+        </Heading>
+        <div className="grid gap-2">
+          {(links ?? []).map((link, index) => (
+            <Link
+              className="text-sm font-semibold text-muted-fg hover:text-fg"
+              href={link.url || "#"}
+              key={`${link.label}-${index}`}
+              target={link.openInNewTab ? "_blank" : undefined}
+            >
+              {link.label || link.url}
+            </Link>
+          ))}
+        </div>
+      </section>
+    );
+  },
 };
 
 export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo"> =
-  {
-    label: "Thông tin liên hệ",
-    defaultProps: {
-      title: "Liên hệ",
-      address: "",
-      phone: "",
-      email: "",
-      className: "",
-    },
-    fields: {
-      title: { type: "text", label: "Tiêu đề" },
-      address: { type: "textarea", label: "Địa chỉ" },
-      phone: { type: "text", label: "Số điện thoại" },
-      email: { type: "text", label: "Email" },
-      className: { type: "text", label: "Lớp CSS bổ sung" },
-    },
-    render: ({ title, address, phone, email, className }) => (
-      <section className={twMerge("space-y-3 text-sm", className)}>
+{
+  label: "Thông tin liên hệ",
+  defaultProps: {
+    title: "Liên hệ",
+    address: "",
+    phone: "",
+    email: "",
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề" },
+    address: { type: "textarea", label: "Địa chỉ" },
+    phone: { type: "text", label: "Số điện thoại" },
+    email: { type: "text", label: "Email" },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  render: (props) => {
+    const {
+      title,
+      address,
+      phone,
+      email,
+      surfaceTone,
+      surfaceBorder,
+      surfaceRadius,
+      surfacePadding,
+      surfaceShadow,
+      className,
+    } = props;
+    const id = getPuckBlockDomId((props as { id?: string }).id);
+
+    return (
+      <section
+        id={id}
+        className={twMerge(
+          "space-y-3 text-sm",
+          getSurfaceClassName(
+            {
+              surfaceTone,
+              surfaceBorder,
+              surfaceRadius,
+              surfacePadding,
+              surfaceShadow,
+            },
+            "",
+          ),
+          className,
+        )}
+      >
         <Heading level={3} className="text-base font-bold text-fg">
           {title}
         </Heading>
         <div className="space-y-2 text-muted-fg">
-          {address ? <p>{address}</p> : null}
+          {address ? <p className="whitespace-pre-line">{address}</p> : null}
           {phone ? <p>Điện thoại: {phone}</p> : null}
           {email ? (
             <p>
@@ -1215,5 +1881,6 @@ export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo
           ) : null}
         </div>
       </section>
-    ),
-  };
+    );
+  },
+};

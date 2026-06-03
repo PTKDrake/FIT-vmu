@@ -13,7 +13,7 @@ export default function CmsNavigationShowPage({
 }: CmsNavigationShowPageProps) {
   return (
     <>
-      <Head title={`Navigation · ${navigationMenuName}`} />
+      <Head title={`Điều hướng · ${navigationMenuName}`} />
       <NavigationTreeEditor
         key={navigationStateVersion}
         initialMenuId={navigationMenuId}

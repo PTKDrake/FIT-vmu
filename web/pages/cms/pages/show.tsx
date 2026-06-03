@@ -20,7 +20,7 @@ interface PageShowProps {
 export default function PageShow({ page }: PageShowProps) {
   return (
     <>
-      <Head title={`Xem trước: ${page.title}`} />
+      <Head title={`Xem trước trang: ${page.title}`} />
 
       <div className="min-h-screen bg-bg text-fg">
         {/* Fullscreen Sticky Top Header */}

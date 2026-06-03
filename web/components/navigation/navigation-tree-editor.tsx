@@ -13,6 +13,7 @@ import { startTransition, useRef, useState } from "react";
 import type { Key, ReactNode } from "react";
 import { Collection } from "react-aria-components/Collection";
 import { useDragAndDrop } from "react-aria-components/useDragAndDrop";
+import syncNavigationMenuItems from "@/actions/App/Http/Controllers/Cms/SyncNavigationMenuItemsController";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,7 +67,6 @@ import type {
   NavigationMenuDraft,
   NavigationResourceOption,
 } from "@/lib/navigation/tree";
-import syncNavigationMenuItems from "@/actions/App/Http/Controllers/Cms/SyncNavigationMenuItemsController";
 
 const navigationTypeLabels: Record<NavigationItemType, string> = {
   custom_url: "Custom URL",

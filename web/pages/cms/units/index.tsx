@@ -46,11 +46,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
-import { t } from "@/lib/i18n";
 import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
+import { t } from "@/lib/i18n";
 import { create, destroy, edit, reorder, show } from "@/routes/cms/units";
 import type { FlashData } from "@/types/shared";
 

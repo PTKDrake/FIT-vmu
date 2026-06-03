@@ -6,7 +6,7 @@ import CmsLayout from "@/layouts/cms-layout";
 export default function CreateSiteLayoutPage() {
   return (
     <>
-      <Head title="Tạo layout" />
+      <Head title="Tạo bố cục" />
       <SiteLayoutForm />
     </>
   );

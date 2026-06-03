@@ -13,15 +13,15 @@ test('post category seeder creates a stable category tree without duplicates', f
 
     $categories = PostCategory::query()->orderBy('sort_order')->get();
 
-    expect($categories)->toHaveCount(8)
-        ->and(PostCategory::query()->where('slug', 'tin-tuc')->count())->toBe(1)
-        ->and(PostCategory::query()->where('slug', 'su-kien')->count())->toBe(1)
-        ->and(PostCategory::query()->where('slug', 'hop-tac-quoc-te')->count())->toBe(1);
+    expect($categories)->toHaveCount(19)
+        ->and(PostCategory::query()->where('slug', 'thong-bao')->count())->toBe(1)
+        ->and(PostCategory::query()->where('slug', 'kien-thuc-nckh')->count())->toBe(1)
+        ->and(PostCategory::query()->where('slug', 'cong-bo-khoa-hoc')->count())->toBe(1);
 
-    $newsCategory = PostCategory::query()->where('slug', 'tin-tuc')->firstOrFail();
+    $nckhCategory = PostCategory::query()->where('slug', 'nghien-cuu-khoa-hoc')->firstOrFail();
 
-    expect($newsCategory->children()->pluck('slug')->all())
-        ->toBe(['su-kien', 'hop-tac-quoc-te']);
+    expect($nckhCategory->children()->pluck('slug')->all())
+        ->toBe(['kien-thuc-nckh', 'cac-nha-khoa-hoc', 'cong-bo-khoa-hoc']);
 });
 
 test('post seeder creates reusable seeded posts with valid relations', function () {
@@ -49,7 +49,7 @@ test('post seeder creates reusable seeded posts with valid relations', function 
     expect($publishedPosts)->not->toBeEmpty()
         ->and($publishedPosts->every(fn (Post $post): bool => $post->published_at !== null))->toBeTrue()
         ->and($posts->contains(fn (Post $post): bool => $post->categories->count() > 1))->toBeTrue()
-        ->and($orientationPost?->categories->pluck('slug')->all())->toBe(['tin-tuc', 'su-kien', 'sinh-vien'])
-        ->and($researchPost?->categories->pluck('slug')->all())->toBe(['tin-tuc', 'nghien-cuu-khoa-hoc', 'sinh-vien'])
+        ->and($orientationPost?->categories->pluck('slug')->all())->toBe(['thong-bao', 'tin-don-vi', 'doan-thanh-nien'])
+        ->and($researchPost?->categories->pluck('slug')->all())->toBe(['tin-don-vi', 'cau-lac-bo-nghien-cuu-khoa-hoc', 'nghien-cuu-khoa-hoc'])
         ->and(User::query()->where('email', 'content-seeder@vmufit.local')->count())->toBeLessThanOrEqual(1);
 });

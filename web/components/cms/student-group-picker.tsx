@@ -2,6 +2,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { StudentGroupFormDialog } from "@/components/cms/student-group-form-dialog";
 import type { StudentGroupFormValues } from "@/components/cms/student-group-form-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Description,
   FieldError,
@@ -12,7 +13,6 @@ import {
   MultipleSelectContent,
   MultipleSelectItem,
 } from "@/components/ui/multiple-select";
-import { Button } from "@/components/ui/button";
 
 interface StudentGroupPickerProps {
   allowGlobalScope: boolean;

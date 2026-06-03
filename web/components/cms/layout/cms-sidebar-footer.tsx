@@ -75,7 +75,7 @@ export function CmsSidebarFooter({
 
           <MenuItem href={cmsDashboardHref}>
             <HomeIcon />
-            Dashboard
+            Bảng điều khiển
           </MenuItem>
           <MenuItem href={edit.url()}>
             <Cog6ToothIcon />

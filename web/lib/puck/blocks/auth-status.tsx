@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/menu";
 import { edit } from "@/routes/profile";
 import type { SharedData } from "@/types/shared";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const AuthStatusComponentConfig: PageBuilderComponentConfig<"AuthStatus"> =
@@ -106,6 +107,7 @@ function AuthStatusBlock({
   showCmsLink = true,
   profileVariant = "avatarName",
   className,
+  id,
 }: {
   alignment?: "left" | "center" | "right";
   buttonLabel?: string;
@@ -115,8 +117,11 @@ function AuthStatusBlock({
   showCmsLink?: boolean;
   profileVariant?: "avatar" | "avatarName" | "compact";
   className?: string;
+  id?: string;
 }) {
   const { auth } = usePage<SharedData>().props;
+  const isEditorPreview = isPuckEditorPreview();
+  const domId = getPuckBlockDomId(id);
   const alignmentClass = {
     left: "justify-start",
     center: "justify-center",
@@ -126,6 +131,7 @@ function AuthStatusBlock({
   if (!auth.user) {
     return (
       <div
+        id={domId}
         className={twMerge(
           "flex flex-wrap items-center gap-2",
           alignmentClass,
@@ -150,22 +156,28 @@ function AuthStatusBlock({
     );
   }
 
-  const userInitials = auth.user.name
-    .split(" ")
-    .map((name) => name[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const userInitials = isEditorPreview
+    ? "TK"
+    : auth.user.name
+        .split(" ")
+        .map((name) => name[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
   const canViewCms = auth.permissions.includes("view admin dashboard");
-  const displayText =
-    profileVariant === "compact"
+  const displayText = isEditorPreview
+    ? "Tài khoản"
+    : profileVariant === "compact"
       ? auth.user.name
       : profileVariant === "avatarName" && showName
         ? auth.user.name
         : null;
 
   return (
-    <div className={twMerge("flex items-center", alignmentClass, className)}>
+    <div
+      id={domId}
+      className={twMerge("flex items-center", alignmentClass, className)}
+    >
       <Menu>
         <MenuTrigger
           aria-label="Hồ sơ người dùng"
@@ -174,7 +186,7 @@ function AuthStatusBlock({
           <Avatar
             className="size-8 *:size-8"
             initials={userInitials}
-            src={auth.user.gravatar}
+            src={isEditorPreview ? undefined : auth.user.gravatar}
           />
           {displayText ? (
             <span className="max-w-40 truncate">{displayText}</span>
@@ -183,10 +195,12 @@ function AuthStatusBlock({
         <MenuContent className="min-w-64" placement="bottom right">
           <MenuSection>
             <MenuHeader separator>
-              <span className="block">{auth.user.name}</span>
+              <span className="block">
+                {isEditorPreview ? "Xem trước layout" : auth.user.name}
+              </span>
               {showEmail ? (
                 <span className="font-normal text-muted-fg">
-                  {auth.user.email}
+                  {isEditorPreview ? "Tài khoản hiện tại" : auth.user.email}
                 </span>
               ) : null}
             </MenuHeader>
@@ -219,3 +233,4 @@ function AuthStatusBlock({
     </div>
   );
 }
+

@@ -1,10 +1,10 @@
 import { Link, usePage } from "@inertiajs/react";
 import type { PropsWithChildren } from "react";
-import { AppLogo } from "@/components/brand/app-logo";
 import {
   create,
   destroy,
 } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
+import { AppLogo } from "@/components/brand/app-logo";
 import { home, register } from "@/routes";
 import { edit } from "@/routes/profile";
 import type { SharedData } from "@/types/shared";

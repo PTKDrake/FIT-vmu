@@ -33,9 +33,9 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
-import { t } from "@/lib/i18n";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
+import { t } from "@/lib/i18n";
 import positionsRoutes from "@/routes/cms/positions";
 import type { FlashData } from "@/types/shared";
 

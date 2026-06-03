@@ -8,7 +8,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
-import { t } from "@/lib/i18n";
 import {
   CmsDataTable,
   DataTableBadge,
@@ -30,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
+import { t } from "@/lib/i18n";
 import usersRoutes from "@/routes/cms/users";
 import type { FlashData, SharedData } from "@/types/shared";
 

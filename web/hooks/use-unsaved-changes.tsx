@@ -1,6 +1,5 @@
 import { router } from "@inertiajs/react";
 import React, { createContext, use, useRef, useState } from "react";
-import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import {
   ModalContent,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/modal";
 import { shouldInterceptUnsavedAnchorNavigation } from "@/hooks/unsaved-navigation";
 import { useMountEffect } from "@/hooks/use-mount-effect";
+import { t } from "@/lib/i18n";
 
 type UnsavedChangesState = {
   isDirty: boolean;
@@ -160,8 +160,10 @@ export function UnsavedChangesProvider({
   const pendingNavigationRef = useRef<PendingNavigation | null>(null);
   const [contextValue] = useState<UnsavedChangesContextType>(() => ({
     setDirty(id, isDirty, onSave) {
-      if (id === "__proto__" || id === "constructor" || id === "prototype")
-        return;
+      if (id === "__proto__" || id === "constructor" || id === "prototype") {
+return;
+}
+
       const safeId = `safe_${id}`;
       onSaveRefs.current[safeId] = onSave;
       dirtyStatesRef.current[safeId] = { isDirty, onSave };
@@ -170,8 +172,10 @@ export function UnsavedChangesProvider({
       );
     },
     removeDirty(id) {
-      if (id === "__proto__" || id === "constructor" || id === "prototype")
-        return;
+      if (id === "__proto__" || id === "constructor" || id === "prototype") {
+return;
+}
+
       const safeId = `safe_${id}`;
       delete onSaveRefs.current[safeId];
       delete dirtyStatesRef.current[safeId];

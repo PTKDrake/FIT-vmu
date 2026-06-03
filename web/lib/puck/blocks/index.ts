@@ -60,5 +60,12 @@ export {
   ContactInfoComponentConfig,
 } from "./dynamic";
 
+// --- SOCIAL BLOCKS ---
+export {
+  SocialLinksComponentConfig,
+  NewsletterFormComponentConfig,
+  CopyrightBarComponentConfig,
+} from "./social";
+
 // --- AUTH BLOCKS ---
 export { AuthStatusComponentConfig } from "./auth-status";

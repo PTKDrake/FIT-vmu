@@ -1,5 +1,5 @@
 import { Link, router, useForm } from "@inertiajs/react";
-import type { FormEvent } from "react";
+import { PuckLayoutBuilder } from "@/components/layout-builder/puck-layout-builder";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,
@@ -15,13 +15,12 @@ import {
 } from "@/components/ui/native-select";
 import { Switch } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
-import { PuckLayoutBuilder } from "@/components/layout-builder/puck-layout-builder";
+import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
   createEmptyPuckData,
   serializePuckPageData,
 } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderData } from "@/lib/puck/page-builder-data";
-import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
   createCombinedSiteLayoutData,
   splitCombinedSiteLayoutData,
@@ -69,9 +68,7 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
     right_data: layout?.rightData ?? emptySlotJson,
   });
 
-  function submit(event?: FormEvent<HTMLFormElement>): void {
-    event?.preventDefault();
-
+  function submit(): void {
     if (layout) {
       form.patch(layoutRoutes.update.url({ siteLayout: layout.id }), {
         preserveScroll: true,
@@ -126,85 +123,92 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
   });
 
   return (
-    <form className="flex flex-1 flex-col gap-4 p-4 pt-0" onSubmit={submit}>
-      <Fieldset className="space-y-6 rounded-2xl border border-border bg-overlay px-5 py-5">
-        <div>
-          <Legend>{isEditing ? "Chỉnh sửa layout" : "Tạo layout"}</Legend>
-          <Text className="mt-1 text-muted-fg">
-            Cấu hình định danh, trạng thái và layout mặc định cho shell public.
-          </Text>
-        </div>
-        <FieldGroup className="grid gap-5 lg:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="layout-name">Tên layout</Label>
-            <Input
-              id="layout-name"
-              value={form.data.name}
-              onChange={(event) => form.setData("name", event.target.value)}
-            />
-            {form.errors.name ? (
-              <FieldError>{form.errors.name}</FieldError>
-            ) : null}
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          submit();
+        }}
+      >
+        <Fieldset className="space-y-6 rounded-2xl border border-border bg-overlay px-5 py-5">
+          <div>
+            <Legend>{isEditing ? "Chỉnh sửa layout" : "Tạo layout"}</Legend>
+            <Text className="mt-1 text-muted-fg">
+              Cấu hình định danh, trạng thái và layout mặc định cho shell
+              public.
+            </Text>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="layout-key">Key</Label>
-            <Input
-              id="layout-key"
-              value={form.data.key}
-              onChange={(event) => form.setData("key", event.target.value)}
-            />
-            {form.errors.key ? (
-              <FieldError>{form.errors.key}</FieldError>
-            ) : null}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="layout-status">Trạng thái</Label>
-            <NativeSelect>
-              <NativeSelectContent
-                id="layout-status"
-                value={form.data.status}
-                onChange={(event) =>
-                  form.setData(
-                    "status",
-                    event.target.value as "draft" | "published",
-                  )
-                }
-              >
-                <option value="draft">Bản nháp</option>
-                <option value="published">Đã xuất bản</option>
-              </NativeSelectContent>
-            </NativeSelect>
-            {form.errors.status ? (
-              <FieldError>{form.errors.status}</FieldError>
-            ) : null}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="layout-default">Layout mặc định</Label>
-            <div className="flex min-h-10 items-center">
-              <Switch
-                id="layout-default"
-                isSelected={form.data.is_default}
-                onChange={(value) => form.setData("is_default", value)}
+          <FieldGroup className="grid gap-5 lg:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="layout-name">Tên layout</Label>
+              <Input
+                id="layout-name"
+                value={form.data.name}
+                onChange={(event) => form.setData("name", event.target.value)}
               />
+              {form.errors.name ? (
+                <FieldError>{form.errors.name}</FieldError>
+              ) : null}
             </div>
-            {form.errors.is_default ? (
-              <FieldError>{form.errors.is_default}</FieldError>
-            ) : null}
+            <div className="space-y-2">
+              <Label htmlFor="layout-key">Key</Label>
+              <Input
+                id="layout-key"
+                value={form.data.key}
+                onChange={(event) => form.setData("key", event.target.value)}
+              />
+              {form.errors.key ? (
+                <FieldError>{form.errors.key}</FieldError>
+              ) : null}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="layout-status">Trạng thái</Label>
+              <NativeSelect>
+                <NativeSelectContent
+                  id="layout-status"
+                  value={form.data.status}
+                  onChange={(event) =>
+                    form.setData(
+                      "status",
+                      event.target.value as "draft" | "published",
+                    )
+                  }
+                >
+                  <option value="draft">Bản nháp</option>
+                  <option value="published">Đã xuất bản</option>
+                </NativeSelectContent>
+              </NativeSelect>
+              {form.errors.status ? (
+                <FieldError>{form.errors.status}</FieldError>
+              ) : null}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="layout-default">Layout mặc định</Label>
+              <div className="flex min-h-10 items-center">
+                <Switch
+                  id="layout-default"
+                  isSelected={form.data.is_default}
+                  onChange={(value) => form.setData("is_default", value)}
+                />
+              </div>
+              {form.errors.is_default ? (
+                <FieldError>{form.errors.is_default}</FieldError>
+              ) : null}
+            </div>
+          </FieldGroup>
+          <div className="flex items-center justify-end gap-3 border-t border-border pt-5">
+            <Link
+              className="inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-bg px-4 text-sm font-medium text-fg transition hover:bg-muted/40"
+              href={layouts.url()}
+            >
+              Hủy
+            </Link>
+            <Button isDisabled={form.processing} type="submit">
+              {form.processing ? "Đang lưu..." : "Lưu layout"}
+            </Button>
           </div>
-        </FieldGroup>
-        <div className="flex items-center justify-end gap-3 border-t border-border pt-5">
-          <Link
-            className="inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-bg px-4 text-sm font-medium text-fg transition hover:bg-muted/40"
-            href={layouts.url()}
-          >
-            Hủy
-          </Link>
-          <Button isDisabled={form.processing} type="submit">
-            {form.processing ? "Đang lưu..." : "Lưu layout"}
-          </Button>
-        </div>
-      </Fieldset>
-
+        </Fieldset>
+      </form>
       <PuckLayoutBuilder
         config={layoutBuilderConfig}
         content={combinedLayoutData}
@@ -214,6 +218,6 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
         onChange={(value) => applySlotData(value.data)}
         onSave={(value) => saveCombinedLayout(value.data)}
       />
-    </form>
+    </div>
   );
 }

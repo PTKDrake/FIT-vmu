@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(*)",
+      "Bash(curl -sk https://fit.vimaru.edu.vn/vi 2>&1 | head -200)",
+      "Bash(curl -sk 'https://fit.vimaru.edu.vn/vi/gioi-thieu' 2>&1 | grep -oP '\\(?<=<div class=\"field-item[^\"]*\">\\).*?\\(?=</div>\\)' | head -30)",
+      "Bash(curl -sk 'https://fit.vimaru.edu.vn/vi/gioi-thieu' 2>&1 | grep -oP '<h[1-3][^>]*>.*?</h[1-3]>' | head -20)"
+    ]
+  }
+}

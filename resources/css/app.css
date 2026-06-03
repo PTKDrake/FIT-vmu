@@ -16,8 +16,7 @@
         "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
 
-    --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv05",
-        "cv11";
+    --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv05", "cv11";
     --font-mono--font-feature-settings: "ss02", "zero";
 
     --color-border: var(--border);
@@ -26,6 +25,9 @@
 
     --color-bg: var(--bg);
     --color-fg: var(--fg);
+
+    --color-transparent-fg: oklch(0.214 0.009 43.1);
+    --color-transparent-bg: oklch(0 0 0);
 
     --color-primary: var(--primary);
     --color-primary-fg: var(--primary-fg);
@@ -37,6 +39,8 @@
 
     --color-accent: var(--accent);
     --color-accent-fg: var(--accent-fg);
+    --color-accent-subtle: var(--accent-subtle);
+    --color-accent-subtle-fg: var(--accent-subtle-fg);
 
     --color-success: var(--success);
     --color-success-fg: var(--success-fg);
@@ -109,7 +113,7 @@
 
 :root {
     --bg: oklch(1 0 0);
-    --fg: oklch(0.218 0.008 223.9);
+    --fg: oklch(0.214 0.009 43.1);
 
     --primary: oklch(0.685 0.169 237.323);
     --primary-fg: oklch(1 0 0);
@@ -119,16 +123,16 @@
     --secondary: oklch(0.925 0.005 214.3);
     --secondary-fg: oklch(0.148 0.004 228.8);
 
-    --accent: oklch(0.596 0.145 163.225);
-    --accent-fg: oklch(1 0 0);
-    --accent-subtle: oklch(0.696 0.17 162.48 / 0.15);
-    --accent-subtle-fg: oklch(0.508 0.118 165.612);
+    --accent: oklch(0.922 0.005 34.3);
+    --accent-fg: oklch(0.147 0.004 49.3);
+    --accent-subtle: oklch(0.438 0.017 39.3 / 0.1);
+    --accent-subtle-fg: oklch(0.367 0.016 35.7);
 
     --overlay: oklch(1 0 0);
     --overlay-fg: oklch(0.148 0.004 228.8);
 
-    --muted: oklch(0.963 0.002 197.1);
-    --muted-fg: oklch(0.56 0.021 213.5);
+    --muted: oklch(0.96 0.002 17.2);
+    --muted-fg: oklch(0.547 0.021 43.1);
 
     --success: oklch(0.6 0.118 184.704);
     --success-fg: oklch(1 0 0);
@@ -222,8 +226,8 @@
     --overlay: oklch(0.218 0.008 223.9);
     --overlay-fg: oklch(0.987 0.002 197.1);
 
-    --muted: oklch(0.218 0.008 223.9);
-    --muted-fg: oklch(0.723 0.014 214.4);
+    --muted: oklch(0.214 0.009 43.1);
+    --muted-fg: oklch(0.714 0.014 41.2);
 
     --success: oklch(0.6 0.118 184.704);
     --success-fg: oklch(1 0 0);
@@ -401,11 +405,8 @@
     }
 
     .navigation-tree-editor [role="treeitem"] {
-        border-bottom: 1px solid color-mix(
-            in oklch,
-            var(--border) 92%,
-            transparent
-        );
+        border-bottom: 1px solid
+            color-mix(in oklch, var(--border) 92%, transparent);
         background-color: color-mix(in oklch, var(--overlay) 96%, var(--muted));
         transition:
             border-color 150ms ease,

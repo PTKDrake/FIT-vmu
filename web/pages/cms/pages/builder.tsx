@@ -19,7 +19,7 @@ export default function CmsPageBuilder({ page }: CmsPageEditorPageProps) {
       <div className="flex flex-1 flex-col p-4 pt-0">
         <PuckPageBuilder
           backHref={edit.url({ page: page.id })}
-          backLabel="Quay lại chỉnh sửa"
+          backLabel="Quay lại phần chỉnh sửa"
           canSave={draftJson !== savedJson}
           className="min-h-[calc(100vh-6.5rem)] rounded-xl border border-border"
           content={draftJson}

@@ -49,19 +49,27 @@ class UnitsAndPositionsSeeder extends Seeder
                 'name' => 'Khoa Công nghệ thông tin',
                 'slug' => 'khoa-cong-nghe-thong-tin',
                 'description' => $this->blockNote([
-                    'Đơn vị phụ trách đào tạo, nghiên cứu và chuyển giao trong lĩnh vực công nghệ thông tin của trường.',
-                    'Tập trung các mảng khoa học máy tính, hệ thống thông tin, mạng máy tính và công nghệ phần mềm.',
+                    'Khoa CNTT – Trường Đại học Hàng hải Việt Nam thành lập ngày 18/12/1997. Khoa đào tạo chuyên ngành CNTT hệ Đại học chính quy với 3 chuyên ngành: Công nghệ Thông tin, Công nghệ Phần mềm và Truyền thông & Mạng máy tính. Hiện Khoa có 5 Bộ môn với tổng số hơn 1050 sinh viên đang theo học.',
                 ]),
                 'description_format' => 'blocknote_json',
                 'sort_order' => 1,
                 'is_active' => true,
             ],
             [
+                'name' => 'Ban chủ nhiệm khoa',
+                'slug' => 'ban-chu-nhiem-khoa',
+                'description' => $this->blockNote([
+                    'Ban chủ nhiệm Khoa CNTT đương nhiệm gồm Trưởng khoa và các Phó Trưởng khoa, chịu trách nhiệm quản lý, điều hành hoạt động đào tạo, nghiên cứu và phát triển của Khoa.',
+                ]),
+                'description_format' => 'blocknote_json',
+                'sort_order' => 5,
+                'is_active' => true,
+            ],
+            [
                 'name' => 'Bộ môn Khoa học máy tính',
                 'slug' => 'bo-mon-khoa-hoc-may-tinh',
                 'description' => $this->blockNote([
-                    'Phụ trách các học phần nền tảng về thuật toán, cấu trúc dữ liệu và trí tuệ nhân tạo.',
-                    'Là đầu mối xây dựng định hướng học thuật cho các nhóm nghiên cứu liên quan đến AI và khoa học dữ liệu.',
+                    'Phụ trách ngành Công nghệ Thông tin và đảm nhận các học phần cơ sở của Khoa CNTT. Trưởng BM: TS. Nguyễn Hạnh Phúc.',
                 ]),
                 'description_format' => 'blocknote_json',
                 'sort_order' => 10,
@@ -71,8 +79,7 @@ class UnitsAndPositionsSeeder extends Seeder
                 'name' => 'Bộ môn Hệ thống thông tin',
                 'slug' => 'bo-mon-he-thong-thong-tin',
                 'description' => $this->blockNote([
-                    'Phụ trách các học phần về phân tích thiết kế hệ thống, dữ liệu doanh nghiệp và chuyển đổi số.',
-                    'Đồng hành với các đề tài ứng dụng thực tiễn trong quản trị dữ liệu và hệ thống thông tin phục vụ vận tải biển.',
+                    'Phụ trách ngành Công nghệ Phần mềm. Trưởng BM: TS. Lê Quyết Tiến.',
                 ]),
                 'description_format' => 'blocknote_json',
                 'sort_order' => 20,
@@ -82,33 +89,51 @@ class UnitsAndPositionsSeeder extends Seeder
                 'name' => 'Bộ môn Truyền thông và mạng máy tính',
                 'slug' => 'bo-mon-truyen-thong-va-mang-may-tinh',
                 'description' => $this->blockNote([
-                    'Phụ trách chương trình về mạng, bảo mật, điện toán đám mây và hạ tầng số.',
-                    'Hỗ trợ các học phần thực hành lab và kết nối doanh nghiệp trong các chủ đề network và security.',
+                    'Phụ trách ngành Truyền thông và Mạng máy tính. Trưởng BM: TS. Hồ Thị Hương Thơm.',
                 ]),
                 'description_format' => 'blocknote_json',
                 'sort_order' => 30,
                 'is_active' => true,
             ],
             [
-                'name' => 'Văn phòng khoa',
-                'slug' => 'van-phong-khoa',
+                'name' => 'Bộ môn Kỹ thuật máy tính',
+                'slug' => 'bo-mon-ky-thuat-may-tinh',
                 'description' => $this->blockNote([
-                    'Đầu mối tiếp nhận hồ sơ, điều phối lịch công tác và hỗ trợ hành chính cho hoạt động của khoa.',
+                    'Đảm nhiệm các học phần nền tảng hệ thống cho các ngành. Phó Trưởng BM: ThS. Phạm Trung Minh.',
                 ]),
                 'description_format' => 'blocknote_json',
                 'sort_order' => 40,
                 'is_active' => true,
             ],
             [
-                'name' => 'Trung tâm nghiên cứu ứng dụng hàng hải số',
-                'slug' => 'trung-tam-nghien-cuu-ung-dung-hang-hai-so',
+                'name' => 'Bộ môn Tin học đại cương',
+                'slug' => 'bo-mon-tin-hoc-dai-cuong',
                 'description' => $this->blockNote([
-                    'Kết nối nghiên cứu ứng dụng công nghệ số với bài toán thực tế trong logistics và hàng hải.',
-                    'Hiện đang được dùng như dữ liệu demo để kiểm tra public listing và navigation nội bộ.',
+                    'Đảm nhiệm học phần Tin học Văn phòng và Tin học đại cương cho toàn trường và hỗ trợ các bộ môn chuyên môn. Phó Trưởng BM: ThS. Nguyễn Kim Anh.',
                 ]),
                 'description_format' => 'blocknote_json',
                 'sort_order' => 50,
-                'is_active' => false,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Ban chấp hành Công đoàn',
+                'slug' => 'ban-chap-hanh-cong-doan',
+                'description' => $this->blockNote([
+                    'Tổ chức Công đoàn Khoa CNTT đại diện và bảo vệ quyền lợi hợp pháp của cán bộ, giảng viên trong Khoa.',
+                ]),
+                'description_format' => 'blocknote_json',
+                'sort_order' => 60,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Liên chi đoàn Khoa CNTT',
+                'slug' => 'lien-chi-doan-khoa-cntt',
+                'description' => $this->blockNote([
+                    'Tổ chức Đoàn Thanh niên cấp Khoa, phụ trách hoạt động phong trào, tình nguyện và hỗ trợ sinh viên.',
+                ]),
+                'description_format' => 'blocknote_json',
+                'sort_order' => 70,
+                'is_active' => true,
             ],
         ];
     }

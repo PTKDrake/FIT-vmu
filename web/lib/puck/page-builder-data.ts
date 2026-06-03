@@ -1,9 +1,10 @@
 import type { Data } from "@puckeditor/core";
+import type { PuckSurfaceStyleProps } from "./blocks/surface";
 
 export const PUCK_PAGE_CONTENT_FORMAT = "puck_json" as const;
 
 export interface VmuFitPageBuilderComponents {
-  SiteLayoutFrame: {
+  SiteLayoutFrame: PuckSurfaceStyleProps & {
     header?: any;
     left?: any;
     right?: any;
@@ -78,7 +79,7 @@ export interface VmuFitPageBuilderComponents {
     type?: "solid" | "dashed" | "dotted";
     color?: "default" | "primary" | "muted";
     spacingY?: "none" | "sm" | "md" | "lg";
-    width?: "full" | "container" | "short";
+    width?: "full" | "container" | "xl" | "lg" | "md" | "sm" | "short";
     align?: "left" | "center" | "right";
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
@@ -124,7 +125,7 @@ export interface VmuFitPageBuilderComponents {
     body: string;
     className?: string;
   };
-  Image: {
+  Image: PuckSurfaceStyleProps & {
     imageUrl: string;
     alt: string;
     caption: string;
@@ -132,7 +133,7 @@ export interface VmuFitPageBuilderComponents {
     rounded: boolean;
     className?: string;
   };
-  ImageText: {
+  ImageText: PuckSurfaceStyleProps & {
     imageUrl: string;
     alt: string;
     title: string;
@@ -140,7 +141,7 @@ export interface VmuFitPageBuilderComponents {
     imagePosition: "left" | "right";
     className?: string;
   };
-  Button: {
+  Button: PuckSurfaceStyleProps & {
     text: string;
     url: string;
     variant: "primary" | "secondary" | "outline" | "plain";
@@ -148,7 +149,7 @@ export interface VmuFitPageBuilderComponents {
     openInNewTab: boolean;
     className?: string;
   };
-  ButtonGroup: {
+  ButtonGroup: PuckSurfaceStyleProps & {
     buttons: {
       text: string;
       url: string;
@@ -158,7 +159,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  Card: {
+  Card: PuckSurfaceStyleProps & {
     title: string;
     description: string;
     imageUrl: string;
@@ -166,13 +167,13 @@ export interface VmuFitPageBuilderComponents {
     linkLabel: string;
     className?: string;
   };
-  Note: {
+  Note: PuckSurfaceStyleProps & {
     title: string;
     body: string;
     intent: "info" | "warning" | "success" | "danger";
     className?: string;
   };
-  BadgeList: {
+  BadgeList: PuckSurfaceStyleProps & {
     badges: {
       text: string;
       intent:
@@ -185,7 +186,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  TagList: {
+  TagList: PuckSurfaceStyleProps & {
     tags: {
       text: string;
     }[];
@@ -217,7 +218,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  AboutSection: {
+  AboutSection: PuckSurfaceStyleProps & {
     badge: string;
     header: string;
     description: string;
@@ -228,7 +229,7 @@ export interface VmuFitPageBuilderComponents {
     imageUrl: string;
     className?: string;
   };
-  FeatureGrid: {
+  FeatureGrid: PuckSurfaceStyleProps & {
     badge: string;
     header: string;
     description: string;
@@ -240,7 +241,7 @@ export interface VmuFitPageBuilderComponents {
     columns: number;
     className?: string;
   };
-  StatsSection: {
+  StatsSection: PuckSurfaceStyleProps & {
     badge: string;
     header: string;
     description: string;
@@ -252,7 +253,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  CTASection: {
+  CTASection: PuckSurfaceStyleProps & {
     header: string;
     description: string;
     primaryActionLabel: string;
@@ -261,7 +262,7 @@ export interface VmuFitPageBuilderComponents {
     secondaryActionHref: string;
     className?: string;
   };
-  TimelineSection: {
+  TimelineSection: PuckSurfaceStyleProps & {
     badge: string;
     header: string;
     description: string;
@@ -271,7 +272,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  FAQSection: {
+  FAQSection: PuckSurfaceStyleProps & {
     title: string;
     description: string;
     items: {
@@ -280,7 +281,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  TestimonialSection: {
+  TestimonialSection: PuckSurfaceStyleProps & {
     badge: string;
     header: string;
     description: string;
@@ -292,7 +293,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  CarouselSection: {
+  CarouselSection: PuckSurfaceStyleProps & {
     badge: string;
     header: string;
     description: string;
@@ -306,7 +307,7 @@ export interface VmuFitPageBuilderComponents {
   };
 
   // 4. Dynamic blocks
-  LatestPosts: {
+  LatestPosts: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     categoryId: string;
@@ -314,60 +315,60 @@ export interface VmuFitPageBuilderComponents {
     showCTA: boolean;
     className?: string;
   };
-  LatestAnnouncements: {
+  LatestAnnouncements: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     layout: "grid" | "list";
     showCTA: boolean;
     className?: string;
   };
-  StaffGrid: {
+  StaffGrid: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     departmentId: string;
     className?: string;
   };
-  UnitList: {
+  UnitList: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     type: string;
     className?: string;
   };
-  DocumentList: {
+  DocumentList: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     categoryId: string;
     showIcon: boolean;
     className?: string;
   };
-  RelatedPosts: {
+  RelatedPosts: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     className?: string;
   };
-  RelatedDocuments: {
+  RelatedDocuments: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     className?: string;
   };
-  NavigationMenu: {
+  NavigationMenu: PuckSurfaceStyleProps & {
     title?: string;
     menuId?: string;
     orientation?: "horizontal" | "vertical";
     className?: string;
   };
-  Categories: {
+  Categories: PuckSurfaceStyleProps & {
     title: string;
     parentId?: string;
     limit: number;
     className?: string;
   };
-  PageLinks: {
+  PageLinks: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     className?: string;
   };
-  LinkList: {
+  LinkList: PuckSurfaceStyleProps & {
     title: string;
     links: {
       label: string;
@@ -376,14 +377,53 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  ContactInfo: {
+  ContactInfo: PuckSurfaceStyleProps & {
     title: string;
     address?: string;
     phone?: string;
     email?: string;
     className?: string;
   };
-  AuthStatus: {
+  SocialLinks: PuckSurfaceStyleProps & {
+    links: {
+      platform:
+        | "facebook"
+        | "youtube"
+        | "linkedin"
+        | "twitter"
+        | "instagram"
+        | "github"
+        | "tiktok"
+        | "zalo"
+        | "email"
+        | "phone"
+        | "website";
+      url: string;
+      label?: string;
+    }[];
+    layout?: "horizontal" | "vertical";
+    iconSize?: "sm" | "md" | "lg";
+    showLabels?: boolean;
+    className?: string;
+  };
+  NewsletterForm: PuckSurfaceStyleProps & {
+    title: string;
+    description: string;
+    placeholder: string;
+    buttonLabel: string;
+    actionUrl: string;
+    layout?: "inline" | "stacked";
+    className?: string;
+  };
+  CopyrightBar: PuckSurfaceStyleProps & {
+    text: string;
+    links: {
+      label: string;
+      url: string;
+    }[];
+    className?: string;
+  };
+  AuthStatus: PuckSurfaceStyleProps & {
     alignment?: "left" | "center" | "right";
     buttonLabel?: string;
     showName?: boolean;

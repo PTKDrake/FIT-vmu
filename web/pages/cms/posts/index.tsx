@@ -32,12 +32,12 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
-import { Textarea } from "@/components/ui/textarea";
 import { Text } from "@/components/ui/text";
-import { t } from "@/lib/i18n";
+import { Textarea } from "@/components/ui/textarea";
 import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
+import { t } from "@/lib/i18n";
 import postsRoutes from "@/routes/cms/posts";
 import type { FlashData } from "@/types/shared";
 
@@ -382,6 +382,7 @@ export default function CmsPostsPage({
                   value={rejectionReason}
                   onChange={(e) => {
                     setRejectionReason(e.target.value);
+
                     if (e.target.value.trim()) {
                       setRejectionError("");
                     }
@@ -410,8 +411,10 @@ export default function CmsPostsPage({
               onPress={() => {
                 if (!rejectionReason.trim()) {
                   setRejectionError("Lý do từ chối là bắt buộc.");
+
                   return;
                 }
+
                 setIsPublishing(true);
                 router.patch(
                   postsRoutes.publish.url({ post: rejectTarget.id }),

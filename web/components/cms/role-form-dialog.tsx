@@ -53,7 +53,7 @@ const categoryTranslations: Record<string, string> = {
   "staff-profiles": "Hồ sơ cán bộ (staff profiles)",
   staff: "Cán bộ (staff)",
   units: "Đơn vị (units)",
-  media: "Thư viện Media (media)",
+  media: "Thư viện media (media)",
   navigation: "Menu điều hướng (navigation)",
   "navigation menus": "Menu điều hướng (navigation)",
   positions: "Chức vụ (positions)",
@@ -63,13 +63,16 @@ const categoryTranslations: Record<string, string> = {
 
 const getCategory = (permissionName: string) => {
   const parts = permissionName.split(" ");
+
   if (parts.length > 1) {
     const rawCategory = parts.slice(1).join(" ");
+
     return (
       categoryTranslations[rawCategory] ||
       `${rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1)}`
     );
   }
+
   return "Hệ thống";
 };
 
@@ -95,11 +98,14 @@ export function RoleFormDialog({
     const groups: Record<string, PermissionData[]> = {};
     allPermissions.forEach((permission) => {
       const cat = getCategory(permission.name);
+
       if (!groups[cat]) {
         groups[cat] = [];
       }
+
       groups[cat].push(permission);
     });
+
     return groups;
   })();
 
@@ -107,13 +113,16 @@ export function RoleFormDialog({
     if (!canManagePermissions || isProtectedRole) {
       return;
     }
+
     const current = [...form.data.permissions];
     const index = current.indexOf(name);
+
     if (index > -1) {
       current.splice(index, 1);
     } else {
       current.push(name);
     }
+
     form.setData("permissions", current);
   }
 
@@ -125,7 +134,9 @@ export function RoleFormDialog({
     if (!canManagePermissions || isProtectedRole) {
       return;
     }
+
     let updated = [...form.data.permissions];
+
     if (allSelected) {
       // Remove all from this category
       updated = updated.filter((p) => !permissionNames.includes(p));
@@ -137,6 +148,7 @@ export function RoleFormDialog({
         }
       });
     }
+
     form.setData("permissions", updated);
   }
 
@@ -154,6 +166,7 @@ export function RoleFormDialog({
         },
         preserveScroll: true,
       });
+
       return;
     }
 
@@ -282,6 +295,7 @@ export function RoleFormDialog({
                         const isChecked = form.data.permissions.includes(
                           permission.name,
                         );
+
                         return (
                           <div
                             key={permission.id}

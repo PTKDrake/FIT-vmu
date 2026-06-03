@@ -1,8 +1,6 @@
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
-import {
-  findCmsNavigationGroupTitle,
-  cmsNavigationItems,
-} from "@/components/cms/navigation";
+import { useState  } from "react";
+import type {Key} from "react";
 import {
   CMS_SIDEBAR_EXPANDED_GROUPS_STORAGE_KEY,
   getCmsNavigationCompactLabel,
@@ -10,7 +8,10 @@ import {
   resolveCmsSidebarExpandedGroups,
   stringifyCmsSidebarExpandedGroups,
 } from "@/components/cms/layout/cms-sidebar-navigation-state";
-import { useState, type Key } from "react";
+import {
+  findCmsNavigationGroupTitle,
+  cmsNavigationItems,
+} from "@/components/cms/navigation";
 import {
   SidebarContent,
   SidebarDisclosure,

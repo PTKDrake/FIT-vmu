@@ -24,7 +24,7 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
   {
     href: cmsDashboardHref,
     icon: HomeIcon,
-    title: "Dashboard",
+    title: "Bảng điều khiển",
   },
   {
     icon: NewspaperIcon,
@@ -32,10 +32,10 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
       { href: "/cms/posts", title: "Bài viết" },
       { href: "/cms/post-categories", title: "Danh mục bài viết" },
       { href: "/cms/pages", title: "Trang" },
-      { href: "/cms/layouts", title: "Layouts" },
-      { href: "/cms/navigation", title: "Navigation" },
+      { href: "/cms/layouts", title: "Bố cục" },
+      { href: "/cms/navigation", title: "Điều hướng" },
       { href: "/cms/student-groups", title: "Nhóm sinh viên" },
-      { href: "/cms/media", title: "Media" },
+      { href: "/cms/media", title: "Thư viện media" },
     ],
     title: "Nội dung",
   },
@@ -66,7 +66,7 @@ export function findCmsNavigationLeaf(
   if (normalizedUrl === cmsDashboardHref) {
     return {
       href: cmsDashboardHref,
-      title: "Dashboard",
+      title: "Bảng điều khiển",
     };
   }
 

@@ -24,7 +24,7 @@ export default function EditSiteLayoutPage({
 }: EditSiteLayoutPageProps) {
   return (
     <>
-      <Head title={`Layout - ${layout.name}`} />
+      <Head title={`Bố cục - ${layout.name}`} />
       <SiteLayoutForm layout={layout} />
     </>
   );

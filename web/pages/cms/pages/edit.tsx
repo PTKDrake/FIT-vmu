@@ -2,8 +2,8 @@ import { ArrowLeftIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
-import type { CmsPageEditorPageProps } from "@/components/cms/types";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
+import type { CmsPageEditorPageProps } from "@/components/cms/types";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,
@@ -94,13 +94,13 @@ export default function EditPage({
                   <div className="flex items-center gap-2">
                     <span className="inline-block size-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <h3 className="text-sm font-bold text-fg">
-                      Trình dựng nội dung trực quan (Page Builder)
+                      Trình dựng nội dung trực quan (trình dựng trang)
                     </h3>
                   </div>
                   <p className="text-xs text-muted-fg leading-relaxed">
                     Trang của bạn đã sẵn sàng! Nhấp vào nút bên cạnh để mở trình
-                    kéo thả trực quan Puck Page Builder, bắt đầu thiết kế giao
-                    diện, bố cục khối, nội dung và hình ảnh.
+                    kéo thả trực quan Puck, bắt đầu thiết kế giao diện, bố cục
+                    khối, nội dung và hình ảnh.
                   </p>
                 </div>
                 <Button
@@ -181,7 +181,7 @@ export default function EditPage({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="page-site-layout">Site layout</Label>
+                    <Label htmlFor="page-site-layout">Bố cục trang</Label>
                     <NativeSelect>
                       <NativeSelectContent
                         id="page-site-layout"
@@ -249,7 +249,7 @@ export default function EditPage({
                   </h3>
 
                   <div className="space-y-2">
-                    <Label htmlFor="page-seo-title">SEO Title</Label>
+                    <Label htmlFor="page-seo-title">Tiêu đề SEO</Label>
                     <Input
                       id="page-seo-title"
                       name="seo_title"
@@ -265,9 +265,7 @@ export default function EditPage({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="page-seo-description">
-                      SEO Description
-                    </Label>
+                    <Label htmlFor="page-seo-description">Mô tả SEO</Label>
                     <Textarea
                       autosize
                       id="page-seo-description"

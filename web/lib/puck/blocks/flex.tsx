@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import { twMerge } from "tailwind-merge";
 import { getHideOnClass, getGapAxisClass } from "./layouts";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
@@ -118,25 +118,27 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       label: "Nội dung",
     },
   },
-  render: ({
-    anchorId,
-    flexDirection,
-    mobileDirection,
-    justifyContent,
-    alignItems,
-    gap,
-    gapX,
-    gapY,
-    wrap,
-    childWidth,
-    hideOn,
-    className,
-    classes, // backwards compatibility
-    children: Children,
-  }) => {
-    if (!Children) {
-      return <></>;
-    }
+  render: (props) => {
+    const {
+      anchorId,
+      flexDirection,
+      mobileDirection,
+      justifyContent,
+      alignItems,
+      gap,
+      gapX,
+      gapY,
+      wrap,
+      childWidth,
+      hideOn,
+      className,
+      classes, // backwards compatibility
+      children: Children,
+    } = props;
+    const id = getPuckBlockDomId(
+      (props as { id?: string }).id,
+      anchorId,
+    );
 
     const mobileDirClass = {
       row: "flex-row",
@@ -169,6 +171,9 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     }[alignItems || "center"];
 
     const wrapClass = wrap !== false ? "flex-wrap" : "flex-nowrap";
+    const emptyPreviewClass = isPuckEditorPreview()
+      ? "empty:min-h-20 empty:min-w-20 empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
+      : "";
 
     const childWidthClass = {
       auto: "",
@@ -179,27 +184,36 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     // Backward compatibility for inline gap styles
     const gapStyle = typeof gap === "number" ? { gap: `${gap}px` } : undefined;
 
+    const resolvedClassName = twMerge(
+      "flex min-h-16 min-w-xl flex-1 w-full py-2",
+      mobileDirClass,
+      desktopDirClass,
+      justifyClass,
+      alignClass,
+      wrapClass,
+      childWidthClass,
+      typeof gap === "number"
+        ? undefined
+        : twMerge(
+          getGapAxisClass("x", gapX ?? gap),
+          getGapAxisClass("y", gapY ?? gap),
+        ),
+      emptyPreviewClass,
+      getHideOnClass(hideOn),
+      className,
+      classes,
+    );
+
     return (
       <Children
-        id={anchorId || undefined}
-        className={cn(
-          "flex min-h-16 w-full py-2",
-          mobileDirClass,
-          desktopDirClass,
-          justifyClass,
-          alignClass,
-          wrapClass,
-          childWidthClass,
-          typeof gap === "number"
-            ? undefined
-            : cn(
-                getGapAxisClass("x", gapX ?? gap),
-                getGapAxisClass("y", gapY ?? gap),
-              ),
-          getHideOnClass(hideOn),
-          className,
-          classes,
-        )}
+        collisionAxis={
+          mobileDirection === "row" && flexDirection === "row"
+            ? "x"
+            : "dynamic"
+        }
+        id={id}
+        className={resolvedClassName}
+        minEmptyHeight={96}
         style={gapStyle}
       />
     );
