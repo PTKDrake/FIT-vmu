@@ -646,16 +646,23 @@ Triển khai chiến lược render shell -> template -> content cho public webs
 
 Checklist:
 
-- [ ] Trang chủ từ `pages` nếu có page published tương ứng.
-- [ ] Header/footer navigation từ `navigation_menus/items`.
-- [ ] Danh sách bài viết theo category.
-- [ ] Chi tiết bài viết.
-- [ ] Danh sách cán bộ/giảng viên.
-- [ ] Chi tiết hồ sơ cán bộ.
-- [ ] Danh sách đơn vị.
-- [ ] Danh sách tài liệu public.
-- [ ] Trang đăng nhập.
-- [ ] Khu vực sinh viên xem tài liệu cá nhân hóa.
+- [x] Chốt cơ chế `system pages` cho các route public đặc biệt như `homepage`, `404`, và các trang mặc định khác nếu cần.
+- [x] Tạo `site_settings` tối giản với typed foreign keys `homepage_page_id`, `not_found_page_id`, `student_home_page_id`.
+- [x] Route `/` resolve qua `system pages` thay vì hardcode slug thường.
+- [x] Public pages tiếp tục render theo pipeline `shell -> template -> content`.
+- [ ] Header/footer navigation resolve từ `navigation_menus/items` theo `location`, không nhét vào `pages.content`.
+- [ ] Tạo resolver dùng chung cho public shell để page, post, category, staff và unit dùng cùng layout/navigation contract.
+- [ ] Danh sách bài viết theo category render theo category template hoặc archive template đã chốt ở task 6.1.
+- [ ] Chi tiết bài viết render theo post template + BlockNote body.
+- [ ] Danh sách cán bộ/giảng viên public chỉ lấy `is_public = true`.
+- [ ] Chi tiết hồ sơ cán bộ public chỉ lấy `is_public = true`.
+- [ ] Danh sách đơn vị public chỉ lấy `is_active = true`.
+- [ ] Trang đăng nhập giữ theo auth flow hiện tại nhưng phải hòa vào public navigation/shell khi cần.
+- [x] `Page` và `Post` hỗ trợ visibility `student_groups`; content restricted không dùng allowlist `student_code` lẻ nữa.
+- [x] Có CMS route/module để quản lý `student_groups`, kèm quick-create component tái sử dụng được khi gắn group vào `Page` và `Post`.
+- [x] Parse list `student_code` từ nhiều định dạng như khoảng trắng, dấu phẩy, chấm phẩy và xuống dòng.
+- [x] `student_code` trong `student_groups` chỉ chấp nhận chữ số và không yêu cầu phải có tài khoản tương ứng trong DB.
+- [ ] Có test cho public navigation theo location/tree, public chỉ thấy dữ liệu published/public, và student chỉ thấy nội dung được cấp quyền hợp lệ cho mọi public resource còn lại.
 
 ### 1.8. Phase 7 - Testing, hardening và release MVP
 

@@ -49,7 +49,7 @@ test('student_code and user ownership stay unique', function () {
 
     expect(fn () => Student::factory()->create([
         'user_id' => $user->id,
-        'student_code' => fake()->unique()->bothify('SV######'),
+        'student_code' => fake()->unique()->numerify('######'),
     ]))->toThrow(QueryException::class)
         ->and(fn () => Student::factory()->create([
             'student_code' => $student->student_code,

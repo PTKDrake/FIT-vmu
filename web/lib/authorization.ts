@@ -56,6 +56,16 @@ const ADMIN_NAVIGATION: Array<{ items: NavigationBlueprint[]; label: string }> =
           icon: NewspaperIcon,
           requiredPermissions: ["view posts"],
         },
+        {
+          title: "Nhóm sinh viên",
+          description:
+            "Tái sử dụng danh sách sinh viên cho quyền truy cập nội dung hạn chế.",
+          icon: UserGroupIcon,
+          requiredPermissions: [
+            "manage student groups",
+            "manage shared student groups",
+          ],
+        },
       ],
     },
     {
@@ -166,6 +176,13 @@ const PERMISSION_GROUPS = [
       "manage units",
       "manage positions",
       "manage staff appointments",
+    ],
+  },
+  {
+    label: "Nhóm sinh viên",
+    permissions: [
+      "manage student groups",
+      "manage shared student groups",
     ],
   },
   {

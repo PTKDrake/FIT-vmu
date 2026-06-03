@@ -109,6 +109,7 @@ test('cms post can be created by managers', function () {
         'excerpt' => 'Excerpt of post',
         'content' => '{"blocks":[]}',
         'content_format' => 'blocknote_json',
+        'visibility' => 'public',
         'status' => 'pending',
     ];
 
@@ -152,6 +153,7 @@ test('cms post can be updated by managers', function () {
         'excerpt' => 'Excerpt updated',
         'content' => '{"blocks":[{"type":"paragraph"}]}',
         'content_format' => 'blocknote_json',
+        'visibility' => 'public',
         'status' => 'draft',
     ];
 

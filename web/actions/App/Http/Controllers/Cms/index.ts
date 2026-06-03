@@ -36,6 +36,10 @@ import StoreNavigationMenuController from './StoreNavigationMenuController'
 import UpdateNavigationMenuController from './UpdateNavigationMenuController'
 import DeleteNavigationMenuController from './DeleteNavigationMenuController'
 import SyncNavigationMenuItemsController from './SyncNavigationMenuItemsController'
+import StudentGroupsIndexController from './StudentGroupsIndexController'
+import StoreStudentGroupController from './StoreStudentGroupController'
+import UpdateStudentGroupController from './UpdateStudentGroupController'
+import DeleteStudentGroupController from './DeleteStudentGroupController'
 import MediaIndexController from './MediaIndexController'
 import StoreMediaController from './StoreMediaController'
 import RenameMediaController from './RenameMediaController'
@@ -110,6 +114,10 @@ const Cms = {
     UpdateNavigationMenuController: Object.assign(UpdateNavigationMenuController, UpdateNavigationMenuController),
     DeleteNavigationMenuController: Object.assign(DeleteNavigationMenuController, DeleteNavigationMenuController),
     SyncNavigationMenuItemsController: Object.assign(SyncNavigationMenuItemsController, SyncNavigationMenuItemsController),
+    StudentGroupsIndexController: Object.assign(StudentGroupsIndexController, StudentGroupsIndexController),
+    StoreStudentGroupController: Object.assign(StoreStudentGroupController, StoreStudentGroupController),
+    UpdateStudentGroupController: Object.assign(UpdateStudentGroupController, UpdateStudentGroupController),
+    DeleteStudentGroupController: Object.assign(DeleteStudentGroupController, DeleteStudentGroupController),
     MediaIndexController: Object.assign(MediaIndexController, MediaIndexController),
     StoreMediaController: Object.assign(StoreMediaController, StoreMediaController),
     RenameMediaController: Object.assign(RenameMediaController, RenameMediaController),

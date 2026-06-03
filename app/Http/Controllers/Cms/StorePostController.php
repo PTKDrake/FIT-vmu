@@ -20,6 +20,8 @@ final class StorePostController extends Controller
          *     excerpt?: string|null,
          *     content: string,
          *     content_format: string,
+         *     visibility: string,
+         *     student_group_ids?: list<int>,
          *     thumbnail_id?: int|null,
          *     status: string
          * } $validated

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Page;
 
+use App\Actions\Content\SyncContentStudentGroupsAction;
 use App\Events\CmsContentChanged;
 use App\Models\Page;
 use App\Models\User;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class ClonePageAction
 {
+    public function __construct(
+        private readonly SyncContentStudentGroupsAction $syncContentStudentGroups,
+    ) {}
+
     public function __invoke(Page $page, User $author): Page
     {
         return DB::transaction(function () use ($page, $author): Page {
@@ -28,6 +33,8 @@ class ClonePageAction
             $clone->status = 'draft';
             $clone->published_at = null;
             $clone->save();
+
+            ($this->syncContentStudentGroups)($clone, $page->studentGroupIds());
 
             event(CmsContentChanged::forPage($clone, 'cloned', 'Đã sao chép trang.'));
 

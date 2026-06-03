@@ -23,6 +23,7 @@ test('cms pages create edit clone and delete flows persist page data', function 
         'seo_description' => 'Mo ta SEO gioi thieu',
         'content' => '{"root":{"props":{"title":"Trang gioi thieu"}},"content":[]}',
         'content_format' => 'puck_json',
+        'visibility' => 'public',
         'status' => 'draft',
     ]);
 
@@ -79,6 +80,7 @@ test('cms pages create edit clone and delete flows persist page data', function 
         'excerpt' => 'Tom tat moi',
         'seo_title' => 'SEO moi',
         'seo_description' => 'Mo ta SEO moi',
+        'visibility' => 'public',
     ])->assertRedirect();
 
     $page->refresh();

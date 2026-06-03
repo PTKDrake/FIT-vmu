@@ -5,11 +5,12 @@ import {
   DocumentTextIcon,
   RocketLaunchIcon,
 } from "@heroicons/react/24/outline";
-import { Head, useForm, Link } from "@inertiajs/react";
+import { Head, useForm, Link, usePage } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
 import type { Selection } from "react-aria-components";
 import type { CmsPageCreatePageProps } from "@/components/cms/types";
+import { StudentGroupPicker } from "@/components/cms/student-group-picker";
 import { Button } from "@/components/ui/button";
 import {
   ChoiceBox,
@@ -32,12 +33,28 @@ import {
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import CmsLayout from "@/layouts/cms-layout";
+import { hasPermission } from "@/lib/authorization";
 import {
   createPuckPageDataFromTemplate,
   serializePuckPageData,
 } from "@/lib/puck/page-builder-data";
 import { pages } from "@/routes/cms";
 import { store } from "@/routes/cms/pages";
+import type { SharedData } from "@/types/shared";
+
+interface CreatePageFormData {
+  content: string;
+  content_format: "puck_json";
+  excerpt: string;
+  seo_description: string;
+  seo_title: string;
+  site_layout_id: string;
+  slug: string;
+  status: "draft";
+  student_group_ids: number[];
+  title: string;
+  visibility: "public" | "authenticated" | "students" | "student_groups";
+}
 
 function slugify(text: string): string {
   return text
@@ -52,13 +69,21 @@ function slugify(text: string): string {
     .replace(/--+/g, "-"); // replace multiple - with single -
 }
 
-export default function CreatePage({ layoutOptions }: CmsPageCreatePageProps) {
+export default function CreatePage({
+  layoutOptions,
+  studentGroupOptions,
+}: CmsPageCreatePageProps) {
+  const { auth } = usePage<SharedData>().props;
+  const canCreateGlobalGroup = hasPermission(
+    auth.permissions,
+    "manage shared student groups",
+  );
   const [selectedTemplate, setSelectedTemplate] = useState<Selection>(
     new Set(["basic"]),
   );
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 
-  const form = useForm({
+  const form = useForm<CreatePageFormData>({
     title: "",
     slug: "",
     excerpt: "",
@@ -66,6 +91,8 @@ export default function CreatePage({ layoutOptions }: CmsPageCreatePageProps) {
     seo_description: "",
     content: "",
     content_format: "puck_json" as const,
+    visibility: "public" as const,
+    student_group_ids: [] as number[],
     site_layout_id: "",
     status: "draft" as const,
   });
@@ -169,6 +196,42 @@ export default function CreatePage({ layoutOptions }: CmsPageCreatePageProps) {
                       <FieldError>{form.errors.excerpt}</FieldError>
                     ) : null}
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="page-visibility">Phạm vi xem</Label>
+                    <NativeSelect>
+                      <NativeSelectContent
+                        id="page-visibility"
+                        value={form.data.visibility}
+                        onChange={(event) =>
+                          form.setData(
+                            "visibility",
+                            event.target.value as typeof form.data.visibility,
+                          )
+                        }
+                      >
+                        <option value="public">Công khai</option>
+                        <option value="authenticated">Cần đăng nhập</option>
+                        <option value="students">Mọi sinh viên</option>
+                        <option value="student_groups">Nhóm sinh viên</option>
+                      </NativeSelectContent>
+                    </NativeSelect>
+                    {form.errors.visibility ? (
+                      <FieldError>{form.errors.visibility}</FieldError>
+                    ) : null}
+                  </div>
+
+                  {form.data.visibility === "student_groups" ? (
+                    <StudentGroupPicker
+                      allowGlobalScope={canCreateGlobalGroup}
+                      error={form.errors.student_group_ids}
+                      onChange={(groupIds) =>
+                        form.setData("student_group_ids", groupIds)
+                      }
+                      options={studentGroupOptions}
+                      selectedIds={form.data.student_group_ids}
+                    />
+                  ) : null}
                 </div>
 
                 {/* Right Side: SEO Info */}

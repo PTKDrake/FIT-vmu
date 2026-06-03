@@ -119,6 +119,13 @@ export interface CmsLayoutOption {
   status: "draft" | "published";
 }
 
+export interface CmsStudentGroupOption {
+  code: string;
+  label: string;
+  scope: "global" | "private";
+  value: string;
+}
+
 export interface CmsNavigationResourceCatalog {
   page: NavigationResourceOption[];
   post: NavigationResourceOption[];
@@ -254,14 +261,39 @@ export interface CmsPageEditorPageProps extends SharedData {
     seoTitle: string | null;
     siteLayoutId: number | null;
     slug: string;
+    studentGroupIds: number[];
     status: "draft" | "pending" | "published" | "rejected";
     title: string;
     updatedAt: string;
+    visibility: "public" | "authenticated" | "students" | "student_groups";
   };
+  studentGroupOptions: CmsStudentGroupOption[];
 }
 
 export interface CmsPageCreatePageProps extends SharedData {
   layoutOptions: CmsLayoutOption[];
+  studentGroupOptions: CmsStudentGroupOption[];
+}
+
+export interface CmsStudentGroupRow {
+  canDelete: boolean;
+  canUpdate: boolean;
+  code: string;
+  id: number;
+  memberCount: number;
+  name: string;
+  ownerName: string | null;
+  scope: "global" | "private";
+  studentCodes: string[];
+  updatedAt: string;
+}
+
+export interface CmsStudentGroupsPageProps extends SharedData {
+  can: {
+    createGlobalGroup: boolean;
+    createGroup: boolean;
+  };
+  groups: CmsStudentGroupRow[];
 }
 
 export interface CmsStaffProfileRow {

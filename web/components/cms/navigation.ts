@@ -34,6 +34,7 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
       { href: "/cms/pages", title: "Trang" },
       { href: "/cms/layouts", title: "Layouts" },
       { href: "/cms/navigation", title: "Navigation" },
+      { href: "/cms/student-groups", title: "Nhóm sinh viên" },
       { href: "/cms/media", title: "Media" },
     ],
     title: "Nội dung",

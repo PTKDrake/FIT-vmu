@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\SiteLayout;
 use App\Models\StaffProfile;
+use App\Models\StudentGroup;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -142,6 +143,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('navigation/{navigationMenu}/items', Controllers\Cms\SyncNavigationMenuItemsController::class)
             ->can('update', 'navigationMenu')
             ->name('navigation.items.sync');
+
+        Route::get('student-groups', Controllers\Cms\StudentGroupsIndexController::class)
+            ->can('viewAny', StudentGroup::class)
+            ->name('student-groups');
+        Route::post('student-groups', Controllers\Cms\StoreStudentGroupController::class)
+            ->can('create', StudentGroup::class)
+            ->name('student-groups.store');
+        Route::patch('student-groups/{student_group}', Controllers\Cms\UpdateStudentGroupController::class)
+            ->can('update', 'student_group')
+            ->name('student-groups.update');
+        Route::delete('student-groups/{student_group}', Controllers\Cms\DeleteStudentGroupController::class)
+            ->can('delete', 'student_group')
+            ->name('student-groups.destroy');
 
         Route::get('media', Controllers\Cms\MediaIndexController::class)
             ->can('viewAny', Media::class)

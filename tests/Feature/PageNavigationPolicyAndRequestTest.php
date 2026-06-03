@@ -15,6 +15,7 @@ use App\Models\NavigationMenu;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\StudentGroup;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Support\Facades\Gate;
@@ -89,6 +90,7 @@ test('page requests validate content workflow payloads', function () {
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
         'thumbnail_id' => $page->thumbnail_id,
+        'visibility' => 'public',
         'status' => 'draft',
     ];
 
@@ -130,6 +132,7 @@ test('page requests reject auth and settings slugs', function () {
         'excerpt' => 'Tóm tắt trang',
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
+        'visibility' => 'public',
         'status' => 'draft',
     ]), [
         'title' => 'Trang tĩnh',
@@ -146,6 +149,7 @@ test('page requests reject auth and settings slugs', function () {
         'excerpt' => 'Tóm tắt trang',
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
+        'visibility' => 'public',
         'status' => 'draft',
     ], null, $page), [
         'title' => 'Trang tĩnh',
@@ -162,17 +166,49 @@ test('page requests reject auth and settings slugs', function () {
         'excerpt' => 'Tóm tắt trang',
         'seo_title' => 'SEO',
         'seo_description' => 'Mô tả SEO',
+        'visibility' => 'public',
     ], null, $page), [
         'title' => 'Trang tĩnh',
         'slug' => 'settings/appearance',
         'excerpt' => 'Tóm tắt trang',
         'seo_title' => 'SEO',
         'seo_description' => 'Mô tả SEO',
+        'visibility' => 'public',
     ]);
 
     expect($storeRequest->errors()->keys())->toContain('slug')
         ->and($updateRequest->errors()->keys())->toContain('slug')
         ->and($metadataRequest->errors()->keys())->toContain('slug');
+});
+
+test('page requests require accessible student groups for student_groups visibility', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $page = Page::factory()->create(['slug' => 'gioi-thieu-vmu']);
+    $globalGroup = StudentGroup::factory()->global()->create();
+    $privateGroup = StudentGroup::factory()->for($editor, 'owner')->create();
+
+    $validData = [
+        'title' => 'Trang cho nhóm sinh viên',
+        'slug' => 'trang-cho-nhom-sinh-vien',
+        'excerpt' => 'Tóm tắt trang',
+        'content' => '{"root":{"props":{"title":"VMU"}}}',
+        'content_format' => 'puck_json',
+        'thumbnail_id' => $page->thumbnail_id,
+        'visibility' => 'student_groups',
+        'student_group_ids' => [$globalGroup->getKey(), $privateGroup->getKey()],
+        'status' => 'draft',
+    ];
+
+    expect(validatePageNavigationRequest(makeStorePageRequest($validData, $editor), $validData)->passes())->toBeTrue()
+        ->and(validatePageNavigationRequest(makeStorePageRequest([
+            ...$validData,
+            'student_group_ids' => [],
+        ], $editor), [
+            ...$validData,
+            'student_group_ids' => [],
+        ])->errors()->keys())->toContain('student_group_ids');
 });
 
 test('post category requests authorize and validate parent constraints', function () {

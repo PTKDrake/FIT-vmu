@@ -4,6 +4,7 @@ use App\Http\Requests\PublishPostRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\StudentGroup;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Support\Facades\Gate;
@@ -78,6 +79,7 @@ test('store post request validates the expected payload', function () {
         'content' => '{"type":"doc"}',
         'content_format' => 'blocknote_json',
         'thumbnail_id' => $existingPost->thumbnail_id,
+        'visibility' => 'public',
         'status' => 'draft',
     ];
 
@@ -128,6 +130,7 @@ test('update post request allows the current post slug and publish request enfor
         'content' => '{"type":"doc"}',
         'content_format' => 'blocknote_json',
         'thumbnail_id' => $post->thumbnail_id,
+        'visibility' => 'public',
         'status' => 'pending',
     ];
 
@@ -162,6 +165,34 @@ test('update post request allows the current post slug and publish request enfor
             'status' => 'rejected',
             'rejection_reason' => 'Thiếu nội dung cần thiết.',
         ])->passes())->toBeTrue();
+});
+
+test('post requests require accessible student groups for student_groups visibility', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $globalGroup = StudentGroup::factory()->global()->create();
+    $privateGroup = StudentGroup::factory()->for($editor, 'owner')->create();
+
+    $validData = [
+        'title' => 'Tin riêng cho nhóm',
+        'slug' => 'tin-rieng-cho-nhom',
+        'excerpt' => 'Short summary',
+        'content' => '{"type":"doc"}',
+        'content_format' => 'blocknote_json',
+        'visibility' => 'student_groups',
+        'student_group_ids' => [$globalGroup->getKey(), $privateGroup->getKey()],
+        'status' => 'draft',
+    ];
+
+    expect(validateRequest(makeStorePostRequest($validData, $editor), $validData)->passes())->toBeTrue()
+        ->and(validateRequest(makeStorePostRequest([
+            ...$validData,
+            'student_group_ids' => [],
+        ], $editor), [
+            ...$validData,
+            'student_group_ids' => [],
+        ])->errors()->keys())->toContain('student_group_ids');
 });
 
 function makeStorePostRequest(array $data, ?User $user = null): StorePostRequest

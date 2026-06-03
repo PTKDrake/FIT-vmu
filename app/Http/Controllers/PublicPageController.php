@@ -4,53 +4,33 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Puck\BuildPuckDynamicDataAction;
+use App\Actions\PublicSite\BuildPublicPagePropsAction;
 use App\Models\Page;
-use App\Models\SiteLayout;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Response;
 
 final class PublicPageController extends Controller
 {
-    public function __invoke(Page $page, BuildPuckDynamicDataAction $buildPuckDynamicData): Response
-    {
+    public function __invoke(
+        Request $request,
+        Page $page,
+        BuildPublicPagePropsAction $buildPublicPageProps,
+    ): Response|RedirectResponse {
         abort_unless($page->status === 'published', 404);
 
-        $page->load('siteLayout');
-        $siteLayout = $this->resolveSiteLayout($page);
+        /** @var User|null $viewer */
+        $viewer = $request->user();
 
-        return inertia('public/page', [
-            'page' => [
-                'id' => $page->getKey(),
-                'title' => $page->title,
-                'slug' => $page->slug,
-                'excerpt' => $page->excerpt,
-                'seoTitle' => $page->seo_title,
-                'seoDescription' => $page->seo_description,
-                'content' => $page->content,
-                'contentFormat' => $page->content_format,
-            ],
-            'layout' => $siteLayout ? [
-                'id' => $siteLayout->getKey(),
-                'name' => $siteLayout->name,
-                'key' => $siteLayout->key,
-                'headerData' => $siteLayout->header_data,
-                'footerData' => $siteLayout->footer_data,
-                'leftData' => $siteLayout->left_data,
-                'rightData' => $siteLayout->right_data,
-            ] : null,
-            'dynamicData' => $buildPuckDynamicData(),
-        ]);
-    }
+        if (! $page->isVisibleTo($viewer)) {
+            if (! $viewer instanceof User && $page->requiresAuthenticationForViewing()) {
+                return to_route('login');
+            }
 
-    private function resolveSiteLayout(Page $page): ?SiteLayout
-    {
-        if ($page->siteLayout instanceof SiteLayout && $page->siteLayout->status === 'published') {
-            return $page->siteLayout;
+            abort(403);
         }
 
-        return SiteLayout::query()
-            ->where('status', 'published')
-            ->where('is_default', true)
-            ->first();
+        return inertia('public/page', $buildPublicPageProps($page, $viewer));
     }
 }

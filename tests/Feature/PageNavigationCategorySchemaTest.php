@@ -37,6 +37,7 @@ test('post category page and navigation tables expose the expected domain column
             'seo_description',
             'content',
             'content_format',
+            'visibility',
             'thumbnail_id',
             'author_id',
             'status',
@@ -106,6 +107,7 @@ test('post category page and navigation defaults match the mvp content conventio
         ->and($page->seo_description)->toBeNull()
         ->and($page->content)->toBeNull()
         ->and($page->content_format)->toBe('puck_json')
+        ->and($page->visibility)->toBe('public')
         ->and($page->status)->toBe('draft')
         ->and($page->published_at)->toBeNull()
         ->and($menu->is_active)->toBeTrue()

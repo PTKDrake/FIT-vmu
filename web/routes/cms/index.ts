@@ -6,6 +6,7 @@ import postCategories09c74a from './post-categories'
 import pagesAf6a29 from './pages'
 import layoutsF4ac99 from './layouts'
 import navigation2b63fc from './navigation'
+import studentGroups8351c8 from './student-groups'
 import media30b75d from './media'
 import ai from './ai'
 import staffProfilesB92b14 from './staff-profiles'
@@ -498,6 +499,87 @@ navigationForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 })
 
 navigation.form = navigationForm
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+export const studentGroups = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: studentGroups.url(options),
+    method: 'get',
+})
+
+studentGroups.definition = {
+    methods: ["get","head"],
+    url: '/cms/student-groups',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+studentGroups.url = (options?: RouteQueryOptions) => {
+    return studentGroups.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+studentGroups.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: studentGroups.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+studentGroups.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: studentGroups.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+const studentGroupsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: studentGroups.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+studentGroupsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: studentGroups.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\StudentGroupsIndexController::__invoke
+* @see app/Http/Controllers/Cms/StudentGroupsIndexController.php:16
+* @route '/cms/student-groups'
+*/
+studentGroupsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: studentGroups.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+studentGroups.form = studentGroupsForm
 
 /**
 * @see \App\Http\Controllers\Cms\MediaIndexController::__invoke
@@ -994,6 +1076,7 @@ const cms = {
     pages: Object.assign(pages, pagesAf6a29),
     layouts: Object.assign(layouts, layoutsF4ac99),
     navigation: Object.assign(navigation, navigation2b63fc),
+    studentGroups: Object.assign(studentGroups, studentGroups8351c8),
     media: Object.assign(media, media30b75d),
     ai: Object.assign(ai, ai),
     staffProfiles: Object.assign(staffProfiles, staffProfilesB92b14),

@@ -24,6 +24,8 @@ final class UpdatePageMetadataController extends Controller
          *     excerpt?: ?string,
          *     seo_title?: ?string,
          *     seo_description?: ?string,
+         *     visibility: string,
+         *     student_group_ids?: list<int>,
          *     site_layout_id?: ?int
          * } $validated
          */

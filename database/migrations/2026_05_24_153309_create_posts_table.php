@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('excerpt')->nullable();
             $table->longText('content')->nullable();
             $table->string('content_format', 50)->default('blocknote_json');
+            $table->string('visibility', 50)->default('public')->index();
             $table->foreignId('thumbnail_id')
                 ->nullable()
                 ->constrained('media')

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 export const show = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 show.url = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ show.url = (args: { page: string | { slug: string } } | [page: string | { slug: 
 
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 show.get = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ show.get = (args: { page: string | { slug: string } } | [page: string | { slug: 
 
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 show.head = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ show.head = (args: { page: string | { slug: string } } | [page: string | { slug:
 
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 const showForm = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const showForm = (args: { page: string | { slug: string } } | [page: string | { 
 
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 showForm.get = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ showForm.get = (args: { page: string | { slug: string } } | [page: string | { sl
 
 /**
 * @see \App\Http\Controllers\PublicPageController::__invoke
-* @see app/Http/Controllers/PublicPageController.php:14
+* @see app/Http/Controllers/PublicPageController.php:16
 * @route '/{page}'
 */
 showForm.head = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -1,8 +1,9 @@
 import { ArrowLeftIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
-import { Head, Link, router, useForm } from "@inertiajs/react";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
 import type { CmsPageEditorPageProps } from "@/components/cms/types";
+import { StudentGroupPicker } from "@/components/cms/student-group-picker";
 import { Button } from "@/components/ui/button";
 import {
   FieldError,
@@ -19,8 +20,10 @@ import {
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import CmsLayout from "@/layouts/cms-layout";
+import { hasPermission } from "@/lib/authorization";
 import { pages } from "@/routes/cms";
 import pageRoutes, { builder } from "@/routes/cms/pages";
+import type { SharedData } from "@/types/shared";
 
 function slugify(text: string): string {
   return text
@@ -38,7 +41,13 @@ function slugify(text: string): string {
 export default function EditPage({
   layoutOptions,
   page,
+  studentGroupOptions,
 }: CmsPageEditorPageProps) {
+  const { auth } = usePage<SharedData>().props;
+  const canCreateGlobalGroup = hasPermission(
+    auth.permissions,
+    "manage shared student groups",
+  );
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(!!page.slug);
 
   const form = useForm({
@@ -47,6 +56,8 @@ export default function EditPage({
     excerpt: page.excerpt || "",
     seo_title: page.seoTitle || "",
     seo_description: page.seoDescription || "",
+    visibility: page.visibility,
+    student_group_ids: page.studentGroupIds,
     site_layout_id: page.siteLayoutId?.toString() ?? "",
   });
 
@@ -193,6 +204,42 @@ export default function EditPage({
                       <FieldError>{form.errors.site_layout_id}</FieldError>
                     ) : null}
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="page-visibility">Phạm vi xem</Label>
+                    <NativeSelect>
+                      <NativeSelectContent
+                        id="page-visibility"
+                        value={form.data.visibility}
+                        onChange={(event) =>
+                          form.setData(
+                            "visibility",
+                            event.target.value as typeof form.data.visibility,
+                          )
+                        }
+                      >
+                        <option value="public">Công khai</option>
+                        <option value="authenticated">Cần đăng nhập</option>
+                        <option value="students">Mọi sinh viên</option>
+                        <option value="student_groups">Nhóm sinh viên</option>
+                      </NativeSelectContent>
+                    </NativeSelect>
+                    {form.errors.visibility ? (
+                      <FieldError>{form.errors.visibility}</FieldError>
+                    ) : null}
+                  </div>
+
+                  {form.data.visibility === "student_groups" ? (
+                    <StudentGroupPicker
+                      allowGlobalScope={canCreateGlobalGroup}
+                      error={form.errors.student_group_ids}
+                      onChange={(groupIds) =>
+                        form.setData("student_group_ids", groupIds)
+                      }
+                      options={studentGroupOptions}
+                      selectedIds={form.data.student_group_ids}
+                    />
+                  ) : null}
                 </div>
 
                 {/* Right Side: SEO Info */}

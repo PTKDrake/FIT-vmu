@@ -58,6 +58,7 @@ class PostFactory extends Factory
                 ],
             ], JSON_THROW_ON_ERROR),
             'content_format' => 'blocknote_json',
+            'visibility' => 'public',
             'thumbnail_id' => Media::factory(),
             'author_id' => User::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'published', 'rejected']),

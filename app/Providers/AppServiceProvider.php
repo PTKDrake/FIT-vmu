@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
+use App\Actions\PublicSite\BuildPublicPagePropsAction;
+use App\Models\SiteSetting;
 use App\Models\User;
 use App\Policies\RolePolicy;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Inertia\ExceptionResponse;
+use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,5 +37,30 @@ class AppServiceProvider extends ServiceProvider
 
         JsonResource::withoutWrapping();
         Vite::prefetch(concurrency: 3);
+
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $response) {
+            if ($response->statusCode() !== 404) {
+                return null;
+            }
+
+            $settings = SiteSetting::query()
+                ->with('notFoundPage')
+                ->first();
+
+            $notFoundPage = $settings?->notFoundPage;
+
+            if (! $notFoundPage || $notFoundPage->status !== 'published' || ! $notFoundPage->isVisibleTo($response->request->user())) {
+                return null;
+            }
+
+            $props = app(BuildPublicPagePropsAction::class)($notFoundPage, $response->request->user());
+
+            return $response
+                ->render('public/page', [
+                    ...$props,
+                    'statusCode' => 404,
+                ])
+                ->withSharedData();
+        });
     }
 }

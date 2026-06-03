@@ -22,9 +22,9 @@ class DocumentRowFactory extends Factory
     {
         return [
             'document_id' => Document::factory(),
-            'student_code' => fake()->bothify('SV######'),
+            'student_code' => fake()->numerify('######'),
             'data' => [
-                'student_code' => fake()->bothify('SV######'),
+                'student_code' => fake()->numerify('######'),
                 'score' => fake()->numberBetween(0, 100),
                 'note' => fake()->sentence(),
             ],

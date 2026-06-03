@@ -5,7 +5,10 @@ namespace App\Http\Requests;
 use App\Models\Media;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\StudentGroup;
+use App\Support\ContentVisibilityOptions;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,6 +22,13 @@ class StorePostRequest extends FormRequest
         return $this->user()?->can('create', Post::class) ?? false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'student_group_ids' => $this->normalizeStudentGroupIds($this->all()['student_group_ids'] ?? []),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,6 +37,7 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::visibilities())],
             'title' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',
@@ -43,6 +54,22 @@ class StorePostRequest extends FormRequest
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'content_format' => ['required', 'string', Rule::in(['blocknote_json'])],
+            'student_group_ids' => [
+                Rule::requiredIf(fn (): bool => $this->string('visibility')->toString() === 'student_groups'),
+                'array',
+                Rule::when($this->string('visibility')->toString() === 'student_groups', ['min:1']),
+            ],
+            'student_group_ids.*' => [
+                'integer',
+                'distinct',
+                Rule::exists((new StudentGroup)->getTable(), 'id')->where(
+                    fn (QueryBuilder $query): QueryBuilder => $query->where(function (QueryBuilder $visibilityQuery): void {
+                        $visibilityQuery
+                            ->whereNull('owner_id')
+                            ->orWhere('owner_id', $this->user()?->getKey());
+                    }),
+                ),
+            ],
             'thumbnail_id' => [
                 'nullable',
                 'integer',
@@ -54,5 +81,26 @@ class StorePostRequest extends FormRequest
                 Rule::in(['draft', 'pending']),
             ],
         ];
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function normalizeStudentGroupIds(mixed $value): array
+    {
+        if (! is_array($value)) {
+            return [];
+        }
+
+        /** @var list<int> $studentGroupIds */
+        $studentGroupIds = collect($value)
+            ->filter(static fn (mixed $item): bool => is_int($item) || (is_string($item) && is_numeric($item)))
+            ->map(static fn (int|string $item): int => (int) $item)
+            ->filter(static fn (int $item): bool => $item > 0)
+            ->unique()
+            ->values()
+            ->all();
+
+        return $studentGroupIds;
     }
 }
