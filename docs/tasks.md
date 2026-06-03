@@ -37,7 +37,7 @@
 | 3     | Backend actions, data objects, policy      | done   | Các task posts/documents/pages/navigation data & policy đã xong                                                                              |
 | 4     | Frontend CMS foundation                    | done   | Admin layout, BlockNote wrapper, table foundation, upload foundation, Puck builder, navigation tree và realtime demo đã xong                 |
 | 5     | Module nội dung chính                      | done   | 5.1-5.12 đã xong                                                                                                                                             |
-| 6     | Public website MVP                         | todo   | Chưa bắt đầu                                                                                                                                 |
+| 6     | Public website MVP                         | doing  | 6.1 đã xong; 6.2 còn todo                                                                                                                     |
 | 7     | Testing, hardening, release MVP            | todo   | Chưa bắt đầu                                                                                                                                 |
 
 ## Task board
@@ -111,7 +111,7 @@
 
 | ID  | Task                                      | Status | Branch                                | PR  | Files touched    | Test commands                                                  | Notes                                                                                                                                                   |
 | --- | ----------------------------------------- | ------ | ------------------------------------- | --- | ---------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 6.1 | Public render architecture shell/template/content | todo   | `feature/public-layout-strategy`      |     | `app/*`, `web/*`, `docs/content-layout-strategy.md` | `./phpw artisan test --compact`, `pnpm lint`, `pnpm typecheck` | Chốt site shell, template registry và pipeline render `shell -> template -> content`; page dùng Puck body, post dùng BlockNote body, category dùng archive/landing template theo `docs/content-layout-strategy.md` |
+| 6.1 | Public render architecture shell/template/content | done   | `feature/public-layout-strategy`      |     | `app/*`, `web/*`, `docs/content-layout-strategy.md` | `./phpw artisan test --compact`, `pnpm lint`, `pnpm typecheck` | Đã chốt site shell, template registry và pipeline render `shell -> template -> content`; page dùng Puck body, post dùng BlockNote body, category dùng archive/landing template theo `docs/content-layout-strategy.md` |
 | 6.2 | Public website, pages, and navigation MVP        | todo   | `feature/public-pages-navigation-mvp` |     | `app/*`, `web/*` | `./phpw artisan test --compact`, `pnpm lint`, `pnpm typecheck` | Render CMS navigation theo location/tree, render `pages` published từ Puck JSON, posts theo category, staff, units, documents, login, khu vực sinh viên |
 
 ### Phase 7 - Release hardening
