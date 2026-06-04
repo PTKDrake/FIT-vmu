@@ -19,6 +19,7 @@ export default function CmsStaffProfileEditPage({
   const { data, setData, post, processing, errors, isDirty } = useForm({
     _method: "patch" as const,
     user_id: profile?.userId ?? 0,
+    academic_title: profile?.academicTitle ?? "",
     full_name: profile?.fullName ?? "",
     slug: profile?.slug ?? "",
     email: profile?.email ?? "",

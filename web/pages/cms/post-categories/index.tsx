@@ -53,6 +53,7 @@ const emptyCategoryFormValues: CategoryFormValues = {
   parent_id: null,
   slug: "",
   sort_order: 0,
+  site_layout_id: null,
 };
 
 const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
@@ -67,6 +68,8 @@ export default function CmsPostCategoriesPage({
   can,
   flash,
   categories,
+  defaultCategoryLayoutId,
+  layoutOptions,
   parentOptions,
 }: CmsPostCategoriesPageProps) {
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
@@ -170,6 +173,7 @@ export default function CmsPostCategoriesPage({
                     parent_id: row.original.parentId,
                     slug: row.original.slug,
                     sort_order: row.original.sortOrder,
+                    site_layout_id: row.original.siteLayoutId,
                   });
                   setDialogOpen(true);
                 }}
@@ -266,6 +270,8 @@ export default function CmsPostCategoriesPage({
         mode={dialogMode}
         onOpenChange={setDialogOpen}
         parentOptions={parentOptions}
+        layoutOptions={layoutOptions}
+        defaultCategoryLayoutId={defaultCategoryLayoutId}
       />
 
       {deleteTarget ? (

@@ -1,7 +1,7 @@
 import publicMethod from './public'
 
-const pages = {
+const posts = {
     public: Object.assign(publicMethod, publicMethod),
 }
 
-export default pages
+export default posts

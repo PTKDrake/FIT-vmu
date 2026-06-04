@@ -16,8 +16,12 @@ final class DeleteSiteLayoutController extends Controller
         try {
             $deleteSiteLayout($siteLayout);
         } catch (\DomainException $exception) {
-            return back()->withErrors(['layout' => $exception->getMessage()]);
+            flash($exception->getMessage(), type: 'error');
+
+            return back();
         }
+
+        flash('Đã xóa layout.');
 
         return to_route('cms.layouts');
     }

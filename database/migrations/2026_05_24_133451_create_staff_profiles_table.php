@@ -17,6 +17,7 @@ return new class extends Migration
                 ->unique()
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->string('academic_title')->nullable();
             $table->string('full_name');
             $table->string('slug')->unique();
             $table->unsignedBigInteger('avatar_id')->nullable()->index();

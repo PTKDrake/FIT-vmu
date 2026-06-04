@@ -12,10 +12,10 @@ import {
 import type { PageBuilderComponentConfig } from "./types";
 
 const siteLayoutSlotClassName =
-  "w-full";
+  "w-full h-full rounded-2xl border border-dashed border-border/40 bg-muted/10 p-4";
 
 const siteLayoutEmptySlotClassName =
-  "empty:flex empty:min-h-24 empty:w-full empty:flex-col empty:gap-4 empty:rounded-2xl empty:border empty:border-dashed empty:border-border/40 empty:bg-muted/10 empty:p-4";
+  "empty:flex empty:min-h-24 empty:w-full";
 
 export const siteLayoutHeaderComponents = [
   "Container",
@@ -56,6 +56,7 @@ export const siteLayoutFooterComponents = [
   "Categories",
   "PageLinks",
   "UnitList",
+  "StaffProfileCard",
 ];
 
 export const siteLayoutSideComponents = [
@@ -75,6 +76,7 @@ export const siteLayoutSideComponents = [
   "LatestAnnouncements",
   "Categories",
   "StaffGrid",
+  "StaffProfileCard",
   "PageLinks",
   "UnitList",
 ];
@@ -158,13 +160,13 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
               <Header className={slotClassName} minEmptyHeight={120} />
             </header>
 
-            <div className="mx-auto flex w-full flex-col lg:flex-row lg:items-start">
-              <aside className="w-full shrink-0 border-b border-border/60 lg:w-72 lg:border-r lg:border-b-0">
-                <Left className={slotClassName} minEmptyHeight={120} />
+            <div className="mx-auto flex w-full h-full flex-col lg:flex-row lg:items-start">
+              <aside className="w-full h-full shrink-0 border-b border-border/60 lg:w-lg lg:border-r lg:border-b-0">
+                <Left className={slotClassName} minEmptyHeight={200} />
               </aside>
 
               <main className="min-w-0 flex-1 border-b border-border/60 lg:border-r lg:border-b-0">
-                <div className="flex min-h-0 flex-1 p-4 lg:min-h-[22rem] lg:p-6">
+                <div className="flex min-h-0 flex-1">
                   <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border/40 bg-muted/10 px-4 py-8">
                     <Text className="text-center text-sm text-muted-fg">
                       Nội dung trang sẽ được render ở vùng main và không lưu
@@ -174,8 +176,8 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
                 </div>
               </main>
 
-              <aside className="w-full shrink-0 lg:w-72">
-                <Right className={slotClassName} minEmptyHeight={120} />
+              <aside className="w-full h-full shrink-0 lg:w-lg">
+                <Right className={slotClassName} minEmptyHeight={200} />
               </aside>
             </div>
 

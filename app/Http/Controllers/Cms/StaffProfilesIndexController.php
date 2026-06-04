@@ -115,6 +115,8 @@ final class StaffProfilesIndexController extends Controller
 
     /**
      * @return array{
+     *     academicTitle: ?string,
+     *     displayName: string,
      *     id: int,
      *     fullName: string,
      *     slug: string,
@@ -133,6 +135,8 @@ final class StaffProfilesIndexController extends Controller
 
         return [
             'id' => $profileId,
+            'academicTitle' => $profile->academic_title,
+            'displayName' => $profile->displayName(),
             'fullName' => $profile->full_name,
             'slug' => $profile->slug,
             'email' => $profile->email,

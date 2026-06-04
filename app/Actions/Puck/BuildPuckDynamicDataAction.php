@@ -22,9 +22,9 @@ class BuildPuckDynamicDataAction
     /**
      * @return array{
      *     navigationMenus: list<array{id: int, name: string, slug: string, location: ?string, items: list<array<string, mixed>>}>,
-     *     posts: list<array{id: int, title: string, slug: string, excerpt: ?string, date: ?string, author: ?string, categoryIds: list<int>, categoryNames: list<string>}>,
+     *     posts: list<array{id: int, title: string, slug: string, url: ?string, excerpt: ?string, date: ?string, author: ?string, thumbnailUrl: ?string, categoryIds: list<int>, categoryNames: list<string>}>,
      *     categories: list<array{id: int, name: string, slug: string, parentId: ?int, description: ?string}>,
-     *     staff: list<array{id: int, name: string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}>,
+     *     staff: list<array{id: int, name: string, fullName: string, academicTitle: ?string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}>,
      *     units: list<array{id: int, name: string, slug: string, description: ?string, head: ?string}>,
      *     pages: list<array{id: int, title: string, slug: string, url: string}>
      * }
@@ -91,25 +91,36 @@ class BuildPuckDynamicDataAction
         }
 
         if ($item->linkable_type === Post::class && $item->linkable_id) {
-            $post = Post::query()->find($item->linkable_id);
+            $post = Post::query()->with('categories')->find($item->linkable_id);
 
-            return $post instanceof Post ? '/posts/'.$post->slug : '#';
+            if ($post instanceof Post) {
+                $primaryCategory = $post->categories
+                    ->where('is_active', true)
+                    ->sortBy('sort_order')
+                    ->first();
+
+                if ($primaryCategory instanceof PostCategory) {
+                    return '/'.$primaryCategory->slug.'/'.$post->slug;
+                }
+            }
+
+            return '#';
         }
 
         if ($item->linkable_type === PostCategory::class && $item->linkable_id) {
             $category = PostCategory::query()->find($item->linkable_id);
 
-            return $category instanceof PostCategory ? '/post-categories/'.$category->slug : '#';
+            return $category instanceof PostCategory ? '/'.$category->slug : '#';
         }
 
         return '#';
     }
 
-    /** @return list<array{id: int, title: string, slug: string, excerpt: ?string, date: ?string, author: ?string, categoryIds: list<int>, categoryNames: list<string>}> */
+    /** @return list<array{id: int, title: string, slug: string, url: ?string, excerpt: ?string, date: ?string, author: ?string, thumbnailUrl: ?string, categoryIds: list<int>, categoryNames: list<string>}> */
     private function posts(?User $viewer = null, bool $enforceVisibility = false): array
     {
         $query = Post::query()
-            ->with(['author', 'categories'])
+            ->with(['author', 'categories', 'thumbnail'])
             ->latest('published_at')
             ->latest()
             ->limit(30);
@@ -136,13 +147,20 @@ class BuildPuckDynamicDataAction
                         ->all(),
                 );
 
+                $primaryCategory = $post->categories
+                    ->where('is_active', true)
+                    ->sortBy('sort_order')
+                    ->first();
+
                 return [
                     'id' => $post->id,
                     'title' => $post->title,
                     'slug' => $post->slug,
+                    'url' => $primaryCategory instanceof PostCategory ? '/'.$primaryCategory->slug.'/'.$post->slug : null,
                     'excerpt' => $post->excerpt,
                     'date' => $this->formatDate($post->published_at),
                     'author' => $post->author?->name,
+                    'thumbnailUrl' => $post->thumbnail?->preview_url,
                     'categoryIds' => $categoryIds,
                     'categoryNames' => $categoryNames,
                 ];
@@ -168,7 +186,7 @@ class BuildPuckDynamicDataAction
             ->all());
     }
 
-    /** @return list<array{id: int, name: string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}> */
+    /** @return list<array{id: int, name: string, fullName: string, academicTitle: ?string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}> */
     private function staff(): array
     {
         return array_values(StaffProfile::query()
@@ -187,7 +205,9 @@ class BuildPuckDynamicDataAction
 
                 return [
                     'id' => $staffProfile->id,
-                    'name' => $staffProfile->full_name,
+                    'name' => $staffProfile->displayName(),
+                    'fullName' => $staffProfile->full_name,
+                    'academicTitle' => $staffProfile->academic_title,
                     'slug' => $staffProfile->slug,
                     'email' => $staffProfile->email,
                     'phone' => $staffProfile->phone,

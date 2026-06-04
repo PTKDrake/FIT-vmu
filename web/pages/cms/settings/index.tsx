@@ -24,7 +24,6 @@ interface LayoutOption {
   id: number;
   key: string;
   name: string;
-  status: "draft" | "published";
 }
 
 interface PageOption {
@@ -125,7 +124,7 @@ export default function SiteSettingsPage({
                 error={form.errors.default_page_layout}
                 items={layoutOptions.map((l) => ({
                   id: String(l.id),
-                  label: `${l.name}${l.status === "draft" ? " - nháp" : ""}`,
+                  label: l.name,
                 }))}
                 label="Layout trang mặc định"
                 value={form.data.default_page_layout}
@@ -138,7 +137,7 @@ export default function SiteSettingsPage({
                 error={form.errors.default_category_layout}
                 items={layoutOptions.map((l) => ({
                   id: String(l.id),
-                  label: `${l.name}${l.status === "draft" ? " - nháp" : ""}`,
+                  label: l.name,
                 }))}
                 label="Layout danh mục mặc định"
                 value={form.data.default_category_layout}
@@ -151,7 +150,7 @@ export default function SiteSettingsPage({
                 error={form.errors.default_post_layout}
                 items={layoutOptions.map((l) => ({
                   id: String(l.id),
-                  label: `${l.name}${l.status === "draft" ? " - nháp" : ""}`,
+                  label: l.name,
                 }))}
                 label="Layout bài viết mặc định"
                 value={form.data.default_post_layout}

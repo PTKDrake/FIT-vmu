@@ -26,6 +26,7 @@ class UpdatePostAction
      *     visibility: string,
      *     student_group_ids?: list<int>,
      *     thumbnail_id?: int|null,
+     *     site_layout_id?: int|null,
      *     status: string
      * }  $attributes
      */
@@ -40,6 +41,7 @@ class UpdatePostAction
                 'content_format' => $attributes['content_format'],
                 'visibility' => $attributes['visibility'],
                 'thumbnail_id' => $attributes['thumbnail_id'] ?? null,
+                'site_layout_id' => $attributes['site_layout_id'] ?? null,
                 'status' => $attributes['status'],
                 'published_at' => $attributes['status'] === 'published' && ! $post->published_at ? now() : $post->published_at,
             ]);

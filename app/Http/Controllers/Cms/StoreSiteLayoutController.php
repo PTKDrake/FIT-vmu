@@ -20,8 +20,7 @@ final class StoreSiteLayoutController extends Controller
          *     header_data?: ?string,
          *     footer_data?: ?string,
          *     left_data?: ?string,
-         *     right_data?: ?string,
-         *     status: string
+         *     right_data?: ?string
          * } $validated
          */
         $siteLayout = $createSiteLayout($validated);

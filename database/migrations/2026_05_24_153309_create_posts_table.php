@@ -18,6 +18,10 @@ return new class extends Migration
             $table->text('excerpt')->nullable();
             $table->longText('content')->nullable();
             $table->string('content_format', 50)->default('blocknote_json');
+            $table->foreignId('site_layout_id')
+                ->nullable()
+                ->constrained('site_layouts')
+                ->nullOnDelete();
             $table->string('visibility', 50)->default('public')->index();
             $table->foreignId('thumbnail_id')
                 ->nullable()
@@ -26,8 +30,14 @@ return new class extends Migration
             $table->foreignId('author_id')
                 ->constrained('users')
                 ->restrictOnDelete();
+            $table->foreignId('reviewed_by_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->string('status')->default('draft')->index();
             $table->timestamp('published_at')->nullable()->index();
+            $table->timestamp('reviewed_at')->nullable()->index();
+            $table->text('rejection_reason')->nullable();
             $table->timestamps();
 
             $table->index(['author_id', 'status']);

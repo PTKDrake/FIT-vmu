@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use App\Models\PostCategory;
+use App\Models\SiteLayout;
+use App\Models\SiteSetting;
 use App\QueryBuilders\CmsPostCategoriesQueryBuilder;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
@@ -87,6 +89,17 @@ final class PostCategoriesIndexController extends Controller
                 ],
             ],
             'parentOptions' => $parentOptions,
+            'layoutOptions' => SiteLayout::query()
+                ->orderBy('name')
+                ->get(['id', 'name', 'key'])
+                ->map(fn (SiteLayout $siteLayout): array => [
+                    'id' => $siteLayout->id,
+                    'name' => $siteLayout->name,
+                    'key' => $siteLayout->key,
+                ])
+                ->values()
+                ->all(),
+            'defaultCategoryLayoutId' => SiteSetting::defaultCategoryLayoutId(),
         ]);
     }
 
@@ -102,6 +115,7 @@ final class PostCategoriesIndexController extends Controller
      *     isActive: bool,
      *     postCount: int,
      *     childrenCount: int,
+     *     siteLayoutId: ?int,
      *     updatedAt: string
      * }
      */
@@ -121,6 +135,7 @@ final class PostCategoriesIndexController extends Controller
             'isActive' => $cat->is_active,
             'postCount' => (int) ($cat->posts_count ?? 0),
             'childrenCount' => (int) ($cat->children_count ?? 0),
+            'siteLayoutId' => $cat->site_layout_id,
             'updatedAt' => $this->formatDateTime($cat->updated_at) ?? now()->toAtomString(),
         ];
     }

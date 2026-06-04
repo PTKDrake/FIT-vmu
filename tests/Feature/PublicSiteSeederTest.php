@@ -9,7 +9,7 @@ test('public site footer seed stays aligned with social and copyright block prop
     $this->seed(DatabaseSeeder::class);
 
     $layout = SiteLayout::query()
-        ->where('key', 'public-default-shell')
+        ->where('key', 'default-page-layout')
         ->firstOrFail();
 
     /** @var array{

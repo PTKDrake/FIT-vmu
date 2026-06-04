@@ -49,6 +49,7 @@ export {
   LatestPostsComponentConfig,
   LatestAnnouncementsComponentConfig,
   StaffGridComponentConfig,
+  StaffProfileCardComponentConfig,
   UnitListComponentConfig,
   RelatedPostsComponentConfig,
   NavigationMenuComponentConfig,

@@ -31,16 +31,19 @@ class SiteSettingsSeeder extends Seeder
             ->orderBy('id')
             ->first();
 
-        $defaultLayout = SiteLayout::query()
-            ->where('status', 'published')
-            ->orderBy('id')
+        $defaultPageLayout = SiteLayout::query()
+            ->where('key', 'default-page-layout')
+            ->first();
+
+        $defaultPostLayout = SiteLayout::query()
+            ->where('key', 'default-post-layout')
             ->first();
 
         SiteSetting::set(SiteSetting::KEY_HOMEPAGE_PAGE, $homepage?->getKey());
         SiteSetting::set(SiteSetting::KEY_NOT_FOUND_PAGE, $notFoundPage?->getKey());
         SiteSetting::set(SiteSetting::KEY_STUDENT_HOME_PAGE, $studentHome?->getKey());
-        SiteSetting::set(SiteSetting::KEY_DEFAULT_PAGE_LAYOUT, $defaultLayout?->getKey());
-        SiteSetting::set(SiteSetting::KEY_DEFAULT_CATEGORY_LAYOUT, $defaultLayout?->getKey());
-        SiteSetting::set(SiteSetting::KEY_DEFAULT_POST_LAYOUT, $defaultLayout?->getKey());
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_PAGE_LAYOUT, $defaultPageLayout?->getKey());
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_CATEGORY_LAYOUT, $defaultPostLayout?->getKey());
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_POST_LAYOUT, $defaultPostLayout?->getKey());
     }
 }

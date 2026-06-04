@@ -12,7 +12,7 @@ test('public homepage is seeded through site layout and page data', function () 
     $this->seed(DatabaseSeeder::class);
 
     $layout = SiteLayout::query()
-        ->where('key', 'public-default-shell')
+        ->where('key', 'default-page-layout')
         ->firstOrFail();
 
     $homepage = Page::query()
@@ -21,9 +21,7 @@ test('public homepage is seeded through site layout and page data', function () 
 
     $homepagePageId = SiteSetting::homepagePageId();
 
-    expect($layout->status)->toBe('published')
-        ->and(SiteSetting::defaultPageLayoutId())->toBe($layout->getKey())
-        ->and($homepage->site_layout_id)->toBe($layout->getKey())
+    expect(SiteSetting::defaultPageLayoutId())->toBe($layout->getKey())
         ->and($homepagePageId)->toBe($homepage->getKey());
 
     /** @var array{
@@ -37,14 +35,14 @@ test('public homepage is seeded through site layout and page data', function () 
     expect($pageContent['root']['props']['title'])->toBe('Trang chủ VMU')
         ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
             'Container',
-            'Section',
-            'Section',
             'Container',
-            'Section',
-            'Section',
-            'Section',
-            'Section',
-            'Section',
+            'Container',
+            'Container',
+            'Container',
+            'Container',
+            'Container',
+            'Container',
+            'Container',
         ])
         ->and(collect(collectHomepageBlockIds($pageContent['content']))->filter()->isNotEmpty())->toBeTrue();
 
@@ -52,10 +50,10 @@ test('public homepage is seeded through site layout and page data', function () 
     $footerContent = json_decode($layout->footer_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
     expect(collect($headerContent['content'])->pluck('type')->all())->toBe([
-        'Section',
+        'Container',
     ])
         ->and(collect($footerContent['content'])->pluck('type')->all())->toBe([
-            'Section',
+            'Container',
         ])
         ->and(homepageBlocksHaveIds($pageContent['content']))->toBeTrue()
         ->and(homepageBlocksHaveIds($headerContent['content']))->toBeTrue()

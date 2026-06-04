@@ -103,7 +103,9 @@ test('media data maps persisted media fields', function () {
 
 test('post page and staff profile data omit lazy relations when not loaded', function () {
     $post = Post::factory()->create();
-    $staffProfile = StaffProfile::factory()->create();
+    $staffProfile = StaffProfile::factory()->create([
+        'academic_title' => 'TS.',
+    ]);
     $page = Page::factory()->create();
 
     expect(PostData::fromModel($post)->toArray())->not->toHaveKey('thumbnail')
@@ -131,6 +133,8 @@ test('post page and staff profile data include loaded media relations', function
     ])->and($staffProfileData['avatar'])->toMatchArray([
         'id' => $staffProfile->avatar?->id,
         'path' => $staffProfile->avatar?->path,
+    ])->and($staffProfileData)->toMatchArray([
+        'academicTitle' => $staffProfile->academic_title,
     ]);
 });
 

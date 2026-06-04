@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
-use App\Models\Page;
+use App\Models\Post;
 use App\Models\PostCategory;
+use Database\Seeders\IntroPostsSeeder;
 use Database\Seeders\NavigationSeeder;
 use Database\Seeders\PostCategorySeeder;
 use Database\Seeders\PostSeeder;
@@ -15,6 +16,7 @@ test('navigation seeder seeds a stable header and footer tree', function () {
     $this->seed(RoleAndPermissionSeeder::class);
     $this->seed(PostCategorySeeder::class);
     $this->seed(PostSeeder::class);
+    $this->seed(IntroPostsSeeder::class);
 
     $this->seed(NavigationSeeder::class);
     $this->seed(NavigationSeeder::class);
@@ -74,7 +76,7 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->where('title', 'Thông báo')
         ->firstOrFail();
 
-    expect($donViItem->linkable_type)->toBe(Page::class)
+    expect($donViItem->linkable_type)->toBe(Post::class)
         ->and($donViItem->linkable?->slug)->toBe('gioi-thieu-khoa-cong-nghe-thong-tin')
         ->and($donViItem->children->pluck('title')->all())->toBe([
             'Ban chủ nhiệm khoa',
@@ -104,7 +106,7 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->and($thongBaoItem->linkable_type)->toBe(PostCategory::class)
         ->and($thongBaoItem->linkable?->slug)->toBe('thong-bao');
 
-    $seededPage = Page::query()
+    $seededPost = Post::query()
         ->where('slug', 'gioi-thieu-khoa-cong-nghe-thong-tin')
         ->firstOrFail();
 
@@ -112,37 +114,37 @@ test('navigation seeder seeds a stable header and footer tree', function () {
      *     root: array{props: array{title: string}},
      *     content: list<array{id: string, type: string, props: array{id: string}}>,
      *     zones: array<string, mixed>
-     * } $pageContent
+     * } $postContent
      */
-    $pageContent = json_decode($seededPage->content ?? '', true, flags: JSON_THROW_ON_ERROR);
+    $postContent = json_decode($seededPost->content ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    expect(Page::query()->whereIn('slug', [
+    expect(Post::query()->whereIn('slug', [
         'gioi-thieu-khoa-cong-nghe-thong-tin',
         'su-menh-va-tam-nhin',
         'co-cau-to-chuc',
     ])->count())->toBe(3)
-        ->and($seededPage->content_format)->toBe('puck_json')
-        ->and($pageContent['root']['props']['title'])->toBe('Giới thiệu Khoa Công nghệ thông tin')
-        ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
+        ->and($seededPost->content_format)->toBe('puck_json')
+        ->and($postContent['root']['props']['title'])->toBe('Giới thiệu Khoa Công nghệ thông tin')
+        ->and(collect($postContent['content'])->pluck('type')->all())->toBe([
             'HeroBanner',
             'RichText',
             'CTASection',
         ])
-        ->and(collect($pageContent['content'])->pluck('props.id')->all())->toBe([
+        ->and(collect($postContent['content'])->pluck('props.id')->all())->toBe([
             'gioi-thieu-khoa-cong-nghe-thong-tin-hero',
             'gioi-thieu-khoa-cong-nghe-thong-tin-rich-text',
             'gioi-thieu-khoa-cong-nghe-thong-tin-cta',
         ])
-        ->and(collect($pageContent['content'])->pluck('id')->all())->toBe([
+        ->and(collect($postContent['content'])->pluck('id')->all())->toBe([
             'gioi-thieu-khoa-cong-nghe-thong-tin-hero',
             'gioi-thieu-khoa-cong-nghe-thong-tin-rich-text',
             'gioi-thieu-khoa-cong-nghe-thong-tin-cta',
         ])
-        ->and(collect($pageContent['content'])->pluck('props.id')->every(
+        ->and(collect($postContent['content'])->pluck('props.id')->every(
             fn (mixed $id): bool => is_string($id) && $id !== '',
         ))->toBeTrue()
-        ->and(allBlocksHaveMatchingNodeIds($pageContent['content']))->toBeTrue()
-        ->and($pageContent['zones'])->toBe([]);
+        ->and(allBlocksHaveMatchingNodeIds($postContent['content']))->toBeTrue()
+        ->and($postContent['zones'])->toBe([]);
 });
 
 /**

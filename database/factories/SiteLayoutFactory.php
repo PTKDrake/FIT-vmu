@@ -31,15 +31,7 @@ class SiteLayoutFactory extends Factory
             'footer_data' => $this->emptyPuckData(),
             'left_data' => null,
             'right_data' => null,
-            'status' => fake()->randomElement(['draft', 'published']),
         ];
-    }
-
-    public function published(): self
-    {
-        return $this->state(fn (): array => [
-            'status' => 'published',
-        ]);
     }
 
     private function emptyPuckData(): string

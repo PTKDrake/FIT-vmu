@@ -13,6 +13,7 @@ class StaffProfileData extends Data
 {
     public function __construct(
         public int $userId,
+        public ?string $academicTitle,
         public string $fullName,
         public string $slug,
         public string $bioFormat,
@@ -33,6 +34,7 @@ class StaffProfileData extends Data
 
         return new self(
             userId: $staffProfile->user_id,
+            academicTitle: $staffProfile->academic_title,
             fullName: $staffProfile->full_name,
             slug: $staffProfile->slug,
             bioFormat: $staffProfile->bio_format,

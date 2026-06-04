@@ -26,6 +26,7 @@ class StoreStaffProfileRequest extends FormRequest
                 Rule::exists('users', 'id'),
                 Rule::unique('staff_profiles', 'user_id'),
             ],
+            'academic_title' => ['nullable', 'string', 'max:50'],
             'full_name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',

@@ -18,12 +18,11 @@ final class PageCreateController extends Controller
         return inertia('cms/pages/create', [
             'layoutOptions' => SiteLayout::query()
                 ->orderBy('name')
-                ->get(['id', 'name', 'key', 'status'])
+                ->get(['id', 'name', 'key'])
                 ->map(fn (SiteLayout $siteLayout): array => [
                     'id' => $siteLayout->id,
                     'name' => $siteLayout->name,
                     'key' => $siteLayout->key,
-                    'status' => $siteLayout->status,
                 ])
                 ->values()
                 ->all(),

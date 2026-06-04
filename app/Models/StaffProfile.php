@@ -22,6 +22,7 @@ class StaffProfile extends Model
      */
     protected $fillable = [
         'user_id',
+        'academic_title',
         'full_name',
         'slug',
         'avatar_id',
@@ -70,5 +71,20 @@ class StaffProfile extends Model
     public function appointments(): HasMany
     {
         return $this->hasMany(StaffAppointment::class);
+    }
+
+    public function displayName(): string
+    {
+        $academicTitle = trim((string) $this->academic_title);
+
+        if ($academicTitle === '') {
+            return $this->full_name;
+        }
+
+        if (str_starts_with(mb_strtolower($this->full_name), mb_strtolower($academicTitle))) {
+            return $this->full_name;
+        }
+
+        return sprintf('%s %s', $academicTitle, $this->full_name);
     }
 }

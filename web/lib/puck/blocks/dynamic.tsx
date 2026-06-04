@@ -21,7 +21,9 @@ interface PuckDynamicPost {
   excerpt: string | null;
   id: number;
   slug: string;
+  thumbnailUrl: string | null;
   title: string;
+  url: string | null;
 }
 
 interface PuckDynamicCategory {
@@ -33,9 +35,11 @@ interface PuckDynamicCategory {
 }
 
 interface PuckDynamicStaff {
+  academicTitle: string | null;
   avatarUrl: string | null;
   email: string | null;
   expertise: string | null;
+  fullName: string;
   id: number;
   name: string;
   phone: string | null;
@@ -142,6 +146,18 @@ function EmptyDynamicState({ label }: { label: string }) {
   );
 }
 
+function staffDisplayName(staff: PuckDynamicStaff): string {
+  if (staff.name.trim() !== "") {
+    return staff.name;
+  }
+
+  if (staff.academicTitle) {
+    return `${staff.academicTitle} ${staff.fullName}`;
+  }
+
+  return staff.fullName;
+}
+
 interface LatestPostsBlockProps {
   categoryId?: string;
   className?: string;
@@ -224,48 +240,53 @@ function LatestPostsBlock(props: LatestPostsBlockProps) {
         )}
       >
         {posts.map((post) => (
-          <Card
+          <Link
             key={post.id}
-            className={twMerge(
-              "overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between",
-              getSurfaceClassName(
-                {
-                  surfaceTone,
-                  surfaceBorder,
-                  surfaceRadius,
-                  surfacePadding,
-                  surfaceShadow,
-                },
-                "",
-              ),
-            )}
+            href={post.url ?? "#"}
+            className="block"
           >
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <Badge
-                  intent="primary"
-                  isCircle={false}
-                  className="text-[9px] font-semibold tracking-wider uppercase border-primary/20 bg-primary-subtle/10 text-primary"
-                >
-                  {post.categoryNames[0] ?? "Tin tức"}
-                </Badge>
-                <span className="text-[10px] text-muted-fg font-medium">
-                  {post.date}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <Heading
-                  level={3}
-                  className="text-base font-bold text-fg group-hover:text-primary transition-colors leading-snug"
-                >
-                  {post.title}
-                </Heading>
-                <Text className="text-xs/relaxed text-muted-fg leading-relaxed">
-                  {post.excerpt}
-                </Text>
-              </div>
-            </CardContent>
-          </Card>
+            <Card
+              className={twMerge(
+                "overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between cursor-pointer",
+                getSurfaceClassName(
+                  {
+                    surfaceTone,
+                    surfaceBorder,
+                    surfaceRadius,
+                    surfacePadding,
+                    surfaceShadow,
+                  },
+                  "",
+                ),
+              )}
+            >
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <Badge
+                    intent="primary"
+                    isCircle={false}
+                    className="text-[9px] font-semibold tracking-wider uppercase border-primary/20 bg-primary-subtle/10 text-primary"
+                  >
+                    {post.categoryNames[0] ?? "Tin tức"}
+                  </Badge>
+                  <span className="text-[10px] text-muted-fg font-medium">
+                    {post.date}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <Heading
+                    level={3}
+                    className="text-base font-bold text-fg group-hover:text-primary transition-colors leading-snug"
+                  >
+                    {post.title}
+                  </Heading>
+                  <Text className="text-xs/relaxed text-muted-fg leading-relaxed">
+                    {post.excerpt}
+                  </Text>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
 
@@ -363,10 +384,11 @@ function LatestAnnouncementsBlock(props: LatestAnnouncementsBlockProps) {
         )}
       >
         {announcements.map((ann) => (
-          <div
+          <Link
             key={ann.id}
+            href={ann.url ?? "#"}
             className={twMerge(
-              "group relative flex items-start gap-4 transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs",
+              "group relative flex items-start gap-4 transition hover:bg-overlay hover:border-primary/20 hover:shadow-xs cursor-pointer",
               getSurfaceClassName(
                 {
                   surfaceTone,
@@ -395,7 +417,7 @@ function LatestAnnouncementsBlock(props: LatestAnnouncementsBlockProps) {
                 <span>{ann.categoryNames[0] ?? "Thông báo"}</span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -501,8 +523,8 @@ function StaffGridBlock({
             <CardContent className="p-6 space-y-4 flex flex-col items-center text-center">
               <Avatar
                 src={st.avatarUrl ?? ""}
-                alt={st.name}
-                initials={st.name.split(" ").pop()?.substring(0, 2)}
+                alt={staffDisplayName(st)}
+                initials={st.fullName.split(" ").pop()?.substring(0, 2)}
                 size="xl"
                 className="shadow-xs group-hover:scale-105 transition duration-300"
               />
@@ -511,7 +533,7 @@ function StaffGridBlock({
                   level={3}
                   className="text-base font-bold text-fg group-hover:text-primary transition-colors"
                 >
-                  {st.name}
+                  {staffDisplayName(st)}
                 </Heading>
                 <Text className="text-xs font-bold text-primary uppercase tracking-wider text-[10px]">
                   {st.position ?? "Cán bộ"}
@@ -539,6 +561,94 @@ function StaffGridBlock({
             </CardContent>
           </Card>
         ))}
+      </div>
+    </section>
+  );
+}
+
+interface StaffProfileCardBlockProps {
+  className?: string;
+  fallbackRole?: string;
+  showEmail?: boolean;
+  showPosition?: boolean;
+  staffId?: string;
+  title?: string;
+  surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
+  surfacePadding?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  surfaceRadius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  surfaceShadow?: "none" | "sm" | "md";
+  surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
+}
+
+function StaffProfileCardBlock({
+  title,
+  staffId,
+  fallbackRole,
+  showEmail = true,
+  showPosition = true,
+  surfaceTone,
+  surfaceBorder,
+  surfaceRadius,
+  surfacePadding,
+  surfaceShadow,
+  className,
+}: StaffProfileCardBlockProps) {
+  const selectedStaffId = parseOptionalId(staffId);
+  const staffRecords = usePuckDynamicData().staff;
+  const staff =
+    staffRecords.find((record) => record.id === selectedStaffId) ??
+    staffRecords[0] ??
+    null;
+
+  if (!staff) {
+    return <EmptyDynamicState label="Không có hồ sơ cán bộ để hiển thị." />;
+  }
+
+  const roleLabel = showPosition
+    ? (staff.position ?? fallbackRole ?? "Cán bộ")
+    : (fallbackRole ?? "");
+
+  return (
+    <section
+      className={twMerge(
+        "mx-auto flex w-full max-w-sm flex-col items-center gap-4 text-center",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        className,
+      )}
+    >
+      {title ? (
+        <Heading level={3} className="text-base font-bold text-fg">
+          {title}
+        </Heading>
+      ) : null}
+      <Avatar
+        src={staff.avatarUrl ?? ""}
+        alt={staffDisplayName(staff)}
+        initials={staff.fullName.split(" ").pop()?.substring(0, 2)}
+        className="size-52 rounded-sm border border-border/70 object-cover shadow-xs"
+      />
+      <div className="space-y-2">
+        <Heading level={3} className="text-2xl font-semibold text-fg">
+          {staffDisplayName(staff)}
+        </Heading>
+        {showEmail && staff.email ? (
+          <p className="text-lg text-primary">
+            <span className="font-semibold text-fg">Email:</span>{" "}
+            <Link href={`mailto:${staff.email}`}>{staff.email}</Link>
+          </p>
+        ) : null}
+        {roleLabel ? (
+          <Text className="text-2xl font-medium text-fg">{roleLabel}</Text>
+        ) : null}
       </div>
     </section>
   );
@@ -723,37 +833,42 @@ function RelatedPostsBlock({
 
       <div className="grid gap-4 md:grid-cols-2 w-full">
         {related.map((post) => (
-          <Card
+          <Link
             key={post.id}
-            className={twMerge(
-              "py-0 shadow-none hover:shadow-md transition-shadow group flex flex-col justify-between",
-              getSurfaceClassName(
-                {
-                  surfaceTone,
-                  surfaceBorder,
-                  surfaceRadius,
-                  surfacePadding,
-                  surfaceShadow,
-                },
-                "",
-              ),
-            )}
+            href={post.url ?? "#"}
+            className="block"
           >
-            <CardContent className="p-5 space-y-3">
-              <span className="text-[10px] text-primary font-bold uppercase tracking-wider block">
-                {post.categoryNames[0] ?? "Tin tức"}
-              </span>
-              <Heading
-                level={3}
-                className="text-sm font-bold text-fg group-hover:text-primary transition-colors leading-snug"
-              >
-                {post.title}
-              </Heading>
-              <Text className="text-xs text-muted-fg leading-relaxed line-clamp-2">
-                {post.excerpt}
-              </Text>
-            </CardContent>
-          </Card>
+            <Card
+              className={twMerge(
+                "py-0 shadow-none hover:shadow-md transition-shadow group flex flex-col justify-between cursor-pointer",
+                getSurfaceClassName(
+                  {
+                    surfaceTone,
+                    surfaceBorder,
+                    surfaceRadius,
+                    surfacePadding,
+                    surfaceShadow,
+                  },
+                  "",
+                ),
+              )}
+            >
+              <CardContent className="p-5 space-y-3">
+                <span className="text-[10px] text-primary font-bold uppercase tracking-wider block">
+                  {post.categoryNames[0] ?? "Tin tức"}
+                </span>
+                <Heading
+                  level={3}
+                  className="text-sm font-bold text-fg group-hover:text-primary transition-colors leading-snug"
+                >
+                  {post.title}
+                </Heading>
+                <Text className="text-xs text-muted-fg leading-relaxed line-clamp-2">
+                  {post.excerpt}
+                </Text>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </section>
@@ -929,7 +1044,7 @@ function CategoriesBlock(props: CategoriesBlockProps) {
                 "",
               ),
             )}
-            href={`/post-categories/${category.slug}`}
+            href={`/${category.slug}`}
             key={category.id}
           >
             {category.name}
@@ -1130,6 +1245,102 @@ export const StaffGridComponentConfig: PageBuilderComponentConfig<"StaffGrid"> =
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
   render: (props) => <StaffGridBlock {...props} />,
+};
+
+export const StaffProfileCardComponentConfig: PageBuilderComponentConfig<"StaffProfileCard"> =
+{
+  label: "Hồ sơ một cán bộ",
+  defaultProps: {
+    title: "",
+    staffId: "",
+    fallbackRole: "Cán bộ",
+    showEmail: true,
+    showPosition: true,
+    surfaceTone: "transparent",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
+    surfacePadding: "none",
+    surfaceShadow: "none",
+    className: "",
+  },
+  fields: {
+    ...puckSurfaceFields,
+    title: { type: "text", label: "Tiêu đề phụ" },
+    staffId: {
+      type: "select",
+      label: "Cán bộ",
+      options: [{ label: "Chưa chọn cán bộ", value: "" }],
+    },
+    fallbackRole: { type: "text", label: "Chức danh dự phòng" },
+    showEmail: {
+      type: "radio",
+      label: "Hiển thị email",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    showPosition: {
+      type: "radio",
+      label: "Hiển thị chức vụ",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    className: { type: "text", label: "Lớp CSS bổ sung" },
+  },
+  resolveFields: async (_data, { fields, lastFields }) => {
+    const lastStaffField = lastFields.staffId;
+
+    if (
+      lastStaffField &&
+      "options" in lastStaffField &&
+      Array.isArray(lastStaffField.options) &&
+      lastStaffField.options.length > 1
+    ) {
+      return lastFields;
+    }
+
+    const response = await fetch(layoutBuilderRoutes.sources.url("staff"), {
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return fields;
+    }
+
+    const payload = (await response.json()) as {
+      data?: Array<{
+        id: number;
+        label: string;
+        meta?: {
+          position?: string | null;
+        };
+      }>;
+    };
+
+    return {
+      ...fields,
+      staffId: {
+        type: "select",
+        label: "Cán bộ",
+        options: [
+          { label: "Chưa chọn cán bộ", value: "" },
+          ...(payload.data ?? []).map((item) => ({
+            label: item.meta?.position
+              ? `${item.label} (${item.meta.position})`
+              : item.label,
+            value: item.id.toString(),
+          })),
+        ],
+      },
+    };
+  },
+  render: (props) => <StaffProfileCardBlock {...props} />,
 };
 
 // 4. UNIT LIST BLOCK

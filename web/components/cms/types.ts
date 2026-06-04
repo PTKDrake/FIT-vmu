@@ -107,7 +107,6 @@ export interface CmsLayoutOption {
   id: number;
   key: string;
   name: string;
-  status: "draft" | "published";
 }
 
 export interface CmsStudentGroupOption {
@@ -289,7 +288,9 @@ export interface CmsStudentGroupsPageProps extends SharedData {
 }
 
 export interface CmsStaffProfileRow {
+  academicTitle: string | null;
   avatarUrl: string | null;
+  displayName: string;
   email: string | null;
   fullName: string;
   id: number;
@@ -325,6 +326,8 @@ export interface CmsStaffProfileFormPageProps extends SharedData {
   profile?: {
     id: number | null;
     userId?: number;
+    academicTitle: string | null;
+    displayName?: string;
     fullName: string;
     slug: string;
     email: string | null;
@@ -354,6 +357,8 @@ export interface CmsStaffProfileShowPageProps extends SharedData {
   };
   profile: {
     id: number;
+    academicTitle: string | null;
+    displayName: string;
     fullName: string;
     slug: string;
     email: string | null;
@@ -383,6 +388,7 @@ export interface CmsPostCategoryRow {
   parentId: number | null;
   parentName: string | null;
   postCount: number;
+  siteLayoutId: number | null;
   slug: string;
   sortOrder: number;
   updatedAt: string;
@@ -393,6 +399,8 @@ export interface CmsPostCategoriesPageProps extends SharedData {
     manageCategories: boolean;
   };
   categories: CmsPaginatedCollection<CmsPostCategoryRow>;
+  defaultCategoryLayoutId: number | null;
+  layoutOptions: CmsLayoutOption[];
   parentOptions: Array<{
     label: string;
     parentId: number | null;

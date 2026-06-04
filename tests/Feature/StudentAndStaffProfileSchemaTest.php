@@ -19,6 +19,7 @@ test('students and staff profiles tables expose the expected domain columns', fu
         ->and(Schema::hasColumns('staff_profiles', [
             'id',
             'user_id',
+            'academic_title',
             'full_name',
             'slug',
             'avatar_id',
@@ -61,11 +62,13 @@ test('staff profile defaults match the mvp content storage convention', function
 
     $staffProfile = StaffProfile::query()->create([
         'user_id' => $user->id,
+        'academic_title' => 'TS.',
         'full_name' => 'Nguyen Van A',
         'slug' => 'nguyen-van-a',
     ])->refresh();
 
     expect($staffProfile->bio)->toBeNull()
+        ->and($staffProfile->academic_title)->toBe('TS.')
         ->and($staffProfile->bio_format)->toBe('blocknote_json')
         ->and($staffProfile->is_public)->toBeFalse();
 });

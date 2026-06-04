@@ -11,6 +11,7 @@ import { useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
+import type { CmsLayoutOption } from "@/components/cms/types";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
 import { Description, FieldError, Label } from "@/components/ui/field";
@@ -28,6 +29,13 @@ import {
   MultipleSelectContent,
   MultipleSelectItem,
 } from "@/components/ui/multiple-select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { TextField } from "@/components/ui/text-field";
 import { Textarea } from "@/components/ui/textarea";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -43,12 +51,13 @@ export interface PostFormValues {
   thumbnail_url?: string | null;
   excerpt: string;
   content: string;
-  content_format: "blocknote_json";
+  content_format: "blocknote_json" | "puck_json";
   thumbnail_id: number | null;
   status: "draft" | "pending" | "published" | "rejected";
   rejection_reason?: string | null;
   reviewed_at?: string | null;
   reviewer_name?: string | null;
+  site_layout_id?: number | null;
 }
 
 interface PostFormProps {
@@ -63,6 +72,8 @@ interface PostFormProps {
     code: string;
     scope: "global" | "private";
   }>;
+  layoutOptions: CmsLayoutOption[];
+  defaultPostLayoutId: number | null;
   allowGlobalGroupCreation: boolean;
   onSubmit: (data: PostFormValues, formHelper: any) => void;
   submitLabel: string;
@@ -74,6 +85,8 @@ export function PostForm({
   initialValues,
   categories,
   studentGroupOptions,
+  layoutOptions,
+  defaultPostLayoutId,
   allowGlobalGroupCreation,
   onSubmit,
   submitLabel,
@@ -141,9 +154,10 @@ export function PostForm({
     student_group_ids: initialValues.student_group_ids,
     excerpt: initialValues.excerpt,
     content: initialValues.content,
-    content_format: "blocknote_json",
+    content_format: initialValues.content_format || "blocknote_json",
     thumbnail_id: initialValues.thumbnail_id,
     status: initialValues.status,
+    site_layout_id: initialValues.site_layout_id ?? null,
   });
 
   function triggerSubmitWithStatus(status: "draft" | "pending"): void {
@@ -395,6 +409,54 @@ export function PostForm({
             />
             <FieldError>{form.errors.excerpt}</FieldError>
           </TextField>
+
+          {/* Layout Select */}
+          <div className="space-y-2">
+            <Select
+              aria-label="Bố cục bài viết"
+              onChange={(key) =>
+                form.setData(
+                  "site_layout_id",
+                  key ? Number(key) : null,
+                )
+              }
+              value={
+                form.data.site_layout_id != null
+                  ? String(form.data.site_layout_id)
+                  : ""
+              }
+            >
+              <Label className="font-semibold text-fg text-sm">
+                Bố cục bài viết
+              </Label>
+              <SelectTrigger />
+              <SelectContent>
+                <SelectItem id="" textValue="Dùng layout mặc định">
+                  <SelectLabel>Dùng layout mặc định</SelectLabel>
+                </SelectItem>
+                {layoutOptions.map((layout) => (
+                  <SelectItem
+                    key={layout.id}
+                    id={String(layout.id)}
+                    textValue={layout.name}
+                  >
+                    <SelectLabel>
+                      {layout.name}
+                      {layout.id === defaultPostLayoutId
+                        ? " (mặc định)"
+                        : ""}
+                    </SelectLabel>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+              {form.errors.site_layout_id ? (
+                <FieldError>{form.errors.site_layout_id}</FieldError>
+              ) : null}
+            </Select>
+            <Description>
+              Chọn bố cục hiển thị cho bài viết trên trang công khai.
+            </Description>
+          </div>
         </div>
       </div>
 

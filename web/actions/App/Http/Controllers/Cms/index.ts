@@ -26,8 +26,7 @@ import SiteLayoutCreateController from './SiteLayoutCreateController'
 import StoreSiteLayoutController from './StoreSiteLayoutController'
 import SiteLayoutEditController from './SiteLayoutEditController'
 import UpdateSiteLayoutController from './UpdateSiteLayoutController'
-import PublishSiteLayoutController from './PublishSiteLayoutController'
-import DraftSiteLayoutController from './DraftSiteLayoutController'
+import CloneSiteLayoutController from './CloneSiteLayoutController'
 import SetDefaultSiteLayoutController from './SetDefaultSiteLayoutController'
 import DeleteSiteLayoutController from './DeleteSiteLayoutController'
 import SiteSettingsIndexController from './SiteSettingsIndexController'
@@ -106,8 +105,7 @@ const Cms = {
     StoreSiteLayoutController: Object.assign(StoreSiteLayoutController, StoreSiteLayoutController),
     SiteLayoutEditController: Object.assign(SiteLayoutEditController, SiteLayoutEditController),
     UpdateSiteLayoutController: Object.assign(UpdateSiteLayoutController, UpdateSiteLayoutController),
-    PublishSiteLayoutController: Object.assign(PublishSiteLayoutController, PublishSiteLayoutController),
-    DraftSiteLayoutController: Object.assign(DraftSiteLayoutController, DraftSiteLayoutController),
+    CloneSiteLayoutController: Object.assign(CloneSiteLayoutController, CloneSiteLayoutController),
     SetDefaultSiteLayoutController: Object.assign(SetDefaultSiteLayoutController, SetDefaultSiteLayoutController),
     DeleteSiteLayoutController: Object.assign(DeleteSiteLayoutController, DeleteSiteLayoutController),
     SiteSettingsIndexController: Object.assign(SiteSettingsIndexController, SiteSettingsIndexController),

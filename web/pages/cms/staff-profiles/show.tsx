@@ -12,7 +12,6 @@ import type { CmsStaffProfileShowPageProps } from "@/components/cms/types";
 import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -24,7 +23,6 @@ import {
 } from "@/components/ui/table";
 import { Text } from "@/components/ui/text";
 import CmsLayout from "@/layouts/cms-layout";
-import { staffProfiles } from "@/routes/cms";
 import { edit } from "@/routes/cms/staff-profiles";
 
 export default function CmsStaffProfileShowPage({
@@ -33,7 +31,7 @@ export default function CmsStaffProfileShowPage({
 }: CmsStaffProfileShowPageProps) {
   return (
     <>
-      <Head title={`Hồ sơ: ${profile.fullName}`} />
+      <Head title={`Hồ sơ: ${profile.displayName}`} />
 
       <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
         <div className="flex items-center justify-end gap-4">
@@ -56,11 +54,11 @@ export default function CmsStaffProfileShowPage({
                   src={profile.avatarUrl ?? undefined}
                   initials={profile.fullName.substring(0, 2).toUpperCase()}
                   className="size-28 rounded-full border-2 border-border shadow-xs"
-                  aria-label={`Avatar của ${profile.fullName}`}
+                  aria-label={`Avatar của ${profile.displayName}`}
                 />
 
                 <h2 className="mt-4 text-lg font-bold text-fg">
-                  {profile.fullName}
+                  {profile.displayName}
                 </h2>
                 <Text className="text-xs text-muted-fg mt-1">
                   Slug: {profile.slug}

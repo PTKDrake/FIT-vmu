@@ -63,7 +63,7 @@ final class CmsContentChanged implements ShouldBroadcast, ShouldDispatchAfterCom
         return new self(
             resource: 'staff-profiles',
             recordId: self::normalizeRecordId($staffProfile->getKey()),
-            title: $staffProfile->full_name,
+            title: $staffProfile->displayName(),
             status: $staffProfile->is_public ? 'published' : 'draft',
             action: $action,
             message: $message,

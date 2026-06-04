@@ -2,6 +2,7 @@ import { Head, usePage } from "@inertiajs/react";
 import type { ReactNode } from "react";
 import { PostForm } from "@/components/cms/post-form";
 import type { PostFormValues } from "@/components/cms/post-form";
+import type { CmsLayoutOption } from "@/components/cms/types";
 import CmsLayout from "@/layouts/cms-layout";
 import { hasPermission } from "@/lib/authorization";
 import postsRoutes from "@/routes/cms/posts";
@@ -13,6 +14,8 @@ interface PostEditPageProps {
     value: string;
     label: string;
   }>;
+  layoutOptions: CmsLayoutOption[];
+  defaultPostLayoutId: number | null;
   studentGroupOptions: Array<{
     value: string;
     label: string;
@@ -24,6 +27,8 @@ interface PostEditPageProps {
 export default function PostEditPage({
   post,
   categories,
+  layoutOptions,
+  defaultPostLayoutId,
   studentGroupOptions,
 }: PostEditPageProps) {
   const { auth } = usePage<SharedData>().props;
@@ -49,6 +54,8 @@ export default function PostEditPage({
           initialValues={post}
           allowGlobalGroupCreation={canCreateGlobalGroup}
           categories={categories}
+          layoutOptions={layoutOptions}
+          defaultPostLayoutId={defaultPostLayoutId}
           studentGroupOptions={studentGroupOptions}
           onSubmit={handleSubmit}
           submitLabel="Lưu thay đổi"

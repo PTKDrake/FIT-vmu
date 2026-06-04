@@ -75,13 +75,13 @@ export default function CmsStaffProfilesPage({
                 src={profile.avatarUrl ?? undefined}
                 initials={profile.fullName.substring(0, 2).toUpperCase()}
                 className="size-9 rounded-full border border-border"
-                aria-label={`Ảnh đại diện của ${profile.fullName}`}
+                aria-label={`Ảnh đại diện của ${profile.displayName}`}
               />
               <Link
                 href={show.url({ staffProfile: profile.id })}
                 className="font-medium text-fg transition hover:text-primary text-sm"
               >
-                {profile.fullName}
+                {profile.displayName}
               </Link>
             </div>
           );
@@ -131,7 +131,7 @@ export default function CmsStaffProfilesPage({
 
           return (
             <DataTableActions
-              triggerAriaLabel={`Tác vụ cho ${profile.fullName}`}
+              triggerAriaLabel={`Tác vụ cho ${profile.displayName}`}
             >
               <MenuItem href={show.url({ staffProfile: profile.id })}>
                 <EyeIcon />

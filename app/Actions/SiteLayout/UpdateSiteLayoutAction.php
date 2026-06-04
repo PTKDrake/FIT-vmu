@@ -10,26 +10,35 @@ class UpdateSiteLayoutAction
 {
     /**
      * @param array{
-     *     name: string,
-     *     key: string,
+     *     name?: string,
+     *     key?: string,
      *     header_data?: ?string,
      *     footer_data?: ?string,
      *     left_data?: ?string,
-     *     right_data?: ?string,
-     *     status: string
+     *     right_data?: ?string
      * } $attributes
      */
     public function __invoke(SiteLayout $siteLayout, array $attributes): SiteLayout
     {
-        $siteLayout->update([
-            'name' => $attributes['name'],
-            'key' => $attributes['key'],
-            'header_data' => $this->normalizeSlot($attributes['header_data'] ?? null),
-            'footer_data' => $this->normalizeSlot($attributes['footer_data'] ?? null),
-            'left_data' => $this->normalizeSlot($attributes['left_data'] ?? null),
-            'right_data' => $this->normalizeSlot($attributes['right_data'] ?? null),
-            'status' => $attributes['status'],
-        ]);
+        $payload = [];
+
+        if (array_key_exists('name', $attributes)) {
+            $payload['name'] = $attributes['name'];
+        }
+
+        if (array_key_exists('key', $attributes)) {
+            $payload['key'] = $attributes['key'];
+        }
+
+        foreach (['header_data', 'footer_data', 'left_data', 'right_data'] as $field) {
+            if (! array_key_exists($field, $attributes)) {
+                continue;
+            }
+
+            $payload[$field] = $this->normalizeSlot($attributes[$field]);
+        }
+
+        $siteLayout->update($payload);
 
         return $siteLayout->fresh(['pages', 'postCategories', 'posts']) ?? $siteLayout;
     }

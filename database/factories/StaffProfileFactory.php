@@ -23,6 +23,7 @@ class StaffProfileFactory extends Factory
 
         return [
             'user_id' => User::factory(),
+            'academic_title' => fake()->randomElement(['TS.', 'ThS.', null]),
             'full_name' => $fullName,
             'slug' => Str::slug($fullName).'-'.fake()->unique()->numberBetween(1000, 9999),
             'avatar_id' => null,

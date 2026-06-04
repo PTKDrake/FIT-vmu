@@ -112,12 +112,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('layouts/{siteLayout}', Controllers\Cms\UpdateSiteLayoutController::class)
             ->can('update', 'siteLayout')
             ->name('layouts.update');
-        Route::patch('layouts/{siteLayout}/publish', Controllers\Cms\PublishSiteLayoutController::class)
-            ->can('update', 'siteLayout')
-            ->name('layouts.publish');
-        Route::patch('layouts/{siteLayout}/draft', Controllers\Cms\DraftSiteLayoutController::class)
-            ->can('update', 'siteLayout')
-            ->name('layouts.draft');
+        Route::post('layouts/{siteLayout}/clone', Controllers\Cms\CloneSiteLayoutController::class)
+            ->can('create', SiteLayout::class)
+            ->name('layouts.clone');
         Route::patch('layouts/{siteLayout}/default', Controllers\Cms\SetDefaultSiteLayoutController::class)
             ->can('update', 'siteLayout')
             ->name('layouts.default');
@@ -278,6 +275,10 @@ require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/dev.php';
 
-Route::get('{page:slug}', Controllers\PublicPageController::class)
-    ->where('page', '^(?!cms(?:/|$)|login$|register$|settings(?:/|$)|password(?:/|$)|auth(?:/|$)|verify-email(?:/|$)).+')
-    ->name('pages.public.show');
+// Public post routes MUST precede the catch-all slug route so that
+// `/{category-slug}/{post-slug}` wins over single-segment slugs.
+Route::get('{categorySlug}/{postSlug}', Controllers\PublicPostController::class)
+    ->name('posts.public.show');
+Route::get('{slug}', Controllers\PublicSlugController::class)
+    ->where('slug', '^(?!cms(?:/|$)|login$|register$|settings(?:/|$)|password(?:/|$)|auth(?:/|$)|verify-email(?:/|$)).+')
+    ->name('public.slug');

@@ -134,6 +134,7 @@ test('admin/editor can access staff profile create page and persist new profile'
     $response = $this->actingAs($admin)
         ->post('/cms/staff-profiles', [
             'user_id' => $eligibleUser->id,
+            'academic_title' => 'TS.',
             'full_name' => 'Lê Hoàng C',
             'slug' => 'le-hoang-c',
             'email' => 'lehoangc@vmu.edu.vn',
@@ -157,6 +158,7 @@ test('admin/editor can access staff profile create page and persist new profile'
     $response->assertRedirect("/cms/staff-profiles/{$profile->id}");
 
     expect($profile->user_id)->toBe($eligibleUser->id)
+        ->and($profile->academic_title)->toBe('TS.')
         ->and($profile->full_name)->toBe('Lê Hoàng C')
         ->and($profile->is_public)->toBeTrue()
         ->and($profile->appointments)->toHaveCount(1)
@@ -177,6 +179,7 @@ test('user can update their own profile and upload a new avatar', function () {
 
     $profile = StaffProfile::factory()->create([
         'user_id' => $staffUser->id,
+        'academic_title' => 'ThS.',
         'full_name' => 'Lê Hoàng C',
         'slug' => 'le-hoang-c',
     ]);
@@ -189,6 +192,7 @@ test('user can update their own profile and upload a new avatar', function () {
     $this->actingAs($staffUser)
         ->post("/cms/staff-profiles/{$profile->id}", [
             '_method' => 'patch',
+            'academic_title' => 'TS.',
             'full_name' => 'Lê Hoàng C Cập Nhật',
             'slug' => 'le-hoang-c-cap-nhat',
             'email' => 'lehoangc-new@vmu.edu.vn',
@@ -212,6 +216,7 @@ test('user can update their own profile and upload a new avatar', function () {
     $profile->refresh();
 
     expect($profile->full_name)->toBe('Lê Hoàng C Cập Nhật')
+        ->and($profile->academic_title)->toBe('TS.')
         ->and($profile->slug)->toBe('le-hoang-c-cap-nhat')
         ->and($profile->email)->toBe('lehoangc-new@vmu.edu.vn')
         ->and($profile->phone)->toBe('0988888888')

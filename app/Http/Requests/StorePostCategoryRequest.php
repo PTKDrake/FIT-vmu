@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\PostCategory;
+use App\Models\SiteLayout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,6 +33,11 @@ class StorePostCategoryRequest extends FormRequest
             ],
             'sort_order' => ['required', 'integer', 'min:0'],
             'is_active' => ['required', 'boolean'],
+            'site_layout_id' => [
+                'nullable',
+                'integer',
+                Rule::exists((new SiteLayout)->getTable(), 'id'),
+            ],
         ];
     }
 }

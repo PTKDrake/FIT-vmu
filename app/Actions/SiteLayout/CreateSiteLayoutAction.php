@@ -15,8 +15,7 @@ class CreateSiteLayoutAction
      *     header_data?: ?string,
      *     footer_data?: ?string,
      *     left_data?: ?string,
-     *     right_data?: ?string,
-     *     status: string
+     *     right_data?: ?string
      * } $attributes
      */
     public function __invoke(array $attributes): SiteLayout
@@ -29,7 +28,6 @@ class CreateSiteLayoutAction
             'footer_data' => $this->normalizeSlot($attributes['footer_data'] ?? null),
             'left_data' => $this->normalizeSlot($attributes['left_data'] ?? null),
             'right_data' => $this->normalizeSlot($attributes['right_data'] ?? null),
-            'status' => $attributes['status'],
         ]);
 
         return $siteLayout;

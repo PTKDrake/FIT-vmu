@@ -208,7 +208,6 @@ export default function EditPage({
                             {layout.id === defaultPageLayoutId
                               ? " (mặc định)"
                               : ""}
-                            {layout.status === "draft" ? " - nháp" : ""}
                           </SelectLabel>
                         </SelectItem>
                       ))}

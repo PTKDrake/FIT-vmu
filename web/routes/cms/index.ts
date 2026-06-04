@@ -179,7 +179,7 @@ posts.form = postsForm
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 export const postCategories = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -194,7 +194,7 @@ postCategories.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 postCategories.url = (options?: RouteQueryOptions) => {
@@ -203,7 +203,7 @@ postCategories.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 postCategories.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -213,7 +213,7 @@ postCategories.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 postCategories.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -223,7 +223,7 @@ postCategories.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 const postCategoriesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -233,7 +233,7 @@ const postCategoriesForm = (options?: RouteQueryOptions): RouteFormDefinition<'g
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 postCategoriesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -243,7 +243,7 @@ postCategoriesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 postCategoriesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

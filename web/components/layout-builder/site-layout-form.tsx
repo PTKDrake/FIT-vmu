@@ -9,13 +9,6 @@ import {
   Legend,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
@@ -40,7 +33,6 @@ interface SiteLayoutFormValues extends Record<string, string> {
   left_data: string;
   name: string;
   right_data: string;
-  status: "draft" | "published";
 }
 
 interface SiteLayoutFormProps {
@@ -52,7 +44,6 @@ interface SiteLayoutFormProps {
     leftData: string | null;
     name: string;
     rightData: string | null;
-    status: "draft" | "published";
   };
 }
 
@@ -61,7 +52,6 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
   const form = useForm<SiteLayoutFormValues>({
     name: layout?.name ?? "",
     key: layout?.key ?? "",
-    status: layout?.status ?? "draft",
     header_data: layout?.headerData ?? emptySlotJson,
     footer_data: layout?.footerData ?? emptySlotJson,
     left_data: layout?.leftData ?? emptySlotJson,
@@ -134,8 +124,7 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
           <div>
             <Legend>{isEditing ? "Chỉnh sửa layout" : "Tạo layout"}</Legend>
             <Text className="mt-1 text-muted-fg">
-              Cấu hình định danh, trạng thái và layout mặc định cho shell
-              public.
+              Cấu hình định danh và nội dung shell public dùng chung.
             </Text>
           </div>
           <FieldGroup className="grid gap-5 lg:grid-cols-2">
@@ -161,27 +150,6 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
                 <FieldError>{form.errors.key}</FieldError>
               ) : null}
             </div>
-            <Select
-              aria-label="Trạng thái"
-              onChange={(key) =>
-                form.setData("status", String(key) as "draft" | "published")
-              }
-              value={form.data.status}
-            >
-              <Label>Trạng thái</Label>
-              <SelectTrigger />
-              <SelectContent>
-                <SelectItem id="draft" textValue="Bản nháp">
-                  <SelectLabel>Bản nháp</SelectLabel>
-                </SelectItem>
-                <SelectItem id="published" textValue="Đã xuất bản">
-                  <SelectLabel>Đã xuất bản</SelectLabel>
-                </SelectItem>
-              </SelectContent>
-              {form.errors.status ? (
-                <FieldError>{form.errors.status}</FieldError>
-              ) : null}
-            </Select>
           </FieldGroup>
           <div className="flex items-center justify-end gap-3 border-t border-border pt-5">
             <Link

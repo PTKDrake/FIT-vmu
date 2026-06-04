@@ -332,6 +332,11 @@ const puckBuilderStyles = `
   flex: none;
 }
 
+.vmu-puck-page-builder [class*="_SidebarSection-breadcrumbs_"] {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 1023px) {
   .vmu-puck-page-builder [class*="_PuckLayout-inner_"] {
     min-height: calc(100vh - 9rem);

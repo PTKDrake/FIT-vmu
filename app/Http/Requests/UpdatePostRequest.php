@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Media;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\SiteLayout;
 use App\Models\StudentGroup;
 use App\Support\ContentVisibilityOptions;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -60,7 +61,12 @@ class UpdatePostRequest extends FormRequest
             ],
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
-            'content_format' => ['required', 'string', Rule::in(['blocknote_json'])],
+            'content_format' => ['required', 'string', Rule::in(['blocknote_json', 'puck_json'])],
+            'site_layout_id' => [
+                'nullable',
+                'integer',
+                Rule::exists((new SiteLayout)->getTable(), 'id'),
+            ],
             'student_group_ids' => [
                 Rule::requiredIf(fn (): bool => $this->string('visibility')->toString() === 'student_groups'),
                 'array',

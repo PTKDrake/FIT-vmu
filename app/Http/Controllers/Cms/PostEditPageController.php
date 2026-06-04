@@ -8,6 +8,8 @@ use App\Actions\StudentGroup\BuildAccessibleStudentGroupOptionsAction;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\SiteLayout;
+use App\Models\SiteSetting;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -55,8 +57,20 @@ final class PostEditPageController extends Controller
                 'rejection_reason' => $post->rejection_reason,
                 'reviewed_at' => $reviewedAt instanceof CarbonInterface ? $reviewedAt->toAtomString() : null,
                 'reviewer_name' => $post->reviewer?->name,
+                'site_layout_id' => $post->site_layout_id,
             ],
             'categories' => $categories,
+            'layoutOptions' => SiteLayout::query()
+                ->orderBy('name')
+                ->get(['id', 'name', 'key'])
+                ->map(fn (SiteLayout $siteLayout): array => [
+                    'id' => $siteLayout->id,
+                    'name' => $siteLayout->name,
+                    'key' => $siteLayout->key,
+                ])
+                ->values()
+                ->all(),
+            'defaultPostLayoutId' => SiteSetting::defaultPostLayoutId(),
             'studentGroupOptions' => $buildStudentGroupOptions($request->user()),
         ]);
     }

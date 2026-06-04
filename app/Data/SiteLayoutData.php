@@ -12,7 +12,6 @@ class SiteLayoutData extends Data
     public function __construct(
         public string $name,
         public string $key,
-        public string $status,
         public ?string $headerData = null,
         public ?string $footerData = null,
         public ?string $leftData = null,
@@ -28,7 +27,6 @@ class SiteLayoutData extends Data
         return new self(
             name: $siteLayout->name,
             key: $siteLayout->key,
-            status: $siteLayout->status,
             headerData: $siteLayout->header_data,
             footerData: $siteLayout->footer_data,
             leftData: $siteLayout->left_data,

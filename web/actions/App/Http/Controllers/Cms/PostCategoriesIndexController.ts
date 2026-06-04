@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 const PostCategoriesIndexController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ PostCategoriesIndexController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 PostCategoriesIndexController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ PostCategoriesIndexController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 PostCategoriesIndexController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ PostCategoriesIndexController.get = (options?: RouteQueryOptions): RouteDefiniti
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 PostCategoriesIndexController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ PostCategoriesIndexController.head = (options?: RouteQueryOptions): RouteDefinit
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 const PostCategoriesIndexControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const PostCategoriesIndexControllerForm = (options?: RouteQueryOptions): RouteFo
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 PostCategoriesIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ PostCategoriesIndexControllerForm.get = (options?: RouteQueryOptions): RouteForm
 
 /**
 * @see \App\Http\Controllers\Cms\PostCategoriesIndexController::__invoke
-* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:27
+* @see app/Http/Controllers/Cms/PostCategoriesIndexController.php:29
 * @route '/cms/post-categories'
 */
 PostCategoriesIndexControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

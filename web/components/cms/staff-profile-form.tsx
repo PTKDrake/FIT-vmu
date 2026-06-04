@@ -32,6 +32,7 @@ import { TextField } from "@/components/ui/text-field";
 
 export interface StaffProfileFormData {
   user_id: number;
+  academic_title: string;
   full_name: string;
   slug: string;
   email: string;
@@ -185,30 +186,40 @@ export function StaffProfileForm({
 
           <div className="grid gap-4 lg:grid-cols-2">
             <TextField
+              name="academic_title"
+              value={data.academic_title}
+              onChange={(value) => onUpdate("academic_title", value)}
+            >
+              <Label>Học hàm, học vị</Label>
+              <Input placeholder="Ví dụ: TS., ThS." />
+              <FieldError>{errors.academic_title}</FieldError>
+            </TextField>
+
+            <TextField
               isRequired
               name="full_name"
               value={data.full_name}
               onChange={(value) => onUpdate("full_name", value)}
             >
               <Label>Họ và tên</Label>
-              <Input placeholder="Ví dụ: TS. Nguyễn Văn A" />
+              <Input placeholder="Ví dụ: Nguyễn Văn A" />
               <FieldError>{errors.full_name}</FieldError>
             </TextField>
-
-            <TextField
-              isRequired
-              name="slug"
-              value={data.slug}
-              onChange={(value) => onUpdate("slug", value)}
-            >
-              <Label>Slug</Label>
-              <Input placeholder="ts-nguyen-van-a" />
-              <FieldError>{errors.slug}</FieldError>
-              <Description>
-                Dùng cho đường dẫn URL giới thiệu cá nhân.
-              </Description>
-            </TextField>
           </div>
+
+          <TextField
+            isRequired
+            name="slug"
+            value={data.slug}
+            onChange={(value) => onUpdate("slug", value)}
+          >
+            <Label>Slug</Label>
+            <Input placeholder="nguyen-van-a" />
+            <FieldError>{errors.slug}</FieldError>
+            <Description>
+              Dùng cho đường dẫn URL giới thiệu cá nhân.
+            </Description>
+          </TextField>
 
           <div className="grid gap-4 lg:grid-cols-2">
             <TextField

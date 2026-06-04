@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
 import type { ReactNode } from "react";
-import { SiteLayoutForm } from "@/components/layout-builder/site-layout-form";
+import { SiteLayoutBuilderEditor } from "@/components/layout-builder/site-layout-builder-editor";
 import CmsLayout from "@/layouts/cms-layout";
 import type { SharedData } from "@/types/shared";
 
@@ -13,7 +13,6 @@ interface EditSiteLayoutPageProps extends SharedData {
     leftData: string | null;
     name: string;
     rightData: string | null;
-    status: "draft" | "published";
     updatedAt: string;
   };
 }
@@ -23,8 +22,8 @@ export default function EditSiteLayoutPage({
 }: EditSiteLayoutPageProps) {
   return (
     <>
-      <Head title={`Bố cục - ${layout.name}`} />
-      <SiteLayoutForm layout={layout} />
+      <Head title={`Chỉnh sửa thành phần - ${layout.name}`} />
+      <SiteLayoutBuilderEditor layout={layout} />
     </>
   );
 }

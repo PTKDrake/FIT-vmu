@@ -44,7 +44,6 @@ class StoreSiteLayoutRequest extends FormRequest
             'footer_data' => ['nullable', 'string'],
             'left_data' => ['nullable', 'string'],
             'right_data' => ['nullable', 'string'],
-            'status' => ['required', 'string', Rule::in(['draft', 'published'])],
         ];
     }
 

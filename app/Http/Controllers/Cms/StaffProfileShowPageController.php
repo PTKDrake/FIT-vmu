@@ -26,7 +26,9 @@ final class StaffProfileShowPageController extends Controller
             ],
             'profile' => [
                 'id' => $staffProfile->id,
+                'academicTitle' => $staffProfile->academic_title,
                 'fullName' => $staffProfile->full_name,
+                'displayName' => $staffProfile->displayName(),
                 'slug' => $staffProfile->slug,
                 'email' => $staffProfile->email,
                 'phone' => $staffProfile->phone,

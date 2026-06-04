@@ -16,7 +16,8 @@ class UpdatePostCategoryAction
      *     description?: string|null,
      *     parent_id?: int|null,
      *     sort_order: int,
-     *     is_active: bool
+     *     is_active: bool,
+     *     site_layout_id?: int|null
      * }  $attributes
      */
     public function __invoke(PostCategory $postCategory, array $attributes): PostCategory
@@ -29,6 +30,7 @@ class UpdatePostCategoryAction
                 'parent_id' => $attributes['parent_id'] ?? null,
                 'sort_order' => $attributes['sort_order'],
                 'is_active' => $attributes['is_active'],
+                'site_layout_id' => $attributes['site_layout_id'] ?? null,
             ]);
 
             return $postCategory->refresh();

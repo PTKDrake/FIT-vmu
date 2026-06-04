@@ -1,6 +1,7 @@
 import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
+import type { CmsLayoutOption } from "@/components/cms/types";
 import { Button } from "@/components/ui/button";
 import {
   Description,
@@ -43,6 +44,7 @@ export interface CategoryFormValues {
   description: string;
   parent_id: number | null;
   sort_order: number;
+  site_layout_id: number | null;
 }
 
 interface CategoryFormDialogProps {
@@ -55,6 +57,8 @@ interface CategoryFormDialogProps {
     parentId: number | null;
     value: string;
   }>;
+  layoutOptions: CmsLayoutOption[];
+  defaultCategoryLayoutId: number | null;
 }
 
 export function CategoryFormDialog({
@@ -63,6 +67,8 @@ export function CategoryFormDialog({
   mode,
   onOpenChange,
   parentOptions,
+  layoutOptions,
+  defaultCategoryLayoutId,
 }: CategoryFormDialogProps) {
   const form = useForm<CategoryFormValues>({
     description: initialValues.description,
@@ -71,6 +77,7 @@ export function CategoryFormDialog({
     parent_id: initialValues.parent_id,
     slug: initialValues.slug,
     sort_order: initialValues.sort_order,
+    site_layout_id: initialValues.site_layout_id ?? null,
   });
 
   function submit(event: FormEvent<HTMLFormElement>): void {
@@ -244,6 +251,46 @@ export function CategoryFormDialog({
                   <SwitchLabel>Kích hoạt danh mục</SwitchLabel>
                 </Switch>
               </div>
+
+              <Select
+                aria-label="Bố cục danh mục"
+                onChange={(key) =>
+                  form.setData(
+                    "site_layout_id",
+                    key ? Number(key) : null,
+                  )
+                }
+                value={
+                  form.data.site_layout_id != null
+                    ? String(form.data.site_layout_id)
+                    : ""
+                }
+              >
+                <Label>Bố cục danh mục</Label>
+                <SelectTrigger />
+                <SelectContent>
+                  <SelectItem id="" textValue="Dùng layout mặc định">
+                    <SelectLabel>Dùng layout mặc định</SelectLabel>
+                  </SelectItem>
+                  {layoutOptions.map((layout) => (
+                    <SelectItem
+                      key={layout.id}
+                      id={String(layout.id)}
+                      textValue={layout.name}
+                    >
+                      <SelectLabel>
+                        {layout.name}
+                        {layout.id === defaultCategoryLayoutId
+                          ? " (mặc định)"
+                          : ""}
+                      </SelectLabel>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+                {form.errors.site_layout_id ? (
+                  <FieldError>{form.errors.site_layout_id}</FieldError>
+                ) : null}
+              </Select>
 
               <div data-slot="control" className="space-y-3">
                 <div className="space-y-1">

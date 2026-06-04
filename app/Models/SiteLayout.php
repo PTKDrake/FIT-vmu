@@ -22,12 +22,6 @@ class SiteLayout extends Model
         'footer_data',
         'left_data',
         'right_data',
-        'status',
-    ];
-
-    /** @var array<string, mixed> */
-    protected $attributes = [
-        'status' => 'draft',
     ];
 
     /** @return HasMany<Page, $this> */

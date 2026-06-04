@@ -79,7 +79,7 @@ class BuildPublicPagePropsAction
 
     private function resolveSiteLayout(Page $page): ?SiteLayout
     {
-        if ($page->siteLayout instanceof SiteLayout && $page->siteLayout->status === 'published') {
+        if ($page->siteLayout instanceof SiteLayout) {
             return $page->siteLayout;
         }
 
@@ -91,7 +91,6 @@ class BuildPublicPagePropsAction
 
         $default = SiteLayout::query()
             ->where('id', $defaultId)
-            ->where('status', 'published')
             ->first();
 
         return $default;

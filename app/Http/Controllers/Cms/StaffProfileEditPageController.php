@@ -36,7 +36,9 @@ final class StaffProfileEditPageController extends Controller
             'profile' => [
                 'id' => $staffProfile->id,
                 'userId' => $staffProfile->user_id,
+                'academicTitle' => $staffProfile->academic_title,
                 'fullName' => $staffProfile->full_name,
+                'displayName' => $staffProfile->displayName(),
                 'slug' => $staffProfile->slug,
                 'email' => $staffProfile->email,
                 'phone' => $staffProfile->phone,

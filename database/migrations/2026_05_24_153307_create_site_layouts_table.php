@@ -16,11 +16,7 @@ return new class extends Migration
             $table->longText('footer_data')->nullable();
             $table->longText('left_data')->nullable();
             $table->longText('right_data')->nullable();
-            $table->string('status')->default('draft')->index();
-            $table->boolean('is_default')->default(false)->index();
             $table->timestamps();
-
-            $table->index(['status', 'is_default']);
         });
     }
 

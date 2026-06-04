@@ -328,6 +328,14 @@ export interface VmuFitPageBuilderComponents {
     departmentId: string;
     className?: string;
   };
+  StaffProfileCard: PuckSurfaceStyleProps & {
+    title?: string;
+    staffId?: string;
+    fallbackRole?: string;
+    showEmail?: boolean;
+    showPosition?: boolean;
+    className?: string;
+  };
   UnitList: PuckSurfaceStyleProps & {
     title: string;
     limit: number;

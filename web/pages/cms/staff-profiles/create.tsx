@@ -19,6 +19,7 @@ export default function CmsStaffProfileCreatePage({
 }: CmsStaffProfileFormPageProps) {
   const { data, setData, post, processing, errors, isDirty } = useForm({
     user_id: 0,
+    academic_title: "",
     full_name: "",
     slug: "",
     email: "",

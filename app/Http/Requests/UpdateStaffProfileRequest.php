@@ -28,6 +28,7 @@ class UpdateStaffProfileRequest extends FormRequest
         $staffProfileId = $staffProfile instanceof StaffProfile ? $staffProfile->getKey() : null;
 
         return [
+            'academic_title' => ['nullable', 'string', 'max:50'],
             'full_name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',

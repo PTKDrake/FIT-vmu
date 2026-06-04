@@ -19,6 +19,10 @@ return new class extends Migration
                 ->nullOnDelete();
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->foreignId('site_layout_id')
+                ->nullable()
+                ->constrained('site_layouts')
+                ->nullOnDelete();
             $table->timestamps();
 
             $table->index(['parent_id', 'sort_order']);

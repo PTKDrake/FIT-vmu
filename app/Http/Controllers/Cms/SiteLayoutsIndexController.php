@@ -38,7 +38,6 @@ final class SiteLayoutsIndexController extends Controller
      *     id: int,
      *     name: string,
      *     key: string,
-     *     status: string,
      *     pagesCount: int,
      *     updatedAt: string
      * }
@@ -49,7 +48,6 @@ final class SiteLayoutsIndexController extends Controller
             'id' => (int) $siteLayout->id,
             'name' => $siteLayout->name,
             'key' => $siteLayout->key,
-            'status' => $siteLayout->status,
             'pagesCount' => $siteLayout->pagesCount,
             'updatedAt' => $this->formatDateTime($siteLayout->updatedAt) ?? now()->toAtomString(),
         ];

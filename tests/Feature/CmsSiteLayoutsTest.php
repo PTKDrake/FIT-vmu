@@ -21,7 +21,7 @@ final class CmsSiteLayoutsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_cms_layouts_can_be_created_updated_defaulted_and_guarded_from_invalid_deletion(): void
+    public function test_cms_layouts_can_be_created_updated_and_guarded_from_invalid_deletion(): void
     {
         $this->seed(RoleAndPermissionSeeder::class);
 
@@ -47,7 +47,6 @@ final class CmsSiteLayoutsTest extends TestCase
             'footer_data' => null,
             'left_data' => null,
             'right_data' => null,
-            'status' => 'draft',
         ]);
 
         $storeResponse->assertSessionHasNoErrors();
@@ -60,27 +59,7 @@ final class CmsSiteLayoutsTest extends TestCase
 
         $storeResponse->assertRedirect(sprintf('/cms/layouts/%d/edit', $layoutId));
 
-        expect($layout->status)->toBe('draft')
-            ->and($layout->header_data)->toContain('AuthStatus');
-
-        $this->patch(sprintf('/cms/layouts/%d/default', $layoutId), ['type' => 'page'])
-            ->assertRedirect();
-
-        $layout->refresh();
-
-        expect($layout->status)->toBe('published')
-            ->and(SiteSetting::defaultPageLayoutId())->toBe($layoutId)
-            ->and(SiteSetting::defaultCategoryLayoutId())->toBeNull()
-            ->and(SiteSetting::defaultPostLayoutId())->toBeNull();
-
-        $this->patch(sprintf('/cms/layouts/%d/default', $layoutId), ['type' => 'category'])
-            ->assertRedirect();
-
-        expect(SiteSetting::defaultPageLayoutId())->toBe($layoutId)
-            ->and(SiteSetting::defaultCategoryLayoutId())->toBe($layoutId);
-
-        $this->patch(sprintf('/cms/layouts/%d/draft', $layoutId))
-            ->assertSessionHasErrors('layout');
+        expect($layout->header_data)->toContain('AuthStatus');
 
         $this->patch(sprintf('/cms/layouts/%d', $layoutId), [
             'name' => 'Layout public updated',
@@ -89,7 +68,6 @@ final class CmsSiteLayoutsTest extends TestCase
             'footer_data' => $slotJson,
             'left_data' => '',
             'right_data' => '',
-            'status' => 'published',
         ])->assertRedirect();
 
         $layout->refresh();
@@ -98,27 +76,48 @@ final class CmsSiteLayoutsTest extends TestCase
             ->and($layout->key)->toBe('layout-public-updated')
             ->and($layout->left_data)->toBeNull();
 
+        $this->post(sprintf('/cms/layouts/%d/clone', $layoutId))
+            ->assertRedirect('/cms/layouts');
+
+        $clone = SiteLayout::query()
+            ->where('key', 'layout-public-updated-ban-sao')
+            ->first();
+
+        expect($clone)->not->toBeNull();
+        expect($clone?->name)->toBe('Layout public updated (Bản sao)')
+            ->and($clone?->header_data)->toBe($layout->header_data)
+            ->and($clone?->footer_data)->toBe($layout->footer_data)
+            ->and($clone?->left_data)->toBe($layout->left_data)
+            ->and($clone?->right_data)->toBe($layout->right_data);
+
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_PAGE_LAYOUT, $layoutId);
+
         $this->delete(sprintf('/cms/layouts/%d', $layoutId))
-            ->assertSessionHasErrors('layout');
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('site_layouts', [
+            'id' => $layoutId,
+        ]);
+
+        expect(session('message'))->toBe('Không thể xóa layout đang được đặt làm mặc định.')
+            ->and(session('type'))->toBe('error');
     }
 
-    public function test_pages_can_select_a_site_layout_and_public_pages_use_published_layout_fallback(): void
+    public function test_pages_can_select_a_site_layout_and_public_pages_use_assigned_layout_or_default_fallback(): void
     {
         $this->seed(RoleAndPermissionSeeder::class);
 
         $editor = User::factory()->createOne();
         $editor->assignRole('editor');
 
-        $defaultLayout = SiteLayout::factory()->published()->createOne([
+        $defaultLayout = SiteLayout::factory()->createOne([
             'name' => 'Default shell',
             'key' => 'default-shell',
             'header_data' => '{"root":{"props":{}},"content":[{"type":"Heading","props":{"id":"default-heading","title":"Default header","subtitle":"","level":2,"alignment":"left"}}]}',
         ]);
         SiteSetting::set(SiteSetting::KEY_DEFAULT_PAGE_LAYOUT, $defaultLayout->getKey());
 
-        $draftLayout = SiteLayout::factory()->createOne([
-            'status' => 'draft',
-        ]);
+        $assignedLayout = SiteLayout::factory()->createOne();
 
         $this->actingAs($editor);
 
@@ -131,13 +130,13 @@ final class CmsSiteLayoutsTest extends TestCase
             'content' => '{"root":{"props":{"title":"Trang public"}},"content":[]}',
             'content_format' => 'puck_json',
             'visibility' => 'public',
-            'site_layout_id' => $draftLayout->getKey(),
+            'site_layout_id' => $assignedLayout->getKey(),
             'status' => 'draft',
         ])->assertRedirect();
 
         $page = Page::query()->where('slug', 'trang-public')->firstOrFail();
 
-        expect($page->site_layout_id)->toBe($draftLayout->getKey());
+        expect($page->site_layout_id)->toBe($assignedLayout->getKey());
 
         $page->update(['status' => 'published']);
 
@@ -146,21 +145,16 @@ final class CmsSiteLayoutsTest extends TestCase
             ->assertInertia(fn (Assert $inertia) => $inertia
                 ->component('public/page')
                 ->where('page.slug', 'trang-public')
-                ->where('layout.id', $defaultLayout->getKey())
+                ->where('layout.id', $assignedLayout->getKey())
             );
 
-        $publishedExplicitLayout = SiteLayout::factory()->published()->createOne([
-            'name' => 'Explicit shell',
-            'key' => 'explicit-shell',
-        ]);
-
-        $page->update(['site_layout_id' => $publishedExplicitLayout->getKey()]);
+        $page->update(['site_layout_id' => null]);
 
         $this->get('/trang-public')
             ->assertOk()
             ->assertInertia(fn (Assert $inertia) => $inertia
                 ->component('public/page')
-                ->where('layout.id', $publishedExplicitLayout->getKey())
+                ->where('layout.id', $defaultLayout->getKey())
             );
     }
 
@@ -219,7 +213,7 @@ final class CmsSiteLayoutsTest extends TestCase
             'is_active' => true,
         ]);
 
-        $layout = SiteLayout::factory()->published()->createOne();
+        $layout = SiteLayout::factory()->createOne();
 
         $this->actingAs($editor)
             ->get('/cms/layouts/create')

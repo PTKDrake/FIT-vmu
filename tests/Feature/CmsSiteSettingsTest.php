@@ -40,13 +40,13 @@ test('cms settings page persists page and layout relations', function () {
         'status' => 'published',
         'visibility' => 'public',
     ]);
-    $pageLayout = SiteLayout::factory()->published()->createOne([
+    $pageLayout = SiteLayout::factory()->createOne([
         'key' => 'page-default',
     ]);
-    $categoryLayout = SiteLayout::factory()->published()->createOne([
+    $categoryLayout = SiteLayout::factory()->createOne([
         'key' => 'category-default',
     ]);
-    $postLayout = SiteLayout::factory()->published()->createOne([
+    $postLayout = SiteLayout::factory()->createOne([
         'key' => 'post-default',
     ]);
 

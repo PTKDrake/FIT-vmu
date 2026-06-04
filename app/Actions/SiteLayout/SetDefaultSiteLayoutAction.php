@@ -17,10 +17,6 @@ class SetDefaultSiteLayoutAction
             throw new \DomainException("Loại layout '{$type}' không hợp lệ.");
         }
 
-        if ($siteLayout->status !== 'published') {
-            $siteLayout->update(['status' => 'published']);
-        }
-
         SiteSetting::set($key, $siteLayout->getKey());
     }
 }

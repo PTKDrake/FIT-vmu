@@ -332,26 +332,26 @@ updateForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout:
 update.form = updateForm
 
 /**
-* @see \App\Http\Controllers\Cms\PublishSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/PublishSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/publish'
+* @see \App\Http\Controllers\Cms\CloneSiteLayoutController::__invoke
+* @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
+* @route '/cms/layouts/{siteLayout}/clone'
 */
-export const publish = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: publish.url(args, options),
-    method: 'patch',
+export const clone = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: clone.url(args, options),
+    method: 'post',
 })
 
-publish.definition = {
-    methods: ["patch"],
-    url: '/cms/layouts/{siteLayout}/publish',
-} satisfies RouteDefinition<["patch"]>
+clone.definition = {
+    methods: ["post"],
+    url: '/cms/layouts/{siteLayout}/clone',
+} satisfies RouteDefinition<["post"]>
 
 /**
-* @see \App\Http\Controllers\Cms\PublishSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/PublishSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/publish'
+* @see \App\Http\Controllers\Cms\CloneSiteLayoutController::__invoke
+* @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
+* @route '/cms/layouts/{siteLayout}/clone'
 */
-publish.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+clone.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -374,142 +374,42 @@ publish.url = (args: { siteLayout: number | { id: number } } | [siteLayout: numb
         : args.siteLayout,
     }
 
-    return publish.definition.url
+    return clone.definition.url
             .replace('{siteLayout}', parsedArgs.siteLayout.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\Cms\PublishSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/PublishSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/publish'
+* @see \App\Http\Controllers\Cms\CloneSiteLayoutController::__invoke
+* @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
+* @route '/cms/layouts/{siteLayout}/clone'
 */
-publish.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: publish.url(args, options),
-    method: 'patch',
-})
-
-/**
-* @see \App\Http\Controllers\Cms\PublishSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/PublishSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/publish'
-*/
-const publishForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: publish.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
+clone.post = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: clone.url(args, options),
     method: 'post',
 })
 
 /**
-* @see \App\Http\Controllers\Cms\PublishSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/PublishSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/publish'
+* @see \App\Http\Controllers\Cms\CloneSiteLayoutController::__invoke
+* @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
+* @route '/cms/layouts/{siteLayout}/clone'
 */
-publishForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: publish.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-publish.form = publishForm
-
-/**
-* @see \App\Http\Controllers\Cms\DraftSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/DraftSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/draft'
-*/
-export const draft = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: draft.url(args, options),
-    method: 'patch',
-})
-
-draft.definition = {
-    methods: ["patch"],
-    url: '/cms/layouts/{siteLayout}/draft',
-} satisfies RouteDefinition<["patch"]>
-
-/**
-* @see \App\Http\Controllers\Cms\DraftSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/DraftSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/draft'
-*/
-draft.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { siteLayout: args }
-    }
-
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteLayout: args.id }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            siteLayout: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        siteLayout: typeof args.siteLayout === 'object'
-        ? args.siteLayout.id
-        : args.siteLayout,
-    }
-
-    return draft.definition.url
-            .replace('{siteLayout}', parsedArgs.siteLayout.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Cms\DraftSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/DraftSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/draft'
-*/
-draft.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: draft.url(args, options),
-    method: 'patch',
-})
-
-/**
-* @see \App\Http\Controllers\Cms\DraftSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/DraftSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/draft'
-*/
-const draftForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: draft.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
+const cloneForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clone.url(args, options),
     method: 'post',
 })
 
 /**
-* @see \App\Http\Controllers\Cms\DraftSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/DraftSiteLayoutController.php:14
-* @route '/cms/layouts/{siteLayout}/draft'
+* @see \App\Http\Controllers\Cms\CloneSiteLayoutController::__invoke
+* @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
+* @route '/cms/layouts/{siteLayout}/clone'
 */
-draftForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: draft.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
+cloneForm.post = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clone.url(args, options),
     method: 'post',
 })
 
-draft.form = draftForm
+clone.form = cloneForm
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
@@ -696,8 +596,7 @@ const layouts = {
     store: Object.assign(store, store),
     edit: Object.assign(edit, edit),
     update: Object.assign(update, update),
-    publish: Object.assign(publish, publish),
-    draft: Object.assign(draft, draft),
+    clone: Object.assign(clone, clone),
     default: Object.assign(defaultMethod, defaultMethod),
     destroy: Object.assign(destroy, destroy),
 }

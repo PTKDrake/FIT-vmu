@@ -21,6 +21,7 @@ final class StoreStaffProfileController extends Controller
     ): RedirectResponse {
         /** @var array{
          *     user_id: int,
+         *     academic_title?: string|null,
          *     full_name: string,
          *     slug: string,
          *     avatar_id?: int|null,
@@ -52,6 +53,7 @@ final class StoreStaffProfileController extends Controller
 
         /** @var array{
          *     user_id: int,
+         *     academic_title?: string|null,
          *     full_name: string,
          *     slug: string,
          *     avatar_id?: int|null,
@@ -72,6 +74,7 @@ final class StoreStaffProfileController extends Controller
          */
         $payload = [
             'user_id' => $validated['user_id'],
+            'academic_title' => $validated['academic_title'] ?? null,
             'full_name' => $validated['full_name'],
             'slug' => $validated['slug'],
             'avatar_id' => $validated['avatar_id'] ?? null,
