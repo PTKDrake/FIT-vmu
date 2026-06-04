@@ -19,13 +19,12 @@ test('public homepage is seeded through site layout and page data', function () 
         ->where('slug', 'trang-chu-vmu')
         ->firstOrFail();
 
-    $settings = SiteSetting::current()->loadMissing('homepagePage.siteLayout');
+    $homepagePageId = SiteSetting::homepagePageId();
 
     expect($layout->status)->toBe('published')
-        ->and($layout->is_default)->toBeTrue()
+        ->and(SiteSetting::defaultPageLayoutId())->toBe($layout->getKey())
         ->and($homepage->site_layout_id)->toBe($layout->getKey())
-        ->and($settings->homepagePage?->slug)->toBe('trang-chu-vmu')
-        ->and($settings->homepagePage?->site_layout_id)->toBe($layout->getKey());
+        ->and($homepagePageId)->toBe($homepage->getKey());
 
     /** @var array{
      *     root: array{props: array{title: string}},

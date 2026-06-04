@@ -28,6 +28,7 @@ class PostCategory extends Model
         'parent_id',
         'sort_order',
         'is_active',
+        'site_layout_id',
     ];
 
     /**
@@ -58,6 +59,12 @@ class PostCategory extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /** @return BelongsTo<SiteLayout, $this> */
+    public function siteLayout(): BelongsTo
+    {
+        return $this->belongsTo(SiteLayout::class);
     }
 
     /** @return HasMany<self, $this> */

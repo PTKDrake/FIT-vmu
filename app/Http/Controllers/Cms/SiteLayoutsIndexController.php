@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Cms;
 use App\Data\SiteLayoutData;
 use App\Http\Controllers\Controller;
 use App\Models\SiteLayout;
+use App\Models\SiteSetting;
 use Carbon\CarbonInterface;
 use Inertia\Response;
 
@@ -24,6 +25,11 @@ final class SiteLayoutsIndexController extends Controller
 
         return inertia('cms/layouts/index', [
             'layouts' => $layouts,
+            'defaultLayoutIds' => [
+                'page' => SiteSetting::defaultPageLayoutId(),
+                'category' => SiteSetting::defaultCategoryLayoutId(),
+                'post' => SiteSetting::defaultPostLayoutId(),
+            ],
         ]);
     }
 
@@ -33,7 +39,6 @@ final class SiteLayoutsIndexController extends Controller
      *     name: string,
      *     key: string,
      *     status: string,
-     *     isDefault: bool,
      *     pagesCount: int,
      *     updatedAt: string
      * }
@@ -45,7 +50,6 @@ final class SiteLayoutsIndexController extends Controller
             'name' => $siteLayout->name,
             'key' => $siteLayout->key,
             'status' => $siteLayout->status,
-            'isDefault' => $siteLayout->isDefault,
             'pagesCount' => $siteLayout->pagesCount,
             'updatedAt' => $this->formatDateTime($siteLayout->updatedAt) ?? now()->toAtomString(),
         ];

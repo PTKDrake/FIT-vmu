@@ -56,7 +56,7 @@
         "vite-plugin-run": "^0.6.1"
     },
     "dependencies": {
-        "@ai-sdk/react": "^3.0.196",
+        "@ai-sdk/react": "^3.0.197",
         "@blocknote/core": "^0.51.4",
         "@blocknote/react": "^0.51.4",
         "@blocknote/shadcn": "^0.51.4",
@@ -82,7 +82,7 @@
         "@tanstack/react-table": "^8.21.3",
         "@types/node": "^22.19.19",
         "@vitejs/plugin-react": "^6.0.2",
-        "ai": "^6.0.194",
+        "ai": "^6.0.195",
         "class-variance-authority": "^0.7.1",
         "concurrently": "^9.2.1",
         "date-fns": "^4.4.0",

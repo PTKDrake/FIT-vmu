@@ -24,7 +24,6 @@ import type { SharedData } from "@/types/shared";
 
 interface CmsLayoutRow {
   id: number;
-  isDefault: boolean;
   key: string;
   name: string;
   pagesCount: number;
@@ -32,11 +31,41 @@ interface CmsLayoutRow {
   updatedAt: string;
 }
 
+interface DefaultLayoutIds {
+  category: number | null;
+  page: number | null;
+  post: number | null;
+}
+
 interface CmsLayoutsPageProps extends SharedData {
+  defaultLayoutIds: DefaultLayoutIds;
   layouts: CmsLayoutRow[];
 }
 
-export default function CmsLayoutsPage({ layouts }: CmsLayoutsPageProps) {
+const defaultTypeLabels: Record<keyof DefaultLayoutIds, string> = {
+  page: "Mặc định trang",
+  category: "Mặc định danh mục",
+  post: "Mặc định bài viết",
+};
+
+const defaultTypeMenuLabels: Record<keyof DefaultLayoutIds, string> = {
+  page: "Đặt mặc định cho Trang",
+  category: "Đặt mặc định cho Danh mục",
+  post: "Đặt mặc định cho Bài viết",
+};
+
+export default function CmsLayoutsPage({
+  defaultLayoutIds,
+  layouts,
+}: CmsLayoutsPageProps) {
+  function handleSetDefault(layoutId: number, type: keyof DefaultLayoutIds): void {
+    router.patch(
+      defaultMethod.url({ siteLayout: layoutId }),
+      { type },
+      { preserveScroll: true },
+    );
+  }
+
   return (
     <>
       <Head title="Bố cục" />
@@ -83,7 +112,7 @@ export default function CmsLayoutsPage({ layouts }: CmsLayoutsPageProps) {
                     key={layout.id}
                   >
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <div>
                           <div className="font-semibold text-fg">
                             {layout.name}
@@ -92,8 +121,20 @@ export default function CmsLayoutsPage({ layouts }: CmsLayoutsPageProps) {
                             {layout.key}
                           </div>
                         </div>
-                        {layout.isDefault ? (
-                          <Badge intent="success">Mặc định</Badge>
+                        {defaultLayoutIds.page === layout.id ? (
+                          <Badge intent="success">
+                            {defaultTypeLabels.page}
+                          </Badge>
+                        ) : null}
+                        {defaultLayoutIds.category === layout.id ? (
+                          <Badge intent="success">
+                            {defaultTypeLabels.category}
+                          </Badge>
+                        ) : null}
+                        {defaultLayoutIds.post === layout.id ? (
+                          <Badge intent="success">
+                            {defaultTypeLabels.post}
+                          </Badge>
                         ) : null}
                       </div>
                     </td>
@@ -126,20 +167,30 @@ export default function CmsLayoutsPage({ layouts }: CmsLayoutsPageProps) {
                             <PencilSquareIcon />
                             Chỉnh sửa
                           </MenuItem>
-                          {!layout.isDefault ? (
-                            <MenuItem
-                              onAction={() =>
-                                router.patch(
-                                  defaultMethod.url({ siteLayout: layout.id }),
-                                  {},
-                                  { preserveScroll: true },
-                                )
-                              }
-                            >
-                              <StarIcon />
-                              Đặt mặc định
-                            </MenuItem>
-                          ) : null}
+                          <MenuItem
+                            onAction={() =>
+                              handleSetDefault(layout.id, "page")
+                            }
+                          >
+                            <StarIcon />
+                            {defaultTypeMenuLabels.page}
+                          </MenuItem>
+                          <MenuItem
+                            onAction={() =>
+                              handleSetDefault(layout.id, "category")
+                            }
+                          >
+                            <StarIcon />
+                            {defaultTypeMenuLabels.category}
+                          </MenuItem>
+                          <MenuItem
+                            onAction={() =>
+                              handleSetDefault(layout.id, "post")
+                            }
+                          >
+                            <StarIcon />
+                            {defaultTypeMenuLabels.post}
+                          </MenuItem>
                           <MenuItem
                             onAction={() =>
                               router.patch(

@@ -3,9 +3,13 @@ import {
   ArrowUturnRightIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
+import { usePage } from "@inertiajs/react";
+import type { Permissions } from "@puckeditor/core";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/ui/button";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
 import {
   clonePuckPageData,
@@ -17,6 +21,7 @@ import type {
   VmuFitPageBuilderData,
   VmuFitPageBuilderValue,
 } from "@/lib/puck/page-builder-data";
+import { PuckSelectField } from "./puck-select-field";
 
 const useLayoutBuilderPuck = createUsePuck<PageBuilderConfig>();
 
@@ -33,8 +38,10 @@ interface PuckLayoutBuilderProps {
   editorKey: string;
   headerTitle: string;
   isSaving?: boolean;
+  normalizeData?: (value: VmuFitPageBuilderData) => VmuFitPageBuilderData;
   onChange?: (value: PuckLayoutBuilderChange) => void;
   onSave?: (value: PuckLayoutBuilderChange) => void;
+  permissions?: Permissions;
 }
 
 export function PuckLayoutBuilder({
@@ -44,10 +51,44 @@ export function PuckLayoutBuilder({
   editorKey,
   headerTitle,
   isSaving = false,
+  normalizeData,
   onChange,
   onSave,
+  permissions = {
+    drag: true,
+    duplicate: true,
+    delete: true,
+    edit: true,
+    insert: true,
+  },
 }: PuckLayoutBuilderProps) {
+  const [editorRevision, setEditorRevision] = useState(0);
+  const dynamicData = usePage<{ dynamicData?: Record<string, unknown> }>().props
+    .dynamicData;
   const initialData = parsePuckLayoutData(content);
+
+  useMountEffect(() => {
+    if (typeof window === "undefined" || !dynamicData) {
+      return;
+    }
+
+    const currentWindow = window as Window & {
+      __VMU_PUCK_DYNAMIC_DATA__?: Record<string, unknown>;
+    };
+    currentWindow.__VMU_PUCK_DYNAMIC_DATA__ = dynamicData;
+
+    try {
+      const topWindow = window.top as Window & {
+        __VMU_PUCK_DYNAMIC_DATA__?: Record<string, unknown>;
+      } | null;
+
+      if (topWindow) {
+        topWindow.__VMU_PUCK_DYNAMIC_DATA__ = dynamicData;
+      }
+    } catch {
+      // Ignore cross-window access failures. The current window fallback is enough.
+    }
+  });
 
   function toChange(nextData: VmuFitPageBuilderData): PuckLayoutBuilderChange {
     return {
@@ -64,29 +105,53 @@ export function PuckLayoutBuilder({
     callback?.(toChange(nextData));
   }
 
+  function normalize(nextData: VmuFitPageBuilderData): VmuFitPageBuilderData {
+    return normalizeData ? normalizeData(nextData) : nextData;
+  }
+
+  function handleDataChange(
+    callback: ((value: PuckLayoutBuilderChange) => void) | undefined,
+    nextData: VmuFitPageBuilderData,
+  ): void {
+    const normalizedData = normalize(nextData);
+    const rawJson = serializePuckPageData(nextData);
+    const normalizedJson = serializePuckPageData(normalizedData);
+
+    if (rawJson !== normalizedJson) {
+      setEditorRevision((currentRevision) => currentRevision + 1);
+    }
+
+    emit(callback, normalizedData);
+  }
+
   return (
     <div
       className={twMerge(
-        "vmu-puck-page-builder overflow-hidden rounded-2xl border border-border shadow-xs",
+        "vmu-puck-page-builder flex min-h-0 flex-1 flex-col overflow-hidden",
         className,
       )}
     >
       <style>{layoutBuilderStyles}</style>
       <Puck
-        key={editorKey}
+        key={`${editorKey}:${editorRevision}`}
         config={config}
         data={initialData}
         headerTitle={headerTitle}
-        onChange={(nextData) => emit(onChange, nextData)}
-        onPublish={(nextData) => emit(onSave, nextData)}
+        onChange={(nextData) => handleDataChange(onChange, nextData)}
+        onPublish={(nextData) => handleDataChange(onSave, nextData)}
         overrides={{
+          fieldTypes: {
+            select: PuckSelectField,
+          },
           headerActions: () => (
             <PuckLayoutBuilderHeaderActions
               isSaving={isSaving}
-              onSave={(nextData) => emit(onSave, nextData)}
+              normalizeData={normalize}
+              onSave={(nextData) => handleDataChange(onSave, nextData)}
             />
           ),
         }}
+        permissions={permissions}
       />
     </div>
   );
@@ -94,9 +159,11 @@ export function PuckLayoutBuilder({
 
 function PuckLayoutBuilderHeaderActions({
   isSaving,
+  normalizeData,
   onSave,
 }: {
   isSaving: boolean;
+  normalizeData: (value: VmuFitPageBuilderData) => VmuFitPageBuilderData;
   onSave: (value: VmuFitPageBuilderData) => void;
 }) {
   const getPuck = useGetPuck();
@@ -130,7 +197,9 @@ function PuckLayoutBuilderHeaderActions({
       <Button
         isDisabled={isSaving}
         onPress={() => {
-          const nextData = getPuck().appState.data as VmuFitPageBuilderData;
+          const nextData = normalizeData(
+            getPuck().appState.data as VmuFitPageBuilderData,
+          );
 
           onSave(nextData);
         }}
@@ -167,18 +236,23 @@ const layoutBuilderStyles = `
   --puck-color-brand-hover: var(--primary, oklch(0.685 0.169 237.323));
 }
 
+
 .vmu-puck-page-builder [class*="_PuckHeader_"],
 .vmu-puck-page-builder [class*="_PuckFields_"] {
   background: var(--color-overlay, #fff);
 }
 
 .vmu-puck-page-builder [class*="_PuckLayout-inner_"] {
-  min-height: 42rem;
   background:
     linear-gradient(180deg, color-mix(in oklch, var(--color-muted) 55%, var(--color-bg)) 0%, var(--color-bg) 18rem);
 }
 
 .vmu-puck-page-builder [class*="_MenuBar-history_"] {
   display: none;
+}
+
+.vmu-puck-page-builder [class*="_SidebarSection-breadcrumbs_"] {
+  display: flex;
+  flex-wrap: wrap;
 }
 `;

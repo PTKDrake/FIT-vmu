@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cms;
 
+use App\Actions\Puck\BuildPuckDynamicDataAction;
 use App\Http\Controllers\Controller;
 use App\Models\SiteLayout;
 use Carbon\CarbonInterface;
+use Illuminate\Http\Request;
 use Inertia\Response;
 
 final class SiteLayoutEditController extends Controller
 {
-    public function __invoke(SiteLayout $siteLayout): Response
-    {
+    public function __invoke(
+        Request $request,
+        SiteLayout $siteLayout,
+        BuildPuckDynamicDataAction $buildPuckDynamicData,
+    ): Response {
         return inertia('cms/layouts/edit', [
+            'dynamicData' => $buildPuckDynamicData($request->user()),
             'layout' => [
                 'id' => $siteLayout->getKey(),
                 'name' => $siteLayout->name,
                 'key' => $siteLayout->key,
                 'status' => $siteLayout->status,
-                'isDefault' => $siteLayout->is_default,
                 'headerData' => $siteLayout->header_data,
                 'footerData' => $siteLayout->footer_data,
                 'leftData' => $siteLayout->left_data,

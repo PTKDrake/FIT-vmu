@@ -12,18 +12,8 @@ return new class extends Migration
     {
         Schema::create('site_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('homepage_page_id')
-                ->nullable()
-                ->constrained('pages')
-                ->nullOnDelete();
-            $table->foreignId('not_found_page_id')
-                ->nullable()
-                ->constrained('pages')
-                ->nullOnDelete();
-            $table->foreignId('student_home_page_id')
-                ->nullable()
-                ->constrained('pages')
-                ->nullOnDelete();
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
             $table->timestamps();
         });
     }

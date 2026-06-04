@@ -1,5 +1,5 @@
-import { twMerge } from "tailwind-merge";
 import * as LucideIcons from "lucide-react";
+import type { ComponentType } from "react";
 import {
   FaFacebook,
   FaGithub,
@@ -10,7 +10,7 @@ import {
   FaYoutube,
 } from "react-icons/fa6";
 import { SiZalo } from "react-icons/si";
-import type { ComponentType } from "react";
+import { twMerge } from "tailwind-merge";
 import { Link } from "@/components/ui/link";
 import { getPuckBlockDomId } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";

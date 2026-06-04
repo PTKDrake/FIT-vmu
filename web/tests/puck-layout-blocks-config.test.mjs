@@ -30,6 +30,10 @@ const siteLayoutBuilderDataSource = readFileSync(
     new URL("../lib/puck/site-layout-builder-data.ts", import.meta.url),
     "utf8",
 );
+const layoutBuilderSource = readFileSync(
+    new URL("../components/layout-builder/puck-layout-builder.tsx", import.meta.url),
+    "utf8",
+);
 
 test("layout blocks expose clearer Vietnamese labels for editor fields", () => {
     assert.match(layoutsSource, /label: "Giới hạn chiều rộng \(Container\)"/);
@@ -71,19 +75,33 @@ test("page builder data types stay aligned with the new layout fields", () => {
 
 test("site layout builder uses one frame with four puck slots", () => {
     assert.match(dataSource, /SiteLayoutFrame: PuckSurfaceStyleProps & \{/);
+    assert.match(layoutConfigsSource, /permissions:\s*\{\s*insert:\s*false,\s*\}/);
     assert.match(siteLayoutFrameSource, /defaultProps: \{/);
+    assert.match(siteLayoutFrameSource, /permissions: \{/);
+    assert.match(siteLayoutFrameSource, /delete: false/);
+    assert.match(siteLayoutFrameSource, /drag: false/);
+    assert.match(siteLayoutFrameSource, /duplicate: false/);
+    assert.match(siteLayoutFrameSource, /insert: false/);
     assert.match(siteLayoutFrameSource, /surfacePadding: "md"/);
     assert.match(siteLayoutFrameSource, /header: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /left: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /right: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /footer: \{\s+type: "slot"/);
-    assert.match(siteLayoutFrameSource, /rounded-\[inherit\]/);
+    assert.match(siteLayoutFrameSource, /siteLayoutSlotClassName =/);
+    assert.match(siteLayoutFrameSource, /<Header className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
+    assert.match(siteLayoutFrameSource, /<Left className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
+    assert.match(siteLayoutFrameSource, /<Right className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
+    assert.match(siteLayoutFrameSource, /<Footer className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
+    assert.match(siteLayoutFrameSource, /"SocialLinks"/);
+    assert.match(siteLayoutFrameSource, /"NewsletterForm"/);
+    assert.match(siteLayoutFrameSource, /"CopyrightBar"/);
     assert.match(
         siteLayoutFrameSource,
-        /rounded-none border-border\/70 bg-overlay\/80 shadow-none/,
+        /mx-auto flex w-full flex-col lg:flex-row lg:items-start/,
     );
     assert.match(layoutConfigsSource, /export const layoutBuilderConfig/);
-    assert.match(layoutConfigsSource, /components: \["SiteLayoutFrame"\]/);
+    assert.match(layoutConfigsSource, /const layoutBuilderComponentNames = \[/);
+    assert.match(layoutConfigsSource, /"SiteLayoutFrame"/);
 });
 
 test("site layout builder data helpers compose and split slot payloads", () => {
@@ -95,6 +113,17 @@ test("site layout builder data helpers compose and split slot payloads", () => {
         siteLayoutBuilderDataSource,
         /export function splitCombinedSiteLayoutData/,
     );
+    assert.match(
+        siteLayoutBuilderDataSource,
+        /export function sanitizeCombinedSiteLayoutData/,
+    );
+    assert.match(
+        siteLayoutBuilderDataSource,
+        /item\.type === "SiteLayoutFrame"/,
+    );
     assert.match(siteLayoutBuilderDataSource, /header_data: serializeSlotData/);
     assert.match(siteLayoutBuilderDataSource, /footer_data: serializeSlotData/);
+    assert.match(layoutBuilderSource, /normalizeData\?:/);
+    assert.match(layoutBuilderSource, /key=\{`\$\{editorKey\}:\$\{editorRevision\}`\}/);
+    assert.match(layoutBuilderSource, /setEditorRevision/);
 });

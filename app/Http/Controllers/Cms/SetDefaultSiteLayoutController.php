@@ -8,12 +8,19 @@ use App\Actions\SiteLayout\SetDefaultSiteLayoutAction;
 use App\Http\Controllers\Controller;
 use App\Models\SiteLayout;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 final class SetDefaultSiteLayoutController extends Controller
 {
-    public function __invoke(SiteLayout $siteLayout, SetDefaultSiteLayoutAction $setDefaultSiteLayout): RedirectResponse
+    public function __invoke(Request $request, SiteLayout $siteLayout, SetDefaultSiteLayoutAction $setDefaultSiteLayout): RedirectResponse
     {
-        $setDefaultSiteLayout($siteLayout);
+        $validated = $request->validate([
+            'type' => ['required', 'string', Rule::in(['page', 'category', 'post'])],
+        ]);
+
+        /** @var array{type: string} $validated */
+        $setDefaultSiteLayout($siteLayout, $validated['type']);
 
         return back();
     }

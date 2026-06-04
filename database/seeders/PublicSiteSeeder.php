@@ -23,8 +23,6 @@ class PublicSiteSeeder extends Seeder
 
     private function seedDefaultSiteLayout(): SiteLayout
     {
-        SiteLayout::query()->update(['is_default' => false]);
-
         return SiteLayout::query()->updateOrCreate(
             ['key' => 'public-default-shell'],
             [
@@ -75,7 +73,10 @@ class PublicSiteSeeder extends Seeder
                                                                 'menuId' => '1',
                                                                 'orientation' => 'horizontal',
                                                                 'className' => 'flex-1 max-w-2xl',
+                                                                'surfaceTone' => 'transparent',
                                                                 'surfaceBorder' => 'none',
+                                                                'surfaceRadius' => 'none',
+                                                                'surfacePadding' => 'none',
                                                                 'surfaceShadow' => 'sm',
                                                             ],
                                                         ],
@@ -138,6 +139,11 @@ class PublicSiteSeeder extends Seeder
                                                                 'address' => "Phòng 301, Nhà A3\nSố 484 Lạch Tray, Kênh Dương, \nLê Chân, Hải Phòng",
                                                                 'phone' => '0225.3735138',
                                                                 'email' => 'fit@vimaru.edu.vn',
+                                                                'surfaceTone' => 'transparent',
+                                                                'surfaceBorder' => 'none',
+                                                                'surfaceRadius' => 'none',
+                                                                'surfacePadding' => 'none',
+                                                                'surfaceShadow' => 'none',
                                                                 'className' => 'max-w-sm',
                                                             ],
                                                         ],
@@ -147,6 +153,11 @@ class PublicSiteSeeder extends Seeder
                                                                 'title' => 'Điều hướng',
                                                                 'menuId' => '2',
                                                                 'orientation' => 'vertical',
+                                                                'surfaceTone' => 'transparent',
+                                                                'surfaceBorder' => 'none',
+                                                                'surfaceRadius' => 'none',
+                                                                'surfacePadding' => 'none',
+                                                                'surfaceShadow' => 'none',
                                                             ],
                                                         ],
                                                     ],
@@ -226,7 +237,6 @@ class PublicSiteSeeder extends Seeder
                 'left_data' => null,
                 'right_data' => null,
                 'status' => 'published',
-                'is_default' => true,
             ],
         );
     }

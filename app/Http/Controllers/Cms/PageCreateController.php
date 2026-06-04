@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Cms;
 use App\Actions\StudentGroup\BuildAccessibleStudentGroupOptionsAction;
 use App\Http\Controllers\Controller;
 use App\Models\SiteLayout;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Response;
 
@@ -16,18 +17,17 @@ final class PageCreateController extends Controller
     {
         return inertia('cms/pages/create', [
             'layoutOptions' => SiteLayout::query()
-                ->orderByDesc('is_default')
                 ->orderBy('name')
-                ->get(['id', 'name', 'key', 'status', 'is_default'])
+                ->get(['id', 'name', 'key', 'status'])
                 ->map(fn (SiteLayout $siteLayout): array => [
                     'id' => $siteLayout->id,
                     'name' => $siteLayout->name,
                     'key' => $siteLayout->key,
                     'status' => $siteLayout->status,
-                    'isDefault' => $siteLayout->is_default,
                 ])
                 ->values()
                 ->all(),
+            'defaultPageLayoutId' => SiteSetting::defaultPageLayoutId(),
             'studentGroupOptions' => $buildStudentGroupOptions($request->user()),
         ]);
     }

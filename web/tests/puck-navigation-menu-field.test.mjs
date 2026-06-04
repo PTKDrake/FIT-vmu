@@ -8,5 +8,7 @@ test("NavigationMenu Puck block uses external data source for menuId", async () 
   assert.match(source, /menuId:\s*\{\s*type:\s*"select"/s);
   assert.match(source, /layoutBuilderRoutes\.sources\.url\("navigation-menus"\)/);
   assert.match(source, /resolveFields:\s*async/);
-  assert.match(source, /Menu đầu tiên khả dụng/);
+  assert.match(source, /Chưa chọn menu điều hướng/);
+  assert.match(source, /isPuckEditorPreview\(\) \? previewMenu : null/);
+  assert.match(source, /if \(!menuId && !menu\) \{/);
 });

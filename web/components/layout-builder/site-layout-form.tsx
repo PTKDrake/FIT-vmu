@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
-  NativeSelect,
-  NativeSelectContent,
-} from "@/components/ui/native-select";
-import { Switch } from "@/components/ui/switch";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import {
@@ -23,6 +25,7 @@ import {
 import type { VmuFitPageBuilderData } from "@/lib/puck/page-builder-data";
 import {
   createCombinedSiteLayoutData,
+  sanitizeCombinedSiteLayoutData,
   splitCombinedSiteLayoutData,
 } from "@/lib/puck/site-layout-builder-data";
 import { layouts } from "@/routes/cms";
@@ -30,10 +33,9 @@ import layoutRoutes from "@/routes/cms/layouts";
 
 const emptySlotJson = serializePuckPageData(createEmptyPuckData());
 
-interface SiteLayoutFormValues extends Record<string, boolean | string> {
+interface SiteLayoutFormValues extends Record<string, string> {
   footer_data: string;
   header_data: string;
-  is_default: boolean;
   key: string;
   left_data: string;
   name: string;
@@ -46,7 +48,6 @@ interface SiteLayoutFormProps {
     footerData: string | null;
     headerData: string | null;
     id: number;
-    isDefault: boolean;
     key: string;
     leftData: string | null;
     name: string;
@@ -61,7 +62,6 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
     name: layout?.name ?? "",
     key: layout?.key ?? "",
     status: layout?.status ?? "draft",
-    is_default: layout?.isDefault ?? false,
     header_data: layout?.headerData ?? emptySlotJson,
     footer_data: layout?.footerData ?? emptySlotJson,
     left_data: layout?.leftData ?? emptySlotJson,
@@ -161,40 +161,27 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
                 <FieldError>{form.errors.key}</FieldError>
               ) : null}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="layout-status">Trạng thái</Label>
-              <NativeSelect>
-                <NativeSelectContent
-                  id="layout-status"
-                  value={form.data.status}
-                  onChange={(event) =>
-                    form.setData(
-                      "status",
-                      event.target.value as "draft" | "published",
-                    )
-                  }
-                >
-                  <option value="draft">Bản nháp</option>
-                  <option value="published">Đã xuất bản</option>
-                </NativeSelectContent>
-              </NativeSelect>
+            <Select
+              aria-label="Trạng thái"
+              onChange={(key) =>
+                form.setData("status", String(key) as "draft" | "published")
+              }
+              value={form.data.status}
+            >
+              <Label>Trạng thái</Label>
+              <SelectTrigger />
+              <SelectContent>
+                <SelectItem id="draft" textValue="Bản nháp">
+                  <SelectLabel>Bản nháp</SelectLabel>
+                </SelectItem>
+                <SelectItem id="published" textValue="Đã xuất bản">
+                  <SelectLabel>Đã xuất bản</SelectLabel>
+                </SelectItem>
+              </SelectContent>
               {form.errors.status ? (
                 <FieldError>{form.errors.status}</FieldError>
               ) : null}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="layout-default">Layout mặc định</Label>
-              <div className="flex min-h-10 items-center">
-                <Switch
-                  id="layout-default"
-                  isSelected={form.data.is_default}
-                  onChange={(value) => form.setData("is_default", value)}
-                />
-              </div>
-              {form.errors.is_default ? (
-                <FieldError>{form.errors.is_default}</FieldError>
-              ) : null}
-            </div>
+            </Select>
           </FieldGroup>
           <div className="flex items-center justify-end gap-3 border-t border-border pt-5">
             <Link
@@ -215,8 +202,10 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
         editorKey={`site-layout-${layout?.id ?? "new"}`}
         headerTitle="Site layout"
         isSaving={form.processing}
+        normalizeData={sanitizeCombinedSiteLayoutData}
         onChange={(value) => applySlotData(value.data)}
         onSave={(value) => saveCombinedLayout(value.data)}
+        className="min-h-0 flex-1"
       />
     </div>
   );

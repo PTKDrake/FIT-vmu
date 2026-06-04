@@ -1,15 +1,12 @@
-import { mergeProps } from "react-aria";
-import { useHover } from "react-aria/useHover";
 import {
   createContext,
-  useCallback,
   useContext,
-  useEffect,
   useRef,
   useState,
   type KeyboardEvent,
 } from "react";
 import { twMerge } from "tailwind-merge";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 import { Link, type LinkProps } from "@/components/ui/link";
 import { cx } from "@/lib/primitive";
 
@@ -45,20 +42,20 @@ const NavbarMenu = ({
   const [open, setOpen] = useState(defaultOpen);
   const closeTimerRef = useRef<number | null>(null);
 
-  const clearCloseTimer = useCallback(() => {
+  const clearCloseTimer = () => {
     if (closeTimerRef.current !== null) {
       window.clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
     }
-  }, []);
+  };
 
-  useEffect(() => {
+  useMountEffect(() => {
     return () => {
       clearCloseTimer();
     };
-  }, [clearCloseTimer]);
+  });
 
-  const scheduleClose = useCallback(() => {
+  const scheduleClose = () => {
     if (delayCloseMs <= 0) {
       setOpen(false);
       return;
@@ -68,48 +65,42 @@ const NavbarMenu = ({
       closeTimerRef.current = null;
       setOpen(false);
     }, delayCloseMs);
-  }, [delayCloseMs, clearCloseTimer]);
+  };
 
-  const handleOpenState = useCallback(
-    (nextOpen: boolean) => {
-      if (nextOpen) {
-        clearCloseTimer();
-        setOpen(true);
-      } else {
-        scheduleClose();
-      }
-    },
-    [clearCloseTimer, scheduleClose],
-  );
+  const handleOpenState = (nextOpen: boolean) => {
+    if (nextOpen) {
+      clearCloseTimer();
+      setOpen(true);
+    } else {
+      scheduleClose();
+    }
+  };
 
-  const { hoverProps } = useHover({
-    onHoverChange: handleOpenState,
-  });
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "Escape") {
-        clearCloseTimer();
-        setOpen(false);
-      }
-    },
-    [clearCloseTimer],
-  );
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") {
+      clearCloseTimer();
+      setOpen(false);
+    }
+  };
 
   return (
     <NavbarMenuContext.Provider value={{ open, setOpen }}>
       <div
-        {...mergeProps(hoverProps, {
-          onFocusCapture: () => {
-            handleOpenState(true);
-          },
-          onBlurCapture: (event: React.FocusEvent<HTMLDivElement>) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) {
-              handleOpenState(false);
-            }
-          },
-          onKeyDown: handleKeyDown,
-        })}
+        onBlurCapture={(event: React.FocusEvent<HTMLDivElement>) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            handleOpenState(false);
+          }
+        }}
+        onFocusCapture={() => {
+          handleOpenState(true);
+        }}
+        onKeyDown={handleKeyDown}
+        onPointerEnter={() => {
+          handleOpenState(true);
+        }}
+        onPointerLeave={() => {
+          handleOpenState(false);
+        }}
         className={twMerge("relative min-w-0", className)}
         {...props}
       >

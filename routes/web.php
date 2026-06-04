@@ -125,6 +125,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->can('delete', 'siteLayout')
             ->name('layouts.destroy');
 
+        Route::get('settings', Controllers\Cms\SiteSettingsIndexController::class)
+            ->can('view admin dashboard')
+            ->name('settings');
+        Route::patch('settings', Controllers\Cms\UpdateSiteSettingsController::class)
+            ->can('view admin dashboard')
+            ->name('settings.update');
+
         Route::get('navigation', Controllers\Cms\NavigationMenusIndexController::class)
             ->can('viewAny', NavigationMenu::class)
             ->name('navigation');

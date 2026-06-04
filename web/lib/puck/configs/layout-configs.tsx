@@ -1,29 +1,82 @@
-import type { PageBuilderConfig } from "../blocks/types";
+import {
+  siteLayoutFooterComponents,
+  siteLayoutHeaderComponents,
+  siteLayoutSideComponents,
+} from "../blocks/site-layout-frame";
+import type {
+  PageBuilderComponentName,
+  PageBuilderConfig,
+} from "../blocks/types";
 import { pageConfig } from "./page-config";
 
 const slotRoot: PageBuilderConfig["root"] = {
-  render: ({ children }) => <div className="font-sans w-full">{children}</div>,
+  permissions: {
+    insert: false,
+  },
+  render: ({ children }) => (
+    <div className="flex h-full min-h-full flex-col font-sans">{children}</div>
+  ),
 };
 
-const components = pageConfig.components;
+const layoutBuilderComponentNames = [
+  "SiteLayoutFrame",
+  ...new Set([
+    ...siteLayoutHeaderComponents,
+    ...siteLayoutSideComponents,
+    ...siteLayoutFooterComponents,
+  ]),
+];
+
+const pageComponents = pageConfig.components as Record<
+  PageBuilderComponentName,
+  PageBuilderConfig["components"][PageBuilderComponentName]
+>;
+
+const components = Object.fromEntries(
+  layoutBuilderComponentNames.map((componentName) => [
+    componentName,
+    pageComponents[componentName as PageBuilderComponentName],
+  ]),
+) as PageBuilderConfig["components"];
 
 export const layoutBuilderConfig: PageBuilderConfig = {
   categories: {
-    layout_blocks: {
-      title: "1. Site layout",
-      components: ["SiteLayoutFrame"],
-    },
+    layout_blocks: {},
     content_blocks: {
-      title: "2. Nội dung",
-      components: [],
+      title: "Nội dung",
+      components: [
+        "Container",
+        "Grid",
+        "Flex",
+        "Spacer",
+        "Divider",
+        "Heading",
+        "RichText",
+        "Image",
+        "Button",
+        "NavigationMenu",
+        "AuthStatus",
+        "LinkList",
+        "ContactInfo",
+        "SocialLinks",
+        "NewsletterForm",
+        "CopyrightBar",
+      ],
     },
     section_blocks: {
-      title: "3. Khối",
-      components: [],
+      title: "Khối",
+      components: ["Section", "Card", "TagList"],
     },
     dynamic_blocks: {
-      title: "4. Dữ liệu",
-      components: [],
+      title: "Dữ liệu",
+      components: [
+        "LatestPosts",
+        "LatestAnnouncements",
+        "Categories",
+        "PageLinks",
+        "UnitList",
+        "StaffGrid",
+      ],
     },
   },
   root: slotRoot,

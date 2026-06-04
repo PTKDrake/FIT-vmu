@@ -105,7 +105,6 @@ export interface CmsPagesPageProps extends SharedData {
 
 export interface CmsLayoutOption {
   id: number;
-  isDefault: boolean;
   key: string;
   name: string;
   status: "draft" | "published";
@@ -242,6 +241,7 @@ export interface CmsUnitShowPageProps extends SharedData {
 }
 
 export interface CmsPageEditorPageProps extends SharedData {
+  defaultPageLayoutId: number | null;
   layoutOptions: CmsLayoutOption[];
   page: {
     content: string | null;
@@ -262,6 +262,7 @@ export interface CmsPageEditorPageProps extends SharedData {
 }
 
 export interface CmsPageCreatePageProps extends SharedData {
+  defaultPageLayoutId: number | null;
   layoutOptions: CmsLayoutOption[];
   studentGroupOptions: CmsStudentGroupOption[];
 }

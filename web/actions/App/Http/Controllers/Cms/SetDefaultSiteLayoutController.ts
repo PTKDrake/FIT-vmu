@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 const SetDefaultSiteLayoutController = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -16,7 +16,7 @@ SetDefaultSiteLayoutController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 SetDefaultSiteLayoutController.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ SetDefaultSiteLayoutController.url = (args: { siteLayout: number | { id: number 
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 SetDefaultSiteLayoutController.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -59,7 +59,7 @@ SetDefaultSiteLayoutController.patch = (args: { siteLayout: number | { id: numbe
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 const SetDefaultSiteLayoutControllerForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -74,7 +74,7 @@ const SetDefaultSiteLayoutControllerForm = (args: { siteLayout: number | { id: n
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 SetDefaultSiteLayoutControllerForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

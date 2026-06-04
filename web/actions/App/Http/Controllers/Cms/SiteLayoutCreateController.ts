@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 const SiteLayoutCreateController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ SiteLayoutCreateController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 SiteLayoutCreateController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ SiteLayoutCreateController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 SiteLayoutCreateController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ SiteLayoutCreateController.get = (options?: RouteQueryOptions): RouteDefinition<
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 SiteLayoutCreateController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ SiteLayoutCreateController.head = (options?: RouteQueryOptions): RouteDefinition
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 const SiteLayoutCreateControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const SiteLayoutCreateControllerForm = (options?: RouteQueryOptions): RouteFormD
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 SiteLayoutCreateControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ SiteLayoutCreateControllerForm.get = (options?: RouteQueryOptions): RouteFormDef
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 SiteLayoutCreateControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

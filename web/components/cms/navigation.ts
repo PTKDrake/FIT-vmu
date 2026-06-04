@@ -33,6 +33,7 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
       { href: "/cms/post-categories", title: "Danh mục bài viết" },
       { href: "/cms/pages", title: "Trang" },
       { href: "/cms/layouts", title: "Bố cục" },
+      { href: "/cms/settings", title: "Cài đặt site" },
       { href: "/cms/navigation", title: "Điều hướng" },
       { href: "/cms/student-groups", title: "Nhóm sinh viên" },
       { href: "/cms/media", title: "Thư viện media" },

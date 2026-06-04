@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 create.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutCreateController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:12
+* @see app/Http/Controllers/Cms/SiteLayoutCreateController.php:14
 * @route '/cms/layouts/create'
 */
 createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 export const edit = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -153,7 +153,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 edit.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ edit.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 edit.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -196,7 +196,7 @@ edit.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 edit.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -206,7 +206,7 @@ edit.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 const editForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -216,7 +216,7 @@ const editForm = (args: { siteLayout: number | { id: number } } | [siteLayout: n
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 editForm.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -226,7 +226,7 @@ editForm.get = (args: { siteLayout: number | { id: number } } | [siteLayout: num
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 editForm.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -513,7 +513,7 @@ draft.form = draftForm
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 export const defaultMethod = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -528,7 +528,7 @@ defaultMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 defaultMethod.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -561,7 +561,7 @@ defaultMethod.url = (args: { siteLayout: number | { id: number } } | [siteLayout
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 defaultMethod.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -571,7 +571,7 @@ defaultMethod.patch = (args: { siteLayout: number | { id: number } } | [siteLayo
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 const defaultMethodForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -586,7 +586,7 @@ const defaultMethodForm = (args: { siteLayout: number | { id: number } } | [site
 
 /**
 * @see \App\Http\Controllers\Cms\SetDefaultSiteLayoutController::__invoke
-* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:14
+* @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
 defaultMethodForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

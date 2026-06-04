@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace App\Actions\SiteLayout;
 
 use App\Models\SiteLayout;
-use Illuminate\Support\Facades\DB;
+use App\Models\SiteSetting;
 
 class SetDefaultSiteLayoutAction
 {
-    public function __invoke(SiteLayout $siteLayout): SiteLayout
+    public function __invoke(SiteLayout $siteLayout, string $type): void
     {
-        return DB::transaction(function () use ($siteLayout): SiteLayout {
-            SiteLayout::query()
-                ->whereKeyNot($siteLayout->getKey())
-                ->update(['is_default' => false]);
+        $key = SiteSetting::layoutKeyForType($type);
 
-            $siteLayout->update([
-                'status' => 'published',
-                'is_default' => true,
-            ]);
+        if ($key === null) {
+            throw new \DomainException("Loại layout '{$type}' không hợp lệ.");
+        }
 
-            return $siteLayout->fresh() ?? $siteLayout;
-        });
+        if ($siteLayout->status !== 'published') {
+            $siteLayout->update(['status' => 'published']);
+        }
+
+        SiteSetting::set($key, $siteLayout->getKey());
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Page;
+use App\Models\SiteLayout;
 use App\Models\SiteSetting;
 use Illuminate\Database\Seeder;
 
@@ -12,8 +13,6 @@ class SiteSettingsSeeder extends Seeder
 {
     public function run(): void
     {
-        $settings = SiteSetting::current();
-
         $homepage = Page::query()
             ->where('status', 'published')
             ->whereIn('slug', ['trang-chu-vmu', 'gioi-thieu-vmu'])
@@ -32,10 +31,16 @@ class SiteSettingsSeeder extends Seeder
             ->orderBy('id')
             ->first();
 
-        $settings->update([
-            'homepage_page_id' => $homepage?->getKey(),
-            'not_found_page_id' => $notFoundPage?->getKey(),
-            'student_home_page_id' => $studentHome?->getKey(),
-        ]);
+        $defaultLayout = SiteLayout::query()
+            ->where('status', 'published')
+            ->orderBy('id')
+            ->first();
+
+        SiteSetting::set(SiteSetting::KEY_HOMEPAGE_PAGE, $homepage?->getKey());
+        SiteSetting::set(SiteSetting::KEY_NOT_FOUND_PAGE, $notFoundPage?->getKey());
+        SiteSetting::set(SiteSetting::KEY_STUDENT_HOME_PAGE, $studentHome?->getKey());
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_PAGE_LAYOUT, $defaultLayout?->getKey());
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_CATEGORY_LAYOUT, $defaultLayout?->getKey());
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_POST_LAYOUT, $defaultLayout?->getKey());
     }
 }

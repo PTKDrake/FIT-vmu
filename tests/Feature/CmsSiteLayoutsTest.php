@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\NavigationItem;
+use App\Models\NavigationMenu;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\SiteLayout;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,6 +37,7 @@ final class CmsSiteLayoutsTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('cms/layouts/index')
                 ->has('layouts')
+                ->has('defaultLayoutIds')
             );
 
         $storeResponse = $this->post('/cms/layouts', [
@@ -44,25 +48,36 @@ final class CmsSiteLayoutsTest extends TestCase
             'left_data' => null,
             'right_data' => null,
             'status' => 'draft',
-            'is_default' => false,
         ]);
 
-        $layout = SiteLayout::query()->where('key', 'layout-public')->firstOrFail();
+        $storeResponse->assertSessionHasNoErrors();
+        $storeResponse->assertRedirect();
+
+        $layout = SiteLayout::query()->where('key', 'layout-public')->first();
+        expect($layout)->not->toBeNull();
+        /** @var SiteLayout $layout */
         $layoutId = $layout->id;
 
         $storeResponse->assertRedirect(sprintf('/cms/layouts/%d/edit', $layoutId));
 
         expect($layout->status)->toBe('draft')
-            ->and($layout->is_default)->toBeFalse()
             ->and($layout->header_data)->toContain('AuthStatus');
 
-        $this->patch(sprintf('/cms/layouts/%d/default', $layoutId))
+        $this->patch(sprintf('/cms/layouts/%d/default', $layoutId), ['type' => 'page'])
             ->assertRedirect();
 
         $layout->refresh();
 
         expect($layout->status)->toBe('published')
-            ->and($layout->is_default)->toBeTrue();
+            ->and(SiteSetting::defaultPageLayoutId())->toBe($layoutId)
+            ->and(SiteSetting::defaultCategoryLayoutId())->toBeNull()
+            ->and(SiteSetting::defaultPostLayoutId())->toBeNull();
+
+        $this->patch(sprintf('/cms/layouts/%d/default', $layoutId), ['type' => 'category'])
+            ->assertRedirect();
+
+        expect(SiteSetting::defaultPageLayoutId())->toBe($layoutId)
+            ->and(SiteSetting::defaultCategoryLayoutId())->toBe($layoutId);
 
         $this->patch(sprintf('/cms/layouts/%d/draft', $layoutId))
             ->assertSessionHasErrors('layout');
@@ -75,7 +90,6 @@ final class CmsSiteLayoutsTest extends TestCase
             'left_data' => '',
             'right_data' => '',
             'status' => 'published',
-            'is_default' => true,
         ])->assertRedirect();
 
         $layout->refresh();
@@ -95,14 +109,15 @@ final class CmsSiteLayoutsTest extends TestCase
         $editor = User::factory()->createOne();
         $editor->assignRole('editor');
 
-        $defaultLayout = SiteLayout::factory()->default()->createOne([
+        $defaultLayout = SiteLayout::factory()->published()->createOne([
             'name' => 'Default shell',
             'key' => 'default-shell',
             'header_data' => '{"root":{"props":{}},"content":[{"type":"Heading","props":{"id":"default-heading","title":"Default header","subtitle":"","level":2,"alignment":"left"}}]}',
         ]);
+        SiteSetting::set(SiteSetting::KEY_DEFAULT_PAGE_LAYOUT, $defaultLayout->getKey());
+
         $draftLayout = SiteLayout::factory()->createOne([
             'status' => 'draft',
-            'is_default' => false,
         ]);
 
         $this->actingAs($editor);
@@ -182,6 +197,47 @@ final class CmsSiteLayoutsTest extends TestCase
             ->assertJsonFragment([
                 'label' => 'Thông báo',
             ]);
+    }
+
+    public function test_site_layout_builder_pages_receive_dynamic_navigation_data(): void
+    {
+        $this->seed(RoleAndPermissionSeeder::class);
+
+        $editor = User::factory()->createOne();
+        $editor->assignRole('editor');
+
+        $menu = NavigationMenu::factory()->createOne([
+            'name' => 'Main Menu',
+            'location' => 'header',
+            'is_active' => true,
+        ]);
+
+        NavigationItem::factory()->createOne([
+            'menu_id' => $menu->getKey(),
+            'title' => 'Trang chủ',
+            'url' => '/',
+            'is_active' => true,
+        ]);
+
+        $layout = SiteLayout::factory()->published()->createOne();
+
+        $this->actingAs($editor)
+            ->get('/cms/layouts/create')
+            ->assertOk()
+            ->assertInertia(fn (Assert $inertia) => $inertia
+                ->component('cms/layouts/create')
+                ->where('dynamicData.navigationMenus.0.name', 'Main Menu')
+                ->where('dynamicData.navigationMenus.0.items.0.title', 'Trang chủ')
+            );
+
+        $this->actingAs($editor)
+            ->get(sprintf('/cms/layouts/%d/edit', $layout->getKey()))
+            ->assertOk()
+            ->assertInertia(fn (Assert $inertia) => $inertia
+                ->component('cms/layouts/edit')
+                ->where('dynamicData.navigationMenus.0.name', 'Main Menu')
+                ->where('dynamicData.navigationMenus.0.items.0.title', 'Trang chủ')
+            );
     }
 
     public function test_public_page_response_hydrates_dynamic_data_for_puck_blocks(): void

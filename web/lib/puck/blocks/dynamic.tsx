@@ -9,7 +9,7 @@ import { NavbarItem, NavbarMenu, NavbarSubmenu } from "@/components/ui/navbar";
 import { Text } from "@/components/ui/text";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
 import type { SharedData } from "@/types/shared";
-import { getPuckBlockDomId } from "./shared";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
@@ -84,18 +84,44 @@ interface PuckDynamicData {
   units: PuckDynamicUnit[];
 }
 
+const emptyPuckDynamicData: PuckDynamicData = {
+  categories: [],
+  navigationMenus: [],
+  pages: [],
+  posts: [],
+  staff: [],
+  units: [],
+};
+
 function usePuckDynamicData(): PuckDynamicData {
-  return (
-    usePage<SharedData & { dynamicData?: PuckDynamicData }>().props
-      .dynamicData ?? {
-      categories: [],
-      navigationMenus: [],
-      pages: [],
-      posts: [],
-      staff: [],
-      units: [],
-    }
-  );
+  const pageDynamicData =
+    usePage<SharedData & { dynamicData?: PuckDynamicData }>().props.dynamicData;
+
+  return pageDynamicData ?? readPuckDynamicDataFromWindow() ?? emptyPuckDynamicData;
+}
+
+function readPuckDynamicDataFromWindow(): PuckDynamicData | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const currentWindow = window as Window & {
+    __VMU_PUCK_DYNAMIC_DATA__?: PuckDynamicData;
+  };
+
+  if (currentWindow.__VMU_PUCK_DYNAMIC_DATA__) {
+    return currentWindow.__VMU_PUCK_DYNAMIC_DATA__;
+  }
+
+  try {
+    const topWindow = window.top as Window & {
+      __VMU_PUCK_DYNAMIC_DATA__?: PuckDynamicData;
+    } | null;
+
+    return topWindow?.__VMU_PUCK_DYNAMIC_DATA__ ?? null;
+  } catch {
+    return null;
+  }
 }
 
 function parseOptionalId(value: string | undefined): number | null {
@@ -759,12 +785,23 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
     className,
   } = props;
   const id = getPuckBlockDomId((props as { id?: string }).id);
-  const selectedMenuId = parseOptionalId(menuId);
-  const menu =
-    usePuckDynamicData().navigationMenus.find((navigationMenu) =>
-      selectedMenuId ? navigationMenu.id === selectedMenuId : true,
-    ) ?? null;
+  const navigationMenus = usePuckDynamicData().navigationMenus;
   const pageUrl = usePage().url;
+  const selectedMenuId = parseOptionalId(menuId);
+  const previewMenu =
+    selectedMenuId === null ? navigationMenus[0] ?? null : null;
+
+  const menu =
+    navigationMenus.find((navigationMenu) =>
+      selectedMenuId ? navigationMenu.id === selectedMenuId : true,
+    ) ??
+    (isPuckEditorPreview() ? previewMenu : null);
+
+  if (!menuId && !menu) {
+    return (
+      <EmptyDynamicState label="Chưa chọn menu điều hướng để hiển thị." />
+    );
+  }
 
   if (!menu || menu.items.length === 0) {
     return <EmptyDynamicState label="Không có menu điều hướng để hiển thị." />;
@@ -1162,7 +1199,7 @@ export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"Navigati
     menuId: {
       type: "select",
       label: "Menu điều hướng",
-      options: [{ label: "Menu đầu tiên khả dụng", value: "" }],
+      options: [{ label: "Chưa chọn menu điều hướng", value: "" }],
     },
     orientation: {
       type: "select",
@@ -1216,7 +1253,7 @@ export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"Navigati
         type: "select",
         label: "Menu điều hướng",
         options: [
-          { label: "Menu đầu tiên khả dụng", value: "" },
+          { label: "Chưa chọn menu điều hướng", value: "" },
           ...(payload.data ?? []).map((item) => ({
             label: item.meta?.location
               ? `${item.label} (${item.meta.location})`
@@ -1239,9 +1276,50 @@ function NavigationMenuEntry({
   item: PuckDynamicNavigationItem;
   orientation?: string;
 }) {
+  const isEditorPreview = isPuckEditorPreview();
   const isVertical = orientation === "vertical";
   const isCurrent = isNavigationBranchCurrent(item, currentPath);
   const hasChildren = item.children.length > 0;
+
+  if (isEditorPreview) {
+    return (
+      <div
+        className={twMerge(
+          "flex flex-col gap-2",
+          isVertical ? "w-full" : "min-w-0",
+        )}
+      >
+        <div
+          className={twMerge(
+            "inline-flex min-h-10 items-center rounded-md px-4 py-2 text-sm font-medium",
+            isCurrent ? "bg-secondary/50 text-fg" : "text-fg",
+            isVertical ? "w-full justify-start" : "w-full md:w-auto",
+          )}
+        >
+          {item.title}
+        </div>
+        {hasChildren ? (
+          <div className="flex flex-col gap-1 ps-3">
+            {item.children.map((child) => (
+              <Link
+                className={twMerge(
+                  "rounded-lg px-3 py-2 text-xs font-medium",
+                  isNavigationItemCurrent(child.url, currentPath)
+                    ? "bg-muted text-fg"
+                    : "text-muted-fg",
+                )}
+                href={child.url}
+                key={child.id}
+                target={child.target === "_blank" ? "_blank" : undefined}
+              >
+                {child.title}
+              </Link>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <NavbarMenu

@@ -40,10 +40,6 @@ import type { BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
-  NativeSelect,
-  NativeSelectContent,
-} from "@/components/ui/native-select";
-import {
   Pagination,
   PaginationFirst,
   PaginationItem,
@@ -57,6 +53,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { t } from "@/lib/i18n";
@@ -857,22 +860,28 @@ export function CmsDataTable<TData extends object>({
             className="w-full sm:w-64"
           />
 
-          <NativeSelect className="min-w-[100px] sm:min-w-[120px] max-w-[160px]">
-            <NativeSelectContent
+          <div className="min-w-[100px] max-w-[160px] sm:min-w-[120px]">
+            <Select
               aria-label="Số dòng mỗi trang"
-              value={String(meta.perPage)}
-              onChange={(event) => {
-                void onPerPageChange(Number(event.target.value));
+              onChange={(key) => {
+                void onPerPageChange(Number(key));
               }}
-              className="text-xs py-1"
+              value={String(meta.perPage)}
             >
-              {PER_PAGE_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option} dòng / trang
-                </option>
-              ))}
-            </NativeSelectContent>
-          </NativeSelect>
+              <SelectTrigger className="text-xs py-1" />
+              <SelectContent>
+                {PER_PAGE_OPTIONS.map((option) => (
+                  <SelectItem
+                    key={option}
+                    id={String(option)}
+                    textValue={`${option} dòng / trang`}
+                  >
+                    <SelectLabel>{option} dòng / trang</SelectLabel>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 

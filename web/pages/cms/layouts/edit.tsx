@@ -9,7 +9,6 @@ interface EditSiteLayoutPageProps extends SharedData {
     footerData: string | null;
     headerData: string | null;
     id: number;
-    isDefault: boolean;
     key: string;
     leftData: string | null;
     name: string;

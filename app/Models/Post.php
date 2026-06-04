@@ -30,6 +30,7 @@ class Post extends Model
         'excerpt',
         'content',
         'content_format',
+        'site_layout_id',
         'visibility',
         'thumbnail_id',
         'author_id',
@@ -68,6 +69,12 @@ class Post extends Model
     public function thumbnail(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'thumbnail_id');
+    }
+
+    /** @return BelongsTo<SiteLayout, $this> */
+    public function siteLayout(): BelongsTo
+    {
+        return $this->belongsTo(SiteLayout::class);
     }
 
     /** @return BelongsToMany<PostCategory, $this> */

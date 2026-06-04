@@ -5,6 +5,7 @@ import postsD8dc7a from './posts'
 import postCategories09c74a from './post-categories'
 import pagesAf6a29 from './pages'
 import layoutsF4ac99 from './layouts'
+import settings69f00b from './settings'
 import navigation2b63fc from './navigation'
 import studentGroups8351c8 from './student-groups'
 import media30b75d from './media'
@@ -340,7 +341,7 @@ pages.form = pagesForm
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 export const layouts = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -355,7 +356,7 @@ layouts.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 layouts.url = (options?: RouteQueryOptions) => {
@@ -364,7 +365,7 @@ layouts.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 layouts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -374,7 +375,7 @@ layouts.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 layouts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -384,7 +385,7 @@ layouts.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 const layoutsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -394,7 +395,7 @@ const layoutsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 layoutsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -404,7 +405,7 @@ layoutsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 layoutsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -418,6 +419,87 @@ layoutsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 })
 
 layouts.form = layoutsForm
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+export const settings = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: settings.url(options),
+    method: 'get',
+})
+
+settings.definition = {
+    methods: ["get","head"],
+    url: '/cms/settings',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+settings.url = (options?: RouteQueryOptions) => {
+    return settings.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+settings.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: settings.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+settings.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: settings.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+const settingsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: settings.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+settingsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: settings.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Cms\SiteSettingsIndexController::__invoke
+* @see app/Http/Controllers/Cms/SiteSettingsIndexController.php:15
+* @route '/cms/settings'
+*/
+settingsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: settings.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+settings.form = settingsForm
 
 /**
 * @see \App\Http\Controllers\Cms\NavigationMenusIndexController::__invoke
@@ -1075,6 +1157,7 @@ const cms = {
     postCategories: Object.assign(postCategories, postCategories09c74a),
     pages: Object.assign(pages, pagesAf6a29),
     layouts: Object.assign(layouts, layoutsF4ac99),
+    settings: Object.assign(settings, settings69f00b),
     navigation: Object.assign(navigation, navigation2b63fc),
     studentGroups: Object.assign(studentGroups, studentGroups8351c8),
     media: Object.assign(media, media30b75d),

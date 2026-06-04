@@ -42,7 +42,57 @@ import {
   NewsletterFormComponentConfig,
   CopyrightBarComponentConfig,
 } from "../blocks";
+import { withSelectFieldDefaults } from "../blocks/shared";
 import type { PageBuilderConfig } from "../blocks/types";
+
+const components = withSelectFieldDefaults({
+  SiteLayoutFrame: SiteLayoutFrameComponentConfig,
+
+  Section: SectionComponentConfig,
+  Container: ContainerComponentConfig,
+  TwoColumns: TwoColumnsComponentConfig,
+  Spacer: SpacerComponentConfig,
+  Divider: DividerComponentConfig,
+  Grid: GridComponentConfig,
+  Flex: FlexComponentConfig,
+
+  Heading: HeadingComponentConfig,
+  RichText: RichTextComponentConfig,
+  Image: ImageComponentConfig,
+  ImageText: ImageTextComponentConfig,
+  Button: ButtonComponentConfig,
+  ButtonGroup: ButtonGroupComponentConfig,
+  Card: CardComponentConfig,
+  Note: NoteComponentConfig,
+  BadgeList: BadgeListComponentConfig,
+  TagList: TagListComponentConfig,
+
+  AboutSection: AboutSectionComponentConfig,
+  FeatureGrid: FeatureGridComponentConfig,
+  StatsSection: StatsSectionComponentConfig,
+  CTASection: CTASectionComponentConfig,
+  TimelineSection: TimelineSectionComponentConfig,
+  FAQSection: FAQSectionComponentConfig,
+  TestimonialSection: TestimonialSectionComponentConfig,
+  CarouselSection: CarouselSectionComponentConfig,
+  HeroBanner: HeroBannerComponentConfig,
+  HeroSplit: HeroSplitComponentConfig,
+
+  LatestPosts: LatestPostsComponentConfig,
+  LatestAnnouncements: LatestAnnouncementsComponentConfig,
+  StaffGrid: StaffGridComponentConfig,
+  UnitList: UnitListComponentConfig,
+  RelatedPosts: RelatedPostsComponentConfig,
+  NavigationMenu: NavigationMenuComponentConfig,
+  Categories: CategoriesComponentConfig,
+  PageLinks: PageLinksComponentConfig,
+  LinkList: LinkListComponentConfig,
+  ContactInfo: ContactInfoComponentConfig,
+  SocialLinks: SocialLinksComponentConfig,
+  NewsletterForm: NewsletterFormComponentConfig,
+  CopyrightBar: CopyrightBarComponentConfig,
+  AuthStatus: AuthStatusComponentConfig,
+});
 
 export const pageConfig: PageBuilderConfig = {
   categories: {
@@ -114,52 +164,5 @@ export const pageConfig: PageBuilderConfig = {
       </article>
     ),
   },
-  components: {
-    SiteLayoutFrame: SiteLayoutFrameComponentConfig,
-
-    Section: SectionComponentConfig,
-    Container: ContainerComponentConfig,
-    TwoColumns: TwoColumnsComponentConfig,
-    Spacer: SpacerComponentConfig,
-    Divider: DividerComponentConfig,
-    Grid: GridComponentConfig,
-    Flex: FlexComponentConfig,
-
-    Heading: HeadingComponentConfig,
-    RichText: RichTextComponentConfig,
-    Image: ImageComponentConfig,
-    ImageText: ImageTextComponentConfig,
-    Button: ButtonComponentConfig,
-    ButtonGroup: ButtonGroupComponentConfig,
-    Card: CardComponentConfig,
-    Note: NoteComponentConfig,
-    BadgeList: BadgeListComponentConfig,
-    TagList: TagListComponentConfig,
-
-    AboutSection: AboutSectionComponentConfig,
-    FeatureGrid: FeatureGridComponentConfig,
-    StatsSection: StatsSectionComponentConfig,
-    CTASection: CTASectionComponentConfig,
-    TimelineSection: TimelineSectionComponentConfig,
-    FAQSection: FAQSectionComponentConfig,
-    TestimonialSection: TestimonialSectionComponentConfig,
-    CarouselSection: CarouselSectionComponentConfig,
-    HeroBanner: HeroBannerComponentConfig,
-    HeroSplit: HeroSplitComponentConfig,
-
-    LatestPosts: LatestPostsComponentConfig,
-    LatestAnnouncements: LatestAnnouncementsComponentConfig,
-    StaffGrid: StaffGridComponentConfig,
-    UnitList: UnitListComponentConfig,
-    RelatedPosts: RelatedPostsComponentConfig,
-    NavigationMenu: NavigationMenuComponentConfig,
-    Categories: CategoriesComponentConfig,
-    PageLinks: PageLinksComponentConfig,
-    LinkList: LinkListComponentConfig,
-    ContactInfo: ContactInfoComponentConfig,
-    SocialLinks: SocialLinksComponentConfig,
-    NewsletterForm: NewsletterFormComponentConfig,
-    CopyrightBar: CopyrightBarComponentConfig,
-    AuthStatus: AuthStatusComponentConfig,
-  },
+  components,
 };

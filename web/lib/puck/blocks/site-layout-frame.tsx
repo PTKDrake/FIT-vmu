@@ -1,7 +1,4 @@
 import { twMerge } from "tailwind-merge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Container } from "@/components/ui/container";
-import { Separator } from "@/components/ui/separator";
 import { Text } from "@/components/ui/text";
 import { getPuckBlockDomId } from "./shared";
 import {
@@ -14,7 +11,13 @@ import {
 } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
-const headerComponents = [
+const siteLayoutSlotClassName =
+  "w-full";
+
+const siteLayoutEmptySlotClassName =
+  "empty:flex empty:min-h-24 empty:w-full empty:flex-col empty:gap-4 empty:rounded-2xl empty:border empty:border-dashed empty:border-border/40 empty:bg-muted/10 empty:p-4";
+
+export const siteLayoutHeaderComponents = [
   "Container",
   "Grid",
   "Flex",
@@ -30,7 +33,7 @@ const headerComponents = [
   "PageLinks",
 ];
 
-const footerComponents = [
+export const siteLayoutFooterComponents = [
   "Section",
   "Container",
   "Grid",
@@ -43,6 +46,9 @@ const footerComponents = [
   "AuthStatus",
   "LinkList",
   "ContactInfo",
+  "SocialLinks",
+  "NewsletterForm",
+  "CopyrightBar",
   "TagList",
   "Card",
   "LatestPosts",
@@ -52,7 +58,7 @@ const footerComponents = [
   "UnitList",
 ];
 
-const sideComponents = [
+export const siteLayoutSideComponents = [
   "Container",
   "Flex",
   "Spacer",
@@ -76,34 +82,40 @@ const sideComponents = [
 export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLayoutFrame"> =
 {
   label: "Khung site layout",
+  permissions: {
+    delete: false,
+    drag: false,
+    duplicate: false,
+    insert: false,
+  },
   defaultProps: {
     surfaceTone: "overlay",
-    surfaceBorder: "default",
-    surfaceRadius: "3xl",
+    surfaceBorder: "none",
+    surfaceRadius: "none",
     surfacePadding: "md",
-    surfaceShadow: "sm",
+    surfaceShadow: "none",
   },
   fields: {
     ...puckSurfaceFields,
     header: {
       type: "slot",
       label: "Header",
-      allow: headerComponents,
+      allow: siteLayoutHeaderComponents,
     },
     left: {
       type: "slot",
       label: "Left sidebar",
-      allow: sideComponents,
+      allow: siteLayoutSideComponents,
     },
     right: {
       type: "slot",
       label: "Right sidebar",
-      allow: sideComponents,
+      allow: siteLayoutSideComponents,
     },
     footer: {
       type: "slot",
       label: "Footer",
-      allow: footerComponents,
+      allow: siteLayoutFooterComponents,
     },
   },
   render: ({
@@ -119,8 +131,12 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
     surfaceShadow,
   }) => {
     const domId = getPuckBlockDomId(id);
+    const slotClassName = twMerge(
+      siteLayoutSlotClassName,
+      siteLayoutEmptySlotClassName,
+    );
     const frameClassName = twMerge(
-      "min-h-[42rem]",
+      "flex min-h-full h-full flex-col",
       getSurfaceToneClass(surfaceTone),
       getSurfaceBorderClass(surfaceBorder),
       getSurfaceRadiusClass(surfaceRadius),
@@ -131,68 +147,40 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
 
     return (
       <div id={domId} className={frameClassName}>
-        <div className={frameInsetClassName}>
-          <div className="overflow-hidden rounded-[inherit] border border-border/50 bg-bg/30">
-            <header className="bg-overlay/70 backdrop-blur-sm">
-              <Container className="py-4">
-                {Header ? <Header /> : <EmptySlot label="Header" />}
-              </Container>
+        <div
+          className={twMerge(
+            frameInsetClassName,
+            "flex min-h-full h-full flex-1 flex-col",
+          )}
+        >
+          <div className="min-h-dvh overflow-hidden rounded-[inherit] border border-border/50 bg-bg text-fg">
+            <header className="w-full border-b border-border/60">
+              <Header className={slotClassName} minEmptyHeight={120} />
             </header>
 
-            <div className="grid gap-4 bg-muted/20 p-4 lg:grid-cols-[18rem_minmax(0,1fr)_18rem]">
-              <aside className="w-full">
-                <Card className="h-full rounded-none border-border/70 bg-overlay/80 shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base/6">
-                      Thanh bên trái
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {Left ? <Left /> : <EmptySlot label="Left sidebar" />}
-                  </CardContent>
-                </Card>
+            <div className="mx-auto flex w-full flex-col lg:flex-row lg:items-start">
+              <aside className="w-full shrink-0 border-b border-border/60 lg:w-72 lg:border-r lg:border-b-0">
+                <Left className={slotClassName} minEmptyHeight={120} />
               </aside>
 
-              <main className="min-w-0">
-                <Card className="h-full rounded-none border-border/70 bg-overlay/90 shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base/6">
-                      Vùng nội dung trang
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Text className="text-sm text-muted-fg">
+              <main className="min-w-0 flex-1 border-b border-border/60 lg:border-r lg:border-b-0">
+                <div className="flex min-h-0 flex-1 p-4 lg:min-h-[22rem] lg:p-6">
+                  <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border/40 bg-muted/10 px-4 py-8">
+                    <Text className="text-center text-sm text-muted-fg">
                       Nội dung trang sẽ được render ở vùng main và không lưu
                       trong SiteLayout.
                     </Text>
-                    <Separator />
-                    <div className="border border-dashed border-border/50 bg-muted/20 px-4 py-8">
-                      <Text className="text-center text-sm text-muted-fg">
-                        Khu vực này được dành cho page builder của từng trang.
-                      </Text>
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </main>
 
-              <aside className="w-full">
-                <Card className="h-full rounded-none border-border/70 bg-overlay/80 shadow-none">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base/6">
-                      Thanh bên phải
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {Right ? <Right /> : <EmptySlot label="Right sidebar" />}
-                  </CardContent>
-                </Card>
+              <aside className="w-full shrink-0 lg:w-72">
+                <Right className={slotClassName} minEmptyHeight={120} />
               </aside>
             </div>
 
-            <footer className="border-t border-border/70 bg-overlay/70 backdrop-blur-sm">
-              <Container className="py-4">
-                {Footer ? <Footer /> : <EmptySlot label="Footer" />}
-              </Container>
+            <footer className="border-t border-border/60">
+              <Footer className={slotClassName} minEmptyHeight={120} />
             </footer>
           </div>
         </div>
@@ -200,17 +188,3 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
     );
   },
 };
-
-function EmptySlot({ label }: { label: string }) {
-  return (
-    <div
-      className={twMerge(
-        "border border-dashed border-border/50 bg-muted/20 px-4 py-6 text-center",
-      )}
-    >
-      <Text className="text-sm font-medium text-muted-fg">
-        Kéo block vào vùng {label}
-      </Text>
-    </div>
-  );
-}

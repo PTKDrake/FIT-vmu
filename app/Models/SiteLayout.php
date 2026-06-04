@@ -23,26 +23,28 @@ class SiteLayout extends Model
         'left_data',
         'right_data',
         'status',
-        'is_default',
     ];
 
     /** @var array<string, mixed> */
     protected $attributes = [
         'status' => 'draft',
-        'is_default' => false,
     ];
-
-    /** @return array<string, string> */
-    protected function casts(): array
-    {
-        return [
-            'is_default' => 'boolean',
-        ];
-    }
 
     /** @return HasMany<Page, $this> */
     public function pages(): HasMany
     {
         return $this->hasMany(Page::class);
+    }
+
+    /** @return HasMany<PostCategory, $this> */
+    public function postCategories(): HasMany
+    {
+        return $this->hasMany(PostCategory::class);
+    }
+
+    /** @return HasMany<Post, $this> */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 }

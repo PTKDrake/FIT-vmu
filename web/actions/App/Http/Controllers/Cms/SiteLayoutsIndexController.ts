@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 const SiteLayoutsIndexController = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ SiteLayoutsIndexController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 SiteLayoutsIndexController.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ SiteLayoutsIndexController.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 SiteLayoutsIndexController.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ SiteLayoutsIndexController.get = (options?: RouteQueryOptions): RouteDefinition<
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 SiteLayoutsIndexController.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ SiteLayoutsIndexController.head = (options?: RouteQueryOptions): RouteDefinition
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 const SiteLayoutsIndexControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const SiteLayoutsIndexControllerForm = (options?: RouteQueryOptions): RouteFormD
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 SiteLayoutsIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ SiteLayoutsIndexControllerForm.get = (options?: RouteQueryOptions): RouteFormDef
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutsIndexController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:15
+* @see app/Http/Controllers/Cms/SiteLayoutsIndexController.php:16
 * @route '/cms/layouts'
 */
 SiteLayoutsIndexControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

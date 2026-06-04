@@ -15,9 +15,7 @@ test('homepage resolves through site settings when configured', function () {
         'visibility' => 'public',
     ]);
 
-    SiteSetting::current()->update([
-        'homepage_page_id' => $page->getKey(),
-    ]);
+    SiteSetting::set(SiteSetting::KEY_HOMEPAGE_PAGE, $page->getKey());
 
     $this->get('/')
         ->assertOk()

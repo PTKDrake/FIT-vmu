@@ -52,7 +52,6 @@ class UpdateSiteLayoutRequest extends FormRequest
             'left_data' => ['nullable', 'string'],
             'right_data' => ['nullable', 'string'],
             'status' => ['required', 'string', Rule::in(['draft', 'published'])],
-            'is_default' => ['boolean'],
         ];
     }
 

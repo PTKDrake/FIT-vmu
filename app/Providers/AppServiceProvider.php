@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Actions\PublicSite\BuildPublicPagePropsAction;
+use App\Models\Page;
 use App\Models\SiteSetting;
 use App\Models\User;
 use App\Policies\RolePolicy;
@@ -43,11 +46,8 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
 
-            $settings = SiteSetting::query()
-                ->with('notFoundPage')
-                ->first();
-
-            $notFoundPage = $settings?->notFoundPage;
+            $notFoundPageId = SiteSetting::notFoundPageId();
+            $notFoundPage = $notFoundPageId !== null ? Page::query()->find($notFoundPageId) : null;
 
             if (! $notFoundPage || $notFoundPage->status !== 'published' || ! $notFoundPage->isVisibleTo($response->request->user())) {
                 return null;

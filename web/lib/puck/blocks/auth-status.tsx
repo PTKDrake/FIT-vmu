@@ -173,6 +173,25 @@ function AuthStatusBlock({
         ? auth.user.name
         : null;
 
+  if (isEditorPreview) {
+    return (
+      <div
+        id={domId}
+        className={twMerge("flex items-center", alignmentClass, className)}
+      >
+        <div className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border bg-bg px-2.5 text-sm font-semibold text-fg">
+          <Avatar
+            className="size-8 *:size-8"
+            initials={userInitials}
+          />
+          {displayText ? (
+            <span className="max-w-40 truncate">{displayText}</span>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       id={domId}
@@ -233,4 +252,3 @@ function AuthStatusBlock({
     </div>
   );
 }
-

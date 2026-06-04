@@ -30,15 +30,18 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import {
-  NativeSelect,
-  NativeSelectContent,
-} from "@/components/ui/native-select";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SearchField, SearchInput } from "@/components/ui/search-field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Code, Text } from "@/components/ui/text";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
@@ -191,6 +194,9 @@ export default function CmsRolesPermissionsPage({
     Record<string, boolean>
   >(() =>
     Object.fromEntries(allCategories.map((category) => [category, false])),
+  );
+  const [expandCollapseValue, setExpandCollapseValue] = useState<string>(
+    "collapsed",
   );
 
   const deferredMatrixSearch = useDeferredValue(matrixSearchQuery);
@@ -537,13 +543,13 @@ export default function CmsRolesPermissionsPage({
                 selectedRoles={selectedRoles}
               />
 
-              <NativeSelect className="w-full xl:w-44">
-                <NativeSelectContent
+              <div className="w-full xl:w-44">
+                <Select
                   aria-label="Điều khiển mở rộng nhóm quyền"
-                  defaultValue="collapsed"
-                  onChange={(event) => {
-                    const nextValue = event.target.value;
+                  onChange={(key) => {
+                    const nextValue = String(key);
 
+                    setExpandCollapseValue(nextValue);
                     setExpandedCategories(
                       Object.fromEntries(
                         allCategories.map((category) => [
@@ -553,11 +559,19 @@ export default function CmsRolesPermissionsPage({
                       ),
                     );
                   }}
+                  value={expandCollapseValue}
                 >
-                  <option value="collapsed">Thu gọn tất cả</option>
-                  <option value="expanded">Mở tất cả</option>
-                </NativeSelectContent>
-              </NativeSelect>
+                  <SelectTrigger />
+                  <SelectContent>
+                    <SelectItem id="collapsed" textValue="Thu gọn tất cả">
+                      <SelectLabel>Thu gọn tất cả</SelectLabel>
+                    </SelectItem>
+                    <SelectItem id="expanded" textValue="Mở tất cả">
+                      <SelectLabel>Mở tất cả</SelectLabel>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">

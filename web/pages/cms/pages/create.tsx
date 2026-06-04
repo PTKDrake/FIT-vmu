@@ -27,9 +27,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
-  NativeSelect,
-  NativeSelectContent,
-} from "@/components/ui/native-select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import CmsLayout from "@/layouts/cms-layout";
@@ -70,6 +73,7 @@ function slugify(text: string): string {
 }
 
 export default function CreatePage({
+  defaultPageLayoutId,
   layoutOptions,
   studentGroupOptions,
 }: CmsPageCreatePageProps) {
@@ -197,29 +201,39 @@ export default function CreatePage({
                     ) : null}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="page-visibility">Phạm vi xem</Label>
-                    <NativeSelect>
-                      <NativeSelectContent
-                        id="page-visibility"
-                        value={form.data.visibility}
-                        onChange={(event) =>
-                          form.setData(
-                            "visibility",
-                            event.target.value as typeof form.data.visibility,
-                          )
-                        }
+                  <Select
+                    aria-label="Phạm vi xem"
+                    onChange={(key) =>
+                      form.setData(
+                        "visibility",
+                        String(key) as typeof form.data.visibility,
+                      )
+                    }
+                    value={form.data.visibility}
+                  >
+                    <Label>Phạm vi xem</Label>
+                    <SelectTrigger />
+                    <SelectContent>
+                      <SelectItem id="public" textValue="Công khai">
+                        <SelectLabel>Công khai</SelectLabel>
+                      </SelectItem>
+                      <SelectItem id="authenticated" textValue="Cần đăng nhập">
+                        <SelectLabel>Cần đăng nhập</SelectLabel>
+                      </SelectItem>
+                      <SelectItem id="students" textValue="Mọi sinh viên">
+                        <SelectLabel>Mọi sinh viên</SelectLabel>
+                      </SelectItem>
+                      <SelectItem
+                        id="student_groups"
+                        textValue="Nhóm sinh viên"
                       >
-                        <option value="public">Công khai</option>
-                        <option value="authenticated">Cần đăng nhập</option>
-                        <option value="students">Mọi sinh viên</option>
-                        <option value="student_groups">Nhóm sinh viên</option>
-                      </NativeSelectContent>
-                    </NativeSelect>
+                        <SelectLabel>Nhóm sinh viên</SelectLabel>
+                      </SelectItem>
+                    </SelectContent>
                     {form.errors.visibility ? (
                       <FieldError>{form.errors.visibility}</FieldError>
                     ) : null}
-                  </div>
+                  </Select>
 
                   {form.data.visibility === "student_groups" ? (
                     <StudentGroupPicker
@@ -279,30 +293,39 @@ export default function CreatePage({
 
               {/* Layout Selection */}
               <div className="space-y-4 border-t border-border pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="page-site-layout">Bố cục trang</Label>
-                  <NativeSelect>
-                    <NativeSelectContent
-                      id="page-site-layout"
-                      value={form.data.site_layout_id}
-                      onChange={(event) =>
-                        form.setData("site_layout_id", event.target.value)
-                      }
-                    >
-                      <option value="">Dùng layout mặc định</option>
-                      {layoutOptions.map((layout) => (
-                        <option key={layout.id} value={layout.id}>
+                <Select
+                  aria-label="Bố cục trang"
+                  onChange={(key) =>
+                    form.setData("site_layout_id", key ? String(key) : "")
+                  }
+                  value={form.data.site_layout_id || null}
+                >
+                  <Label>Bố cục trang</Label>
+                  <SelectTrigger />
+                  <SelectContent>
+                    <SelectItem id="" textValue="Dùng layout mặc định">
+                      <SelectLabel>Dùng layout mặc định</SelectLabel>
+                    </SelectItem>
+                    {layoutOptions.map((layout) => (
+                      <SelectItem
+                        key={layout.id}
+                        id={String(layout.id)}
+                        textValue={layout.name}
+                      >
+                        <SelectLabel>
                           {layout.name}
-                          {layout.isDefault ? " (mặc định)" : ""}
+                          {layout.id === defaultPageLayoutId
+                            ? " (mặc định)"
+                            : ""}
                           {layout.status === "draft" ? " - nháp" : ""}
-                        </option>
-                      ))}
-                    </NativeSelectContent>
-                  </NativeSelect>
+                        </SelectLabel>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                   {form.errors.site_layout_id ? (
                     <FieldError>{form.errors.site_layout_id}</FieldError>
                   ) : null}
-                </div>
+                </Select>
 
                 <div>
                   <h3 className="text-sm font-semibold text-fg/80">

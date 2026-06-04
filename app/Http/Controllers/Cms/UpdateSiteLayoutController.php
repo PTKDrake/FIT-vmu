@@ -25,8 +25,7 @@ final class UpdateSiteLayoutController extends Controller
          *     footer_data?: ?string,
          *     left_data?: ?string,
          *     right_data?: ?string,
-         *     status: string,
-         *     is_default?: bool
+         *     status: string
          * } $validated
          */
         $updateSiteLayout($siteLayout, $validated);

@@ -3,7 +3,7 @@ import metadata from './metadata'
 import content from './content'
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -18,7 +18,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 create.url = (options?: RouteQueryOptions) => {
@@ -27,7 +27,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -37,7 +37,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -47,7 +47,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -57,7 +57,7 @@ const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -67,7 +67,7 @@ createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Cms\PageCreateController::__invoke
-* @see app/Http/Controllers/Cms/PageCreateController.php:15
+* @see app/Http/Controllers/Cms/PageCreateController.php:16
 * @route '/cms/pages/create'
 */
 createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -140,7 +140,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 export const edit = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -155,7 +155,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 edit.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -188,7 +188,7 @@ edit.url = (args: { page: number | { id: number } } | [page: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 edit.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -198,7 +198,7 @@ edit.get = (args: { page: number | { id: number } } | [page: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 edit.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -208,7 +208,7 @@ edit.head = (args: { page: number | { id: number } } | [page: number | { id: num
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 const editForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -218,7 +218,7 @@ const editForm = (args: { page: number | { id: number } } | [page: number | { id
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 editForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -228,7 +228,7 @@ editForm.get = (args: { page: number | { id: number } } | [page: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Cms\PageEditorController::__invoke
-* @see app/Http/Controllers/Cms/PageEditorController.php:16
+* @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
 editForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

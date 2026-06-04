@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 const SiteLayoutEditController = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ SiteLayoutEditController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 SiteLayoutEditController.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ SiteLayoutEditController.url = (args: { siteLayout: number | { id: number } } | 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 SiteLayoutEditController.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ SiteLayoutEditController.get = (args: { siteLayout: number | { id: number } } | 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 SiteLayoutEditController.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ SiteLayoutEditController.head = (args: { siteLayout: number | { id: number } } |
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 const SiteLayoutEditControllerForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const SiteLayoutEditControllerForm = (args: { siteLayout: number | { id: number 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 SiteLayoutEditControllerForm.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ SiteLayoutEditControllerForm.get = (args: { siteLayout: number | { id: number } 
 
 /**
 * @see \App\Http\Controllers\Cms\SiteLayoutEditController::__invoke
-* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:14
+* @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
 SiteLayoutEditControllerForm.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

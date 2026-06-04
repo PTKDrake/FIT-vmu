@@ -32,7 +32,6 @@ class SiteLayoutFactory extends Factory
             'left_data' => null,
             'right_data' => null,
             'status' => fake()->randomElement(['draft', 'published']),
-            'is_default' => false,
         ];
     }
 
@@ -40,13 +39,6 @@ class SiteLayoutFactory extends Factory
     {
         return $this->state(fn (): array => [
             'status' => 'published',
-        ]);
-    }
-
-    public function default(): self
-    {
-        return $this->published()->state(fn (): array => [
-            'is_default' => true,
         ]);
     }
 

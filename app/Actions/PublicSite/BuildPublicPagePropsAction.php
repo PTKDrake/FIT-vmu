@@ -7,6 +7,7 @@ namespace App\Actions\PublicSite;
 use App\Actions\Puck\BuildPuckDynamicDataAction;
 use App\Models\Page;
 use App\Models\SiteLayout;
+use App\Models\SiteSetting;
 use App\Models\User;
 
 class BuildPublicPagePropsAction
@@ -82,9 +83,17 @@ class BuildPublicPagePropsAction
             return $page->siteLayout;
         }
 
-        return SiteLayout::query()
+        $defaultId = SiteSetting::defaultPageLayoutId();
+
+        if ($defaultId === null) {
+            return null;
+        }
+
+        $default = SiteLayout::query()
+            ->where('id', $defaultId)
             ->where('status', 'published')
-            ->where('is_default', true)
             ->first();
+
+        return $default;
     }
 }

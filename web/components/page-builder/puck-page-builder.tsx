@@ -6,6 +6,7 @@ import {
 import { router } from "@inertiajs/react";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
 import { twMerge } from "tailwind-merge";
+import { PuckSelectField } from "@/components/layout-builder/puck-select-field";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
@@ -183,6 +184,9 @@ export function PuckPageBuilder({
         }}
         onPublish={handleSave}
         overrides={{
+          fieldTypes: {
+            select: PuckSelectField,
+          },
           headerActions: () => (
             <PuckPageBuilderHeaderActions
               backHref={backHref}

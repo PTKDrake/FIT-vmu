@@ -30,6 +30,8 @@ import PublishSiteLayoutController from './PublishSiteLayoutController'
 import DraftSiteLayoutController from './DraftSiteLayoutController'
 import SetDefaultSiteLayoutController from './SetDefaultSiteLayoutController'
 import DeleteSiteLayoutController from './DeleteSiteLayoutController'
+import SiteSettingsIndexController from './SiteSettingsIndexController'
+import UpdateSiteSettingsController from './UpdateSiteSettingsController'
 import NavigationMenusIndexController from './NavigationMenusIndexController'
 import NavigationMenuShowController from './NavigationMenuShowController'
 import StoreNavigationMenuController from './StoreNavigationMenuController'
@@ -108,6 +110,8 @@ const Cms = {
     DraftSiteLayoutController: Object.assign(DraftSiteLayoutController, DraftSiteLayoutController),
     SetDefaultSiteLayoutController: Object.assign(SetDefaultSiteLayoutController, SetDefaultSiteLayoutController),
     DeleteSiteLayoutController: Object.assign(DeleteSiteLayoutController, DeleteSiteLayoutController),
+    SiteSettingsIndexController: Object.assign(SiteSettingsIndexController, SiteSettingsIndexController),
+    UpdateSiteSettingsController: Object.assign(UpdateSiteSettingsController, UpdateSiteSettingsController),
     NavigationMenusIndexController: Object.assign(NavigationMenusIndexController, NavigationMenusIndexController),
     NavigationMenuShowController: Object.assign(NavigationMenuShowController, NavigationMenuShowController),
     StoreNavigationMenuController: Object.assign(StoreNavigationMenuController, StoreNavigationMenuController),

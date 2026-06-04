@@ -40,7 +40,7 @@ export function createCombinedSiteLayoutData({
   leftData,
   rightData,
 }: SiteLayoutSlotValues): VmuFitPageBuilderData {
-  return {
+  return sanitizeCombinedSiteLayoutData({
     root: {
       props: {},
     },
@@ -56,13 +56,15 @@ export function createCombinedSiteLayoutData({
         },
       },
     ],
-  };
+  });
 }
 
 export function splitCombinedSiteLayoutData(
   data: VmuFitPageBuilderData,
 ): SiteLayoutSplitValues {
-  const frame = data.content.find((item) => item.type === "SiteLayoutFrame") as
+  const sanitizedData = sanitizeCombinedSiteLayoutData(data);
+
+  const frame = sanitizedData.content.find((item) => item.type === "SiteLayoutFrame") as
     | { props?: SiteLayoutFrameProps }
     | undefined;
 
@@ -71,6 +73,32 @@ export function splitCombinedSiteLayoutData(
     left_data: serializeSlotData(frame?.props?.left),
     right_data: serializeSlotData(frame?.props?.right),
     footer_data: serializeSlotData(frame?.props?.footer),
+  };
+}
+
+export function sanitizeCombinedSiteLayoutData(
+  data: VmuFitPageBuilderData,
+): VmuFitPageBuilderData {
+  const frame = data.content.find((item) => item.type === "SiteLayoutFrame");
+
+  if (!frame) {
+    return createCombinedSiteLayoutData({});
+  }
+
+  return {
+    ...clonePuckPageData(data),
+    content: [
+      {
+        ...frame,
+        props: {
+          ...frame.props,
+          id:
+            typeof frame.props?.id === "string" && frame.props.id !== ""
+              ? frame.props.id
+              : SITE_LAYOUT_FRAME_ID,
+        },
+      },
+    ],
   };
 }
 
