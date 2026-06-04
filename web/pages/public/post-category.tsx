@@ -76,7 +76,6 @@ export default function PublicPostCategoryPage({
               <BreadcrumbsItem
                 key={index}
                 href={crumb.url ?? undefined}
-                isCurrent={crumb.url === null}
               >
                 {crumb.label}
               </BreadcrumbsItem>

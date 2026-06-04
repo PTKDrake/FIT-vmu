@@ -62,7 +62,6 @@ export default function PublicPost({
               <BreadcrumbsItem
                 key={index}
                 href={crumb.url ?? undefined}
-                isCurrent={crumb.url === null}
               >
                 {crumb.label}
               </BreadcrumbsItem>
