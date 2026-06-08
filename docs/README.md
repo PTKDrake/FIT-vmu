@@ -12,6 +12,7 @@ Use this structure for all future documentation:
 Current source-of-truth documents:
 
 - [Laravel Architecture](./laravel/architecture.md)
+- [Deploy Ubuntu VPS với PostgreSQL](./laravel/deploy-ubuntu-postgresql.md)
 - [Actions Base](./laravel/actions-base.md)
 - [Frontend Overview](./frontend/overview.md)
 - [Testing Overview](./testing/overview.md)

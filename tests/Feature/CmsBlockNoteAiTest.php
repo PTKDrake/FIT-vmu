@@ -23,6 +23,16 @@ test('shared inertia props expose blocknote ai feature flag', function () {
         );
 });
 
+test('cms pages render a csrf meta tag for authenticated ai requests', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $this->actingAs($editor)
+        ->get('/cms/posts/create')
+        ->assertOk()
+        ->assertSee('meta name="csrf-token"', false);
+});
+
 test('blocknote ai route returns service unavailable when openrouter is not configured', function () {
     config()->set('services.openrouter.api_key', null);
     config()->set('services.openrouter.blocknote_model', null);
