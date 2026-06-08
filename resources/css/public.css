@@ -5,12 +5,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@source "../web/pages/public";
-@source "../web/components/editor";
-@source "../web/components/page-builder";
-@source "../web/components/site-layout";
-@source "../web/components/ui";
-@source "../web/lib/puck";
+@source "../../web/pages/public";
+@source "../../web/components/editor";
+@source "../../web/components/page-builder";
+@source "../../web/components/site-layout";
+@source "../../web/components/ui";
+@source "../../web/lib/puck";
 
 @theme inline {
     --font-sans:
