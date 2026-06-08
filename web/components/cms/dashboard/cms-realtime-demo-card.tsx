@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";
-import { echo } from "@/lib/echo";
 import { t } from "@/lib/i18n";
+import { loadEcho } from "@/lib/load-echo";
 import realtimeRoutes from "@/routes/cms/realtime";
 import type { SharedData } from "@/types/shared";
 
@@ -52,23 +52,35 @@ export function CmsRealtimeDemoCard() {
   const channelName = user ? `cms-user.${user.id}` : null;
 
   useMountEffect(() => {
-    const currentEcho = echo;
+    let isActive = true;
+    let unsubscribe: (() => void) | undefined;
 
-    if (!currentEcho || !channelName) {
+    if (!channelName) {
       return;
     }
 
-    const channel = currentEcho.private(channelName);
-    const handleRealtimePing = (payload: CmsRealtimePingPayload) => {
-      setLastPing(payload);
-      toast.success(payload.message);
-    };
+    void loadEcho().then(({ echo }) => {
+      if (!isActive || !echo) {
+        return;
+      }
 
-    channel.listen("CmsRealtimePinged", handleRealtimePing);
+      const channel = echo.private(channelName);
+      const handleRealtimePing = (payload: CmsRealtimePingPayload) => {
+        setLastPing(payload);
+        toast.success(payload.message);
+      };
+
+      channel.listen("CmsRealtimePinged", handleRealtimePing);
+
+      unsubscribe = () => {
+        channel.stopListening("CmsRealtimePinged", handleRealtimePing);
+        echo.leave(channelName);
+      };
+    });
 
     return () => {
-      channel.stopListening("CmsRealtimePinged", handleRealtimePing);
-      currentEcho.leave(channelName);
+      isActive = false;
+      unsubscribe?.();
     };
   });
 

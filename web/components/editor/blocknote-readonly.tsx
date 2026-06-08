@@ -1,3 +1,5 @@
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/shadcn/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { twMerge } from "tailwind-merge";

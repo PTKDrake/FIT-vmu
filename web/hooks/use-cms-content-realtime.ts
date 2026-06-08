@@ -1,5 +1,5 @@
 import { useMountEffect } from "@/hooks/use-mount-effect";
-import { echo } from "@/lib/echo";
+import { loadEcho } from "@/lib/load-echo";
 
 export type CmsContentChangedPayload = {
   action: string;
@@ -16,23 +16,31 @@ export function useCmsContentRealtime(
   onChange: (payload: CmsContentChangedPayload) => void,
 ): void {
   useMountEffect(() => {
-    const currentEcho = echo;
+    let isActive = true;
+    let unsubscribe: (() => void) | undefined;
 
-    if (!currentEcho) {
-      return;
-    }
+    void loadEcho().then(({ echo }) => {
+      if (!isActive || !echo) {
+        return;
+      }
 
-    const channelName = `cms.${resource}`;
-    const channel = currentEcho.private(channelName);
-    const handleContentChanged = (payload: CmsContentChangedPayload) => {
-      onChange(payload);
-    };
+      const channelName = `cms.${resource}`;
+      const channel = echo.private(channelName);
+      const handleContentChanged = (payload: CmsContentChangedPayload) => {
+        onChange(payload);
+      };
 
-    channel.listen(".CmsContentChanged", handleContentChanged);
+      channel.listen(".CmsContentChanged", handleContentChanged);
+
+      unsubscribe = () => {
+        channel.stopListening(".CmsContentChanged", handleContentChanged);
+        echo.leave(channelName);
+      };
+    });
 
     return () => {
-      channel.stopListening(".CmsContentChanged", handleContentChanged);
-      currentEcho.leave(channelName);
+      isActive = false;
+      unsubscribe?.();
     };
   });
 }

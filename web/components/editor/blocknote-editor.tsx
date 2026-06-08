@@ -1,3 +1,6 @@
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/shadcn/style.css";
+import "@blocknote/xl-ai/style.css";
 import { vi as blockNoteViDictionary } from "@blocknote/core/locales";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
