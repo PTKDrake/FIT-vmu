@@ -39,8 +39,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
+        @php($stylesheet = str_starts_with($page['component'], 'public/') ? 'resources/css/public.css' : 'resources/css/app.css')
         @viteReactRefresh
-        @vite(['resources/css/app.css', 'web/app.tsx', "web/pages/{$page['component']}.tsx"])
+        @vite([$stylesheet, 'web/app.tsx', "web/pages/{$page['component']}.tsx"])
         @inertiaHead
     </head>
     <body class="font-sans antialiased">

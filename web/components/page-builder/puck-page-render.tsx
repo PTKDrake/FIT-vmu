@@ -3,7 +3,12 @@ import { cloneElement, isValidElement } from "react";
 import type { ReactElement, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
-import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
+import {
+  footerConfig,
+  headerConfig,
+  sideConfig,
+  vmuFitPageBuilderConfig,
+} from "@/lib/puck/page-builder-config";
 import {
   parsePuckLayoutData,
   parsePuckPageData,
@@ -13,19 +18,24 @@ import type { VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
 interface PuckPageRenderProps {
   className?: string;
   config?: PageBuilderConfig;
+  configName?: PuckPageRenderConfigName;
   content?: VmuFitPageBuilderValue;
   mode?: "page" | "slot";
 }
 
+export type PuckPageRenderConfigName = "page" | "header" | "footer" | "side";
+
 export function PuckPageRender({
   className,
-  config = vmuFitPageBuilderConfig,
+  config,
+  configName = "page",
   content,
   mode = "page",
 }: PuckPageRenderProps) {
+  const resolvedConfig = config ?? getPuckPageRenderConfig(configName);
   const data =
     mode === "slot" ? parsePuckLayoutData(content) : parsePuckPageData(content);
-  const publicConfig = createPublicRenderConfig(config);
+  const publicConfig = createPublicRenderConfig(resolvedConfig);
 
   return (
     <div
@@ -37,6 +47,24 @@ export function PuckPageRender({
       <Render config={publicConfig} data={data} />
     </div>
   );
+}
+
+function getPuckPageRenderConfig(
+  configName: PuckPageRenderConfigName,
+): PageBuilderConfig {
+  if (configName === "header") {
+    return headerConfig;
+  }
+
+  if (configName === "footer") {
+    return footerConfig;
+  }
+
+  if (configName === "side") {
+    return sideConfig;
+  }
+
+  return vmuFitPageBuilderConfig;
 }
 
 function createPublicRenderConfig(

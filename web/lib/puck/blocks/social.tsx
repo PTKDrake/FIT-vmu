@@ -1,4 +1,4 @@
-import * as LucideIcons from "lucide-react";
+import { Globe, Link as LinkIcon, Mail, Phone } from "lucide-react";
 import type { ComponentType } from "react";
 import {
   FaFacebook,
@@ -46,9 +46,9 @@ const PLATFORM_ICON_MAP: Record<SocialPlatform, IconComponent> = {
   github: FaGithub,
   tiktok: FaTiktok,
   zalo: SiZalo,
-  email: LucideIcons.Mail,
-  phone: LucideIcons.Phone,
-  website: LucideIcons.Globe,
+  email: Mail,
+  phone: Phone,
+  website: Globe,
 };
 
 const PLATFORM_LABEL_MAP: Record<SocialPlatform, string> = {
@@ -64,18 +64,6 @@ const PLATFORM_LABEL_MAP: Record<SocialPlatform, string> = {
   phone: "Điện thoại",
   website: "Website",
 };
-
-function PlatformIcon({
-  platform,
-  className,
-}: {
-  platform: SocialPlatform;
-  className?: string;
-}) {
-  const IconComponent = PLATFORM_ICON_MAP[platform] || LucideIcons.Link;
-
-  return <IconComponent className={className} />;
-}
 
 export const SocialLinksComponentConfig: PageBuilderComponentConfig<"SocialLinks"> =
   {
@@ -202,14 +190,15 @@ export const SocialLinksComponentConfig: PageBuilderComponentConfig<"SocialLinks
           )}
         >
           <div className={layoutClass}>
-            {links.map((link, index) => {
+            {links.map((link) => {
               const displayLabel =
                 link.label || PLATFORM_LABEL_MAP[link.platform] || "";
               const href = link.url || "#";
+              const IconComponent = PLATFORM_ICON_MAP[link.platform] || LinkIcon;
 
               return (
                 <Link
-                  key={index}
+                  key={`${link.platform}-${href}-${displayLabel}`}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -221,10 +210,7 @@ export const SocialLinksComponentConfig: PageBuilderComponentConfig<"SocialLinks
                   )}
                   aria-label={displayLabel}
                 >
-                  <PlatformIcon
-                    platform={link.platform}
-                    className={iconSizeClass}
-                  />
+                  <IconComponent className={iconSizeClass} />
                   {showLabels && <span>{displayLabel}</span>}
                 </Link>
               );
@@ -320,6 +306,7 @@ export const NewsletterFormComponentConfig: PageBuilderComponentConfig<"Newslett
           >
             <input
               type="email"
+              aria-label={placeholder || "Email nhận tin"}
               placeholder={placeholder || "Nhập email của bạn"}
               className={twMerge(
                 "flex-1 px-4 py-2.5 text-sm bg-bg text-fg border border-border focus:outline-none focus:ring-2 focus:ring-primary/50",
@@ -413,9 +400,9 @@ export const CopyrightBarComponentConfig: PageBuilderComponentConfig<"CopyrightB
         >
           {links && links.length > 0 && (
             <div className="flex flex-wrap justify-center gap-4 mb-3">
-              {links.map((link, index) => (
+              {links.map((link) => (
                 <Link
-                  key={index}
+                  key={`${link.url || "#"}-${link.label}`}
                   href={link.url || "#"}
                   className="text-xs text-muted-fg hover:text-primary transition-colors"
                 >

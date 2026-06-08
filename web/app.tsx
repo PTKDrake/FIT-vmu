@@ -1,12 +1,17 @@
-import { createInertiaApp } from "@inertiajs/react";
+import { createInertiaApp, usePage } from "@inertiajs/react";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import type { ComponentType } from "react";
+import { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { Toast } from "@/components/ui/toast";
 import { initializeTheme } from "@/hooks/use-theme";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 const pages = import.meta.glob<{ default: ComponentType }>("./pages/**/*.tsx");
+const Toast = lazy(() =>
+  import("@/components/ui/toast").then((module) => ({
+    default: module.Toast,
+  })),
+);
 
 void createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -24,7 +29,7 @@ void createInertiaApp({
       <NuqsAdapter>
         <>
           <App {...props} />
-          <Toast position="top-right" />
+          <AppToast />
         </>
       </NuqsAdapter>,
     );
@@ -36,3 +41,18 @@ void createInertiaApp({
 });
 
 initializeTheme();
+
+function AppToast() {
+  const { component } = usePage();
+  const needsToast = !component.startsWith("public/");
+
+  if (!needsToast) {
+    return null;
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <Toast position="top-right" />
+    </Suspense>
+  );
+}

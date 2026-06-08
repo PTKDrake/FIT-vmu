@@ -10,7 +10,7 @@ import { defineConfig } from "vite"
 export default defineConfig({
     plugins: [
         laravel({
-            input: ["resources/css/app.css", "web/app.tsx"],
+            input: ["resources/css/app.css", "resources/css/public.css", "web/app.tsx"],
             refresh: true,
         }),
         inertia(),

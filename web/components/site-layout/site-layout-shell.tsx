@@ -1,10 +1,5 @@
 import type { ReactNode } from "react";
-import { PuckPageRender } from "@/components/page-builder/puck-page-render";
-import {
-  footerConfig,
-  headerConfig,
-  sideConfig,
-} from "@/lib/puck/page-builder-config";
+import { LazyPuckPageRender } from "@/components/page-builder/lazy-puck-page-render";
 import { parsePuckLayoutData } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderValue } from "@/lib/puck/page-builder-data";
 
@@ -30,8 +25,8 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
     <div className="min-h-dvh bg-bg text-fg">
       {hasHeader ? (
         <header>
-          <PuckPageRender
-            config={headerConfig}
+          <LazyPuckPageRender
+            configName="header"
             content={layout?.headerData}
             mode="slot"
           />
@@ -41,8 +36,8 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
       <div className="mx-auto flex w-full flex-col lg:flex-row lg:items-start">
         {hasLeft ? (
           <aside className="w-full shrink-0 lg:w-72">
-            <PuckPageRender
-              config={sideConfig}
+            <LazyPuckPageRender
+              configName="side"
               content={layout?.leftData}
               mode="slot"
             />
@@ -53,8 +48,8 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
 
         {hasRight ? (
           <aside className="w-full shrink-0 lg:w-72">
-            <PuckPageRender
-              config={sideConfig}
+            <LazyPuckPageRender
+              configName="side"
               content={layout?.rightData}
               mode="slot"
             />
@@ -64,8 +59,8 @@ export function SiteLayoutShell({ children, layout }: SiteLayoutShellProps) {
 
       {hasFooter ? (
         <footer>
-          <PuckPageRender
-            config={footerConfig}
+          <LazyPuckPageRender
+            configName="footer"
             content={layout?.footerData}
             mode="slot"
           />

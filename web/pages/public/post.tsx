@@ -6,7 +6,7 @@ import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
 import { Text } from "@/components/ui/text";
 import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
-import { PuckPageRender } from "@/components/page-builder/puck-page-render";
+import { LazyPuckPageRender } from "@/components/page-builder/lazy-puck-page-render";
 import { SiteLayoutShell } from "@/components/site-layout/site-layout-shell";
 import type { SiteLayoutShellData } from "@/components/site-layout/site-layout-shell";
 import type { SharedData } from "@/types/shared";
@@ -58,9 +58,9 @@ export default function PublicPost({
       <SiteLayoutShell layout={layout}>
         <article className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
           <Breadcrumbs className="mb-6">
-            {breadcrumbs.map((crumb, index) => (
+            {breadcrumbs.map((crumb) => (
               <BreadcrumbsItem
-                key={index}
+                key={`${crumb.url ?? "current"}-${crumb.label}`}
                 href={crumb.url ?? undefined}
               >
                 {crumb.label}
@@ -112,7 +112,7 @@ export default function PublicPost({
 
           <div className="prose prose-lg max-w-none">
             {post.contentFormat === "puck_json" ? (
-              <PuckPageRender content={post.content} />
+              <LazyPuckPageRender content={post.content} />
             ) : (
               <BlockNoteReadonly content={post.content ?? undefined} />
             )}
@@ -141,7 +141,7 @@ export default function PublicPost({
                         />
                       </div>
                     ) : null}
-                    <CardContent className="p-4 space-y-2 flex-1 flex flex-col">
+                    <CardContent className="flex flex-1 flex-col gap-2 p-4">
                       {related.categoryNames[0] ? (
                         <span className="text-[10px] text-primary font-bold uppercase tracking-wider">
                           {related.categoryNames[0]}
