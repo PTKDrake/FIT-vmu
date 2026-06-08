@@ -1,4 +1,4 @@
-import { createInertiaApp, usePage } from "@inertiajs/react";
+import { createInertiaApp } from "@inertiajs/react";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import type { ComponentType } from "react";
 import { lazy, Suspense } from "react";
@@ -29,7 +29,7 @@ void createInertiaApp({
       <NuqsAdapter>
         <>
           <App {...props} />
-          <AppToast />
+          <AppToast component={props.initialPage.component} />
         </>
       </NuqsAdapter>,
     );
@@ -42,8 +42,7 @@ void createInertiaApp({
 
 initializeTheme();
 
-function AppToast() {
-  const { component } = usePage();
+function AppToast({ component }: { component: string }) {
   const needsToast = !component.startsWith("public/");
 
   if (!needsToast) {
