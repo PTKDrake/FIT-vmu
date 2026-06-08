@@ -16,7 +16,7 @@ class StudentGroupFactory extends Factory
 {
     public function definition(): array
     {
-        $name = fake()->randomElement([
+        $name = $this->faker->randomElement([
             'TTM63DH',
             'CNTT K63',
             'Nhóm thực tập cảng số',
@@ -25,7 +25,7 @@ class StudentGroupFactory extends Factory
 
         return [
             'name' => $name,
-            'code' => Str::upper(fake()->unique()->bothify('GRP###??')),
+            'code' => Str::upper($this->faker->unique()->bothify('GRP###??')),
             'owner_id' => User::factory(),
         ];
     }

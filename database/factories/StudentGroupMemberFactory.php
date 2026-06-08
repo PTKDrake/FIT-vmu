@@ -17,7 +17,7 @@ class StudentGroupMemberFactory extends Factory
     {
         return [
             'student_group_id' => StudentGroup::factory(),
-            'student_code' => fake()->unique()->numerify('######'),
+            'student_code' => $this->faker->unique()->numerify('######'),
         ];
     }
 }

@@ -36,12 +36,12 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $title = fake()->sentence(6);
+        $title = $this->faker->sentence(6);
 
         return [
             'title' => $title,
-            'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(100, 999),
-            'excerpt' => fake()->optional()->paragraph(),
+            'slug' => Str::slug($title).'-'.$this->faker->unique()->numberBetween(100, 999),
+            'excerpt' => $this->faker->optional()->paragraph(),
             'content' => json_encode([
                 [
                     'id' => (string) Str::uuid(),
@@ -50,7 +50,7 @@ class PostFactory extends Factory
                     'content' => [
                         [
                             'type' => 'text',
-                            'text' => fake()->paragraph(),
+                            'text' => $this->faker->paragraph(),
                             'styles' => [],
                         ],
                     ],
@@ -61,8 +61,8 @@ class PostFactory extends Factory
             'visibility' => 'public',
             'thumbnail_id' => Media::factory(),
             'author_id' => User::factory(),
-            'status' => fake()->randomElement(['draft', 'pending', 'published', 'rejected']),
-            'published_at' => fake()->optional()->dateTimeBetween('-1 year', 'now'),
+            'status' => $this->faker->randomElement(['draft', 'pending', 'published', 'rejected']),
+            'published_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

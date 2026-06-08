@@ -22,9 +22,9 @@ class StaffAppointmentFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = fake()->dateTimeBetween('-5 years', '-6 months');
-        $endDate = fake()->boolean(40)
-            ? fake()->dateTimeBetween($startDate, '+1 year')
+        $startDate = $this->faker->dateTimeBetween('-5 years', '-6 months');
+        $endDate = $this->faker->boolean(40)
+            ? $this->faker->dateTimeBetween($startDate, '+1 year')
             : null;
 
         return [
@@ -33,7 +33,7 @@ class StaffAppointmentFactory extends Factory
             'position_id' => Position::factory(),
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'note' => fake()->optional()->sentence(),
+            'note' => $this->faker->optional()->sentence(),
         ];
     }
 }

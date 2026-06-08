@@ -23,15 +23,15 @@ class MediaFactory extends Factory
     {
         $extension = 'pdf';
         $storageName = Str::lower((string) Str::ulid()).'.'.$extension;
-        $displayName = fake()->unique()->slug().'.'.$extension;
+        $displayName = $this->faker->unique()->slug().'.'.$extension;
 
         return [
             'disk' => 'public',
-            'path' => 'media/'.fake()->date('Y/m').'/'.$storageName,
+            'path' => 'media/'.$this->faker->date('Y/m').'/'.$storageName,
             'original_name' => $storageName,
             'display_name' => $displayName,
             'mime_type' => 'application/pdf',
-            'size' => fake()->numberBetween(10_000, 5_000_000),
+            'size' => $this->faker->numberBetween(10_000, 5_000_000),
             'uploaded_by' => User::factory(),
         ];
     }

@@ -20,7 +20,7 @@ class PositionFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->randomElement([
+        $name = $this->faker->randomElement([
             'Truong khoa',
             'Pho khoa',
             'Truong bo mon',
@@ -31,8 +31,8 @@ class PositionFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
-            'sort_order' => fake()->numberBetween(0, 20),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(100, 999),
+            'sort_order' => $this->faker->numberBetween(0, 20),
             'is_active' => true,
         ];
     }

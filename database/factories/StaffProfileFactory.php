@@ -19,16 +19,16 @@ class StaffProfileFactory extends Factory
      */
     public function definition(): array
     {
-        $fullName = fake()->name();
+        $fullName = $this->faker->name();
 
         return [
             'user_id' => User::factory(),
-            'academic_title' => fake()->randomElement(['TS.', 'ThS.', null]),
+            'academic_title' => $this->faker->randomElement(['TS.', 'ThS.', null]),
             'full_name' => $fullName,
-            'slug' => Str::slug($fullName).'-'.fake()->unique()->numberBetween(1000, 9999),
+            'slug' => Str::slug($fullName).'-'.$this->faker->unique()->numberBetween(1000, 9999),
             'avatar_id' => null,
-            'email' => fake()->safeEmail(),
-            'phone' => fake()->phoneNumber(),
+            'email' => $this->faker->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
             'bio' => json_encode([
                 [
                     'id' => (string) Str::uuid(),
@@ -37,7 +37,7 @@ class StaffProfileFactory extends Factory
                     'content' => [
                         [
                             'type' => 'text',
-                            'text' => fake()->sentence(),
+                            'text' => $this->faker->sentence(),
                             'styles' => [],
                         ],
                     ],

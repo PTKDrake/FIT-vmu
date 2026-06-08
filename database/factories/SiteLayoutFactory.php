@@ -16,7 +16,7 @@ class SiteLayoutFactory extends Factory
     public function definition(): array
     {
         /** @var string $name */
-        $name = fake()->unique()->randomElement([
+        $name = $this->faker->unique()->randomElement([
             'Default Public Layout',
             'Admissions Layout',
             'Department Layout',
@@ -26,7 +26,7 @@ class SiteLayoutFactory extends Factory
 
         return [
             'name' => $name,
-            'key' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
+            'key' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(100, 999),
             'header_data' => $this->emptyPuckData(),
             'footer_data' => $this->emptyPuckData(),
             'left_data' => null,

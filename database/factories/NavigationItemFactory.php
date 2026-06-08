@@ -18,13 +18,13 @@ class NavigationItemFactory extends Factory
         return [
             'menu_id' => NavigationMenu::factory(),
             'parent_id' => null,
-            'title' => fake()->words(2, true),
+            'title' => $this->faker->words(2, true),
             'type' => 'custom_url',
             'linkable_type' => null,
             'linkable_id' => null,
-            'url' => '/'.fake()->slug(),
-            'target' => fake()->randomElement(['_self', '_blank']),
-            'sort_order' => fake()->numberBetween(0, 20),
+            'url' => '/'.$this->faker->slug(),
+            'target' => $this->faker->randomElement(['_self', '_blank']),
+            'sort_order' => $this->faker->numberBetween(0, 20),
             'is_active' => true,
         ];
     }

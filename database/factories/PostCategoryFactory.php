@@ -16,7 +16,7 @@ class PostCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement([
+            'name' => $this->faker->randomElement([
                 'Tin tuc',
                 'Thong bao',
                 'Tuyen sinh',
@@ -24,10 +24,10 @@ class PostCategoryFactory extends Factory
                 'Nghien cuu khoa hoc',
                 'Sinh vien',
             ]),
-            'slug' => Str::slug(fake()->unique()->words(3, true)),
-            'description' => fake()->optional()->paragraph(),
+            'slug' => Str::slug($this->faker->unique()->words(3, true)),
+            'description' => $this->faker->optional()->paragraph(),
             'parent_id' => null,
-            'sort_order' => fake()->numberBetween(0, 20),
+            'sort_order' => $this->faker->numberBetween(0, 20),
             'is_active' => true,
         ];
     }

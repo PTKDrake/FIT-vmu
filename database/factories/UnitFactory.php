@@ -20,7 +20,7 @@ class UnitFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->randomElement([
+        $name = $this->faker->randomElement([
             'Ban chu nhiem',
             'Bo mon Khoa hoc may tinh',
             'Bo mon He thong thong tin',
@@ -31,7 +31,7 @@ class UnitFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(100, 999),
             'description' => json_encode([
                 [
                     'id' => (string) Str::uuid(),
@@ -40,7 +40,7 @@ class UnitFactory extends Factory
                     'content' => [
                         [
                             'type' => 'text',
-                            'text' => fake()->sentence(),
+                            'text' => $this->faker->sentence(),
                             'styles' => [],
                         ],
                     ],
@@ -48,7 +48,7 @@ class UnitFactory extends Factory
                 ],
             ], JSON_THROW_ON_ERROR),
             'description_format' => 'blocknote_json',
-            'sort_order' => fake()->numberBetween(0, 20),
+            'sort_order' => $this->faker->numberBetween(0, 20),
             'is_active' => true,
         ];
     }

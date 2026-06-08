@@ -18,7 +18,7 @@ class PageFactory extends Factory
     public function definition(): array
     {
         /** @var string $title */
-        $title = fake()->randomElement([
+        $title = $this->faker->randomElement([
             'Trang chu',
             'Gioi thieu',
             'Lien he',
@@ -28,10 +28,10 @@ class PageFactory extends Factory
 
         return [
             'title' => $title,
-            'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(100, 999),
-            'excerpt' => fake()->optional()->paragraph(),
-            'seo_title' => fake()->optional()->sentence(6),
-            'seo_description' => fake()->optional()->sentence(12),
+            'slug' => Str::slug($title).'-'.$this->faker->unique()->numberBetween(100, 999),
+            'excerpt' => $this->faker->optional()->paragraph(),
+            'seo_title' => $this->faker->optional()->sentence(6),
+            'seo_description' => $this->faker->optional()->sentence(12),
             'content' => json_encode([
                 'root' => [
                     'props' => [
@@ -47,8 +47,8 @@ class PageFactory extends Factory
             'site_layout_id' => null,
             'thumbnail_id' => Media::factory(),
             'author_id' => User::factory(),
-            'status' => fake()->randomElement(['draft', 'pending', 'published', 'rejected']),
-            'published_at' => fake()->optional()->dateTimeBetween('-1 year', 'now'),
+            'status' => $this->faker->randomElement(['draft', 'pending', 'published', 'rejected']),
+            'published_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

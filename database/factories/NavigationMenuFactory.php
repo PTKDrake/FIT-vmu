@@ -15,7 +15,7 @@ class NavigationMenuFactory extends Factory
 {
     public function definition(): array
     {
-        $name = fake()->randomElement([
+        $name = $this->faker->randomElement([
             'Header chinh',
             'Footer chinh',
             'Mobile menu',
@@ -24,8 +24,8 @@ class NavigationMenuFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
-            'location' => fake()->randomElement(['header', 'footer', 'mobile', 'sidebar']),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(100, 999),
+            'location' => $this->faker->randomElement(['header', 'footer', 'mobile', 'sidebar']),
             'is_active' => true,
         ];
     }
