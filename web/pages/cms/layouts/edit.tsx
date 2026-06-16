@@ -5,6 +5,9 @@ import CmsLayout from "@/layouts/cms-layout";
 import type { SharedData } from "@/types/shared";
 
 interface EditSiteLayoutPageProps extends SharedData {
+  can: {
+    exportPuckJson: boolean;
+  };
   layout: {
     footerData: string | null;
     headerData: string | null;
@@ -18,12 +21,13 @@ interface EditSiteLayoutPageProps extends SharedData {
 }
 
 export default function EditSiteLayoutPage({
+  can,
   layout,
 }: EditSiteLayoutPageProps) {
   return (
     <>
       <Head title={`Chỉnh sửa thành phần - ${layout.name}`} />
-      <SiteLayoutBuilderEditor layout={layout} />
+      <SiteLayoutBuilderEditor canExport={can.exportPuckJson} layout={layout} />
     </>
   );
 }

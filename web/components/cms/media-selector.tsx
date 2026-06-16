@@ -48,6 +48,75 @@ interface MediaItem {
   mimeType: string;
 }
 
+interface PaginationSegment {
+  key: string;
+  type: "page" | "gap";
+  page: number;
+}
+
+const MEDIA_LIBRARY_SKELETON_KEYS = Array.from(
+  { length: 8 },
+  (_, index) => `media-library-skeleton-${index + 1}`,
+);
+
+function getCleanDisplayName(url: string | null, name: string | null): string {
+  if (name) {
+    return name;
+  }
+
+  if (!url) {
+    return "Chưa chọn ảnh";
+  }
+
+  const filename = url.split("/").pop() || "";
+
+  if (/^\d+$/.test(filename)) {
+    return "Ảnh đại diện";
+  }
+
+  return decodeURIComponent(filename);
+}
+
+function buildPaginationPages(
+  currentPageNum: number,
+  lastPageNum: number,
+): PaginationSegment[] {
+  const pages: PaginationSegment[] = [];
+  const range = 1;
+
+  pages.push({ key: "page-1", type: "page", page: 1 });
+
+  if (currentPageNum - range > 2) {
+    pages.push({ key: "gap-before", type: "gap", page: 0 });
+  }
+
+  for (
+    let pageNumber = Math.max(2, currentPageNum - range);
+    pageNumber <= Math.min(lastPageNum - 1, currentPageNum + range);
+    pageNumber++
+  ) {
+    pages.push({
+      key: `page-${pageNumber}`,
+      type: "page",
+      page: pageNumber,
+    });
+  }
+
+  if (currentPageNum + range < lastPageNum - 1) {
+    pages.push({ key: "gap-after", type: "gap", page: 0 });
+  }
+
+  if (lastPageNum > 1) {
+    pages.push({
+      key: `page-${lastPageNum}`,
+      type: "page",
+      page: lastPageNum,
+    });
+  }
+
+  return pages;
+}
+
 export function MediaSelector({
   value,
   onChange,
@@ -231,60 +300,6 @@ export function MediaSelector({
   const currentPreview =
     localPreviewUrl || (value ? `/storage/media/${value}` : null);
 
-  const getCleanDisplayName = (
-    url: string | null,
-    name: string | null,
-  ): string => {
-    if (name) {
-      return name;
-    }
-
-    if (!url) {
-      return "Chưa chọn ảnh";
-    }
-
-    const filename = url.split("/").pop() || "";
-
-    // If the filename is just a number (which is the ID), do not display it as a number
-    if (/^\d+$/.test(filename)) {
-      return "Ảnh đại diện";
-    }
-
-    return decodeURIComponent(filename);
-  };
-
-  const buildPaginationPages = (
-    currentPageNum: number,
-    lastPageNum: number,
-  ) => {
-    const pages: { type: "page" | "gap"; page: number }[] = [];
-    const range = 1;
-
-    pages.push({ type: "page", page: 1 });
-
-    if (currentPageNum - range > 2) {
-      pages.push({ type: "gap", page: 0 });
-    }
-
-    for (
-      let i = Math.max(2, currentPageNum - range);
-      i <= Math.min(lastPageNum - 1, currentPageNum + range);
-      i++
-    ) {
-      pages.push({ type: "page", page: i });
-    }
-
-    if (currentPageNum + range < lastPageNum - 1) {
-      pages.push({ type: "gap", page: 0 });
-    }
-
-    if (lastPageNum > 1) {
-      pages.push({ type: "page", page: lastPageNum });
-    }
-
-    return pages;
-  };
-
   return (
     <div className="space-y-3">
       <div className="space-y-1">
@@ -437,9 +452,9 @@ export function MediaSelector({
                   {/* Grid Area */}
                   {loadingLibrary ? (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8">
-                      {[...Array(8)].map((_, i) => (
+                      {MEDIA_LIBRARY_SKELETON_KEYS.map((skeletonKey) => (
                         <div
-                          key={i}
+                          key={skeletonKey}
                           className="aspect-square rounded-lg bg-muted/30 animate-pulse border border-border/40"
                         />
                       ))}
@@ -517,10 +532,10 @@ export function MediaSelector({
                                 }
                               />
                               {buildPaginationPages(currentPage, lastPage).map(
-                                (item, index) =>
+                                (item) =>
                                   item.type === "page" ? (
                                     <PaginationItem
-                                      key={index}
+                                      key={item.key}
                                       isCurrent={item.page === currentPage}
                                       onPress={() =>
                                         void loadLibrary(searchQuery, item.page)
@@ -530,7 +545,7 @@ export function MediaSelector({
                                       {item.page}
                                     </PaginationItem>
                                   ) : (
-                                    <PaginationGap key={index} />
+                                    <PaginationGap key={item.key} />
                                   ),
                               )}
                               <PaginationNext
@@ -580,6 +595,7 @@ export function MediaSelector({
                 >
                   <input
                     ref={dropzoneInputProps.ref}
+                    aria-label="Tải ảnh lên từ máy tính"
                     type={dropzoneInputProps.type}
                     multiple={dropzoneInputProps.multiple}
                     accept={dropzoneInputProps.accept}
@@ -589,7 +605,7 @@ export function MediaSelector({
                     onClick={dropzoneInputProps.onClick}
                   />
                   {uploading ? (
-                    <div className="space-y-3 py-4 flex flex-col items-center text-center">
+                    <div className="py-4 flex flex-col gap-3 items-center text-center">
                       <ArrowPathIcon className="size-10 text-primary animate-spin" />
                       <p className="text-sm font-semibold text-fg">
                         Đang tải tệp tin lên máy chủ...

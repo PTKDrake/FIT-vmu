@@ -96,6 +96,20 @@ export function getPaddingXClass(paddingX?: "none" | "sm" | "md" | "lg") {
   return paddingX ? pxClasses[paddingX] : "";
 }
 
+export function getInsetYClass(
+  insetY?: "none" | "xs" | "sm" | "md" | "lg",
+) {
+  const insetClasses = {
+    none: "py-0",
+    xs: "py-2",
+    sm: "py-3 sm:py-4",
+    md: "py-4 sm:py-6",
+    lg: "py-8 sm:py-10",
+  };
+
+  return insetY ? insetClasses[insetY] : "";
+}
+
 export function getBackgroundClass(background?: string) {
   const bgClasses: Record<string, string> = {
     transparent: "bg-transparent text-fg",
@@ -418,6 +432,7 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
     maxWidth: "lg",
     horizontalPadding: "md",
     align: "center",
+    insetY: "none",
     hideOn: "none",
     className: "",
   },
@@ -457,6 +472,17 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
         { label: "Phải", value: "right" },
       ],
     },
+    insetY: {
+      type: "select",
+      label: "Khoảng đệm trên và dưới",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Rất nhỏ", value: "xs" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
     hideOn: {
       type: "select",
       label: "Ẩn theo thiết bị",
@@ -483,6 +509,7 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       paddingX,
       horizontalPadding,
       align,
+      insetY,
       hideOn,
       className,
       children: Children,
@@ -522,10 +549,11 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       <div
         id={id}
         className={twMerge(
-          "w-full",
+          "@container w-full min-w-0",
           alignClass,
           widthClass,
           getPaddingXClass(resolvedHorizontalPadding),
+          getInsetYClass(insetY),
           getHideOnClass(hideOn),
           className,
         )}
@@ -644,13 +672,13 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
     );
 
     const ratioClass = {
-      equal: "grid-cols-1 md:grid-cols-2",
-      leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr]",
-      rightWide: "grid-cols-1 md:grid-cols-[1fr_2fr]",
+      equal: "grid-cols-1 md:grid-cols-2 @3xl:grid-cols-2",
+      leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr] @3xl:grid-cols-[2fr_1fr]",
+      rightWide: "grid-cols-1 md:grid-cols-[1fr_2fr] @3xl:grid-cols-[1fr_2fr]",
       // Backwards compatibility mappings:
-      "1:1": "grid-cols-1 md:grid-cols-2",
-      "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr]",
-      "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr]",
+      "1:1": "grid-cols-1 md:grid-cols-2 @3xl:grid-cols-2",
+      "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr] @3xl:grid-cols-[2fr_1fr]",
+      "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr] @3xl:grid-cols-[1fr_2fr]",
     }[columnRatio || "equal"];
 
     const isStack = stackOnMobile !== false;
@@ -660,12 +688,12 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
       typeof gap === "number" ? { gap: `${gap}px` } : undefined;
 
     const wrapperClass = twMerge(
-      "grid w-full items-start gap-6 md:gap-8",
+      "@container grid w-full min-w-0 items-start gap-6 md:gap-8",
       isStack
         ? twMerge(
           "flex",
           isReverse ? "flex-col-reverse" : "flex-col",
-          "md:grid",
+          "md:grid @3xl:grid",
           ratioClass,
         )
         : twMerge("grid", ratioClass),

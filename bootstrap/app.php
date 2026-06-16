@@ -15,9 +15,19 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
+    ->withCommands([
+        __DIR__.'/../app/Console/Commands',
+    ])
     ->withMiddleware(function (Middleware $middleware) {
         // Uncomment this when you have sidebar state
         // $middleware->encryptCookies(except: ['sidebar:state']);
+        $middleware->trustProxies(
+            at: ['127.0.0.1'],
+            headers: Request::HEADER_X_FORWARDED_FOR |
+                Request::HEADER_X_FORWARDED_HOST |
+                Request::HEADER_X_FORWARDED_PORT |
+                Request::HEADER_X_FORWARDED_PROTO
+        );
 
         $middleware->redirectUsersTo(function (Request $request): string {
             $user = $request->user();

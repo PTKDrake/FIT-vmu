@@ -2,7 +2,8 @@ import { createInertiaApp } from "@inertiajs/react";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import type { ComponentType } from "react";
 import { lazy, Suspense } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot  } from "react-dom/client";
+import type {Root} from "react-dom/client";
 import { initializeTheme } from "@/hooks/use-theme";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -25,7 +26,12 @@ void createInertiaApp({
     return page().then((module) => module.default as ComponentType);
   },
   setup({ el, App, props }) {
-    createRoot(el!).render(
+    const container = el as HTMLElement & { __vmuRoot?: Root };
+    const root = container.__vmuRoot ?? createRoot(container);
+
+    container.__vmuRoot = root;
+
+    root.render(
       <NuqsAdapter>
         <>
           <App {...props} />

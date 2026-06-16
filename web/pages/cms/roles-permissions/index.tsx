@@ -9,8 +9,8 @@ import {
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { Head } from "@inertiajs/react";
-import { Fragment, useDeferredValue, useState  } from "react";
-import type {ReactNode} from "react";
+import { Fragment, useDeferredValue, useState } from "react";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { RoleActionDialog } from "@/components/cms/role-action-dialog";
 import { RoleFormDialog } from "@/components/cms/role-form-dialog";
@@ -132,7 +132,7 @@ function normalizePermissionList(values: string[]): string[] {
 }
 
 function sortByLabel(values: string[]): string[] {
-  return [...values].sort((left, right) =>
+  return values.toSorted((left, right) =>
     left.localeCompare(right, "vi", { sensitivity: "base" }),
   );
 }
@@ -195,9 +195,8 @@ export default function CmsRolesPermissionsPage({
   >(() =>
     Object.fromEntries(allCategories.map((category) => [category, false])),
   );
-  const [expandCollapseValue, setExpandCollapseValue] = useState<string>(
-    "collapsed",
-  );
+  const [expandCollapseValue, setExpandCollapseValue] =
+    useState<string>("collapsed");
 
   const deferredMatrixSearch = useDeferredValue(matrixSearchQuery);
 
@@ -716,7 +715,7 @@ export default function CmsRolesPermissionsPage({
                                     <span className="text-xs text-muted-fg">
                                       {checkedCount}/{items.length}
                                     </span>
-                                    <div className="h-2 w-24 rounded-full bg-secondary">
+                                    <div className="size-24 rounded-full bg-secondary">
                                       <div
                                         className="h-2 rounded-full bg-primary transition-[width]"
                                         style={{

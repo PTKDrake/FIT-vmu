@@ -17,7 +17,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                 'type' => 'Container',
                 'props' => [
                     'id' => 'public-header-container',
-                    'maxWidth' => 'xl',
+                    'maxWidth' => 'full',
                     'horizontalPadding' => 'md',
                     'children' => [
                         [
@@ -29,10 +29,10 @@ class DefaultSiteLayoutSeeder extends Seeder
                                 'justifyContent' => 'between',
                                 'alignItems' => 'center',
                                 'gapX' => 'lg',
-                                'gapY' => 'sm',
-                                'wrap' => false,
+                                'gapY' => 'md',
+                                'wrap' => true,
                                 'childWidth' => 'auto',
-                                'className' => 'py-3 sm:py-4',
+                                'insetY' => 'sm',
                                 'children' => [
                                     [
                                         'type' => 'Heading',
@@ -41,6 +41,9 @@ class DefaultSiteLayoutSeeder extends Seeder
                                             'subtitle' => 'Trường Đại học Hàng hải Việt Nam',
                                             'level' => 4,
                                             'alignment' => 'left',
+                                            'fullWidthOnMobile' => true,
+                                            'autoWidthFromMd' => true,
+                                            'noShrinkFromMd' => true,
                                         ],
                                     ],
                                     [
@@ -48,8 +51,15 @@ class DefaultSiteLayoutSeeder extends Seeder
                                         'props' => [
                                             'title' => '',
                                             'menuId' => '1',
+                                            'mobileButtonLabel' => 'Mở menu điều hướng',
+                                            'mobileLogoAlt' => 'FIT VMU',
+                                            'mobileLogoUrl' => '/logo.png',
+                                            'mobilePanelTitle' => 'Khoa Công nghệ thông tin',
+                                            'fullWidthOnMobile' => true,
+                                            'growFromMd' => true,
+                                            'basisFromMd' => '44rem',
+                                            'maxWidth' => 'none',
                                             'orientation' => 'horizontal',
-                                            'className' => 'flex-1 max-w-2xl',
                                             'surfaceTone' => 'transparent',
                                             'surfaceBorder' => 'none',
                                             'surfaceRadius' => 'none',
@@ -67,6 +77,9 @@ class DefaultSiteLayoutSeeder extends Seeder
                                             'showRegisterLink' => false,
                                             'showCmsLink' => true,
                                             'profileVariant' => 'compact',
+                                            'fullWidthOnMobile' => true,
+                                            'autoWidthFromMd' => true,
+                                            'noShrinkFromMd' => true,
                                         ],
                                     ],
                                 ],
@@ -81,22 +94,22 @@ class DefaultSiteLayoutSeeder extends Seeder
                 'type' => 'Container',
                 'props' => [
                     'id' => 'public-footer-container',
-                    'maxWidth' => 'full',
-                    'horizontalPadding' => 'none',
+                    'maxWidth' => 'xl',
+                    'horizontalPadding' => 'md',
+                    'insetY' => 'lg',
                     'children' => [
                         [
-                            'type' => 'Flex',
+                            'type' => 'Grid',
                             'props' => [
-                                'flexDirection' => 'row',
-                                'mobileDirection' => 'column',
-                                'justifyContent' => 'evenly',
+                                'mobileColumns' => 1,
+                                'tabletColumns' => 1,
+                                'desktopColumns' => 2,
+                                'gapX' => 'xl',
+                                'gapY' => 'lg',
                                 'alignItems' => 'start',
-                                'gapX' => 'md',
-                                'gapY' => 'md',
-                                'wrap' => false,
-                                'childWidth' => 'full',
+                                'justifyItems' => 'stretch',
+                                'insetY' => 'xs',
                                 'hideOn' => 'none',
-                                'className' => 'py-6',
                                 'children' => [
                                     [
                                         'type' => 'ContactInfo',
@@ -110,7 +123,10 @@ class DefaultSiteLayoutSeeder extends Seeder
                                             'surfaceRadius' => 'none',
                                             'surfacePadding' => 'none',
                                             'surfaceShadow' => 'none',
-                                            'className' => 'max-w-sm',
+                                            'maxWidth' => 'sm',
+                                            'textAlign' => 'center',
+                                            'textAlignFromLg' => 'left',
+                                            'positionFromLg' => 'start',
                                         ],
                                     ],
                                     [
@@ -118,6 +134,10 @@ class DefaultSiteLayoutSeeder extends Seeder
                                         'props' => [
                                             'title' => 'Điều hướng',
                                             'menuId' => '2',
+                                            'maxWidth' => 'sm',
+                                            'textAlign' => 'center',
+                                            'textAlignFromLg' => 'left',
+                                            'positionFromLg' => 'end',
                                             'orientation' => 'vertical',
                                             'surfaceTone' => 'transparent',
                                             'surfaceBorder' => 'none',
@@ -168,7 +188,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                                 'surfaceRadius' => 'none',
                                 'surfacePadding' => 'none',
                                 'surfaceShadow' => 'none',
-                                'className' => 'flex items-center justify-center',
+                                'className' => 'flex flex-wrap items-center justify-center gap-x-6 gap-y-3',
                             ],
                         ],
                         [

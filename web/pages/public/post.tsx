@@ -1,14 +1,14 @@
 import { Head } from "@inertiajs/react";
+import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
+import { LazyPuckPageRender } from "@/components/page-builder/lazy-puck-page-render";
+import { SiteLayoutShell } from "@/components/site-layout/site-layout-shell";
+import type { SiteLayoutShellData } from "@/components/site-layout/site-layout-shell";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumbs, BreadcrumbsItem } from "@/components/ui/breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
 import { Text } from "@/components/ui/text";
-import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
-import { LazyPuckPageRender } from "@/components/page-builder/lazy-puck-page-render";
-import { SiteLayoutShell } from "@/components/site-layout/site-layout-shell";
-import type { SiteLayoutShellData } from "@/components/site-layout/site-layout-shell";
 import type { SharedData } from "@/types/shared";
 
 interface PublicPostPageProps extends SharedData {

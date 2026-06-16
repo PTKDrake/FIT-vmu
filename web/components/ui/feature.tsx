@@ -26,7 +26,7 @@ export function FeatureCard({
       )}
       {...props}
     >
-      <CardContent className="space-y-4 p-6 flex flex-col items-start text-left">
+      <CardContent className="p-6 flex flex-col gap-4 items-start text-left">
         {icon && (
           <div className="inline-flex size-12 items-center justify-center rounded-2xl border border-primary/5 bg-primary-subtle text-primary shrink-0 transition-colors duration-300 group-hover/card:bg-primary group-hover/card:text-primary-fg shadow-xs">
             {icon}

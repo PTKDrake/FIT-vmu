@@ -1,10 +1,11 @@
 packages:
-  - '.'
+  - "."
 
 allowBuilds:
   msgpackr-extract: true
   msw: false
   unrs-resolver: true
+minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
   - oxlint-plugin-react-doctor@0.2.14
@@ -13,4 +14,4 @@ minimumReleaseAgeExclude:
   - react-doctor@0.2.16
 
 publicHoistPattern:
-  - '@inertiajs/core'
+  - "@inertiajs/core"

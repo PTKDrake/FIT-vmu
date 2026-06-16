@@ -755,7 +755,7 @@ export function CmsDataTable<TData extends object>({
     },
   ];
 
-  // eslint-disable-next-line react-hooks-js/incompatible-library
+  // eslint-disable-next-line
   const table = useReactTable({
     columns,
     data,
@@ -989,7 +989,7 @@ export function CmsDataTable<TData extends object>({
           </Text>
           {isReloading ? (
             <Text className="text-[10px] uppercase tracking-[0.18em] text-primary/80 font-bold animate-pulse">
-              Đang cập nhật dữ liệu...
+              Đang cập nhật dữ liệu&hellip;
             </Text>
           ) : null}
         </div>

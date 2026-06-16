@@ -17,6 +17,10 @@ export const HeadingComponentConfig: PageBuilderComponentConfig<"Heading"> = {
     subtitle: "",
     level: 2,
     alignment: "left",
+    layoutPreset: "default",
+    fullWidthOnMobile: false,
+    autoWidthFromMd: false,
+    noShrinkFromMd: false,
     className: "",
   },
   fields: {
@@ -41,21 +45,76 @@ export const HeadingComponentConfig: PageBuilderComponentConfig<"Heading"> = {
         { label: "Phải", value: "right" },
       ],
     },
+    layoutPreset: {
+      type: "select",
+      label: "Bố cục sẵn",
+      options: [
+        { label: "Mặc định", value: "default" },
+        { label: "Header thương hiệu", value: "headerBrand" },
+      ],
+    },
+    fullWidthOnMobile: {
+      type: "radio",
+      label: "Đầy chiều rộng trên mobile",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    autoWidthFromMd: {
+      type: "radio",
+      label: "Tự co chiều rộng từ tablet",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    noShrinkFromMd: {
+      type: "radio",
+      label: "Giữ kích thước từ tablet",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
   render: (props) => {
-    const { title, subtitle, level, alignment, className } = props;
+    const {
+      title,
+      subtitle,
+      level,
+      alignment,
+      layoutPreset,
+      fullWidthOnMobile,
+      autoWidthFromMd,
+      noShrinkFromMd,
+      className,
+    } = props;
     const id = getPuckBlockDomId(props.id);
     const alignClass = {
       left: "text-left",
       center: "text-center mx-auto",
       right: "text-right ml-auto",
     }[alignment];
+    const layoutPresetClass =
+      layoutPreset === "headerBrand" ? "w-full md:w-auto md:shrink-0" : "";
+    const responsiveWidthClass = twMerge(
+      fullWidthOnMobile ? "w-full" : "",
+      autoWidthFromMd ? "md:w-auto" : "",
+      noShrinkFromMd ? "md:shrink-0" : "",
+    );
 
     return (
       <div
         id={id}
-        className={twMerge("space-y-1.5", alignClass, className)}
+        className={twMerge(
+          "space-y-1.5",
+          alignClass,
+          layoutPresetClass,
+          responsiveWidthClass,
+          className,
+        )}
       >
         <Heading
           level={level}
@@ -751,14 +810,21 @@ export const NoteComponentConfig: PageBuilderComponentConfig<"Note"> = {
       className,
     } = props;
     const id = getPuckBlockDomId(props.id);
+    const accentClassName = {
+      info: "border-l-3 border-l-info",
+      success: "border-l-3 border-l-success",
+      warning: "border-l-3 border-l-warning",
+      danger: "border-l-3 border-l-danger",
+    }[intent];
 
     return (
       <NoteUI
         id={id}
         intent={intent}
-        indicator={true}
+        indicator={false}
         className={twMerge(
-          "my-2",
+          "my-2 border-l-3 px-4 py-3",
+          accentClassName,
           getSurfaceClassName(
             {
               surfaceTone,
@@ -772,11 +838,11 @@ export const NoteComponentConfig: PageBuilderComponentConfig<"Note"> = {
           className,
         )}
       >
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           {title && (
-            <h5 className="font-bold text-sm tracking-tight">{title}</h5>
+            <h5 className="text-sm font-semibold tracking-tight">{title}</h5>
           )}
-          <p className="text-xs/relaxed opacity-90">{body}</p>
+          <p className="text-sm/relaxed opacity-85">{body}</p>
         </div>
       </NoteUI>
     );

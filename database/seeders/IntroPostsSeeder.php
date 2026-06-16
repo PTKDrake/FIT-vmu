@@ -187,35 +187,135 @@ HTML,
             ],
             'content' => $this->assignBlockIds([
                 [
-                    'type' => 'HeroBanner',
+                    'type' => 'Container',
                     'props' => [
-                        'id' => "{$pageData['slug']}-hero",
-                        'eyebrow' => $pageData['eyebrow'],
-                        'title' => $pageData['title'],
-                        'description' => $pageData['description'],
-                        'primaryActionHref' => $pageData['primary_action_href'],
-                        'primaryActionLabel' => $pageData['primary_action_label'],
-                        'secondaryActionHref' => $pageData['secondary_action_href'],
-                        'secondaryActionLabel' => $pageData['secondary_action_label'],
+                        'id' => "{$pageData['slug']}-hero-container",
+                        'maxWidth' => 'xl',
+                        'horizontalPadding' => 'md',
+                        'children' => [
+                            [
+                                'type' => 'Flex',
+                                'props' => [
+                                    'id' => "{$pageData['slug']}-hero-stack",
+                                    'flexDirection' => 'column',
+                                    'mobileDirection' => 'column',
+                                    'alignItems' => 'stretch',
+                                    'gapY' => 'md',
+                                    'children' => [
+                                        [
+                                            'type' => 'Heading',
+                                            'props' => [
+                                                'id' => "{$pageData['slug']}-hero-heading",
+                                                'title' => $pageData['title'],
+                                                'subtitle' => $pageData['eyebrow'],
+                                                'level' => 1,
+                                                'alignment' => 'left',
+                                            ],
+                                        ],
+                                        [
+                                            'type' => 'RichText',
+                                            'props' => [
+                                                'id' => "{$pageData['slug']}-hero-description",
+                                                'body' => sprintf('<p>%s</p>', e($pageData['description'])),
+                                            ],
+                                        ],
+                                        [
+                                            'type' => 'ButtonGroup',
+                                            'props' => [
+                                                'id' => "{$pageData['slug']}-hero-actions",
+                                                'buttons' => [
+                                                    [
+                                                        'text' => $pageData['primary_action_label'],
+                                                        'url' => $pageData['primary_action_href'],
+                                                        'variant' => 'primary',
+                                                        'size' => 'md',
+                                                        'openInNewTab' => false,
+                                                    ],
+                                                    [
+                                                        'text' => $pageData['secondary_action_label'],
+                                                        'url' => $pageData['secondary_action_href'],
+                                                        'variant' => 'outline',
+                                                        'size' => 'md',
+                                                        'openInNewTab' => false,
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
                 [
-                    'type' => 'RichText',
+                    'type' => 'Container',
                     'props' => [
-                        'id' => "{$pageData['slug']}-rich-text",
-                        'body' => $pageData['rich_text'],
+                        'id' => "{$pageData['slug']}-content-container",
+                        'maxWidth' => 'xl',
+                        'horizontalPadding' => 'md',
+                        'children' => [
+                            [
+                                'type' => 'RichText',
+                                'props' => [
+                                    'id' => "{$pageData['slug']}-rich-text",
+                                    'body' => $pageData['rich_text'],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
                 [
-                    'type' => 'CTASection',
+                    'type' => 'Container',
                     'props' => [
-                        'id' => "{$pageData['slug']}-cta",
-                        'header' => "Khám phá thêm: {$pageData['title']}",
-                        'description' => 'Trang được seed từ dữ liệu thực tế của fit.vimaru.edu.vn để đội biên tập tiếp tục chỉnh sửa trong Puck builder.',
-                        'primaryActionLabel' => 'Mở Page Builder',
-                        'primaryActionHref' => '/cms/pages',
-                        'secondaryActionLabel' => 'Xem navigation',
-                        'secondaryActionHref' => '/cms/navigation',
+                        'id' => "{$pageData['slug']}-cta-container",
+                        'maxWidth' => 'xl',
+                        'horizontalPadding' => 'md',
+                        'children' => [
+                            [
+                                'type' => 'Grid',
+                                'props' => [
+                                    'id' => "{$pageData['slug']}-cta-grid",
+                                    'mobileColumns' => 1,
+                                    'tabletColumns' => 1,
+                                    'desktopColumns' => 2,
+                                    'gapX' => 'lg',
+                                    'gapY' => 'lg',
+                                    'children' => [
+                                        [
+                                            'type' => 'Note',
+                                            'props' => [
+                                                'id' => "{$pageData['slug']}-cta-note",
+                                                'title' => "Khám phá thêm: {$pageData['title']}",
+                                                'body' => 'Trang được seed từ dữ liệu thực tế của fit.vimaru.edu.vn để đội biên tập tiếp tục chỉnh sửa trong Puck builder.',
+                                                'intent' => 'info',
+                                            ],
+                                        ],
+                                        [
+                                            'type' => 'ButtonGroup',
+                                            'props' => [
+                                                'id' => "{$pageData['slug']}-cta-actions",
+                                                'buttons' => [
+                                                    [
+                                                        'text' => 'Mở Page Builder',
+                                                        'url' => '/cms/pages',
+                                                        'variant' => 'primary',
+                                                        'size' => 'md',
+                                                        'openInNewTab' => false,
+                                                    ],
+                                                    [
+                                                        'text' => 'Xem navigation',
+                                                        'url' => '/cms/navigation',
+                                                        'variant' => 'outline',
+                                                        'size' => 'md',
+                                                        'openInNewTab' => false,
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ], $pageData['slug']),

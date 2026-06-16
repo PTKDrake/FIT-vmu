@@ -7,8 +7,10 @@ import {
 import { usePage } from "@inertiajs/react";
 import type { Permissions } from "@puckeditor/core";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
-import { useState } from "react";
+import type { Plugin } from "@puckeditor/core";
+import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { PuckExportMenu } from "@/components/page-builder/puck-export-menu";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
@@ -33,27 +35,34 @@ export interface PuckLayoutBuilderChange {
 }
 
 interface PuckLayoutBuilderProps {
+  canExport?: boolean;
   className?: string;
   config: PageBuilderConfig;
   content?: VmuFitPageBuilderValue;
   editorKey: string;
+  exportName?: string;
   headerTitle: string;
   isSaving?: boolean;
   normalizeData?: (value: VmuFitPageBuilderData) => VmuFitPageBuilderData;
   onChange?: (value: PuckLayoutBuilderChange) => void;
+  onDirtyChange?: (isDirty: boolean) => void;
   onSave?: (value: PuckLayoutBuilderChange) => void;
   permissions?: Permissions;
+  plugins?: Plugin<PageBuilderConfig>[];
 }
 
 export function PuckLayoutBuilder({
+  canExport = false,
   className,
   config,
   content,
   editorKey,
+  exportName = "site-layout",
   headerTitle,
   isSaving = false,
   normalizeData,
   onChange,
+  onDirtyChange,
   onSave,
   permissions = {
     drag: true,
@@ -62,11 +71,11 @@ export function PuckLayoutBuilder({
     edit: true,
     insert: true,
   },
+  plugins,
 }: PuckLayoutBuilderProps) {
-  const [editorRevision, setEditorRevision] = useState(0);
   const dynamicData = usePage<{ dynamicData?: Record<string, unknown> }>().props
     .dynamicData;
-  const initialData = parsePuckLayoutData(content);
+  const initialData = useMemo(() => parsePuckLayoutData(content), [content]);
 
   useMountEffect(() => {
     if (typeof window === "undefined" || !dynamicData) {
@@ -91,6 +100,69 @@ export function PuckLayoutBuilder({
     }
   });
 
+  useMountEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    let frameId: number | null = null;
+
+    const syncPreviewFrameStyles = () => {
+      const iframe = document.querySelector(
+        ".vmu-puck-page-builder iframe",
+      ) as HTMLIFrameElement | null;
+      const iframeHead = iframe?.contentDocument?.head;
+
+      if (!iframeHead) {
+        return;
+      }
+
+      let styleElement = iframeHead.querySelector(
+        "#vmu-layout-builder-preview-fixes",
+      ) as HTMLStyleElement | null;
+
+      if (!styleElement) {
+        styleElement = iframe.contentDocument.createElement("style");
+        styleElement.id = "vmu-layout-builder-preview-fixes";
+        iframeHead.appendChild(styleElement);
+      }
+
+      if (styleElement.textContent !== layoutBuilderPreviewFrameStyles) {
+        styleElement.textContent = layoutBuilderPreviewFrameStyles;
+      }
+    };
+
+    const scheduleSyncPreviewFrameStyles = () => {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = window.requestAnimationFrame(() => {
+        frameId = null;
+        syncPreviewFrameStyles();
+      });
+    };
+
+    syncPreviewFrameStyles();
+
+    const bodyObserver = new MutationObserver(scheduleSyncPreviewFrameStyles);
+    bodyObserver.observe(
+      document.querySelector(".vmu-puck-page-builder") ?? document.body,
+      {
+        childList: true,
+        subtree: true,
+      },
+    );
+
+    return () => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      bodyObserver.disconnect();
+    };
+  });
+
   function toChange(nextData: VmuFitPageBuilderData): PuckLayoutBuilderChange {
     return {
       data: clonePuckPageData(nextData),
@@ -103,6 +175,10 @@ export function PuckLayoutBuilder({
     callback: ((value: PuckLayoutBuilderChange) => void) | undefined,
     nextData: VmuFitPageBuilderData,
   ): void {
+    if (callback === undefined) {
+      return;
+    }
+
     callback?.(toChange(nextData));
   }
 
@@ -114,15 +190,16 @@ export function PuckLayoutBuilder({
     callback: ((value: PuckLayoutBuilderChange) => void) | undefined,
     nextData: VmuFitPageBuilderData,
   ): void {
-    const normalizedData = normalize(nextData);
-    const rawJson = serializePuckPageData(nextData);
-    const normalizedJson = serializePuckPageData(normalizedData);
-
-    if (rawJson !== normalizedJson) {
-      setEditorRevision((currentRevision) => currentRevision + 1);
+    if (callback === undefined) {
+      return;
     }
 
-    emit(callback, normalizedData);
+    emit(callback, normalize(nextData));
+  }
+
+  function handleEditorChange(nextData: VmuFitPageBuilderData): void {
+    onDirtyChange?.(true);
+    handleDataChange(onChange, nextData);
   }
 
   return (
@@ -134,18 +211,21 @@ export function PuckLayoutBuilder({
     >
       <style>{layoutBuilderStyles}</style>
       <Puck
-        key={`${editorKey}:${editorRevision}`}
+        key={editorKey}
         config={config}
         data={initialData}
         headerTitle={headerTitle}
-        onChange={(nextData) => handleDataChange(onChange, nextData)}
+        onChange={handleEditorChange}
         onPublish={(nextData) => handleDataChange(onSave, nextData)}
+        plugins={plugins}
         overrides={{
           fieldTypes: {
             select: PuckSelectField,
           },
           headerActions: () => (
             <PuckLayoutBuilderHeaderActions
+              canExport={canExport}
+              exportName={exportName}
               isSaving={isSaving}
               normalizeData={normalize}
               onSave={(nextData) => handleDataChange(onSave, nextData)}
@@ -159,10 +239,14 @@ export function PuckLayoutBuilder({
 }
 
 function PuckLayoutBuilderHeaderActions({
+  canExport,
+  exportName,
   isSaving,
   normalizeData,
   onSave,
 }: {
+  canExport: boolean;
+  exportName: string;
   isSaving: boolean;
   normalizeData: (value: VmuFitPageBuilderData) => VmuFitPageBuilderData;
   onSave: (value: VmuFitPageBuilderData) => void;
@@ -175,6 +259,15 @@ function PuckLayoutBuilderHeaderActions({
 
   return (
     <div className="flex items-center gap-2">
+      {canExport ? (
+        <PuckExportMenu
+          exportName={exportName}
+          getData={() =>
+            normalizeData(getPuck().appState.data as VmuFitPageBuilderData)
+          }
+        />
+      ) : null}
+
       <Button
         aria-label="Hoàn tác"
         intent="outline"
@@ -255,5 +348,33 @@ const layoutBuilderStyles = `
 .vmu-puck-page-builder [class*="_SidebarSection-breadcrumbs_"] {
   display: flex;
   flex-wrap: wrap;
+}
+
+.vmu-puck-page-builder [data-puck-component]:has([data-vmu-puck-block="navigation-menu"][data-vmu-navigation-orientation="horizontal"]) {
+  width: 100%;
+  min-width: fit-content;
+  max-width: none;
+}
+
+@media (min-width: 48rem) {
+  .vmu-puck-page-builder [data-puck-component]:has([data-vmu-puck-block="navigation-menu"][data-vmu-navigation-orientation="horizontal"]) {
+    flex-basis: 44rem;
+    flex-grow: 1;
+  }
+}
+`;
+
+const layoutBuilderPreviewFrameStyles = `
+[data-puck-component]:has([data-vmu-puck-block="navigation-menu"][data-vmu-navigation-orientation="horizontal"]) {
+  width: 100%;
+  min-width: fit-content;
+  max-width: none;
+}
+
+@media (min-width: 48rem) {
+  [data-puck-component]:has([data-vmu-puck-block="navigation-menu"][data-vmu-navigation-orientation="horizontal"]) {
+    flex-basis: 44rem;
+    flex-grow: 1;
+  }
 }
 `;

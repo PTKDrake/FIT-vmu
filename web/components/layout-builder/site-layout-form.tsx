@@ -79,10 +79,7 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
       ...slotData,
     };
 
-    form.setData("header_data", slotData.header_data);
-    form.setData("left_data", slotData.left_data);
-    form.setData("right_data", slotData.right_data);
-    form.setData("footer_data", slotData.footer_data);
+    form.setData(payload);
 
     return payload;
   }
@@ -171,7 +168,6 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
         headerTitle="Site layout"
         isSaving={form.processing}
         normalizeData={sanitizeCombinedSiteLayoutData}
-        onChange={(value) => applySlotData(value.data)}
         onSave={(value) => saveCombinedLayout(value.data)}
         className="min-h-0 flex-1"
       />

@@ -19,6 +19,9 @@ final class SiteLayoutEditController extends Controller
         BuildPuckDynamicDataAction $buildPuckDynamicData,
     ): Response {
         return inertia('cms/layouts/edit', [
+            'can' => [
+                'exportPuckJson' => $request->user()?->can('export puck json') ?? false,
+            ],
             'dynamicData' => $buildPuckDynamicData($request->user()),
             'layout' => [
                 'id' => $siteLayout->getKey(),

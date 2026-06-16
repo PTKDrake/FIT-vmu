@@ -1,5 +1,6 @@
 import { router, useForm } from "@inertiajs/react";
 import { PuckLayoutBuilder } from "@/components/layout-builder/puck-layout-builder";
+import { createSiteLayoutOutlinePlugin } from "@/components/layout-builder/site-layout-outline-plugin";
 import { layoutBuilderConfig } from "@/lib/puck/page-builder-config";
 import type { VmuFitPageBuilderData } from "@/lib/puck/page-builder-data";
 import {
@@ -10,6 +11,7 @@ import {
 import layoutRoutes from "@/routes/cms/layouts";
 
 interface SiteLayoutBuilderEditorProps {
+  canExport?: boolean;
   layout: {
     footerData: string | null;
     headerData: string | null;
@@ -31,6 +33,7 @@ interface SiteLayoutBuilderFormValues extends Record<string, string> {
 }
 
 export function SiteLayoutBuilderEditor({
+  canExport = false,
   layout,
 }: SiteLayoutBuilderEditorProps) {
   const form = useForm<SiteLayoutBuilderFormValues>({
@@ -51,10 +54,7 @@ export function SiteLayoutBuilderEditor({
       ...slotData,
     };
 
-    form.setData("header_data", slotData.header_data);
-    form.setData("left_data", slotData.left_data);
-    form.setData("right_data", slotData.right_data);
-    form.setData("footer_data", slotData.footer_data);
+    form.setData(payload);
 
     return payload;
   }
@@ -81,14 +81,16 @@ export function SiteLayoutBuilderEditor({
   return (
     <div className="flex flex-1 flex-col p-4 pt-0">
       <PuckLayoutBuilder
+        canExport={canExport}
         config={layoutBuilderConfig}
         content={combinedLayoutData}
         editorKey={`site-layout-${layout.id}`}
+        exportName={layout.key}
         headerTitle="Site layout"
         isSaving={form.processing}
         normalizeData={sanitizeCombinedSiteLayoutData}
-        onChange={(value) => applySlotData(value.data)}
         onSave={(value) => saveCombinedLayout(value.data)}
+        plugins={[createSiteLayoutOutlinePlugin()]}
         className="min-h-0 flex-1"
       />
     </div>

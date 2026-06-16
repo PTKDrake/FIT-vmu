@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 const PageBuilderController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ PageBuilderController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 PageBuilderController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ PageBuilderController.url = (args: { page: number | { id: number } } | [page: nu
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 PageBuilderController.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ PageBuilderController.get = (args: { page: number | { id: number } } | [page: nu
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 PageBuilderController.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ PageBuilderController.head = (args: { page: number | { id: number } } | [page: n
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 const PageBuilderControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const PageBuilderControllerForm = (args: { page: number | { id: number } } | [pa
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 PageBuilderControllerForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ PageBuilderControllerForm.get = (args: { page: number | { id: number } } | [page
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:14
+* @see app/Http/Controllers/Cms/PageBuilderController.php:15
 * @route '/cms/pages/{page}/builder'
 */
 PageBuilderControllerForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

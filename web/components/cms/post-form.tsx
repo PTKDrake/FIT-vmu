@@ -243,7 +243,7 @@ export function PostForm({
       {/* Main Form Content - 3 Column Grid */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 items-start w-full">
         {/* Column 1 & 2: Title and BlockNote Content (2/3 width) inside a visually clear Canvas Card */}
-        <div className="lg:col-span-2 space-y-6 flex flex-col min-h-[70vh]">
+        <div className="lg:col-span-2 flex flex-col gap-6 min-h-[70vh]">
           <div className="flex w-full">
             <TextField
               aria-label="Tiêu đề bài viết"
@@ -520,7 +520,7 @@ export function PostForm({
             {/* Distraction-Free Header Bar */}
             <div className="flex items-center justify-between border-b border-border/50 pb-4 mb-4">
               <div className="flex items-center gap-2 text-muted-fg">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[10px] font-mono tracking-wider uppercase">
                   Chế độ viết tập trung (Distraction-Free)
                 </span>

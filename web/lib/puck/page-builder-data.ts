@@ -5,6 +5,7 @@ export const PUCK_PAGE_CONTENT_FORMAT = "puck_json" as const;
 
 export interface VmuFitPageBuilderComponents {
   SiteLayoutFrame: PuckSurfaceStyleProps & {
+    className?: string;
     header?: any;
     left?: any;
     right?: any;
@@ -36,6 +37,7 @@ export interface VmuFitPageBuilderComponents {
     paddingX?: "yes" | "no" | boolean; // Supports boolean for backwards compatibility
     horizontalPadding?: "none" | "sm" | "md" | "lg";
     align?: "center" | "left" | "right";
+    insetY?: "none" | "xs" | "sm" | "md" | "lg";
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
     children?: any;
@@ -51,6 +53,7 @@ export interface VmuFitPageBuilderComponents {
     gapY?: "sm" | "md" | "lg" | "xl";
     alignItems?: "start" | "center" | "stretch";
     justifyItems?: "start" | "center" | "end" | "stretch";
+    insetY?: "none" | "xs" | "sm" | "md" | "lg";
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
     children?: any;
@@ -107,6 +110,7 @@ export interface VmuFitPageBuilderComponents {
     gapY?: "sm" | "md" | "lg" | "xl";
     wrap?: boolean;
     childWidth?: "auto" | "equal" | "full";
+    insetY?: "none" | "xs" | "sm" | "md" | "lg";
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
     classes?: string;
@@ -119,6 +123,10 @@ export interface VmuFitPageBuilderComponents {
     subtitle: string;
     level: 1 | 2 | 3 | 4;
     alignment: "left" | "center" | "right";
+    layoutPreset?: "default" | "headerBrand";
+    fullWidthOnMobile?: boolean;
+    autoWidthFromMd?: boolean;
+    noShrinkFromMd?: boolean;
     className?: string;
   };
   RichText: {
@@ -260,6 +268,9 @@ export interface VmuFitPageBuilderComponents {
     primaryActionHref: string;
     secondaryActionLabel: string;
     secondaryActionHref: string;
+    layoutPreset?: "default" | "containedWide";
+    align?: "left" | "center" | "right";
+    maxWidth?: "none" | "4xl";
     className?: string;
   };
   TimelineSection: PuckSurfaceStyleProps & {
@@ -350,6 +361,20 @@ export interface VmuFitPageBuilderComponents {
   NavigationMenu: PuckSurfaceStyleProps & {
     title?: string;
     menuId?: string;
+    mobileButtonLabel?: string;
+    mobileLogoAlt?: string;
+    mobileLogoUrl?: string;
+    mobilePanelTitle?: string;
+    layoutPreset?: "default" | "headerPrimary" | "footerMenu";
+    fullWidthOnMobile?: boolean;
+    autoWidthFromMd?: boolean;
+    noShrinkFromMd?: boolean;
+    growFromMd?: boolean;
+    basisFromMd?: "none" | "44rem";
+    maxWidth?: "default" | "none" | "sm";
+    textAlign?: "left" | "center" | "right";
+    textAlignFromLg?: "inherit" | "left" | "center" | "right";
+    positionFromLg?: "inherit" | "start" | "center" | "end";
     orientation?: "horizontal" | "vertical";
     className?: string;
   };
@@ -378,6 +403,11 @@ export interface VmuFitPageBuilderComponents {
     address?: string;
     phone?: string;
     email?: string;
+    layoutPreset?: "default" | "footerContact";
+    maxWidth?: "default" | "sm";
+    textAlign?: "left" | "center" | "right";
+    textAlignFromLg?: "inherit" | "left" | "center" | "right";
+    positionFromLg?: "inherit" | "start" | "center" | "end";
     className?: string;
   };
   SocialLinks: PuckSurfaceStyleProps & {
@@ -427,6 +457,10 @@ export interface VmuFitPageBuilderComponents {
     showRegisterLink?: boolean;
     showCmsLink?: boolean;
     profileVariant?: "avatar" | "avatarName" | "compact";
+    layoutPreset?: "default" | "headerActions";
+    fullWidthOnMobile?: boolean;
+    autoWidthFromMd?: boolean;
+    noShrinkFromMd?: boolean;
     className?: string;
   };
 }

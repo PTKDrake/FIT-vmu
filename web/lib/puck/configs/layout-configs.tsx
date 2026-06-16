@@ -14,7 +14,9 @@ const slotRoot: PageBuilderConfig["root"] = {
     insert: false,
   },
   render: ({ children }) => (
-    <div className="flex h-full min-h-full flex-col font-sans">{children}</div>
+    <div className="@container/puck-slot flex h-full min-h-full min-w-0 flex-col font-sans">
+      {children}
+    </div>
   ),
 };
 

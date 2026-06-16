@@ -24,12 +24,7 @@ import {
 import { Text } from "@/components/ui/text";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
-import {
-  clone,
-  create,
-  destroy,
-  edit,
-} from "@/routes/cms/layouts";
+import { clone, create, destroy, edit } from "@/routes/cms/layouts";
 import type { FlashData, SharedData } from "@/types/shared";
 
 interface CmsLayoutRow {
@@ -57,6 +52,12 @@ const defaultTypeLabels: Record<keyof DefaultLayoutIds, string> = {
   post: "Mặc định bài viết",
 };
 
+const VIETNAMESE_DATE_FORMATTER = new Intl.DateTimeFormat("vi-VN", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
+
 export default function CmsLayoutsPage({
   flash,
   defaultLayoutIds,
@@ -83,7 +84,7 @@ export default function CmsLayoutsPage({
         }}
         isOpen={editingLayout !== null}
         onOpenChange={(isOpen) => {
-          if (! isOpen) {
+          if (!isOpen) {
             setEditingLayout(null);
           }
         }}
@@ -128,13 +129,10 @@ export default function CmsLayoutsPage({
             <Button
               intent="danger"
               onPress={() =>
-                router.delete(
-                  destroy.url({ siteLayout: deleteTarget.id }),
-                  {
-                    onSuccess: () => setDeleteTarget(null),
-                    preserveScroll: true,
-                  },
-                )
+                router.delete(destroy.url({ siteLayout: deleteTarget.id }), {
+                  onSuccess: () => setDeleteTarget(null),
+                  preserveScroll: true,
+                })
               }
             >
               Xác nhận xóa
@@ -165,7 +163,9 @@ export default function CmsLayoutsPage({
                 <th className="px-4 py-3 font-semibold">Bố cục</th>
                 <th className="px-4 py-3 font-semibold">Trang dùng</th>
                 <th className="px-4 py-3 font-semibold">Cập nhật</th>
-                <th className="px-4 py-3" />
+                <th className="px-4 py-3">
+                  <span className="sr-only">Tác vụ</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -223,9 +223,7 @@ export default function CmsLayoutsPage({
                           <EllipsisHorizontalIcon className="size-5" />
                         </MenuTrigger>
                         <MenuContent placement="bottom right">
-                          <MenuItem
-                            onAction={() => setEditingLayout(layout)}
-                          >
+                          <MenuItem onAction={() => setEditingLayout(layout)}>
                             <InformationCircleIcon />
                             Chỉnh sửa thông tin
                           </MenuItem>
@@ -269,11 +267,7 @@ export default function CmsLayoutsPage({
 }
 
 function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(new Date(value));
+  return VIETNAMESE_DATE_FORMATTER.format(new Date(value));
 }
 
 function LayoutsFlashToast({

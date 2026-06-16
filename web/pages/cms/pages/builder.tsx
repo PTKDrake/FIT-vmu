@@ -6,11 +6,21 @@ import type { CmsPageEditorPageProps } from "@/components/cms/types";
 import { PuckPageBuilder } from "@/components/page-builder/puck-page-builder";
 import CmsLayout from "@/layouts/cms-layout";
 import { edit } from "@/routes/cms/pages";
+import type { SharedData } from "@/types/shared";
 
-export default function CmsPageBuilder({ page }: CmsPageEditorPageProps) {
+interface CmsPageBuilderPageProps extends SharedData {
+  can: {
+    exportPuckJson: boolean;
+  };
+  page: CmsPageEditorPageProps["page"];
+}
+
+export default function CmsPageBuilder({
+  can,
+  page,
+}: CmsPageBuilderPageProps) {
   const initialJson = page.content ?? "";
-  const [draftJson, setDraftJson] = useState(initialJson);
-  const [savedJson, setSavedJson] = useState(initialJson);
+  const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   return (
@@ -20,14 +30,14 @@ export default function CmsPageBuilder({ page }: CmsPageEditorPageProps) {
         <PuckPageBuilder
           backHref={edit.url({ page: page.id })}
           backLabel="Quay lại phần chỉnh sửa"
-          canSave={draftJson !== savedJson}
+          canExport={can.exportPuckJson}
+          canSave={isDirty}
           className="min-h-[calc(100vh-6.5rem)] rounded-xl border border-border"
-          content={draftJson}
+          content={initialJson}
+          exportName={page.slug}
           headerTitle={page.title}
           isSaving={isSaving}
-          onChange={(nextValue) => {
-            setDraftJson(nextValue.json);
-          }}
+          onDirtyChange={setIsDirty}
           onSave={(nextValue) => {
             setIsSaving(true);
 
@@ -40,8 +50,7 @@ export default function CmsPageBuilder({ page }: CmsPageEditorPageProps) {
               {
                 onError: () => setIsSaving(false),
                 onSuccess: () => {
-                  setSavedJson(nextValue.json);
-                  setDraftJson(nextValue.json);
+                  setIsDirty(false);
                   setIsSaving(false);
                 },
                 preserveScroll: true,

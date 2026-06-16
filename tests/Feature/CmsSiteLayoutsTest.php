@@ -229,6 +229,7 @@ final class CmsSiteLayoutsTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $inertia) => $inertia
                 ->component('cms/layouts/edit')
+                ->where('can.exportPuckJson', true)
                 ->where('dynamicData.navigationMenus.0.name', 'Main Menu')
                 ->where('dynamicData.navigationMenus.0.items.0.title', 'Trang chủ')
             );

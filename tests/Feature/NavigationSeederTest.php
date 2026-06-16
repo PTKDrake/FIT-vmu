@@ -6,6 +6,7 @@ use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
 use App\Models\Post;
 use App\Models\PostCategory;
+use Database\Seeders\DonViAndChuyenNganhSeeder;
 use Database\Seeders\IntroPostsSeeder;
 use Database\Seeders\NavigationSeeder;
 use Database\Seeders\PostCategorySeeder;
@@ -17,6 +18,7 @@ test('navigation seeder seeds a stable header and footer tree', function () {
     $this->seed(PostCategorySeeder::class);
     $this->seed(PostSeeder::class);
     $this->seed(IntroPostsSeeder::class);
+    $this->seed(DonViAndChuyenNganhSeeder::class);
 
     $this->seed(NavigationSeeder::class);
     $this->seed(NavigationSeeder::class);
@@ -76,8 +78,8 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->where('title', 'Thông báo')
         ->firstOrFail();
 
-    expect($donViItem->linkable_type)->toBe(Post::class)
-        ->and($donViItem->linkable?->slug)->toBe('gioi-thieu-khoa-cong-nghe-thong-tin')
+    expect($donViItem->linkable_type)->toBe(PostCategory::class)
+        ->and($donViItem->linkable?->slug)->toBe('don-vi')
         ->and($donViItem->children->pluck('title')->all())->toBe([
             'Ban chủ nhiệm khoa',
             'Bộ môn Hệ thống thông tin',
@@ -87,8 +89,28 @@ test('navigation seeder seeds a stable header and footer tree', function () {
             'Bộ môn Truyền thông và Mạng máy tính',
             'Ban chấp hành Công đoàn',
             'Liên chi đoàn Khoa CNTT',
-        ])
-        ->and($tinTucItem->linkable_type)->toBe(PostCategory::class)
+        ]);
+
+    $donViFirstChild = $donViItem->children->first();
+
+    expect($donViFirstChild)->not->toBeNull()
+        ->and($donViFirstChild->linkable_type)->toBe(Post::class)
+        ->and($donViFirstChild->linkable?->slug)->toBe('don-vi-ban-chu-nhiem-khoa');
+
+    $chuyenNganhItem = NavigationItem::query()
+        ->where('menu_id', $headerMenu->getKey())
+        ->where('title', 'Chuyên ngành')
+        ->firstOrFail();
+
+    expect($chuyenNganhItem->linkable_type)->toBe(PostCategory::class)
+        ->and($chuyenNganhItem->linkable?->slug)->toBe('chuyen-nganh')
+        ->and($chuyenNganhItem->children->pluck('title')->all())->toBe([
+            'Công nghệ thông tin',
+            'Công nghệ phần mềm',
+            'Truyền thông và mạng máy tính',
+        ]);
+
+    expect($tinTucItem->linkable_type)->toBe(PostCategory::class)
         ->and($tinTucItem->linkable?->slug)->toBe('tin-don-vi')
         ->and($tinTucItem->children->pluck('title')->all())->toBe([
             'Cao học',
@@ -102,8 +124,9 @@ test('navigation seeder seeds a stable header and footer tree', function () {
             'Hoạt động thể thao văn nghệ',
             'Học bổng',
             'Cơ hội việc làm',
-        ])
-        ->and($thongBaoItem->linkable_type)->toBe(PostCategory::class)
+        ]);
+
+    expect($thongBaoItem->linkable_type)->toBe(PostCategory::class)
         ->and($thongBaoItem->linkable?->slug)->toBe('thong-bao');
 
     $seededPost = Post::query()
@@ -126,24 +149,25 @@ test('navigation seeder seeds a stable header and footer tree', function () {
         ->and($seededPost->content_format)->toBe('puck_json')
         ->and($postContent['root']['props']['title'])->toBe('Giới thiệu Khoa Công nghệ thông tin')
         ->and(collect($postContent['content'])->pluck('type')->all())->toBe([
-            'HeroBanner',
-            'RichText',
-            'CTASection',
+            'Container',
+            'Container',
+            'Container',
         ])
         ->and(collect($postContent['content'])->pluck('props.id')->all())->toBe([
-            'gioi-thieu-khoa-cong-nghe-thong-tin-hero',
-            'gioi-thieu-khoa-cong-nghe-thong-tin-rich-text',
-            'gioi-thieu-khoa-cong-nghe-thong-tin-cta',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-hero-container',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-content-container',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-cta-container',
         ])
         ->and(collect($postContent['content'])->pluck('id')->all())->toBe([
-            'gioi-thieu-khoa-cong-nghe-thong-tin-hero',
-            'gioi-thieu-khoa-cong-nghe-thong-tin-rich-text',
-            'gioi-thieu-khoa-cong-nghe-thong-tin-cta',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-hero-container',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-content-container',
+            'gioi-thieu-khoa-cong-nghe-thong-tin-cta-container',
         ])
         ->and(collect($postContent['content'])->pluck('props.id')->every(
             fn (mixed $id): bool => is_string($id) && $id !== '',
         ))->toBeTrue()
         ->and(allBlocksHaveMatchingNodeIds($postContent['content']))->toBeTrue()
+        ->and(allBlocksContainNoSectionTypes($postContent['content']))->toBeTrue()
         ->and($postContent['zones'])->toBe([]);
 });
 
@@ -188,6 +212,38 @@ function isBlockList(mixed $value): bool
     foreach ($value as $item) {
         if (! is_array($item) || ! is_string($item['type'] ?? null)) {
             return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param  list<array<string, mixed>>  $blocks
+ */
+function allBlocksContainNoSectionTypes(array $blocks): bool
+{
+    foreach ($blocks as $block) {
+        if (! is_array($block)) {
+            return false;
+        }
+
+        $type = $block['type'] ?? null;
+
+        if (! is_string($type) || str_contains($type, 'Section')) {
+            return false;
+        }
+
+        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
+
+        foreach ($props as $value) {
+            if (! isBlockList($value)) {
+                continue;
+            }
+
+            if (! allBlocksContainNoSectionTypes($value)) {
+                return false;
+            }
         }
     }
 

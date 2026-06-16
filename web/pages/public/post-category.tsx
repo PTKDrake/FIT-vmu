@@ -1,4 +1,7 @@
 import { Head } from "@inertiajs/react";
+import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
+import { SiteLayoutShell } from "@/components/site-layout/site-layout-shell";
+import type { SiteLayoutShellData } from "@/components/site-layout/site-layout-shell";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumbs, BreadcrumbsItem } from "@/components/ui/breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,9 +16,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Text } from "@/components/ui/text";
-import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
-import { SiteLayoutShell } from "@/components/site-layout/site-layout-shell";
-import type { SiteLayoutShellData } from "@/components/site-layout/site-layout-shell";
 import type { SharedData } from "@/types/shared";
 
 interface PostCategoryPageProps extends SharedData {
@@ -51,7 +51,9 @@ interface PostCategoryPageProps extends SharedData {
     total: number;
   };
   breadcrumbs: Array<{ label: string; url: string | null }>;
-  layout: (SiteLayoutShellData & { id: number; key: string; name: string }) | null;
+  layout:
+    | (SiteLayoutShellData & { id: number; key: string; name: string })
+    | null;
 }
 
 export default function PublicPostCategoryPage({
@@ -72,9 +74,9 @@ export default function PublicPostCategoryPage({
       <SiteLayoutShell layout={layout}>
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
           <Breadcrumbs className="mb-6">
-            {breadcrumbs.map((crumb, index) => (
+            {breadcrumbs.map((crumb) => (
               <BreadcrumbsItem
-                key={index}
+                key={`${crumb.url ?? "current"}:${crumb.label}`}
                 href={crumb.url ?? undefined}
               >
                 {crumb.label}
@@ -83,7 +85,10 @@ export default function PublicPostCategoryPage({
           </Breadcrumbs>
 
           <div className="mb-8 space-y-3">
-            <Heading level={1} className="text-3xl font-extrabold tracking-tight">
+            <Heading
+              level={1}
+              className="text-3xl font-extrabold tracking-tight"
+            >
               {category.name}
             </Heading>
             {category.description ? (
@@ -111,11 +116,7 @@ export default function PublicPostCategoryPage({
             <>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {posts.data.map((post) => (
-                  <Link
-                    key={post.id}
-                    href={post.url ?? "#"}
-                    className="block"
-                  >
+                  <Link key={post.id} href={post.url ?? "#"} className="block">
                     <Card className="overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col h-full cursor-pointer">
                       {post.thumbnailUrl ? (
                         <div className="aspect-video w-full overflow-hidden">
@@ -126,7 +127,7 @@ export default function PublicPostCategoryPage({
                           />
                         </div>
                       ) : null}
-                      <CardContent className="p-5 space-y-3 flex-1 flex flex-col">
+                      <CardContent className="p-5 flex-1 flex flex-col gap-3">
                         <div className="flex items-center justify-between gap-2">
                           <Badge
                             intent="primary"
@@ -174,15 +175,15 @@ export default function PublicPostCategoryPage({
                       />
                       {Array.from({ length: posts.last_page }, (_, i) => {
                         const pageNum = i + 1;
+
                         if (
                           pageNum === 1 ||
                           pageNum === posts.last_page ||
                           Math.abs(pageNum - posts.current_page) <= 1
                         ) {
-                          const pageUrl = new URL(
-                            window.location.href,
-                          );
+                          const pageUrl = new URL(window.location.href);
                           pageUrl.searchParams.set("page", String(pageNum));
+
                           return (
                             <PaginationItem
                               key={pageNum}
@@ -193,23 +194,21 @@ export default function PublicPostCategoryPage({
                             </PaginationItem>
                           );
                         }
-                        if (
-                          pageNum === 2 &&
-                          posts.current_page > 3
-                        ) {
+
+                        if (pageNum === 2 && posts.current_page > 3) {
                           return <PaginationGap key="gap-start" />;
                         }
+
                         if (
                           pageNum === posts.last_page - 1 &&
                           posts.current_page < posts.last_page - 2
                         ) {
                           return <PaginationGap key="gap-end" />;
                         }
+
                         return null;
                       })}
-                      <PaginationNext
-                        href={posts.next_page_url ?? undefined}
-                      />
+                      <PaginationNext href={posts.next_page_url ?? undefined} />
                     </PaginationList>
                   </Pagination>
                 </div>

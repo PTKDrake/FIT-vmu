@@ -1,4 +1,7 @@
 import { usePage } from "@inertiajs/react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +10,7 @@ import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
 import { NavbarItem, NavbarMenu, NavbarSubmenu } from "@/components/ui/navbar";
 import { Text } from "@/components/ui/text";
+import { useIsMobile } from "@/hooks/use-mobile";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
 import type { SharedData } from "@/types/shared";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
@@ -136,6 +140,68 @@ function parseOptionalId(value: string | undefined): number | null {
   const parsed = Number(value);
 
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function getBlockLayoutPresetClass(
+  preset: string | undefined,
+): string {
+  switch (preset) {
+    case "headerPrimary":
+      return "w-full min-w-0 md:grow md:basis-[44rem] md:max-w-none";
+    case "footerContact":
+      return "mx-auto max-w-sm text-center lg:mx-0 lg:text-left";
+    case "footerMenu":
+      return "mx-auto max-w-sm text-center lg:mr-0 lg:ml-auto lg:text-left";
+    case "containedWide":
+      return "mx-auto w-full max-w-4xl";
+    default:
+      return "";
+  }
+}
+
+function getResponsiveTextAlignClass(
+  align: string | undefined,
+  breakpoint?: "lg",
+): string {
+  const prefix = breakpoint ? `${breakpoint}:` : "";
+
+  switch (align) {
+    case "left":
+      return `${prefix}text-left`;
+    case "center":
+      return `${prefix}text-center`;
+    case "right":
+      return `${prefix}text-right`;
+    default:
+      return "";
+  }
+}
+
+function getResponsivePositionClass(
+  position: string | undefined,
+  breakpoint: "lg",
+): string {
+  switch (position) {
+    case "start":
+      return `${breakpoint}:mr-auto ${breakpoint}:ml-0`;
+    case "center":
+      return `${breakpoint}:mx-auto`;
+    case "end":
+      return `${breakpoint}:ml-auto ${breakpoint}:mr-0`;
+    default:
+      return "";
+  }
+}
+
+function getResponsiveMaxWidthClass(maxWidth: string | undefined): string {
+  switch (maxWidth) {
+    case "sm":
+      return "max-w-sm";
+    case "none":
+      return "max-w-none";
+    default:
+      return "";
+  }
 }
 
 function EmptyDynamicState({ label }: { label: string }) {
@@ -520,7 +586,7 @@ function StaffGridBlock({
               ),
             )}
           >
-            <CardContent className="p-6 space-y-4 flex flex-col items-center text-center">
+            <CardContent className="p-6 flex flex-col gap-4 items-center text-center">
               <Avatar
                 src={st.avatarUrl ?? ""}
                 alt={staffDisplayName(st)}
@@ -877,7 +943,21 @@ function RelatedPostsBlock({
 
 interface NavigationMenuBlockProps {
   className?: string;
+  layoutPreset?: string;
+  fullWidthOnMobile?: boolean;
+  autoWidthFromMd?: boolean;
+  noShrinkFromMd?: boolean;
+  growFromMd?: boolean;
+  basisFromMd?: "none" | "44rem";
+  maxWidth?: "default" | "none" | "sm";
+  textAlign?: "left" | "center" | "right";
+  textAlignFromLg?: "inherit" | "left" | "center" | "right";
+  positionFromLg?: "inherit" | "start" | "center" | "end";
   menuId?: string;
+  mobileButtonLabel?: string;
+  mobileLogoAlt?: string;
+  mobileLogoUrl?: string;
+  mobilePanelTitle?: string;
   orientation?: string;
   title?: string;
   surfaceBorder?: "none" | "subtle" | "default" | "strong" | "dashed";
@@ -891,6 +971,16 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
   const {
     title,
     menuId,
+    layoutPreset,
+    fullWidthOnMobile,
+    autoWidthFromMd,
+    noShrinkFromMd,
+    growFromMd,
+    basisFromMd,
+    maxWidth,
+    textAlign,
+    textAlignFromLg,
+    positionFromLg,
     orientation,
     surfaceTone,
     surfaceBorder,
@@ -902,6 +992,9 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
   const id = getPuckBlockDomId((props as { id?: string }).id);
   const navigationMenus = usePuckDynamicData().navigationMenus;
   const pageUrl = usePage().url;
+  const isMobile = useIsMobile();
+  const isEditorPreview = isPuckEditorPreview();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const selectedMenuId = parseOptionalId(menuId);
   const previewMenu =
     selectedMenuId === null ? navigationMenus[0] ?? null : null;
@@ -922,11 +1015,69 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
     return <EmptyDynamicState label="Không có menu điều hướng để hiển thị." />;
   }
 
+  const layoutClassName = twMerge(
+    getBlockLayoutPresetClass(layoutPreset),
+    fullWidthOnMobile ? "w-full" : "",
+    autoWidthFromMd ? "md:w-auto" : "",
+    noShrinkFromMd ? "md:shrink-0" : "",
+    growFromMd ? "md:grow" : "",
+    basisFromMd === "44rem" ? "md:basis-[44rem]" : "",
+    maxWidth === "none" ? "md:max-w-none" : "",
+    getResponsiveMaxWidthClass(maxWidth),
+    getResponsiveTextAlignClass(textAlign),
+    textAlignFromLg === "inherit"
+      ? ""
+      : getResponsiveTextAlignClass(textAlignFromLg, "lg"),
+    positionFromLg === "inherit"
+      ? ""
+      : getResponsivePositionClass(positionFromLg, "lg"),
+  );
+  const editorPreviewLayoutClassName =
+    isEditorPreview && orientation !== "vertical"
+      ? "w-full max-w-none min-w-fit md:basis-[44rem] md:grow"
+      : "";
+  const editorPreviewNavClassName =
+    isEditorPreview && orientation !== "vertical"
+      ? "w-full min-w-0"
+      : "w-full min-w-0";
+  const editorPreviewItemsClassName =
+    isEditorPreview && orientation !== "vertical"
+      ? "flex min-w-fit gap-1"
+      : "flex min-w-0 gap-1";
+
+  if (orientation !== "vertical" && isMobile && !isEditorPreview) {
+    return (
+      <MobileNavigationMenu
+        buttonLabel={props.mobileButtonLabel}
+        className={className}
+        currentPath={pageUrl}
+        isOpen={isDrawerOpen}
+        layoutPreset={layoutPreset}
+        layoutClassName={layoutClassName}
+        logoAlt={props.mobileLogoAlt}
+        logoUrl={props.mobileLogoUrl}
+        menu={menu}
+        panelTitle={props.mobilePanelTitle}
+        title={title}
+        onOpenChange={setIsDrawerOpen}
+        surfaceBorder={surfaceBorder}
+        surfacePadding={surfacePadding}
+        surfaceRadius={surfaceRadius}
+        surfaceShadow={surfaceShadow}
+        surfaceTone={surfaceTone}
+      />
+    );
+  }
+
   return (
     <section
       id={id}
+      data-vmu-puck-block="navigation-menu"
+      data-vmu-navigation-orientation={
+        orientation === "vertical" ? "vertical" : "horizontal"
+      }
       className={twMerge(
-        "space-y-3",
+        "@container/nav min-w-0 space-y-3",
         getSurfaceClassName(
           {
             surfaceTone,
@@ -937,6 +1088,8 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
           },
           "",
         ),
+        layoutClassName,
+        editorPreviewLayoutClassName,
         className,
       )}
     >
@@ -947,14 +1100,14 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
       ) : null}
       <nav
         aria-label={menu.name}
-        className="w-full"
+        className={editorPreviewNavClassName}
       >
         <div
           className={twMerge(
-            "flex justify-between",
+            editorPreviewItemsClassName,
             orientation === "vertical"
               ? "flex-col items-stretch"
-              : "flex-wrap items-center",
+              : "flex-row flex-wrap items-center justify-center xl:justify-between",
           )}
         >
           {menu.items.map((item) => (
@@ -968,6 +1121,245 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
         </div>
       </nav>
     </section>
+  );
+}
+
+interface MobileNavigationMenuProps {
+  buttonLabel?: string;
+  className?: string;
+  currentPath: string;
+  isOpen: boolean;
+  layoutClassName?: string;
+  logoAlt?: string;
+  logoUrl?: string;
+  menu: PuckDynamicNavigationMenu;
+  panelTitle?: string;
+  layoutPreset?: string;
+  title?: string;
+  onOpenChange: (nextOpen: boolean) => void;
+  surfaceBorder?: NavigationMenuBlockProps["surfaceBorder"];
+  surfacePadding?: NavigationMenuBlockProps["surfacePadding"];
+  surfaceRadius?: NavigationMenuBlockProps["surfaceRadius"];
+  surfaceShadow?: NavigationMenuBlockProps["surfaceShadow"];
+  surfaceTone?: NavigationMenuBlockProps["surfaceTone"];
+}
+
+function MobileNavigationMenu({
+  buttonLabel,
+  className,
+  currentPath,
+  isOpen,
+  layoutClassName,
+  logoAlt,
+  logoUrl,
+  menu,
+  layoutPreset,
+  panelTitle,
+  title,
+  onOpenChange,
+  surfaceBorder,
+  surfacePadding,
+  surfaceRadius,
+  surfaceShadow,
+  surfaceTone,
+}: MobileNavigationMenuProps) {
+  return (
+    <section
+      className={twMerge(
+        "@container/nav min-w-0 w-full max-w-none space-y-3 md:w-auto",
+        getSurfaceClassName(
+          {
+            surfaceTone,
+            surfaceBorder,
+            surfaceRadius,
+            surfacePadding,
+            surfaceShadow,
+          },
+          "",
+        ),
+        layoutClassName || getBlockLayoutPresetClass(layoutPreset),
+        className,
+      )}
+    >
+      {title ? (
+        <Heading level={3} className="text-sm font-bold text-fg">
+          {title}
+        </Heading>
+      ) : null}
+
+      <div className="md:hidden">
+        <button
+          aria-controls={`mobile-navigation-${menu.id}`}
+          aria-expanded={isOpen}
+          aria-label={buttonLabel || "Mở menu điều hướng"}
+          className="flex min-h-12 w-full items-center gap-3 rounded-lg border border-border bg-overlay px-4 py-2 text-fg shadow-sm transition hover:bg-muted"
+          type="button"
+          onClick={() => onOpenChange(!isOpen)}
+        >
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={logoAlt || menu.name}
+              className="size-9 shrink-0 rounded-full border border-border bg-bg object-contain p-1 shadow-sm"
+            />
+          ) : null}
+          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          <div className="min-w-0 flex-1 text-left">
+            <div className="truncate text-sm font-semibold">
+              {panelTitle || menu.name}
+            </div>
+            <div className="truncate text-[11px] text-muted-fg">
+              {buttonLabel || "Mở menu điều hướng"}
+            </div>
+          </div>
+        </button>
+      </div>
+
+      {isOpen
+        ? createPortal(
+        <div className="fixed inset-0 z-[120] md:hidden">
+          <button
+            aria-label="Đóng menu điều hướng"
+            className="absolute inset-0 bg-fg/70"
+            type="button"
+            onClick={() => onOpenChange(false)}
+          />
+
+          <div
+            id={`mobile-navigation-${menu.id}`}
+            className="relative isolate h-dvh w-full overflow-y-auto bg-bg pb-8 text-fg shadow-2xl"
+          >
+            <div className="sticky top-0 z-10 border-b border-border bg-bg/95 px-4 pt-3 pb-4 backdrop-blur">
+              <button
+                aria-label="Đóng menu điều hướng"
+                className="flex h-11 w-full items-center justify-start rounded-lg border border-border bg-overlay px-4 text-fg transition hover:bg-muted"
+                type="button"
+                onClick={() => onOpenChange(false)}
+              >
+                <X className="size-5" />
+              </button>
+              {logoUrl ? (
+                <div className="flex justify-center pt-5">
+                  <img
+                    src={logoUrl}
+                    alt={logoAlt || menu.name}
+                    className="size-16 rounded-full border border-border bg-bg object-contain p-1 shadow-lg"
+                  />
+                </div>
+              ) : null}
+              {panelTitle ? (
+                <p className="pt-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-fg">
+                  {panelTitle}
+                </p>
+              ) : null}
+            </div>
+
+            <nav aria-label={menu.name} className="px-4 pt-4">
+              <div className="space-y-0.5">
+                {menu.items.map((item) => (
+                  <MobileNavigationMenuEntry
+                    currentPath={currentPath}
+                    item={item}
+                    key={item.id}
+                    onNavigate={() => onOpenChange(false)}
+                  />
+                ))}
+              </div>
+            </nav>
+          </div>
+        </div>,
+        document.body,
+      )
+        : null}
+    </section>
+  );
+}
+
+function MobileNavigationMenuEntry({
+  currentPath,
+  item,
+  onNavigate,
+}: {
+  currentPath: string;
+  item: PuckDynamicNavigationItem;
+  onNavigate: () => void;
+}) {
+  const hasChildren = item.children.length > 0;
+  const isCurrent = isNavigationItemCurrent(item.url, currentPath);
+  const hasCurrentChild = item.children.some((child) =>
+    isNavigationItemCurrent(child.url, currentPath),
+  );
+  const [isExpanded, setIsExpanded] = useState(
+    normalizeNavigationPath(currentPath) !== "/" && hasCurrentChild,
+  );
+
+  if (!hasChildren) {
+    return (
+      <Link
+        className={twMerge(
+          "flex min-h-12 items-center border-b border-border/80 py-1 text-base font-semibold text-fg transition hover:text-primary",
+          isCurrent ? "text-primary" : "",
+        )}
+        href={item.url}
+        target={item.target === "_blank" ? "_blank" : undefined}
+        onClick={onNavigate}
+      >
+        {item.title}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="border-b border-border/80 py-1">
+      <div className="flex items-center gap-2">
+        <Link
+          className={twMerge(
+            "flex min-h-12 flex-1 items-center text-base font-semibold text-fg transition hover:text-primary",
+            isCurrent ? "text-primary" : "",
+          )}
+          href={item.url}
+          target={item.target === "_blank" ? "_blank" : undefined}
+          onClick={onNavigate}
+        >
+          {item.title}
+        </Link>
+        <button
+          aria-expanded={isExpanded}
+          aria-label={`Mở nhóm ${item.title}`}
+          className="grid size-10 shrink-0 place-items-center rounded-full text-muted-fg transition hover:bg-muted hover:text-fg"
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <ChevronDown
+            className={twMerge(
+              "size-4 transition-transform",
+              isExpanded ? "rotate-180" : "",
+            )}
+          />
+        </button>
+      </div>
+
+      {isExpanded ? (
+        <div className="space-y-1 pb-2 ps-3 pt-1">
+          {item.children.map((child) => (
+            <Link
+              className={twMerge(
+                "flex min-h-10 items-center rounded-lg bg-overlay px-3 text-sm font-medium text-muted-fg transition hover:bg-muted hover:text-fg",
+                isNavigationItemCurrent(child.url, currentPath)
+                  ? "bg-muted text-fg"
+                  : "",
+              )}
+              href={child.url}
+              key={child.id}
+              target={child.target === "_blank" ? "_blank" : undefined}
+              onClick={onNavigate}
+            >
+              {child.title}
+            </Link>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -1396,6 +1788,20 @@ export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"Navigati
   defaultProps: {
     title: "",
     menuId: "",
+    mobileButtonLabel: "Mở menu",
+    mobileLogoAlt: "FIT VMU",
+    mobileLogoUrl: "/logo.png",
+    mobilePanelTitle: "",
+    layoutPreset: "default",
+    fullWidthOnMobile: false,
+    autoWidthFromMd: false,
+    noShrinkFromMd: false,
+    growFromMd: false,
+    basisFromMd: "none",
+    maxWidth: "default",
+    textAlign: "left",
+    textAlignFromLg: "inherit",
+    positionFromLg: "inherit",
     orientation: "horizontal",
     surfaceTone: "transparent",
     surfaceBorder: "none",
@@ -1420,6 +1826,97 @@ export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"Navigati
         { label: "Dọc", value: "vertical" },
       ],
     },
+    layoutPreset: {
+      type: "select",
+      label: "Bố cục sẵn",
+      options: [
+        { label: "Mặc định", value: "default" },
+        { label: "Menu chính ở header", value: "headerPrimary" },
+        { label: "Menu footer canh phải", value: "footerMenu" },
+      ],
+    },
+    fullWidthOnMobile: {
+      type: "radio",
+      label: "Đầy chiều rộng trên mobile",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    autoWidthFromMd: {
+      type: "radio",
+      label: "Tự co chiều rộng từ tablet",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    noShrinkFromMd: {
+      type: "radio",
+      label: "Giữ kích thước từ tablet",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    growFromMd: {
+      type: "radio",
+      label: "Giãn ra từ tablet",
+      options: [
+        { label: "Có", value: true },
+        { label: "Không", value: false },
+      ],
+    },
+    basisFromMd: {
+      type: "select",
+      label: "Chiều rộng nền từ tablet",
+      options: [
+        { label: "Không đặt", value: "none" },
+        { label: "Rộng (44rem)", value: "44rem" },
+      ],
+    },
+    maxWidth: {
+      type: "select",
+      label: "Chiều rộng tối đa",
+      options: [
+        { label: "Mặc định", value: "default" },
+        { label: "Không giới hạn", value: "none" },
+        { label: "Nhỏ (sm)", value: "sm" },
+      ],
+    },
+    textAlign: {
+      type: "select",
+      label: "Canh chữ trên mobile",
+      options: [
+        { label: "Trái", value: "left" },
+        { label: "Giữa", value: "center" },
+        { label: "Phải", value: "right" },
+      ],
+    },
+    textAlignFromLg: {
+      type: "select",
+      label: "Canh chữ từ desktop",
+      options: [
+        { label: "Giữ như mobile", value: "inherit" },
+        { label: "Trái", value: "left" },
+        { label: "Giữa", value: "center" },
+        { label: "Phải", value: "right" },
+      ],
+    },
+    positionFromLg: {
+      type: "select",
+      label: "Vị trí khối từ desktop",
+      options: [
+        { label: "Giữ mặc định", value: "inherit" },
+        { label: "Bám trái", value: "start" },
+        { label: "Giữa", value: "center" },
+        { label: "Bám phải", value: "end" },
+      ],
+    },
+    mobileButtonLabel: { type: "text", label: "Nhãn trợ năng nút mobile" },
+    mobileLogoUrl: { type: "text", label: "Logo trong menu mobile" },
+    mobileLogoAlt: { type: "text", label: "Mô tả logo mobile" },
+    mobilePanelTitle: { type: "text", label: "Tiêu đề nhỏ trong menu mobile" },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
   resolveFields: async (_data, { fields, lastFields }) => {
@@ -1497,14 +1994,14 @@ function NavigationMenuEntry({
       <div
         className={twMerge(
           "flex flex-col gap-2",
-          isVertical ? "w-full" : "min-w-0",
+          isVertical ? "w-full" : "w-auto min-w-0",
         )}
       >
         <div
           className={twMerge(
-            "inline-flex min-h-10 items-center rounded-md px-4 py-2 text-sm font-medium",
+            "inline-flex min-h-10 items-center rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap",
             isCurrent ? "bg-secondary/50 text-fg" : "text-fg",
-            isVertical ? "w-full justify-start" : "w-full md:w-auto",
+            isVertical ? "w-full justify-start" : "w-auto justify-center",
           )}
         >
           {item.title}
@@ -1536,14 +2033,14 @@ function NavigationMenuEntry({
     <NavbarMenu
       className={twMerge(
         "group/menu-item",
-        isVertical ? "w-full" : "flex max-w-full flex-col",
+        isVertical ? "w-full" : "flex w-auto max-w-full flex-col",
       )}
       delayCloseMs={isVertical ? 0 : 150}
     >
       <NavbarItem
         className={twMerge(
-          "min-h-10",
-          isVertical ? "w-full justify-start" : "w-full md:w-auto",
+          "min-h-10 whitespace-nowrap",
+          isVertical ? "w-full justify-start" : "w-auto justify-center",
         )}
         href={item.url}
         isCurrent={isCurrent}
@@ -1770,6 +2267,11 @@ export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo
     address: "",
     phone: "",
     email: "",
+    layoutPreset: "default",
+    maxWidth: "default",
+    textAlign: "left",
+    textAlignFromLg: "inherit",
+    positionFromLg: "inherit",
     surfaceTone: "transparent",
     surfaceBorder: "none",
     surfaceRadius: "none",
@@ -1783,6 +2285,51 @@ export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo
     address: { type: "textarea", label: "Địa chỉ" },
     phone: { type: "text", label: "Số điện thoại" },
     email: { type: "text", label: "Email" },
+    layoutPreset: {
+      type: "select",
+      label: "Bố cục sẵn",
+      options: [
+        { label: "Mặc định", value: "default" },
+        { label: "Khối liên hệ footer", value: "footerContact" },
+      ],
+    },
+    maxWidth: {
+      type: "select",
+      label: "Chiều rộng tối đa",
+      options: [
+        { label: "Mặc định", value: "default" },
+        { label: "Nhỏ (sm)", value: "sm" },
+      ],
+    },
+    textAlign: {
+      type: "select",
+      label: "Canh chữ trên mobile",
+      options: [
+        { label: "Trái", value: "left" },
+        { label: "Giữa", value: "center" },
+        { label: "Phải", value: "right" },
+      ],
+    },
+    textAlignFromLg: {
+      type: "select",
+      label: "Canh chữ từ desktop",
+      options: [
+        { label: "Giữ như mobile", value: "inherit" },
+        { label: "Trái", value: "left" },
+        { label: "Giữa", value: "center" },
+        { label: "Phải", value: "right" },
+      ],
+    },
+    positionFromLg: {
+      type: "select",
+      label: "Vị trí khối từ desktop",
+      options: [
+        { label: "Giữ mặc định", value: "inherit" },
+        { label: "Bám trái", value: "start" },
+        { label: "Giữa", value: "center" },
+        { label: "Bám phải", value: "end" },
+      ],
+    },
     className: { type: "text", label: "Lớp CSS bổ sung" },
   },
   render: (props) => {
@@ -1791,6 +2338,11 @@ export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo
       address,
       phone,
       email,
+      layoutPreset,
+      maxWidth,
+      textAlign,
+      textAlignFromLg,
+      positionFromLg,
       surfaceTone,
       surfaceBorder,
       surfaceRadius,
@@ -1799,6 +2351,17 @@ export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo
       className,
     } = props;
     const id = getPuckBlockDomId((props as { id?: string }).id);
+    const layoutClassName = twMerge(
+      getBlockLayoutPresetClass(layoutPreset),
+      getResponsiveMaxWidthClass(maxWidth),
+      getResponsiveTextAlignClass(textAlign),
+      textAlignFromLg === "inherit"
+        ? ""
+        : getResponsiveTextAlignClass(textAlignFromLg, "lg"),
+      positionFromLg === "inherit"
+        ? ""
+        : getResponsivePositionClass(positionFromLg, "lg"),
+    );
 
     return (
       <section
@@ -1815,6 +2378,7 @@ export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo
             },
             "",
           ),
+          layoutClassName,
           className,
         )}
       >

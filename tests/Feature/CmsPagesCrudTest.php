@@ -60,6 +60,7 @@ test('cms pages create edit clone and delete flows persist page data', function 
         ->assertOk()
         ->assertInertia(fn (Assert $inertiaPage) => $inertiaPage
             ->component('cms/pages/builder')
+            ->where('can.exportPuckJson', true)
             ->where('page.id', $page->getKey())
             ->where('page.slug', 'trang-gioi-thieu')
             ->where('page.contentFormat', 'puck_json')
