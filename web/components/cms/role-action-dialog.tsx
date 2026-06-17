@@ -37,6 +37,10 @@ interface ActionFormValues {
   permissions: string[];
 }
 
+function roleRouteArgument<TRouteArgument>(roleId: number): TRouteArgument {
+  return { id: roleId } as unknown as TRouteArgument;
+}
+
 export function RoleActionDialog({
   isOpen,
   onOpenChange,
@@ -69,31 +73,45 @@ export function RoleActionDialog({
     }
 
     if (mode === "rename") {
-      form.patch(rolesPermissions.update.url({ role: String(role.id) }), {
-        onSuccess: () => {
-          toast.success(`Đã đổi tên vai trò thành "${form.data.name}".`);
-          onOpenChange(false);
+      form.patch(
+        rolesPermissions.update.url(
+          roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
+            role.id,
+          ),
+        ),
+        {
+          onSuccess: () => {
+            toast.success(`Đã đổi tên vai trò thành "${form.data.name}".`);
+            onOpenChange(false);
+          },
+          onError: () => {
+            toast.error("Có lỗi xảy ra khi đổi tên vai trò.");
+          },
+          preserveScroll: true,
         },
-        onError: () => {
-          toast.error("Có lỗi xảy ra khi đổi tên vai trò.");
-        },
-        preserveScroll: true,
-      });
+      );
 
       return;
     }
 
     if (mode === "delete") {
-      form.delete(rolesPermissions.delete.url({ role: String(role.id) }), {
-        onSuccess: () => {
-          toast.success(`Đã xóa vai trò "${role.name}" thành công.`);
-          onOpenChange(false);
+      form.delete(
+        rolesPermissions.delete.url(
+          roleRouteArgument<Parameters<typeof rolesPermissions.delete.url>[0]>(
+            role.id,
+          ),
+        ),
+        {
+          onSuccess: () => {
+            toast.success(`Đã xóa vai trò "${role.name}" thành công.`);
+            onOpenChange(false);
+          },
+          onError: () => {
+            toast.error("Có lỗi xảy ra khi xóa vai trò.");
+          },
+          preserveScroll: true,
         },
-        onError: () => {
-          toast.error("Có lỗi xảy ra khi xóa vai trò.");
-        },
-        preserveScroll: true,
-      });
+      );
 
       return;
     }

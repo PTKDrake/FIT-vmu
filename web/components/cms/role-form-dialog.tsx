@@ -75,6 +75,10 @@ const getCategory = (permissionName: string) => {
   return "Hệ thống";
 };
 
+function roleRouteArgument<TRouteArgument>(roleId: number): TRouteArgument {
+  return { id: roleId } as unknown as TRouteArgument;
+}
+
 export function RoleFormDialog({
   isOpen,
   onOpenChange,
@@ -169,8 +173,18 @@ export function RoleFormDialog({
       return;
     }
 
+    if (initialValues.id === undefined) {
+      toast.error("Không tìm thấy vai trò cần cập nhật.");
+
+      return;
+    }
+
     form.patch(
-      rolesPermissions.update.url({ role: String(initialValues.id ?? "") }),
+      rolesPermissions.update.url(
+        roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
+          initialValues.id,
+        ),
+      ),
       {
         onSuccess: () => {
           toast.success("Cập nhật vai trò thành công!");

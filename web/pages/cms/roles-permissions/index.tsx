@@ -145,6 +145,10 @@ function arraysAreEqual(left: string[], right: string[]): boolean {
   return left.every((value, index) => value === right[index]);
 }
 
+function roleRouteArgument<TRouteArgument>(roleId: number): TRouteArgument {
+  return { id: roleId } as unknown as TRouteArgument;
+}
+
 export default function CmsRolesPermissionsPage({
   can,
   roles,
@@ -395,7 +399,11 @@ export default function CmsRolesPermissionsPage({
         }
 
         const response = await fetch(
-          rolesPermissions.update.url({ role: String(roleId) }),
+          rolesPermissions.update.url(
+            roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
+              roleId,
+            ),
+          ),
           {
             method: "PATCH",
             headers: {
