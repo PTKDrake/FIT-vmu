@@ -26,7 +26,7 @@ export function HighlightCard({
       )}
       {...props}
     >
-      <CardContent className="space-y-4 p-6 flex flex-col items-start text-left">
+      <CardContent className="p-6 flex flex-col gap-4 items-start text-left">
         {badge && (
           <Badge
             intent="outline"

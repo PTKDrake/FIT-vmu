@@ -30,8 +30,24 @@ const siteLayoutBuilderDataSource = readFileSync(
     new URL("../lib/puck/site-layout-builder-data.ts", import.meta.url),
     "utf8",
 );
+const contentSource = readFileSync(
+    new URL("../lib/puck/blocks/content.tsx", import.meta.url),
+    "utf8",
+);
 const layoutBuilderSource = readFileSync(
     new URL("../components/layout-builder/puck-layout-builder.tsx", import.meta.url),
+    "utf8",
+);
+const siteLayoutShellSource = readFileSync(
+    new URL("../components/site-layout/site-layout-shell.tsx", import.meta.url),
+    "utf8",
+);
+const siteLayoutBuilderEditorSource = readFileSync(
+    new URL("../components/layout-builder/site-layout-builder-editor.tsx", import.meta.url),
+    "utf8",
+);
+const siteLayoutOutlinePluginSource = readFileSync(
+    new URL("../components/layout-builder/site-layout-outline-plugin.tsx", import.meta.url),
     "utf8",
 );
 
@@ -44,7 +60,15 @@ test("layout blocks expose clearer Vietnamese labels for editor fields", () => {
     assert.match(flexSource, /label: "Phân bố phần tử theo trục chính"/);
 });
 
+test("puck note blocks use a quieter accent treatment instead of circular indicators", () => {
+    assert.match(contentSource, /indicator=\{false\}/);
+    assert.match(contentSource, /border-l-3 px-4 py-3/);
+    assert.match(contentSource, /text-sm\/relaxed opacity-85/);
+});
+
 test("layout blocks include common design fields for spacing and presentation", () => {
+    assert.match(layoutsSource, /export function getInsetYClass/);
+    assert.match(layoutsSource, /insetY: \{/);
     assert.match(layoutsSource, /paddingX: \{/);
     assert.match(layoutsSource, /backgroundPosition: \{/);
     assert.match(layoutsSource, /backgroundSize: \{/);
@@ -52,12 +76,68 @@ test("layout blocks include common design fields for spacing and presentation", 
     assert.match(layoutsSource, /horizontalPadding: \{/);
     assert.match(gridSource, /gapX: \{/);
     assert.match(gridSource, /gapY: \{/);
+    assert.match(gridSource, /insetY: \{/);
     assert.match(gridSource, /justifyItems: \{/);
     assert.match(flexSource, /gapX: \{/);
     assert.match(flexSource, /gapY: \{/);
+    assert.match(flexSource, /insetY: \{/);
+});
+
+test("puck layout primitives use container-aware responsive classes", () => {
+    assert.match(flexSource, /@container flex min-h-16 min-w-0/);
+    assert.doesNotMatch(flexSource, /min-w-xl/);
+    assert.match(flexSource, /@3xl:flex-row/);
+    assert.match(gridSource, /@container grid min-h-16 min-w-0/);
+    assert.match(gridSource, /@md:grid-cols-2/);
+    assert.match(gridSource, /@5xl:grid-cols-3/);
+    assert.match(layoutsSource, /@container w-full min-w-0/);
+    assert.match(layoutsSource, /@3xl:grid-cols-2/);
 });
 
 test("page builder data types stay aligned with the new layout fields", () => {
+    assert.match(
+        dataSource,
+        /SiteLayoutFrame: PuckSurfaceStyleProps & \{\s+className\?: string;/,
+    );
+    assert.match(
+        dataSource,
+        /insetY\?: "none" \| "xs" \| "sm" \| "md" \| "lg"/,
+    );
+    assert.match(
+        dataSource,
+        /layoutPreset\?: "default" \| "headerBrand"/,
+    );
+    assert.match(dataSource, /fullWidthOnMobile\?: boolean/);
+    assert.match(dataSource, /autoWidthFromMd\?: boolean/);
+    assert.match(dataSource, /noShrinkFromMd\?: boolean/);
+    assert.match(
+        dataSource,
+        /layoutPreset\?: "default" \| "containedWide"/,
+    );
+    assert.match(dataSource, /align\?: "left" \| "center" \| "right"/);
+    assert.match(dataSource, /maxWidth\?: "none" \| "4xl"/);
+    assert.match(
+        dataSource,
+        /layoutPreset\?: "default" \| "headerPrimary" \| "footerMenu"/,
+    );
+    assert.match(dataSource, /growFromMd\?: boolean/);
+    assert.match(dataSource, /basisFromMd\?: "none" \| "44rem"/);
+    assert.match(
+        dataSource,
+        /textAlignFromLg\?: "inherit" \| "left" \| "center" \| "right"/,
+    );
+    assert.match(
+        dataSource,
+        /positionFromLg\?: "inherit" \| "start" \| "center" \| "end"/,
+    );
+    assert.match(
+        dataSource,
+        /layoutPreset\?: "default" \| "footerContact"/,
+    );
+    assert.match(
+        dataSource,
+        /layoutPreset\?: "default" \| "headerActions"/,
+    );
     assert.match(dataSource, /paddingX\?: "none" \| "sm" \| "md" \| "lg"/);
     assert.match(
         dataSource,
@@ -83,25 +163,41 @@ test("site layout builder uses one frame with four puck slots", () => {
     assert.match(siteLayoutFrameSource, /duplicate: false/);
     assert.match(siteLayoutFrameSource, /insert: false/);
     assert.match(siteLayoutFrameSource, /surfacePadding: "md"/);
+    assert.match(siteLayoutFrameSource, /className: ""/);
+    assert.match(
+        siteLayoutFrameSource,
+        /className: \{\s+type: "text",\s+label: "Lớp CSS bổ sung",\s+\}/,
+    );
     assert.match(siteLayoutFrameSource, /header: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /left: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /right: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /footer: \{\s+type: "slot"/);
     assert.match(siteLayoutFrameSource, /siteLayoutSlotClassName =/);
+    assert.match(
+        siteLayoutFrameSource,
+        /getSurfaceShadowClass\(surfaceShadow\),\s+className,/,
+    );
     assert.match(siteLayoutFrameSource, /<Header className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
-    assert.match(siteLayoutFrameSource, /<Left className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
-    assert.match(siteLayoutFrameSource, /<Right className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
+    assert.match(siteLayoutFrameSource, /<Left className=\{slotClassName\} minEmptyHeight=\{200\} \/>/);
+    assert.match(siteLayoutFrameSource, /<Right className=\{slotClassName\} minEmptyHeight=\{200\} \/>/);
     assert.match(siteLayoutFrameSource, /<Footer className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
     assert.match(siteLayoutFrameSource, /"SocialLinks"/);
     assert.match(siteLayoutFrameSource, /"NewsletterForm"/);
     assert.match(siteLayoutFrameSource, /"CopyrightBar"/);
     assert.match(
         siteLayoutFrameSource,
-        /mx-auto flex w-full flex-col lg:flex-row lg:items-start/,
+        /<SiteLayoutShellFrame/,
     );
     assert.match(layoutConfigsSource, /export const layoutBuilderConfig/);
     assert.match(layoutConfigsSource, /const layoutBuilderComponentNames = \[/);
     assert.match(layoutConfigsSource, /"SiteLayoutFrame"/);
+    assert.match(siteLayoutShellSource, /export function SiteLayoutShellFrame/);
+    assert.match(siteLayoutBuilderEditorSource, /plugins=\{\[createSiteLayoutOutlinePlugin\(\)\]\}/);
+    assert.match(siteLayoutOutlinePluginSource, /name: "outline"/);
+    assert.match(siteLayoutOutlinePluginSource, /Header/);
+    assert.match(siteLayoutOutlinePluginSource, /Left sidebar/);
+    assert.match(siteLayoutOutlinePluginSource, /Right sidebar/);
+    assert.match(siteLayoutOutlinePluginSource, /Footer/);
 });
 
 test("site layout builder data helpers compose and split slot payloads", () => {
@@ -126,4 +222,10 @@ test("site layout builder data helpers compose and split slot payloads", () => {
     assert.match(layoutBuilderSource, /normalizeData\?:/);
     assert.match(layoutBuilderSource, /key=\{`\$\{editorKey\}:\$\{editorRevision\}`\}/);
     assert.match(layoutBuilderSource, /setEditorRevision/);
+    assert.match(layoutBuilderSource, /layoutBuilderPreviewFrameStyles/);
+    assert.match(layoutBuilderSource, /#vmu-layout-builder-preview-fixes/);
+    assert.match(
+        layoutBuilderSource,
+        /data-puck-component\]:has\(\[data-vmu-puck-block="navigation-menu"\]\[data-vmu-navigation-orientation="horizontal"\]\)/,
+    );
 });

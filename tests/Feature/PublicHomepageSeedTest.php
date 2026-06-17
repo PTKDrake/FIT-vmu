@@ -44,7 +44,8 @@ test('public homepage is seeded through site layout and page data', function () 
             'Container',
             'Container',
         ])
-        ->and(collect(collectHomepageBlockIds($pageContent['content']))->filter()->isNotEmpty())->toBeTrue();
+        ->and(collect(collectHomepageBlockIds($pageContent['content']))->filter()->isNotEmpty())->toBeTrue()
+        ->and(homepageBlocksContainNoSectionTypes($pageContent['content']))->toBeTrue();
 
     $headerContent = json_decode($layout->header_data ?? '', true, flags: JSON_THROW_ON_ERROR);
     $footerContent = json_decode($layout->footer_data ?? '', true, flags: JSON_THROW_ON_ERROR);
@@ -60,7 +61,9 @@ test('public homepage is seeded through site layout and page data', function () 
         ->and(homepageBlocksHaveIds($footerContent['content']))->toBeTrue()
         ->and(homepageBlocksHaveMatchingNodeIds($pageContent['content']))->toBeTrue()
         ->and(homepageBlocksHaveMatchingNodeIds($headerContent['content']))->toBeTrue()
-        ->and(homepageBlocksHaveMatchingNodeIds($footerContent['content']))->toBeTrue();
+        ->and(homepageBlocksHaveMatchingNodeIds($footerContent['content']))->toBeTrue()
+        ->and(homepageBlocksContainNoSectionTypes($headerContent['content']))->toBeTrue()
+        ->and(homepageBlocksContainNoSectionTypes($footerContent['content']))->toBeTrue();
 
     $this->get('/')
         ->assertOk()
@@ -175,6 +178,38 @@ function isHomepageBlockList(mixed $value): bool
     foreach ($value as $item) {
         if (! is_array($item) || ! is_string($item['type'] ?? null)) {
             return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param  list<array<string, mixed>>  $blocks
+ */
+function homepageBlocksContainNoSectionTypes(array $blocks): bool
+{
+    foreach ($blocks as $block) {
+        if (! is_array($block)) {
+            return false;
+        }
+
+        $type = $block['type'] ?? null;
+
+        if (! is_string($type) || str_contains($type, 'Section')) {
+            return false;
+        }
+
+        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
+
+        foreach ($props as $value) {
+            if (! isHomepageBlockList($value)) {
+                continue;
+            }
+
+            if (! homepageBlocksContainNoSectionTypes($value)) {
+                return false;
+            }
         }
     }
 

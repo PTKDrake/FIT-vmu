@@ -33,11 +33,6 @@
         <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
         <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-
         <!-- Scripts -->
         @php($stylesheet = str_starts_with($page['component'], 'public/') ? 'resources/css/public.css' : 'resources/css/app.css')
         @viteReactRefresh

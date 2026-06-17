@@ -1,5 +1,5 @@
 import { Head } from "@inertiajs/react";
-import { LazyPuckPageRender } from "@/components/page-builder/lazy-puck-page-render";
+import { PuckPageRender } from "@/components/page-builder/puck-page-render";
 import { SiteLayoutShell } from "@/components/site-layout/site-layout-shell";
 import type { SiteLayoutShellData } from "@/components/site-layout/site-layout-shell";
 import type { SharedData } from "@/types/shared";
@@ -35,7 +35,7 @@ export default function PublicPage({ layout, page }: PublicPageProps) {
       </Head>
 
       <SiteLayoutShell layout={layout}>
-        <LazyPuckPageRender content={page.content} />
+        <PuckPageRender content={page.content} />
       </SiteLayoutShell>
     </>
   );

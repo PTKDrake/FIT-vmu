@@ -3,6 +3,7 @@
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\User;
+use Database\Seeders\DonViAndChuyenNganhSeeder;
 use Database\Seeders\PostCategorySeeder;
 use Database\Seeders\PostSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
@@ -52,4 +53,46 @@ test('post seeder creates reusable seeded posts with valid relations', function 
         ->and($orientationPost?->categories->pluck('slug')->all())->toBe(['thong-bao', 'tin-don-vi', 'doan-thanh-nien'])
         ->and($researchPost?->categories->pluck('slug')->all())->toBe(['tin-don-vi', 'cau-lac-bo-nghien-cuu-khoa-hoc', 'nghien-cuu-khoa-hoc'])
         ->and(User::query()->where('email', 'content-seeder@vmufit.local')->count())->toBeLessThanOrEqual(1);
+});
+
+test('don vi and chuyen nganh seeder builds two parent categories with children and posts idempotently', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+    $this->seed(PostCategorySeeder::class);
+    $this->seed(DonViAndChuyenNganhSeeder::class);
+    $this->seed(DonViAndChuyenNganhSeeder::class);
+
+    $donVi = PostCategory::query()->where('slug', 'don-vi')->firstOrFail();
+    $chuyenNganh = PostCategory::query()->where('slug', 'chuyen-nganh')->firstOrFail();
+
+    expect($donVi->children()->pluck('slug')->all())->toBe([
+        'ban-chu-nhiem-khoa',
+        'bo-mon-he-thong-thong-tin',
+        'bo-mon-khoa-hoc-may-tinh',
+        'bo-mon-ky-thuat-may-tinh',
+        'bo-mon-tin-hoc-dai-cuong',
+        'bo-mon-truyen-thong-va-mang-may-tinh',
+        'ban-chap-hanh-cong-doan',
+        'lien-chi-doan-khoa-cong-nghe-thong-tin',
+    ])
+        ->and($chuyenNganh->children()->pluck('slug')->all())->toBe([
+            'cong-nghe-thong-tin',
+            'cong-nghe-phan-mem',
+            'truyen-thong-va-mang-may-tinh',
+        ]);
+
+    $unitPost = Post::query()->where('slug', 'don-vi-ban-chu-nhiem-khoa')->firstOrFail();
+    $majorPost = Post::query()->where('slug', 'chuyen-nganh-cong-nghe-thong-tin')->firstOrFail();
+
+    expect($unitPost->content_format)->toBe('blocknote_json')
+        ->and($majorPost->content_format)->toBe('blocknote_json')
+        ->and($unitPost->categories->pluck('slug')->all())->toContain('ban-chu-nhiem-khoa', 'don-vi')
+        ->and($majorPost->categories->pluck('slug')->all())->toContain('cong-nghe-thong-tin', 'chuyen-nganh')
+        ->and(Post::query()->where('slug', 'like', 'don-vi-%')->count())->toBe(8)
+        ->and(Post::query()->where('slug', 'like', 'chuyen-nganh-%')->count())->toBe(3);
+
+    $decoded = json_decode($unitPost->content, true, flags: JSON_THROW_ON_ERROR);
+
+    expect($decoded)->toBeArray()
+        ->and($decoded)->not->toBeEmpty()
+        ->and($decoded[0]['type'] ?? null)->toBe('paragraph');
 });

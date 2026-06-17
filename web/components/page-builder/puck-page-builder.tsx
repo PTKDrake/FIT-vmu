@@ -4,10 +4,11 @@ import {
   ArrowUturnRightIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
-import { router } from "@inertiajs/react";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
+import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { PuckSelectField } from "@/components/layout-builder/puck-select-field";
+import { PuckExportMenu } from "@/components/page-builder/puck-export-menu";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import { vmuFitPageBuilderConfig } from "@/lib/puck/page-builder-config";
@@ -35,13 +36,16 @@ export interface PuckPageBuilderChange {
 export interface PuckPageBuilderProps {
   backHref?: string;
   backLabel?: string;
+  canExport?: boolean;
   canSave?: boolean;
   className?: string;
   content?: VmuFitPageBuilderValue;
   editorKey?: string | number;
+  exportName?: string;
   headerTitle?: string;
   isSaving?: boolean;
   onChange?: (value: PuckPageBuilderChange) => void;
+  onDirtyChange?: (isDirty: boolean) => void;
   onPublish?: (value: PuckPageBuilderChange) => void;
   onSave?: (value: PuckPageBuilderChange) => void;
 }
@@ -49,19 +53,24 @@ export interface PuckPageBuilderProps {
 export function PuckPageBuilder({
   backHref,
   backLabel = "Danh sách",
+  canExport = false,
   canSave = true,
   className,
   content,
   editorKey,
+  exportName = "page-builder",
   headerTitle = "Page",
   isSaving = false,
   onChange,
+  onDirtyChange,
   onPublish,
   onSave,
 }: PuckPageBuilderProps) {
-  const initialData = parsePuckPageData(content);
+  const initialData = useMemo(() => parsePuckPageData(content), [content]);
 
   useMountEffect(() => {
+    let frameId: number | null = null;
+
     const syncTheme = () => {
       const isDark = document.documentElement.classList.contains("dark");
       const iframe = document.querySelector(
@@ -118,28 +127,43 @@ export function PuckPageBuilder({
       }
     };
 
-    // 1. Sync theme immediately
+    const scheduleSyncTheme = () => {
+      if (frameId !== null) {
+        return;
+      }
+
+      frameId = window.requestAnimationFrame(() => {
+        frameId = null;
+        syncTheme();
+      });
+    };
+
     syncTheme();
 
-    // 2. Observe changes to document.documentElement class list (parent theme changes)
     const docObserver = new MutationObserver(() => {
-      syncTheme();
+      scheduleSyncTheme();
     });
     docObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
 
-    // 3. Observe body changes (for iframe insertion/re-render by Puck)
     const bodyObserver = new MutationObserver(() => {
-      syncTheme();
+      scheduleSyncTheme();
     });
-    bodyObserver.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+    bodyObserver.observe(
+      document.querySelector(".vmu-puck-page-builder") ?? document.body,
+      {
+        childList: true,
+        subtree: true,
+      },
+    );
 
     return () => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+
       docObserver.disconnect();
       bodyObserver.disconnect();
     };
@@ -166,6 +190,16 @@ export function PuckPageBuilder({
     emit(onPublish, nextData);
   }
 
+  function handleEditorChange(nextData: VmuFitPageBuilderData): void {
+    onDirtyChange?.(true);
+
+    if (onChange === undefined) {
+      return;
+    }
+
+    emit(onChange, nextData);
+  }
+
   return (
     <div
       className={twMerge(
@@ -180,9 +214,7 @@ export function PuckPageBuilder({
         config={vmuFitPageBuilderConfig}
         data={initialData}
         headerTitle={headerTitle}
-        onChange={(nextData) => {
-          emit(onChange, nextData);
-        }}
+        onChange={handleEditorChange}
         onPublish={handleSave}
         overrides={{
           fieldTypes: {
@@ -192,7 +224,9 @@ export function PuckPageBuilder({
             <PuckPageBuilderHeaderActions
               backHref={backHref}
               backLabel={backLabel}
+              canExport={canExport}
               canSave={canSave}
+              exportName={exportName}
               isSaving={isSaving}
               onSave={handleSave}
             />
@@ -206,13 +240,17 @@ export function PuckPageBuilder({
 function PuckPageBuilderHeaderActions({
   backHref,
   backLabel,
+  canExport,
   canSave,
+  exportName,
   isSaving,
   onSave,
 }: {
   backHref?: string;
   backLabel: string;
+  canExport: boolean;
   canSave: boolean;
+  exportName: string;
   isSaving: boolean;
   onSave: (value: VmuFitPageBuilderData) => void;
 }) {
@@ -224,6 +262,13 @@ function PuckPageBuilderHeaderActions({
 
   return (
     <div className="flex items-center gap-2">
+      {canExport ? (
+        <PuckExportMenu
+          exportName={exportName}
+          getData={() => getPuck().appState.data as VmuFitPageBuilderData}
+        />
+      ) : null}
+
       <Button
         aria-label="Hoàn tác"
         intent="outline"

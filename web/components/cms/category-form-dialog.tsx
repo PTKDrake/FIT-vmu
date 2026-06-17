@@ -1,7 +1,7 @@
 import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
-import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import type { CmsLayoutOption } from "@/components/cms/types";
+import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
 import {
   Description,

@@ -223,10 +223,12 @@ CmsStaffProfileShowPage.layout = (page: ReactNode) => (
   <CmsLayout>{page}</CmsLayout>
 );
 
+const VIETNAMESE_DATE_ONLY_FORMATTER = new Intl.DateTimeFormat("vi-VN", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
+
 function formatOnlyDate(value: string): string {
-  return new Intl.DateTimeFormat("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(new Date(value));
+  return VIETNAMESE_DATE_ONLY_FORMATTER.format(new Date(value));
 }

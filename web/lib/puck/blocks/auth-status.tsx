@@ -40,6 +40,10 @@ export const AuthStatusComponentConfig: PageBuilderComponentConfig<"AuthStatus">
       showRegisterLink: false,
       showCmsLink: true,
       profileVariant: "avatarName",
+      layoutPreset: "default",
+      fullWidthOnMobile: false,
+      autoWidthFromMd: false,
+      noShrinkFromMd: false,
       className: "",
     },
     fields: {
@@ -94,6 +98,38 @@ export const AuthStatusComponentConfig: PageBuilderComponentConfig<"AuthStatus">
           { label: "Gọn", value: "compact" },
         ],
       },
+      layoutPreset: {
+        type: "select",
+        label: "Bố cục sẵn",
+        options: [
+          { label: "Mặc định", value: "default" },
+          { label: "Cụm hành động header", value: "headerActions" },
+        ],
+      },
+      fullWidthOnMobile: {
+        type: "radio",
+        label: "Đầy chiều rộng trên mobile",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      autoWidthFromMd: {
+        type: "radio",
+        label: "Tự co chiều rộng từ tablet",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      noShrinkFromMd: {
+        type: "radio",
+        label: "Giữ kích thước từ tablet",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
       className: { type: "text", label: "Lớp CSS bổ sung" },
     },
     render: (props) => <AuthStatusBlock {...props} />,
@@ -107,6 +143,10 @@ function AuthStatusBlock({
   showRegisterLink = false,
   showCmsLink = true,
   profileVariant = "avatarName",
+  layoutPreset = "default",
+  fullWidthOnMobile = false,
+  autoWidthFromMd = false,
+  noShrinkFromMd = false,
   className,
   id,
 }: {
@@ -117,6 +157,10 @@ function AuthStatusBlock({
   showRegisterLink?: boolean;
   showCmsLink?: boolean;
   profileVariant?: "avatar" | "avatarName" | "compact";
+  layoutPreset?: "default" | "headerActions";
+  fullWidthOnMobile?: boolean;
+  autoWidthFromMd?: boolean;
+  noShrinkFromMd?: boolean;
   className?: string;
   id?: string;
 }) {
@@ -128,6 +172,13 @@ function AuthStatusBlock({
     center: "justify-center",
     right: "justify-end",
   }[alignment];
+  const layoutPresetClass =
+    layoutPreset === "headerActions" ? "w-full md:w-auto md:shrink-0" : "";
+  const responsiveWidthClass = twMerge(
+    fullWidthOnMobile ? "w-full" : "",
+    autoWidthFromMd ? "md:w-auto" : "",
+    noShrinkFromMd ? "md:shrink-0" : "",
+  );
 
   if (!auth.user) {
     return (
@@ -136,6 +187,8 @@ function AuthStatusBlock({
         className={twMerge(
           "flex flex-wrap items-center gap-2",
           alignmentClass,
+          layoutPresetClass,
+          responsiveWidthClass,
           className,
         )}
       >
@@ -178,7 +231,13 @@ function AuthStatusBlock({
     return (
       <div
         id={domId}
-        className={twMerge("flex items-center", alignmentClass, className)}
+        className={twMerge(
+          "flex items-center",
+          alignmentClass,
+          layoutPresetClass,
+          responsiveWidthClass,
+          className,
+        )}
       >
         <div className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border bg-bg px-2.5 text-sm font-semibold text-fg">
           <Avatar className="size-8 *:size-8" initials={userInitials} />
@@ -193,7 +252,13 @@ function AuthStatusBlock({
   return (
     <div
       id={domId}
-      className={twMerge("flex items-center", alignmentClass, className)}
+      className={twMerge(
+        "flex items-center",
+        alignmentClass,
+        layoutPresetClass,
+        responsiveWidthClass,
+        className,
+      )}
     >
       <Menu>
         <MenuTrigger

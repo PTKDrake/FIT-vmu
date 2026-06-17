@@ -132,7 +132,7 @@ function normalizePermissionList(values: string[]): string[] {
 }
 
 function sortByLabel(values: string[]): string[] {
-  return [...values].sort((left, right) =>
+  return values.toSorted((left, right) =>
     left.localeCompare(right, "vi", { sensitivity: "base" }),
   );
 }
@@ -715,7 +715,7 @@ export default function CmsRolesPermissionsPage({
                                     <span className="text-xs text-muted-fg">
                                       {checkedCount}/{items.length}
                                     </span>
-                                    <div className="h-2 w-24 rounded-full bg-secondary">
+                                    <div className="size-24 rounded-full bg-secondary">
                                       <div
                                         className="h-2 rounded-full bg-primary transition-[width]"
                                         style={{

@@ -4,6 +4,7 @@ import {
   getGapAxisClass,
   getAlignItemsClass,
   getJustifyItemsClass,
+  getInsetYClass,
 } from "./layouts";
 import {
   getPuckBlockDomId,
@@ -21,6 +22,7 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
     gapY: "lg",
     alignItems: "stretch",
     justifyItems: "stretch",
+    insetY: "none",
     hideOn: "none",
     className: "",
   },
@@ -98,6 +100,17 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
         { label: "Kéo giãn", value: "stretch" },
       ],
     },
+    insetY: {
+      type: "select",
+      label: "Khoảng đệm trên và dưới",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Rất nhỏ", value: "xs" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
     hideOn: {
       type: "select",
       label: "Ẩn theo thiết bị",
@@ -128,6 +141,7 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       gapY,
       alignItems,
       justifyItems,
+      insetY,
       anchorId,
       hideOn,
       className,
@@ -161,20 +175,20 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
 
     const tabletColsClass =
       {
-        1: "sm:grid-cols-1",
-        2: "sm:grid-cols-2",
-        3: "sm:grid-cols-3",
-        4: "sm:grid-cols-4",
+        1: "sm:grid-cols-1 @md:grid-cols-1",
+        2: "sm:grid-cols-2 @md:grid-cols-2",
+        3: "sm:grid-cols-3 @md:grid-cols-3",
+        4: "sm:grid-cols-4 @md:grid-cols-4",
       }[finalTabletCols as 1 | 2 | 3 | 4] || "sm:grid-cols-2";
 
     const desktopColsClass =
       {
-        1: "lg:grid-cols-1",
-        2: "lg:grid-cols-2",
-        3: "lg:grid-cols-3",
-        4: "lg:grid-cols-4",
-        5: "lg:grid-cols-5",
-        6: "lg:grid-cols-6",
+        1: "lg:grid-cols-1 @5xl:grid-cols-1",
+        2: "lg:grid-cols-2 @5xl:grid-cols-2",
+        3: "lg:grid-cols-3 @5xl:grid-cols-3",
+        4: "lg:grid-cols-4 @5xl:grid-cols-4",
+        5: "lg:grid-cols-5 @5xl:grid-cols-5",
+        6: "lg:grid-cols-6 @5xl:grid-cols-6",
       }[finalDesktopCols as 1 | 2 | 3 | 4 | 5 | 6] || "lg:grid-cols-3";
 
     // For inline style gap backwards compatibility
@@ -184,7 +198,8 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       : "";
 
     const resolvedClassName = twMerge(
-      "grid min-h-16 w-full py-2",
+      "@container grid min-h-16 min-w-0 w-full",
+      getInsetYClass(insetY),
       mobileColsClass,
       tabletColsClass,
       desktopColsClass,

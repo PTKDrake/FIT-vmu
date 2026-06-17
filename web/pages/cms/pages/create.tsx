@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Head, useForm, Link, usePage } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Selection } from "react-aria-components";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
 import type { CmsPageCreatePageProps } from "@/components/cms/types";
@@ -85,7 +85,7 @@ export default function CreatePage({
   const [selectedTemplate, setSelectedTemplate] = useState<Selection>(
     new Set(["basic"]),
   );
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
+  const isSlugManuallyEdited = useRef(false);
 
   const form = useForm<CreatePageFormData>({
     title: "",
@@ -126,7 +126,7 @@ export default function CreatePage({
 
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <form onSubmit={submit}>
-          <Fieldset className="rounded-2xl border border-border bg-overlay px-5 py-5 space-y-6">
+          <Fieldset className="rounded-2xl border border-border bg-overlay p-5 space-y-6">
             <div>
               <Legend>Tạo trang mới</Legend>
               <Text className="text-muted-fg mt-1">
@@ -156,7 +156,7 @@ export default function CreatePage({
 
                         form.setData("title", title);
 
-                        if (!isSlugManuallyEdited) {
+                        if (!isSlugManuallyEdited.current) {
                           form.setData("slug", slugify(title));
                         }
                       }}
@@ -174,7 +174,7 @@ export default function CreatePage({
                       placeholder="gioi-thieu-khoa-cntt"
                       value={form.data.slug}
                       onChange={(event) => {
-                        setIsSlugManuallyEdited(true);
+                        isSlugManuallyEdited.current = true;
                         form.setData("slug", event.target.value);
                       }}
                     />

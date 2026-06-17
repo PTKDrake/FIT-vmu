@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { getHideOnClass, getGapAxisClass } from "./layouts";
+import { getHideOnClass, getGapAxisClass, getInsetYClass } from "./layouts";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
@@ -14,6 +14,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     gapY: "md",
     wrap: true,
     childWidth: "auto",
+    insetY: "none",
     hideOn: "none",
     className: "",
   },
@@ -99,6 +100,17 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
         { label: "Đầy dòng", value: "full" },
       ],
     },
+    insetY: {
+      type: "select",
+      label: "Khoảng đệm trên và dưới",
+      options: [
+        { label: "Không", value: "none" },
+        { label: "Rất nhỏ", value: "xs" },
+        { label: "Nhỏ", value: "sm" },
+        { label: "Vừa", value: "md" },
+        { label: "Lớn", value: "lg" },
+      ],
+    },
     hideOn: {
       type: "select",
       label: "Ẩn theo thiết bị",
@@ -130,6 +142,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       gapY,
       wrap,
       childWidth,
+      insetY,
       hideOn,
       className,
       classes, // backwards compatibility
@@ -146,11 +159,11 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     }[mobileDirection || "column"];
 
     const desktopDirClass = {
-      row: "md:flex-row",
-      column: "md:flex-col",
-      rowReverse: "md:flex-row-reverse",
+      row: "md:flex-row @3xl:flex-row",
+      column: "md:flex-col @3xl:flex-col",
+      rowReverse: "md:flex-row-reverse @3xl:flex-row-reverse",
       "row-reverse": "md:flex-row-reverse",
-      columnReverse: "md:flex-col-reverse",
+      columnReverse: "md:flex-col-reverse @3xl:flex-col-reverse",
       "column-reverse": "md:flex-col-reverse",
     }[flexDirection || "row"];
 
@@ -174,18 +187,22 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     const emptyPreviewClass = isPuckEditorPreview()
       ? "empty:min-h-20 empty:min-w-20 empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
       : "";
+    const editorPreviewPuckWrapperClass = isPuckEditorPreview()
+      ? "[&>[data-puck-component]:has([data-vmu-puck-block='navigation-menu'])]:w-full [&>[data-puck-component]:has([data-vmu-puck-block='navigation-menu'])]:min-w-fit [&>[data-puck-component]:has([data-vmu-puck-block='navigation-menu'])]:max-w-none md:[&>[data-puck-component]:has([data-vmu-puck-block='navigation-menu'])]:basis-[44rem] md:[&>[data-puck-component]:has([data-vmu-puck-block='navigation-menu'])]:grow"
+      : "";
 
     const childWidthClass = {
       auto: "",
       equal: "[&>*]:flex-1",
-      full: "[&>*]:w-full md:[&>*]:w-auto",
+      full: "[&>*]:w-full md:[&>*]:w-auto @3xl:[&>*]:w-auto",
     }[childWidth || "auto"];
 
     // Backward compatibility for inline gap styles
     const gapStyle = typeof gap === "number" ? { gap: `${gap}px` } : undefined;
 
     const resolvedClassName = twMerge(
-      "flex min-h-16 min-w-xl flex-1 w-full py-2",
+      "@container flex min-h-16 min-w-0 flex-1 w-full",
+      getInsetYClass(insetY),
       mobileDirClass,
       desktopDirClass,
       justifyClass,
@@ -199,6 +216,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
           getGapAxisClass("y", gapY ?? gap),
         ),
       emptyPreviewClass,
+      editorPreviewPuckWrapperClass,
       getHideOnClass(hideOn),
       className,
       classes,

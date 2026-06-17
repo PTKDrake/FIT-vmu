@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { Text } from "@/components/ui/text";
+import { SiteLayoutShellFrame } from "@/components/site-layout/site-layout-shell";
 import { getPuckBlockDomId } from "./shared";
 import {
   getSurfaceBorderClass,
@@ -96,9 +97,14 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
     surfaceRadius: "none",
     surfacePadding: "md",
     surfaceShadow: "none",
+    className: "",
   },
   fields: {
     ...puckSurfaceFields,
+    className: {
+      type: "text",
+      label: "Lớp CSS bổ sung",
+    },
     header: {
       type: "slot",
       label: "Header",
@@ -128,6 +134,7 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
     right: Right,
     surfaceTone,
     surfaceBorder,
+    className,
     surfaceRadius,
     surfacePadding,
     surfaceShadow,
@@ -143,6 +150,7 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
       getSurfaceBorderClass(surfaceBorder),
       getSurfaceRadiusClass(surfaceRadius),
       getSurfaceShadowClass(surfaceShadow),
+      className,
     );
 
     const frameInsetClassName = getSurfacePaddingClass(surfacePadding);
@@ -156,34 +164,21 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
           )}
         >
           <div className="min-h-dvh overflow-hidden rounded-[inherit] border border-border/50 bg-bg text-fg">
-            <header className="w-full border-b border-border/60">
-              <Header className={slotClassName} minEmptyHeight={120} />
-            </header>
-
-            <div className="mx-auto flex w-full h-full flex-col lg:flex-row lg:items-start">
-              <aside className="w-full h-full shrink-0 border-b border-border/60 lg:w-lg lg:border-r lg:border-b-0">
-                <Left className={slotClassName} minEmptyHeight={200} />
-              </aside>
-
-              <main className="min-w-0 flex-1 border-b border-border/60 lg:border-r lg:border-b-0">
-                <div className="flex min-h-0 flex-1">
-                  <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border/40 bg-muted/10 px-4 py-8">
-                    <Text className="text-center text-sm text-muted-fg">
-                      Nội dung trang sẽ được render ở vùng main và không lưu
-                      trong SiteLayout.
-                    </Text>
-                  </div>
+            <SiteLayoutShellFrame
+              footer={<Footer className={slotClassName} minEmptyHeight={120} />}
+              header={<Header className={slotClassName} minEmptyHeight={120} />}
+              left={<Left className={slotClassName} minEmptyHeight={200} />}
+              right={<Right className={slotClassName} minEmptyHeight={200} />}
+            >
+              <div className="flex min-h-full flex-1">
+                <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border/40 bg-muted/10 px-4 py-8">
+                  <Text className="text-center text-sm text-muted-fg">
+                    Nội dung trang sẽ được render ở vùng main và không lưu
+                    trong SiteLayout.
+                  </Text>
                 </div>
-              </main>
-
-              <aside className="w-full h-full shrink-0 lg:w-lg">
-                <Right className={slotClassName} minEmptyHeight={200} />
-              </aside>
-            </div>
-
-            <footer className="border-t border-border/60">
-              <Footer className={slotClassName} minEmptyHeight={120} />
-            </footer>
+              </div>
+            </SiteLayoutShellFrame>
           </div>
         </div>
       </div>

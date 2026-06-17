@@ -4,8 +4,15 @@ import optimizeLocales from "@react-aria/optimize-locales-plugin"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import laravel from "laravel-vite-plugin"
+import fs from "node:fs"
 import { fileURLToPath, URL } from "node:url"
 import { defineConfig } from "vite"
+
+const viteHost = "fitvmu.mcmevn.com"
+const viteCertificatePath = `/etc/nginx/certs/${viteHost}.pem`
+const viteKeyPath = `/etc/nginx/certs/${viteHost}-key.pem`
+const hasLocalTlsCertificate =
+    fs.existsSync(viteCertificatePath) && fs.existsSync(viteKeyPath)
 
 export default defineConfig({
     plugins: [
@@ -50,5 +57,25 @@ export default defineConfig({
             "react",
             "react-dom",
         ],
+    },
+    server: {
+        host: "0.0.0.0",
+        port: 5173,
+        strictPort: true,
+        origin: hasLocalTlsCertificate ? `https://${viteHost}:5173` : undefined,
+        cors: {
+            origin: [`https://${viteHost}`],
+        },
+        hmr: {
+            host: viteHost,
+            port: 5173,
+            protocol: hasLocalTlsCertificate ? "wss" : "ws",
+        },
+        https: hasLocalTlsCertificate
+            ? {
+                  cert: fs.readFileSync(viteCertificatePath),
+                  key: fs.readFileSync(viteKeyPath),
+              }
+            : undefined,
     },
 })
