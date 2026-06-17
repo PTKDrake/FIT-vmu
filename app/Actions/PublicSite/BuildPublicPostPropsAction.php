@@ -30,14 +30,34 @@ final class BuildPublicPostPropsAction
     public function __invoke(Post $post, PostCategory $category, ?User $viewer = null): array
     {
         $post->loadMissing(['siteLayout', 'author', 'categories', 'thumbnail']);
+        $layout = PublicLayoutResolver::resolve($post->siteLayout, SiteSetting::defaultPostLayoutId());
 
         return [
             'post' => $this->postToArray($post, $category),
             'breadcrumbs' => $this->buildBreadcrumbs($post, $category),
             'relatedPosts' => $this->buildRelatedPosts($post, $category, $viewer),
-            'layout' => PublicLayoutResolver::resolve($post->siteLayout, SiteSetting::defaultPostLayoutId()),
-            'dynamicData' => ($this->buildPuckDynamicData)($viewer, true),
+            'layout' => $layout,
+            'dynamicData' => ($this->buildPuckDynamicData)(
+                $viewer,
+                true,
+                $this->puckPayloads($post->content, $layout),
+            ),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $layout
+     * @return list<mixed>
+     */
+    private function puckPayloads(?string $content, ?array $layout): array
+    {
+        return array_values(array_filter([
+            $content,
+            $layout['headerData'] ?? null,
+            $layout['footerData'] ?? null,
+            $layout['leftData'] ?? null,
+            $layout['rightData'] ?? null,
+        ]));
     }
 
     /**

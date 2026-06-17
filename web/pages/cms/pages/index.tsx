@@ -77,7 +77,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
 
   useCmsContentRealtime("pages", (payload) => {
     toast.info(payload.message);
-    tableQueryState.list.reload();
+    reloadPagesList();
   });
 
   const columns: Array<ColumnDef<CmsPageTableRow, any>> = [
@@ -178,7 +178,10 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
               router.post(
                 clone.url({ page: row.original.id }),
                 {},
-                { preserveScroll: true },
+                {
+                  onSuccess: reloadPagesList,
+                  preserveScroll: true,
+                },
               );
             }}
           >
@@ -205,9 +208,16 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
     setIsDeleting(true);
     router.delete(destroy.url({ page: deleteTarget.id }), {
       onFinish: () => setIsDeleting(false),
-      onSuccess: () => setDeleteTarget(null),
+      onSuccess: () => {
+        setDeleteTarget(null);
+        reloadPagesList();
+      },
       preserveScroll: true,
     });
+  }
+
+  function reloadPagesList(): void {
+    tableQueryState.list.reload();
   }
 
   return (

@@ -28,3 +28,16 @@ test("Puck blocks share configurable surface fields", async () => {
         assert.match(source, /surfaceShadow/);
     }
 });
+
+test("Puck layout blocks share configurable surface fields without changing legacy defaults", async () => {
+    for (const file of [
+        "web/lib/puck/blocks/layouts.tsx",
+        "web/lib/puck/blocks/grid.tsx",
+        "web/lib/puck/blocks/flex.tsx",
+    ]) {
+        const source = await readFile(file, "utf8");
+
+        assert.match(source, /puckSurfaceFields/);
+        assert.match(source, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
+    }
+});

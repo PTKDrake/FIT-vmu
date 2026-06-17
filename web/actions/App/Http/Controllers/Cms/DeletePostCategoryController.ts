@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-const DeletePostCategoryController = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeletePostCategoryController = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeletePostCategoryController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeletePostCategoryController.definition = {
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-DeletePostCategoryController.url = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+DeletePostCategoryController.url = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post_category: args }
     }
@@ -52,7 +52,7 @@ DeletePostCategoryController.url = (args: { post_category: string | number | { i
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-DeletePostCategoryController.delete = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeletePostCategoryController.delete = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeletePostCategoryController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeletePostCategoryController.delete = (args: { post_category: string | number | 
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-const DeletePostCategoryControllerForm = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeletePostCategoryControllerForm = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeletePostCategoryController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeletePostCategoryControllerForm = (args: { post_category: string | number
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-DeletePostCategoryControllerForm.delete = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeletePostCategoryControllerForm.delete = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeletePostCategoryController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-const ClonePageController = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const ClonePageController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: ClonePageController.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ ClonePageController.definition = {
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-ClonePageController.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+ClonePageController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -52,7 +52,7 @@ ClonePageController.url = (args: { page: string | number | { id: string | number
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-ClonePageController.post = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ClonePageController.post = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: ClonePageController.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ ClonePageController.post = (args: { page: string | number | { id: string | numbe
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-const ClonePageControllerForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const ClonePageControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: ClonePageController.url(args, options),
     method: 'post',
 })
@@ -72,7 +72,7 @@ const ClonePageControllerForm = (args: { page: string | number | { id: string | 
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-ClonePageControllerForm.post = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+ClonePageControllerForm.post = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: ClonePageController.url(args, options),
     method: 'post',
 })

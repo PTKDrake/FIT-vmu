@@ -8,6 +8,7 @@ import {
   vmuFitPageBuilderConfig,
 } from "@/lib/puck/page-builder-config";
 import {
+  applyPuckDefaultProps,
   parsePuckLayoutData,
   parsePuckPageData,
 } from "@/lib/puck/page-builder-data";
@@ -31,8 +32,9 @@ export function PuckPageRender({
   mode = "page",
 }: PuckPageRenderProps) {
   const resolvedConfig = config ?? getPuckPageRenderConfig(configName);
-  const data =
+  const parsedData =
     mode === "slot" ? parsePuckLayoutData(content) : parsePuckPageData(content);
+  const data = applyPuckDefaultProps(parsedData, resolvedConfig);
 
   return (
     <div

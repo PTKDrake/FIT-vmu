@@ -1,9 +1,7 @@
 import { filterSuggestionItems } from "@blocknote/core/extensions";
 import {
-  FormattingToolbar,
   FormattingToolbarController,
   getDefaultReactSlashMenuItems,
-  getFormattingToolbarItems,
   SuggestionMenuController,
   useBlockNoteEditor,
 } from "@blocknote/react";
@@ -12,15 +10,13 @@ import {
   AIToolbarButton,
   getAISlashMenuItems,
 } from "@blocknote/xl-ai";
+import { BlockNoteFormattingToolbar } from "./blocknote-formatting-toolbar";
 
 function BlockNoteAiFormattingToolbar() {
   return (
-    <FormattingToolbar>
-      {[
-        ...getFormattingToolbarItems(),
-        <AIToolbarButton key="ai-toolbar-button" />,
-      ]}
-    </FormattingToolbar>
+    <BlockNoteFormattingToolbar>
+      <AIToolbarButton key="ai-toolbar-button" />
+    </BlockNoteFormattingToolbar>
   );
 }
 

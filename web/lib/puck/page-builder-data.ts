@@ -1,5 +1,6 @@
 import type { Data } from "@puckeditor/core";
 import type { PuckSurfaceStyleProps } from "./blocks/surface";
+import type { PuckImageValue } from "./media";
 
 export const PUCK_PAGE_CONTENT_FORMAT = "puck_json" as const;
 
@@ -13,7 +14,7 @@ export interface VmuFitPageBuilderComponents {
   };
 
   // 1. Layout blocks
-  Section: {
+  Section: PuckSurfaceStyleProps & {
     anchorId?: string;
     background?: "transparent" | "primarySubtle" | "infoSubtle" | "dark";
     paddingTop?: "none" | "sm" | "md" | "lg";
@@ -21,7 +22,7 @@ export interface VmuFitPageBuilderComponents {
     paddingY?: "none" | "sm" | "md" | "lg"; // For backwards compatibility
     paddingX?: "none" | "sm" | "md" | "lg";
     minHeight?: "auto" | "md" | "lg" | "screen";
-    backgroundImage?: string;
+    backgroundImage?: PuckImageValue;
     backgroundPosition?: "top" | "center" | "bottom";
     backgroundSize?: "cover" | "contain" | "auto";
     overlay?: "none" | "light" | "dark" | "primary";
@@ -31,7 +32,7 @@ export interface VmuFitPageBuilderComponents {
     className?: string;
     children?: any;
   };
-  Container: {
+  Container: PuckSurfaceStyleProps & {
     anchorId?: string;
     maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
     paddingX?: "yes" | "no" | boolean; // Supports boolean for backwards compatibility
@@ -42,7 +43,7 @@ export interface VmuFitPageBuilderComponents {
     className?: string;
     children?: any;
   };
-  Grid: {
+  Grid: PuckSurfaceStyleProps & {
     anchorId?: string;
     columns?: number; // Backwards compatibility
     mobileColumns?: 1 | 2;
@@ -58,7 +59,7 @@ export interface VmuFitPageBuilderComponents {
     className?: string;
     children?: any;
   };
-  TwoColumns: {
+  TwoColumns: PuckSurfaceStyleProps & {
     anchorId?: string;
     columnRatio?: "equal" | "leftWide" | "rightWide";
     gap?: "sm" | "md" | "lg" | "xl" | number; // Number for backwards compatibility
@@ -87,7 +88,7 @@ export interface VmuFitPageBuilderComponents {
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
   };
-  Flex: {
+  Flex: PuckSurfaceStyleProps & {
     anchorId?: string;
     flexDirection?:
       | "row"
@@ -134,7 +135,7 @@ export interface VmuFitPageBuilderComponents {
     className?: string;
   };
   Image: PuckSurfaceStyleProps & {
-    imageUrl: string;
+    imageUrl: PuckImageValue;
     alt: string;
     caption: string;
     objectFit: "cover" | "contain";
@@ -142,7 +143,7 @@ export interface VmuFitPageBuilderComponents {
     className?: string;
   };
   ImageText: PuckSurfaceStyleProps & {
-    imageUrl: string;
+    imageUrl: PuckImageValue;
     alt: string;
     title: string;
     description: string;
@@ -170,7 +171,7 @@ export interface VmuFitPageBuilderComponents {
   Card: PuckSurfaceStyleProps & {
     title: string;
     description: string;
-    imageUrl: string;
+    imageUrl: PuckImageValue;
     linkUrl: string;
     linkLabel: string;
     className?: string;
@@ -215,7 +216,7 @@ export interface VmuFitPageBuilderComponents {
   HeroSplit: {
     title: string;
     description: string;
-    imageUrl: string;
+    imageUrl: PuckImageValue;
     primaryActionHref: string;
     primaryActionLabel: string;
     secondaryActionHref: string;
@@ -234,7 +235,7 @@ export interface VmuFitPageBuilderComponents {
     address: string;
     phone: string;
     email: string;
-    imageUrl: string;
+    imageUrl: PuckImageValue;
     className?: string;
   };
   FeatureGrid: PuckSurfaceStyleProps & {
@@ -300,7 +301,7 @@ export interface VmuFitPageBuilderComponents {
       name: string;
       roleAndCompany: string;
       content: string;
-      avatar: string;
+      avatar: PuckImageValue;
     }[];
     className?: string;
   };
@@ -309,7 +310,7 @@ export interface VmuFitPageBuilderComponents {
     header: string;
     description: string;
     items: {
-      imageUrl: string;
+      imageUrl: PuckImageValue;
       title: string;
       description: string;
       linkUrl: string;
@@ -363,7 +364,7 @@ export interface VmuFitPageBuilderComponents {
     menuId?: string;
     mobileButtonLabel?: string;
     mobileLogoAlt?: string;
-    mobileLogoUrl?: string;
+    mobileLogoUrl?: PuckImageValue;
     mobilePanelTitle?: string;
     layoutPreset?: "default" | "headerPrimary" | "footerMenu";
     fullWidthOnMobile?: boolean;
@@ -479,6 +480,14 @@ export type VmuFitPageBuilderValue =
   | string
   | null
   | undefined;
+
+interface PuckDefaultPropsComponentConfig {
+  defaultProps?: unknown;
+}
+
+interface PuckDefaultPropsConfig {
+  components: Record<string, PuckDefaultPropsComponentConfig | undefined>;
+}
 
 const DEFAULT_PAGE_DATA: VmuFitPageBuilderData = {
   root: {
@@ -991,6 +1000,24 @@ export function serializePuckPageData(data: VmuFitPageBuilderData): string {
   return JSON.stringify(data, null, 2);
 }
 
+export function applyPuckDefaultProps(
+  data: VmuFitPageBuilderData,
+  config: PuckDefaultPropsConfig,
+): VmuFitPageBuilderData {
+  return clonePuckPageData({
+    ...data,
+    content: normalizePuckComponentList(
+      data.content,
+      config,
+    ) as VmuFitPageBuilderData["content"],
+    ...(data.zones
+      ? {
+          zones: normalizePuckZones(data.zones, config),
+        }
+      : {}),
+  });
+}
+
 function isPuckPageData(
   value: unknown,
 ): value is Partial<VmuFitPageBuilderData> {
@@ -1024,4 +1051,105 @@ function normalizePuckPageData(
     content: Array.isArray(data.content) ? data.content : [],
     ...(data.zones ? { zones: data.zones } : {}),
   };
+}
+
+function normalizePuckComponentList(
+  value: unknown,
+  config: PuckDefaultPropsConfig,
+): unknown[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((item) => normalizePuckComponentData(item, config));
+}
+
+function normalizePuckComponentData(
+  value: unknown,
+  config: PuckDefaultPropsConfig,
+): unknown {
+  if (!isPuckComponentData(value)) {
+    return normalizePuckPropValue(value, config);
+  }
+
+  const componentConfig = config.components[value.type];
+  const defaultProps = isPlainRecord(componentConfig?.defaultProps)
+    ? componentConfig.defaultProps
+    : {};
+  const props = isPlainRecord(value.props) ? value.props : {};
+
+  return {
+    ...value,
+    props: mergePuckDefaultProps(defaultProps, props, config),
+  };
+}
+
+function mergePuckDefaultProps(
+  defaultProps: Record<string, unknown>,
+  props: Record<string, unknown>,
+  config: PuckDefaultPropsConfig,
+): Record<string, unknown> {
+  const mergedProps: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(defaultProps)) {
+    mergedProps[key] = normalizePuckPropValue(value, config);
+  }
+
+  for (const [key, value] of Object.entries(props)) {
+    if (value === undefined) {
+      continue;
+    }
+
+    mergedProps[key] = normalizePuckPropValue(value, config);
+  }
+
+  return mergedProps;
+}
+
+function normalizePuckPropValue(
+  value: unknown,
+  config: PuckDefaultPropsConfig,
+): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizePuckComponentData(item, config));
+  }
+
+  if (!isPlainRecord(value)) {
+    return value;
+  }
+
+  if (isPuckComponentData(value)) {
+    return normalizePuckComponentData(value, config);
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, item]) => [
+      key,
+      normalizePuckPropValue(item, config),
+    ]),
+  );
+}
+
+function normalizePuckZones(
+  zones: NonNullable<VmuFitPageBuilderData["zones"]>,
+  config: PuckDefaultPropsConfig,
+): NonNullable<VmuFitPageBuilderData["zones"]> {
+  return Object.fromEntries(
+    Object.entries(zones).map(([zoneName, value]) => [
+      zoneName,
+      Array.isArray(value)
+        ? normalizePuckComponentList(value, config)
+        : normalizePuckPropValue(value, config),
+    ]),
+  ) as NonNullable<VmuFitPageBuilderData["zones"]>;
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isPuckComponentData(
+  value: unknown,
+): value is { props?: unknown; type: string } & Record<string, unknown> {
+  return isPlainRecord(value) && typeof value.type === "string";
 }

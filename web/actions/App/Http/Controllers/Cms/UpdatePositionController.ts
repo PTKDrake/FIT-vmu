@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdatePositionController.php:15
 * @route '/cms/positions/{position}'
 */
-const UpdatePositionController = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdatePositionController = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePositionController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdatePositionController.definition = {
 * @see app/Http/Controllers/Cms/UpdatePositionController.php:15
 * @route '/cms/positions/{position}'
 */
-UpdatePositionController.url = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UpdatePositionController.url = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { position: args }
     }
@@ -52,7 +52,7 @@ UpdatePositionController.url = (args: { position: string | number | { id: string
 * @see app/Http/Controllers/Cms/UpdatePositionController.php:15
 * @route '/cms/positions/{position}'
 */
-UpdatePositionController.patch = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdatePositionController.patch = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePositionController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdatePositionController.patch = (args: { position: string | number | { id: stri
 * @see app/Http/Controllers/Cms/UpdatePositionController.php:15
 * @route '/cms/positions/{position}'
 */
-const UpdatePositionControllerForm = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdatePositionControllerForm = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePositionController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdatePositionControllerForm = (args: { position: string | number | { id: 
 * @see app/Http/Controllers/Cms/UpdatePositionController.php:15
 * @route '/cms/positions/{position}'
 */
-UpdatePositionControllerForm.patch = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdatePositionControllerForm.patch = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePositionController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

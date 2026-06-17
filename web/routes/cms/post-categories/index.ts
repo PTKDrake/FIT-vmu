@@ -60,7 +60,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-export const update = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -75,7 +75,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-update.url = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post_category: args }
     }
@@ -108,7 +108,7 @@ update.url = (args: { post_category: string | number | { id: string | number } }
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-update.patch = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -118,7 +118,7 @@ update.patch = (args: { post_category: string | number | { id: string | number }
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-const updateForm = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -133,7 +133,7 @@ const updateForm = (args: { post_category: string | number | { id: string | numb
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-updateForm.patch = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -150,7 +150,7 @@ update.form = updateForm
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-export const destroy = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -165,7 +165,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-destroy.url = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post_category: args }
     }
@@ -198,7 +198,7 @@ destroy.url = (args: { post_category: string | number | { id: string | number } 
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-destroy.delete = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -208,7 +208,7 @@ destroy.delete = (args: { post_category: string | number | { id: string | number
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-const destroyForm = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -223,7 +223,7 @@ const destroyForm = (args: { post_category: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/DeletePostCategoryController.php:13
 * @route '/cms/post-categories/{post_category}'
 */
-destroyForm.delete = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

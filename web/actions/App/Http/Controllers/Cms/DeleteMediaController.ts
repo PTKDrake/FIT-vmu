@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-const DeleteMediaController = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeleteMediaController = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteMediaController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeleteMediaController.definition = {
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-DeleteMediaController.url = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+DeleteMediaController.url = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { media: args }
     }
@@ -52,7 +52,7 @@ DeleteMediaController.url = (args: { media: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-DeleteMediaController.delete = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeleteMediaController.delete = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteMediaController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeleteMediaController.delete = (args: { media: string | number | { id: string | 
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-const DeleteMediaControllerForm = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeleteMediaControllerForm = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteMediaController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeleteMediaControllerForm = (args: { media: string | number | { id: string
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-DeleteMediaControllerForm.delete = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeleteMediaControllerForm.delete = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteMediaController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

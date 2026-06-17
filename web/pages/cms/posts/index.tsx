@@ -86,7 +86,7 @@ export default function CmsPostsPage({
 
   useCmsContentRealtime("posts", (payload) => {
     toast.info(payload.message);
-    tableQueryState.list.reload();
+    reloadPostsList();
   });
 
   const columns: Array<ColumnDef<CmsPostTableRow, any>> = [
@@ -256,9 +256,14 @@ export default function CmsPostsPage({
       },
       {
         onFinish: () => setIsPublishing(false),
+        onSuccess: reloadPostsList,
         preserveScroll: true,
       },
     );
+  }
+
+  function reloadPostsList(): void {
+    tableQueryState.list.reload();
   }
 
   function deletePost(): void {
@@ -269,7 +274,10 @@ export default function CmsPostsPage({
     setIsDeleting(true);
     router.delete(postsRoutes.destroy.url({ post: deleteTarget.id }), {
       onFinish: () => setIsDeleting(false),
-      onSuccess: () => setDeleteTarget(null),
+      onSuccess: () => {
+        setDeleteTarget(null);
+        reloadPostsList();
+      },
       preserveScroll: true,
     });
   }
@@ -429,6 +437,7 @@ export default function CmsPostsPage({
                       setRejectionReason("");
                       setRejectionError("");
                     },
+                    onSuccess: reloadPostsList,
                     preserveScroll: true,
                   },
                 );

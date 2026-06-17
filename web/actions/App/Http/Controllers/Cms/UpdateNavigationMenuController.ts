@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateNavigationMenuController.php:15
 * @route '/cms/navigation/{navigationMenu}'
 */
-const UpdateNavigationMenuController = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateNavigationMenuController = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateNavigationMenuController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateNavigationMenuController.definition = {
 * @see app/Http/Controllers/Cms/UpdateNavigationMenuController.php:15
 * @route '/cms/navigation/{navigationMenu}'
 */
-UpdateNavigationMenuController.url = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UpdateNavigationMenuController.url = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { navigationMenu: args }
     }
@@ -52,7 +52,7 @@ UpdateNavigationMenuController.url = (args: { navigationMenu: string | number | 
 * @see app/Http/Controllers/Cms/UpdateNavigationMenuController.php:15
 * @route '/cms/navigation/{navigationMenu}'
 */
-UpdateNavigationMenuController.patch = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateNavigationMenuController.patch = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateNavigationMenuController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateNavigationMenuController.patch = (args: { navigationMenu: string | number 
 * @see app/Http/Controllers/Cms/UpdateNavigationMenuController.php:15
 * @route '/cms/navigation/{navigationMenu}'
 */
-const UpdateNavigationMenuControllerForm = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateNavigationMenuControllerForm = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateNavigationMenuController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateNavigationMenuControllerForm = (args: { navigationMenu: string | num
 * @see app/Http/Controllers/Cms/UpdateNavigationMenuController.php:15
 * @route '/cms/navigation/{navigationMenu}'
 */
-UpdateNavigationMenuControllerForm.patch = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateNavigationMenuControllerForm.patch = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateNavigationMenuController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

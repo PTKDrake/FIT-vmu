@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-const UpdateUserController = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateUserController = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateUserController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateUserController.definition = {
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-UpdateUserController.url = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UpdateUserController.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -52,7 +52,7 @@ UpdateUserController.url = (args: { user: string | number | { id: string | numbe
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-UpdateUserController.patch = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateUserController.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateUserController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateUserController.patch = (args: { user: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-const UpdateUserControllerForm = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateUserControllerForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateUserController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateUserControllerForm = (args: { user: string | number | { id: string |
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-UpdateUserControllerForm.patch = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateUserControllerForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateUserController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

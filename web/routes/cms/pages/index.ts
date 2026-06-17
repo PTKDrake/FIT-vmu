@@ -143,7 +143,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-export const edit = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -158,7 +158,7 @@ edit.definition = {
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-edit.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -191,7 +191,7 @@ edit.url = (args: { page: string | number | { id: string | number } } | [page: s
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-edit.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -201,7 +201,7 @@ edit.get = (args: { page: string | number | { id: string | number } } | [page: s
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-edit.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -211,7 +211,7 @@ edit.head = (args: { page: string | number | { id: string | number } } | [page: 
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-const editForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -221,7 +221,7 @@ const editForm = (args: { page: string | number | { id: string | number } } | [p
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-editForm.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -231,7 +231,7 @@ editForm.get = (args: { page: string | number | { id: string | number } } | [pag
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-editForm.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -245,10 +245,10 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-export const builder = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const builder = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: builder.url(args, options),
     method: 'get',
 })
@@ -260,10 +260,10 @@ builder.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-builder.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+builder.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -293,50 +293,50 @@ builder.url = (args: { page: string | number | { id: string | number } } | [page
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-builder.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+builder.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: builder.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-builder.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+builder.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: builder.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-const builderForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const builderForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: builder.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-builderForm.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+builderForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: builder.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-builderForm.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+builderForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: builder.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -353,7 +353,7 @@ builder.form = builderForm
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-export const show = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -368,7 +368,7 @@ show.definition = {
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-show.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -401,7 +401,7 @@ show.url = (args: { page: string | number | { id: string | number } } | [page: s
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-show.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -411,7 +411,7 @@ show.get = (args: { page: string | number | { id: string | number } } | [page: s
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-show.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -421,7 +421,7 @@ show.head = (args: { page: string | number | { id: string | number } } | [page: 
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-const showForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -431,7 +431,7 @@ const showForm = (args: { page: string | number | { id: string | number } } | [p
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-showForm.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -441,7 +441,7 @@ showForm.get = (args: { page: string | number | { id: string | number } } | [pag
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-showForm.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -458,7 +458,7 @@ show.form = showForm
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-export const clone = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const clone = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clone.url(args, options),
     method: 'post',
 })
@@ -473,7 +473,7 @@ clone.definition = {
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-clone.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+clone.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -506,7 +506,7 @@ clone.url = (args: { page: string | number | { id: string | number } } | [page: 
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-clone.post = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+clone.post = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clone.url(args, options),
     method: 'post',
 })
@@ -516,7 +516,7 @@ clone.post = (args: { page: string | number | { id: string | number } } | [page:
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-const cloneForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const cloneForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: clone.url(args, options),
     method: 'post',
 })
@@ -526,7 +526,7 @@ const cloneForm = (args: { page: string | number | { id: string | number } } | [
 * @see app/Http/Controllers/Cms/ClonePageController.php:16
 * @route '/cms/pages/{page}/clone'
 */
-cloneForm.post = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+cloneForm.post = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: clone.url(args, options),
     method: 'post',
 })
@@ -538,7 +538,7 @@ clone.form = cloneForm
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-export const destroy = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -553,7 +553,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-destroy.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -586,7 +586,7 @@ destroy.url = (args: { page: string | number | { id: string | number } } | [page
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-destroy.delete = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -596,7 +596,7 @@ destroy.delete = (args: { page: string | number | { id: string | number } } | [p
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-const destroyForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -611,7 +611,7 @@ const destroyForm = (args: { page: string | number | { id: string | number } } |
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-destroyForm.delete = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

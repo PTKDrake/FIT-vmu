@@ -151,7 +151,7 @@ create.form = createForm
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-export const show = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -166,7 +166,7 @@ show.definition = {
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-show.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -199,7 +199,7 @@ show.url = (args: { unit: string | number | { id: string | number } } | [unit: s
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-show.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -209,7 +209,7 @@ show.get = (args: { unit: string | number | { id: string | number } } | [unit: s
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-show.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -219,7 +219,7 @@ show.head = (args: { unit: string | number | { id: string | number } } | [unit: 
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-const showForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -229,7 +229,7 @@ const showForm = (args: { unit: string | number | { id: string | number } } | [u
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-showForm.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -239,7 +239,7 @@ showForm.get = (args: { unit: string | number | { id: string | number } } | [uni
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-showForm.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -256,7 +256,7 @@ show.form = showForm
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-export const edit = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -271,7 +271,7 @@ edit.definition = {
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-edit.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -304,7 +304,7 @@ edit.url = (args: { unit: string | number | { id: string | number } } | [unit: s
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-edit.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -314,7 +314,7 @@ edit.get = (args: { unit: string | number | { id: string | number } } | [unit: s
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-edit.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -324,7 +324,7 @@ edit.head = (args: { unit: string | number | { id: string | number } } | [unit: 
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-const editForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -334,7 +334,7 @@ const editForm = (args: { unit: string | number | { id: string | number } } | [u
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-editForm.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -344,7 +344,7 @@ editForm.get = (args: { unit: string | number | { id: string | number } } | [uni
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-editForm.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -417,7 +417,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-export const update = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -432,7 +432,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-update.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -465,7 +465,7 @@ update.url = (args: { unit: string | number | { id: string | number } } | [unit:
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-update.patch = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -475,7 +475,7 @@ update.patch = (args: { unit: string | number | { id: string | number } } | [uni
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-const updateForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -490,7 +490,7 @@ const updateForm = (args: { unit: string | number | { id: string | number } } | 
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-updateForm.patch = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -507,7 +507,7 @@ update.form = updateForm
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-export const destroy = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -522,7 +522,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-destroy.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -555,7 +555,7 @@ destroy.url = (args: { unit: string | number | { id: string | number } } | [unit
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-destroy.delete = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -565,7 +565,7 @@ destroy.delete = (args: { unit: string | number | { id: string | number } } | [u
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-const destroyForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -580,7 +580,7 @@ const destroyForm = (args: { unit: string | number | { id: string | number } } |
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-destroyForm.delete = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

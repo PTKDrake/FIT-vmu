@@ -5,8 +5,10 @@ import {
   CheckIcon,
 } from "@heroicons/react/24/outline";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
+import { usePage } from "@inertiajs/react";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { PuckMediaField } from "@/components/layout-builder/puck-media-field";
 import { PuckSelectField } from "@/components/layout-builder/puck-select-field";
 import { PuckExportMenu } from "@/components/page-builder/puck-export-menu";
 import { Button } from "@/components/ui/button";
@@ -66,7 +68,34 @@ export function PuckPageBuilder({
   onPublish,
   onSave,
 }: PuckPageBuilderProps) {
+  const dynamicData = usePage<{ dynamicData?: Record<string, unknown> }>().props
+    .dynamicData;
   const initialData = useMemo(() => parsePuckPageData(content), [content]);
+
+  useMountEffect(() => {
+    if (typeof window === "undefined" || !dynamicData) {
+      return;
+    }
+
+    const currentWindow = window as Window & {
+      __VMU_PUCK_DYNAMIC_DATA__?: Record<string, unknown>;
+    };
+    currentWindow.__VMU_PUCK_DYNAMIC_DATA__ = dynamicData;
+
+    try {
+      const topWindow = window.top as
+        | (Window & {
+            __VMU_PUCK_DYNAMIC_DATA__?: Record<string, unknown>;
+          })
+        | null;
+
+      if (topWindow) {
+        topWindow.__VMU_PUCK_DYNAMIC_DATA__ = dynamicData;
+      }
+    } catch {
+      // Ignore cross-window access failures. The current window fallback is enough.
+    }
+  });
 
   useMountEffect(() => {
     let frameId: number | null = null;
@@ -122,6 +151,20 @@ export function PuckPageBuilder({
               }
             `;
             iframeHead.appendChild(fontOverride);
+          }
+
+          let previewFixes = iframeHead.querySelector(
+            "#vmu-page-builder-preview-fixes",
+          ) as HTMLStyleElement | null;
+
+          if (!previewFixes) {
+            previewFixes = iframe.contentDocument.createElement("style");
+            previewFixes.id = "vmu-page-builder-preview-fixes";
+            iframeHead.appendChild(previewFixes);
+          }
+
+          if (previewFixes.textContent !== puckBuilderPreviewFrameStyles) {
+            previewFixes.textContent = puckBuilderPreviewFrameStyles;
           }
         }
       }
@@ -201,12 +244,7 @@ export function PuckPageBuilder({
   }
 
   return (
-    <div
-      className={twMerge(
-        "vmu-puck-page-builder",
-        className,
-      )}
-    >
+    <div className={twMerge("vmu-puck-page-builder", className)}>
       <style>{puckBuilderStyles}</style>
 
       <Puck
@@ -215,11 +253,11 @@ export function PuckPageBuilder({
         data={initialData}
         headerTitle={headerTitle}
         onChange={handleEditorChange}
-        onPublish={handleSave}
         overrides={{
           fieldTypes: {
+            cmsMedia: PuckMediaField,
             select: PuckSelectField,
-          },
+          } as any,
           headerActions: () => (
             <PuckPageBuilderHeaderActions
               backHref={backHref}
@@ -339,6 +377,15 @@ const puckBuilderStyles = `
   min-height: 100%;
 }
 
+.vmu-puck-page-builder [data-puck-dropzone]:not(:empty) {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.vmu-puck-page-builder [data-puck-dropzone]:empty {
+  min-height: 5rem;
+}
+
 .vmu-puck-page-builder [class*="_PuckHeader_"] {
   border-bottom: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
   background: var(--color-overlay, #fff);
@@ -387,5 +434,17 @@ const puckBuilderStyles = `
   .vmu-puck-page-builder [class*="_PuckLayout-inner_"] {
     min-height: calc(100vh - 9rem);
   }
+}
+`;
+
+const puckBuilderPreviewFrameStyles = `
+[data-puck-dropzone]:not(:empty),
+[data-puck-dropzone][class*="DropZone--hasChildren"] {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+[data-puck-dropzone]:empty {
+  min-height: 5rem;
 }
 `;

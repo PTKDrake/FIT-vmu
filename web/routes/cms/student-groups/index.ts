@@ -60,7 +60,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-export const update = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -75,7 +75,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-update.url = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { student_group: args }
     }
@@ -108,7 +108,7 @@ update.url = (args: { student_group: string | number | { id: string | number } }
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-update.patch = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -118,7 +118,7 @@ update.patch = (args: { student_group: string | number | { id: string | number }
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-const updateForm = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -133,7 +133,7 @@ const updateForm = (args: { student_group: string | number | { id: string | numb
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-updateForm.patch = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -150,7 +150,7 @@ update.form = updateForm
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-export const destroy = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -165,7 +165,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-destroy.url = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { student_group: args }
     }
@@ -198,7 +198,7 @@ destroy.url = (args: { student_group: string | number | { id: string | number } 
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-destroy.delete = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -208,7 +208,7 @@ destroy.delete = (args: { student_group: string | number | { id: string | number
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-const destroyForm = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -223,7 +223,7 @@ const destroyForm = (args: { student_group: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-destroyForm.delete = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

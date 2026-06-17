@@ -5,6 +5,7 @@ import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
 import { Note as NoteUI } from "@/components/ui/note";
 import { Text } from "@/components/ui/text";
+import { getPuckImageUrl } from "@/lib/puck/media";
 import { getPuckBlockDomId } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
@@ -220,6 +221,7 @@ export const ImageComponentConfig: PageBuilderComponentConfig<"Image"> = {
       className,
     } = props;
     const id = getPuckBlockDomId(props.id);
+    const resolvedImageUrl = getPuckImageUrl(imageUrl);
     const imageRadius = surfaceRadius ?? (rounded ? "3xl" : "none");
 
     return (
@@ -242,9 +244,9 @@ export const ImageComponentConfig: PageBuilderComponentConfig<"Image"> = {
             ),
           )}
         >
-          {imageUrl ? (
+          {resolvedImageUrl ? (
             <img
-              src={imageUrl}
+              src={resolvedImageUrl}
               alt={alt}
               className={twMerge(
                 "w-full h-full object-center transition duration-500 group-hover:scale-[1.02]",
@@ -331,6 +333,7 @@ export const ImageTextComponentConfig: PageBuilderComponentConfig<"ImageText"> =
       className,
     } = props;
     const id = getPuckBlockDomId(props.id);
+    const resolvedImageUrl = getPuckImageUrl(imageUrl);
 
     return (
       <div
@@ -380,9 +383,9 @@ export const ImageTextComponentConfig: PageBuilderComponentConfig<"ImageText"> =
             imagePosition === "right" ? "md:order-2" : "md:order-1",
           )}
         >
-          {imageUrl ? (
+          {resolvedImageUrl ? (
             <img
-              src={imageUrl}
+              src={resolvedImageUrl}
               alt={alt || title}
               className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
             />
@@ -695,6 +698,7 @@ export const CardComponentConfig: PageBuilderComponentConfig<"Card"> = {
       className,
     } = props;
     const id = getPuckBlockDomId(props.id);
+    const resolvedImageUrl = getPuckImageUrl(imageUrl);
 
     return (
       <CardUI
@@ -715,9 +719,9 @@ export const CardComponentConfig: PageBuilderComponentConfig<"Card"> = {
         )}
       >
         <div className="relative aspect-video w-full overflow-hidden bg-muted">
-          {imageUrl ? (
+          {resolvedImageUrl ? (
             <img
-              src={imageUrl}
+              src={resolvedImageUrl}
               alt={title}
               className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
             />

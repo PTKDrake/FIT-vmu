@@ -68,6 +68,7 @@ test("puck note blocks use a quieter accent treatment instead of circular indica
 
 test("layout blocks include common design fields for spacing and presentation", () => {
     assert.match(layoutsSource, /export function getInsetYClass/);
+    assert.match(layoutsSource, /puckSurfaceFields/);
     assert.match(layoutsSource, /insetY: \{/);
     assert.match(layoutsSource, /paddingX: \{/);
     assert.match(layoutsSource, /backgroundPosition: \{/);
@@ -78,16 +79,23 @@ test("layout blocks include common design fields for spacing and presentation", 
     assert.match(gridSource, /gapY: \{/);
     assert.match(gridSource, /insetY: \{/);
     assert.match(gridSource, /justifyItems: \{/);
+    assert.match(gridSource, /puckSurfaceFields/);
     assert.match(flexSource, /gapX: \{/);
     assert.match(flexSource, /gapY: \{/);
     assert.match(flexSource, /insetY: \{/);
+    assert.match(flexSource, /puckSurfaceFields/);
+    assert.match(layoutsSource, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
+    assert.match(gridSource, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
+    assert.match(flexSource, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
 });
 
-test("puck layout primitives use container-aware responsive classes", () => {
-    assert.match(flexSource, /@container flex min-h-16 min-w-0/);
+test("puck layout primitives use responsive classes without making grid a container root", () => {
+    assert.match(flexSource, /@container flex min-w-0/);
+    assert.doesNotMatch(flexSource, /@container flex min-h-16 min-w-0/);
     assert.doesNotMatch(flexSource, /min-w-xl/);
     assert.match(flexSource, /@3xl:flex-row/);
-    assert.match(gridSource, /@container grid min-h-16 min-w-0/);
+    assert.match(gridSource, /"grid min-w-0 w-full"/);
+    assert.doesNotMatch(gridSource, /@container grid/);
     assert.match(gridSource, /@md:grid-cols-2/);
     assert.match(gridSource, /@5xl:grid-cols-3/);
     assert.match(layoutsSource, /@container w-full min-w-0/);
@@ -99,6 +107,11 @@ test("page builder data types stay aligned with the new layout fields", () => {
         dataSource,
         /SiteLayoutFrame: PuckSurfaceStyleProps & \{\s+className\?: string;/,
     );
+    assert.match(dataSource, /Section: PuckSurfaceStyleProps & \{/);
+    assert.match(dataSource, /Container: PuckSurfaceStyleProps & \{/);
+    assert.match(dataSource, /Grid: PuckSurfaceStyleProps & \{/);
+    assert.match(dataSource, /TwoColumns: PuckSurfaceStyleProps & \{/);
+    assert.match(dataSource, /Flex: PuckSurfaceStyleProps & \{/);
     assert.match(
         dataSource,
         /insetY\?: "none" \| "xs" \| "sm" \| "md" \| "lg"/,
@@ -220,9 +233,9 @@ test("site layout builder data helpers compose and split slot payloads", () => {
     assert.match(siteLayoutBuilderDataSource, /header_data: serializeSlotData/);
     assert.match(siteLayoutBuilderDataSource, /footer_data: serializeSlotData/);
     assert.match(layoutBuilderSource, /normalizeData\?:/);
-    assert.match(layoutBuilderSource, /key=\{`\$\{editorKey\}:\$\{editorRevision\}`\}/);
-    assert.match(layoutBuilderSource, /setEditorRevision/);
+    assert.match(layoutBuilderSource, /key=\{editorKey\}/);
     assert.match(layoutBuilderSource, /layoutBuilderPreviewFrameStyles/);
+    assert.match(layoutBuilderSource, /\[data-puck-dropzone\]:not\(:empty\)/);
     assert.match(layoutBuilderSource, /#vmu-layout-builder-preview-fixes/);
     assert.match(
         layoutBuilderSource,

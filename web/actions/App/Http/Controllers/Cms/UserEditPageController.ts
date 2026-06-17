@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-const UserEditPageController = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const UserEditPageController = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: UserEditPageController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ UserEditPageController.definition = {
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-UserEditPageController.url = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UserEditPageController.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -52,7 +52,7 @@ UserEditPageController.url = (args: { user: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-UserEditPageController.get = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+UserEditPageController.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: UserEditPageController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ UserEditPageController.get = (args: { user: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-UserEditPageController.head = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+UserEditPageController.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: UserEditPageController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ UserEditPageController.head = (args: { user: string | number | { id: string | nu
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-const UserEditPageControllerForm = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const UserEditPageControllerForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UserEditPageController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const UserEditPageControllerForm = (args: { user: string | number | { id: string
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-UserEditPageControllerForm.get = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+UserEditPageControllerForm.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UserEditPageController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ UserEditPageControllerForm.get = (args: { user: string | number | { id: string |
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-UserEditPageControllerForm.head = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+UserEditPageControllerForm.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UserEditPageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

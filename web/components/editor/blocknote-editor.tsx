@@ -2,7 +2,7 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
 import "@blocknote/xl-ai/style.css";
 import { vi as blockNoteViDictionary } from "@blocknote/core/locales";
-import { useCreateBlockNote } from "@blocknote/react";
+import { FilePanelController, useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { vi as blockNoteAiViDictionary } from "@blocknote/xl-ai/locales";
 import { usePage } from "@inertiajs/react";
@@ -12,6 +12,8 @@ import { useTheme } from "@/hooks/use-theme";
 import type { SharedData } from "@/types/shared";
 import { BlockNoteAiControllers } from "./blocknote-ai";
 import { createBlockNoteAiExtension } from "./blocknote-ai-extension";
+import { BlockNoteFormattingToolbar } from "./blocknote-formatting-toolbar";
+import { BlockNoteMediaFilePanel } from "./blocknote-media-file-panel";
 import {
   cloneBlockNoteContent,
   getBlockNoteFormat,
@@ -20,6 +22,7 @@ import {
   serializeBlockNoteContent,
 } from "./blocknote-parse";
 import type { BlockNoteContent, BlockNoteValue } from "./blocknote-types";
+import { uploadBlockNoteCmsMedia } from "./blocknote-upload";
 
 export interface BlockNoteEditorChange {
   blocks: BlockNoteContent;
@@ -65,7 +68,7 @@ export function BlockNoteEditor({
       },
       extensions: blockNoteAiEnabled ? [createBlockNoteAiExtension()] : [],
       initialContent,
-      uploadFile,
+      uploadFile: uploadFile ?? uploadBlockNoteCmsMedia,
     },
     [blockNoteAiEnabled, editorKey],
   );
@@ -99,14 +102,20 @@ export function BlockNoteEditor({
         theme={resolvedTheme}
         editable={isEditable}
         emojiPicker={isEditable}
-        filePanel={isEditable}
+        filePanel={false}
         linkToolbar={isEditable}
         onChange={handleEditorChange}
         sideMenu={isEditable}
         slashMenu={blockNoteAiEnabled ? false : isEditable}
         tableHandles={isEditable}
-        formattingToolbar={blockNoteAiEnabled ? false : isEditable}
+        formattingToolbar={false}
       >
+        {isEditable ? (
+          <FilePanelController filePanel={BlockNoteMediaFilePanel} />
+        ) : null}
+        {isEditable && !blockNoteAiEnabled ? (
+          <BlockNoteFormattingToolbar />
+        ) : null}
         {blockNoteAiEnabled ? <BlockNoteAiControllers /> : null}
       </BlockNoteView>
     </div>

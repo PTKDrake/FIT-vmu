@@ -24,6 +24,7 @@ import type {
   VmuFitPageBuilderData,
   VmuFitPageBuilderValue,
 } from "@/lib/puck/page-builder-data";
+import { PuckMediaField } from "./puck-media-field";
 import { PuckSelectField } from "./puck-select-field";
 
 const useLayoutBuilderPuck = createUsePuck<PageBuilderConfig>();
@@ -88,9 +89,11 @@ export function PuckLayoutBuilder({
     currentWindow.__VMU_PUCK_DYNAMIC_DATA__ = dynamicData;
 
     try {
-      const topWindow = window.top as Window & {
-        __VMU_PUCK_DYNAMIC_DATA__?: Record<string, unknown>;
-      } | null;
+      const topWindow = window.top as
+        | (Window & {
+            __VMU_PUCK_DYNAMIC_DATA__?: Record<string, unknown>;
+          })
+        | null;
 
       if (topWindow) {
         topWindow.__VMU_PUCK_DYNAMIC_DATA__ = dynamicData;
@@ -216,12 +219,12 @@ export function PuckLayoutBuilder({
         data={initialData}
         headerTitle={headerTitle}
         onChange={handleEditorChange}
-        onPublish={(nextData) => handleDataChange(onSave, nextData)}
         plugins={plugins}
         overrides={{
           fieldTypes: {
+            cmsMedia: PuckMediaField,
             select: PuckSelectField,
-          },
+          } as any,
           headerActions: () => (
             <PuckLayoutBuilderHeaderActions
               canExport={canExport}
@@ -330,6 +333,14 @@ const layoutBuilderStyles = `
   --puck-color-brand-hover: var(--primary, oklch(0.685 0.169 237.323));
 }
 
+.vmu-puck-page-builder [data-puck-dropzone]:not(:empty) {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.vmu-puck-page-builder [data-puck-dropzone]:empty {
+  min-height: 5rem;
+}
 
 .vmu-puck-page-builder [class*="_PuckHeader_"],
 .vmu-puck-page-builder [class*="_PuckFields_"] {
@@ -365,6 +376,16 @@ const layoutBuilderStyles = `
 `;
 
 const layoutBuilderPreviewFrameStyles = `
+[data-puck-dropzone]:not(:empty),
+[data-puck-dropzone][class*="DropZone--hasChildren"] {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+[data-puck-dropzone]:empty {
+  min-height: 5rem;
+}
+
 [data-puck-component]:has([data-vmu-puck-block="navigation-menu"][data-vmu-navigation-orientation="horizontal"]) {
   width: 100%;
   min-width: fit-content;

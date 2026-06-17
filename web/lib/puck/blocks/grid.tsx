@@ -10,6 +10,7 @@ import {
   getPuckBlockDomId,
   isPuckEditorPreview,
 } from "./shared";
+import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
@@ -31,6 +32,7 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       type: "text",
       label: "ID điều hướng",
     },
+    ...puckSurfaceFields,
     mobileColumns: {
       type: "select",
       label: "Số cột trên mobile",
@@ -198,7 +200,7 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       : "";
 
     const resolvedClassName = twMerge(
-      "@container grid min-h-16 min-w-0 w-full",
+      "grid min-w-0 w-full",
       getInsetYClass(insetY),
       mobileColsClass,
       tabletColsClass,
@@ -212,6 +214,7 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       emptyPreviewClass,
       getAlignItemsClass(alignItems),
       getJustifyItemsClass(justifyItems),
+      getSurfaceClassName(props, "", { includeDefaults: false }),
       getHideOnClass(hideOn),
       className,
     );

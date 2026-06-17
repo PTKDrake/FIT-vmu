@@ -1,10 +1,10 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-const PageBuilderController = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const PageBuilderController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PageBuilderController.url(args, options),
     method: 'get',
 })
@@ -16,10 +16,10 @@ PageBuilderController.definition = {
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-PageBuilderController.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+PageBuilderController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -49,50 +49,50 @@ PageBuilderController.url = (args: { page: string | number | { id: string | numb
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-PageBuilderController.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+PageBuilderController.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PageBuilderController.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-PageBuilderController.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+PageBuilderController.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: PageBuilderController.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-const PageBuilderControllerForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const PageBuilderControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageBuilderController.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-PageBuilderControllerForm.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PageBuilderControllerForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageBuilderController.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Cms\PageBuilderController::__invoke
-* @see app/Http/Controllers/Cms/PageBuilderController.php:15
+* @see app/Http/Controllers/Cms/PageBuilderController.php:16
 * @route '/cms/pages/{page}/builder'
 */
-PageBuilderControllerForm.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PageBuilderControllerForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageBuilderController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

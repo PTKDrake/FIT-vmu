@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const StaffProfileShowPageController = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const StaffProfileShowPageController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: StaffProfileShowPageController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ StaffProfileShowPageController.definition = {
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-StaffProfileShowPageController.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+StaffProfileShowPageController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -52,7 +52,7 @@ StaffProfileShowPageController.url = (args: { staffProfile: string | number | { 
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-StaffProfileShowPageController.get = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+StaffProfileShowPageController.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: StaffProfileShowPageController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ StaffProfileShowPageController.get = (args: { staffProfile: string | number | { 
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-StaffProfileShowPageController.head = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+StaffProfileShowPageController.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: StaffProfileShowPageController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ StaffProfileShowPageController.head = (args: { staffProfile: string | number | {
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const StaffProfileShowPageControllerForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const StaffProfileShowPageControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: StaffProfileShowPageController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const StaffProfileShowPageControllerForm = (args: { staffProfile: string | numbe
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-StaffProfileShowPageControllerForm.get = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+StaffProfileShowPageControllerForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: StaffProfileShowPageController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ StaffProfileShowPageControllerForm.get = (args: { staffProfile: string | number 
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-StaffProfileShowPageControllerForm.head = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+StaffProfileShowPageControllerForm.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: StaffProfileShowPageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

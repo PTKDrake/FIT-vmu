@@ -28,6 +28,13 @@ interface PuckFieldDefinition {
 
 type PuckFieldDefinitions = Record<string, PuckFieldDefinition>;
 
+const PUCK_MEDIA_FIELD_NAMES = new Set([
+  "avatar",
+  "backgroundImage",
+  "imageUrl",
+  "mobileLogoUrl",
+]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
@@ -97,6 +104,13 @@ function normalizeFieldDefinitions(
           objectFields: normalizedObjectFields,
         };
       }
+    }
+
+    if (field.type === "text" && PUCK_MEDIA_FIELD_NAMES.has(fieldName)) {
+      nextField = {
+        ...nextField,
+        type: "cmsMedia",
+      };
     }
 
     if (nextField !== field) {

@@ -23,6 +23,7 @@ import { StatsGrid, StatItem } from "@/components/ui/stats";
 import { StepsTimeline } from "@/components/ui/steps-timeline";
 import { TestimonialsGrid, TestimonialCard } from "@/components/ui/testimonial";
 import { Text } from "@/components/ui/text";
+import { getPuckImageUrl } from "@/lib/puck/media";
 import { LucideIconRenderer } from "./shared";
 import { getPuckBlockDomId } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";
@@ -81,6 +82,7 @@ export const AboutSectionComponentConfig: PageBuilderComponentConfig<"AboutSecti
         ...sectionProps
       } = props;
       const id = getPuckBlockDomId(props.id);
+      const imageUrl = getPuckImageUrl(sectionProps.imageUrl);
 
       return (
         <div id={id}>
@@ -99,6 +101,7 @@ export const AboutSectionComponentConfig: PageBuilderComponentConfig<"AboutSecti
               className,
             )}
             {...sectionProps}
+            imageUrl={imageUrl}
             fallbackIcon={
               <LucideIconRenderer
                 name="School"
@@ -812,7 +815,7 @@ export const TestimonialSectionComponentConfig: PageBuilderComponentConfig<"Test
                 name={testimonial.name}
                 role={testimonial.roleAndCompany}
                 content={testimonial.content}
-                avatarUrl={testimonial.avatar}
+                avatarUrl={getPuckImageUrl(testimonial.avatar)}
               />
             ))}
           </TestimonialsGrid>
@@ -937,76 +940,80 @@ export const CarouselSectionComponentConfig: PageBuilderComponentConfig<"Carouse
           <div className="mx-auto max-w-5xl">
             <Carousel opts={{ loop: true, align: "start" }} className="w-full">
               <CarouselContent>
-                {items.map((item) => (
-                  <CarouselItem
-                    key={`${item.title}:${item.imageUrl ?? "placeholder"}`}
-                    className="md:basis-1/2 lg:basis-1/2 p-2"
-                  >
-                    <Card className="border-border bg-overlay py-0 shadow-xs h-full flex flex-col justify-between group">
-                      <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                        {item.imageUrl ? (
-                          <img
-                            src={item.imageUrl}
-                            alt={item.title}
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-primary-subtle/20 text-primary">
-                            <svg
-                              className="size-12 opacity-30"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={1.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                      <CardContent className="p-6 flex-1 flex flex-col gap-3 justify-between">
-                        <div className="space-y-1.5">
-                          <Heading
-                            level={3}
-                            className="text-lg font-bold text-fg group-hover:text-primary transition-colors"
-                          >
-                            {item.title}
-                          </Heading>
-                          <Text className="text-xs/relaxed text-muted-fg leading-relaxed">
-                            {item.description}
-                          </Text>
-                        </div>
-                        {item.linkUrl && (
-                          <div className="pt-2">
-                            <Link
-                              href={item.linkUrl}
-                              className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
-                            >
-                              Xem thêm
+                {items.map((item) => {
+                  const imageUrl = getPuckImageUrl(item.imageUrl);
+
+                  return (
+                    <CarouselItem
+                      key={`${item.title}:${imageUrl || "placeholder"}`}
+                      className="md:basis-1/2 lg:basis-1/2 p-2"
+                    >
+                      <Card className="border-border bg-overlay py-0 shadow-xs h-full flex flex-col justify-between group">
+                        <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                          {imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt={item.title}
+                              className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-primary-subtle/20 text-primary">
                               <svg
-                                className="size-3 transition duration-200 group-hover:translate-x-0.5"
+                                className="size-12 opacity-30"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
-                                strokeWidth={2}
+                                strokeWidth={1.5}
                               >
                                 <path
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
-                                  d="M9 5l7 7-7 7"
+                                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                                 />
                               </svg>
-                            </Link>
+                            </div>
+                          )}
+                        </div>
+                        <CardContent className="p-6 flex-1 flex flex-col gap-3 justify-between">
+                          <div className="space-y-1.5">
+                            <Heading
+                              level={3}
+                              className="text-lg font-bold text-fg group-hover:text-primary transition-colors"
+                            >
+                              {item.title}
+                            </Heading>
+                            <Text className="text-xs/relaxed text-muted-fg leading-relaxed">
+                              {item.description}
+                            </Text>
                           </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
+                          {item.linkUrl && (
+                            <div className="pt-2">
+                              <Link
+                                href={item.linkUrl}
+                                className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                              >
+                                Xem thêm
+                                <svg
+                                  className="size-3 transition duration-200 group-hover:translate-x-0.5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  strokeWidth={2}
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 5l7 7-7 7"
+                                  />
+                                </svg>
+                              </Link>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  );
+                })}
               </CarouselContent>
 
               <CarouselHandler className="justify-center mt-6">

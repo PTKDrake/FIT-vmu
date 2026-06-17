@@ -22,7 +22,12 @@ final class SiteLayoutEditController extends Controller
             'can' => [
                 'exportPuckJson' => $request->user()?->can('export puck json') ?? false,
             ],
-            'dynamicData' => $buildPuckDynamicData($request->user()),
+            'dynamicData' => $buildPuckDynamicData($request->user(), false, [
+                $siteLayout->header_data,
+                $siteLayout->footer_data,
+                $siteLayout->left_data,
+                $siteLayout->right_data,
+            ]),
             'layout' => [
                 'id' => $siteLayout->getKey(),
                 'name' => $siteLayout->name,
