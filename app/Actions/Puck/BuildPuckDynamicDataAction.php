@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Puck;
 
+use App\Models\Media;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
 use App\Models\Page;
@@ -19,17 +20,23 @@ use Illuminate\Support\Facades\Storage;
 
 class BuildPuckDynamicDataAction
 {
+    public function __construct(
+        private readonly ExtractPuckMediaIdsAction $extractPuckMediaIds,
+    ) {}
+
     /**
+     * @param  iterable<mixed>  $puckPayloads
      * @return array{
      *     navigationMenus: list<array{id: int, name: string, slug: string, location: ?string, items: list<array<string, mixed>>}>,
      *     posts: list<array{id: int, title: string, slug: string, url: ?string, excerpt: ?string, date: ?string, author: ?string, thumbnailUrl: ?string, categoryIds: list<int>, categoryNames: list<string>}>,
      *     categories: list<array{id: int, name: string, slug: string, parentId: ?int, description: ?string}>,
      *     staff: list<array{id: int, name: string, fullName: string, academicTitle: ?string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}>,
      *     units: list<array{id: int, name: string, slug: string, description: ?string, head: ?string}>,
-     *     pages: list<array{id: int, title: string, slug: string, url: string}>
+     *     pages: list<array{id: int, title: string, slug: string, url: string}>,
+     *     media: array<int, array{id: int, displayName: string, previewUrl: string, mimeType: string}>
      * }
      */
-    public function __invoke(?User $viewer = null, bool $enforceVisibility = false): array
+    public function __invoke(?User $viewer = null, bool $enforceVisibility = false, iterable $puckPayloads = []): array
     {
         return [
             'navigationMenus' => $this->navigationMenus(),
@@ -38,7 +45,34 @@ class BuildPuckDynamicDataAction
             'staff' => $this->staff(),
             'units' => $this->units(),
             'pages' => $this->pages($viewer, $enforceVisibility),
+            'media' => $this->media($puckPayloads),
         ];
+    }
+
+    /**
+     * @param  iterable<mixed>  $puckPayloads
+     * @return array<int, array{id: int, displayName: string, previewUrl: string, mimeType: string}>
+     */
+    private function media(iterable $puckPayloads): array
+    {
+        $mediaIds = ($this->extractPuckMediaIds)($puckPayloads);
+
+        if ($mediaIds === []) {
+            return [];
+        }
+
+        return Media::query()
+            ->whereIn('id', $mediaIds)
+            ->get()
+            ->mapWithKeys(fn (Media $media): array => [
+                $media->id => [
+                    'id' => $media->id,
+                    'displayName' => $media->display_name,
+                    'previewUrl' => $media->preview_url,
+                    'mimeType' => $media->mime_type,
+                ],
+            ])
+            ->all();
     }
 
     /** @return list<array{id: int, name: string, slug: string, location: ?string, items: list<array<string, mixed>>}> */

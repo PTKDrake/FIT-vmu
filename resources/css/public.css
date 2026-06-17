@@ -17,6 +17,15 @@
     discover those public-page utilities from source files at build time.
 */
 @source inline("grid grid-cols-1 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 gap-3 gap-4 gap-6 gap-8 flex flex-col flex-row flex-wrap items-start items-center justify-start justify-center justify-between w-full max-w-md max-w-2xl max-w-3xl max-w-4xl max-w-5xl mx-auto rounded-lg rounded-xl rounded-2xl rounded-3xl border border-border border-border/50 border-border/60 border-border/70 bg-bg bg-overlay bg-overlay/50 bg-overlay/90 bg-muted/10 bg-muted/15 bg-muted/20 bg-muted/25 p-3 p-4 p-5 p-6 p-8 px-3 px-4 px-5 px-6 py-2 py-3 py-4 py-5 py-6 shadow-none shadow-xs shadow-sm hover:shadow-md");
+@source inline("@container @md:grid-cols-1 @md:grid-cols-2 @md:grid-cols-3 @md:grid-cols-4 @3xl:flex-row @3xl:flex-col @3xl:flex-row-reverse @3xl:flex-col-reverse @3xl:grid @3xl:grid-cols-2 @3xl:grid-cols-[2fr_1fr] @3xl:grid-cols-[1fr_2fr] @5xl:grid-cols-1 @5xl:grid-cols-2 @5xl:grid-cols-3 @5xl:grid-cols-4 @5xl:grid-cols-5 @5xl:grid-cols-6");
+@source inline("sm:grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 sm:grid-cols-4 md:grid md:grid-cols-2 md:grid-cols-[2fr_1fr] md:grid-cols-[1fr_2fr] lg:grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 lg:grid-cols-5 lg:grid-cols-6");
+@source inline("bg-transparent bg-bg bg-overlay/90 bg-muted/40 bg-muted/20 bg-primary-subtle/10 border-primary-subtle/20 bg-info-subtle/10 border-info-subtle/20 bg-accent-subtle-fg text-bg text-fg");
+@source inline("border-0 border border-dashed border-border border-border/50 border-border/60 border-border/80 rounded-none rounded-sm rounded-md rounded-lg rounded-xl rounded-2xl rounded-3xl rounded-full p-0 p-2 p-3 p-4 p-6 p-8 shadow-none shadow-xs shadow-sm");
+@source inline("hidden sm:block sm:hidden lg:block lg:hidden gap-4 gap-6 gap-8 gap-12 gap-x-4 gap-x-6 gap-x-8 gap-x-12 gap-y-4 gap-y-6 gap-y-8 gap-y-12");
+@source inline("pt-0 pt-4 sm:pt-6 pt-10 sm:pt-16 pt-16 sm:pt-24 pb-0 pb-4 sm:pb-6 pb-10 sm:pb-16 pb-16 sm:pb-24 px-0 px-4 sm:px-6 md:px-8 px-5 sm:px-8 md:px-10");
+@source inline("py-0 py-2 py-3 sm:py-4 py-4 sm:py-6 py-8 sm:py-10 min-h-0 min-h-[400px] sm:min-h-[500px] min-h-[600px] sm:min-h-[750px] min-h-screen");
+@source inline("absolute inset-0 z-0 pointer-events-none bg-bg/70 bg-fg/45 bg-primary/15 items-start items-center items-end items-stretch justify-items-start justify-items-center justify-items-end justify-items-stretch justify-start justify-center justify-end justify-between justify-around justify-evenly");
+@source inline("flex-row flex-col flex-row-reverse flex-col-reverse md:flex-row md:flex-col md:flex-row-reverse md:flex-col-reverse flex-wrap flex-nowrap flex-1 w-auto md:w-auto grow basis-[44rem] min-w-0 min-w-fit max-w-none");
 
 @theme inline {
     --font-sans:

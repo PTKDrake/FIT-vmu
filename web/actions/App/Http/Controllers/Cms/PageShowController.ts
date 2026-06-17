@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-const PageShowController = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const PageShowController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PageShowController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ PageShowController.definition = {
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-PageShowController.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+PageShowController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -52,7 +52,7 @@ PageShowController.url = (args: { page: string | number | { id: string | number 
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-PageShowController.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+PageShowController.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PageShowController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ PageShowController.get = (args: { page: string | number | { id: string | number 
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-PageShowController.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+PageShowController.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: PageShowController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ PageShowController.head = (args: { page: string | number | { id: string | number
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-const PageShowControllerForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const PageShowControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageShowController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const PageShowControllerForm = (args: { page: string | number | { id: string | n
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-PageShowControllerForm.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PageShowControllerForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageShowController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ PageShowControllerForm.get = (args: { page: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/PageShowController.php:14
 * @route '/cms/pages/{page}/show'
 */
-PageShowControllerForm.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PageShowControllerForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageShowController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

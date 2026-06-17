@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-const DeleteSiteLayoutController = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeleteSiteLayoutController = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteSiteLayoutController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeleteSiteLayoutController.definition = {
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-DeleteSiteLayoutController.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+DeleteSiteLayoutController.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -52,7 +52,7 @@ DeleteSiteLayoutController.url = (args: { siteLayout: string | number | { id: st
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-DeleteSiteLayoutController.delete = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeleteSiteLayoutController.delete = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteSiteLayoutController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeleteSiteLayoutController.delete = (args: { siteLayout: string | number | { id:
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-const DeleteSiteLayoutControllerForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeleteSiteLayoutControllerForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteSiteLayoutController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeleteSiteLayoutControllerForm = (args: { siteLayout: string | number | { 
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-DeleteSiteLayoutControllerForm.delete = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeleteSiteLayoutControllerForm.delete = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteSiteLayoutController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

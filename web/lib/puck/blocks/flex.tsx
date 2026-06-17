@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { getHideOnClass, getGapAxisClass, getInsetYClass } from "./layouts";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
+import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
 export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
@@ -23,6 +24,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       type: "text",
       label: "ID điều hướng",
     },
+    ...puckSurfaceFields,
     flexDirection: {
       type: "select",
       label: "Hướng từ tablet trở lên",
@@ -201,7 +203,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     const gapStyle = typeof gap === "number" ? { gap: `${gap}px` } : undefined;
 
     const resolvedClassName = twMerge(
-      "@container flex min-h-16 min-w-0 flex-1 w-full",
+      "@container flex min-w-0 flex-1 w-full",
       getInsetYClass(insetY),
       mobileDirClass,
       desktopDirClass,
@@ -217,6 +219,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
         ),
       emptyPreviewClass,
       editorPreviewPuckWrapperClass,
+      getSurfaceClassName(props, "", { includeDefaults: false }),
       getHideOnClass(hideOn),
       className,
       classes,

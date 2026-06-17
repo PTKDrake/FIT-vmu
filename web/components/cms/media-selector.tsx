@@ -41,11 +41,25 @@ interface MediaSelectorProps {
   error?: string;
 }
 
-interface MediaItem {
+export interface CmsMediaItem {
   id: number;
   displayName: string;
   previewUrl: string;
   mimeType: string;
+}
+
+interface MediaLibrarySelectorProps {
+  value: CmsMediaItem | number | null;
+  onChange: (media: CmsMediaItem | null) => void;
+  label?: string;
+  description?: string;
+  error?: string;
+  emptyTitle?: string;
+  modalTitle?: string;
+  removeMessage?: string;
+  selectMessage?: string;
+  showLabel?: boolean;
+  uploadMessage?: string;
 }
 
 interface PaginationSegment {
@@ -58,6 +72,41 @@ const MEDIA_LIBRARY_SKELETON_KEYS = Array.from(
   { length: 8 },
   (_, index) => `media-library-skeleton-${index + 1}`,
 );
+
+function normalizeMediaItem(item: any): CmsMediaItem {
+  return {
+    id: item.id,
+    displayName: item.displayName || item.display_name || "Chưa đặt tên",
+    previewUrl: item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
+    mimeType: item.mimeType || item.mime_type || "image/jpeg",
+  };
+}
+
+export async function uploadCmsMediaFile(file: File): Promise<CmsMediaItem> {
+  const formData = new FormData();
+  formData.append("files[]", file);
+
+  const response = await fetch(cmsRoutes.media.store.url(), {
+    method: "POST",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      Accept: "application/json",
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Không thể tải tập tin lên máy chủ.");
+  }
+
+  const data = await response.json();
+
+  if (data.success && data.media && data.media.length > 0) {
+    return normalizeMediaItem(data.media[0]);
+  }
+
+  throw new Error("Định dạng phản hồi không hợp lệ.");
+}
 
 function getCleanDisplayName(url: string | null, name: string | null): string {
   if (name) {
@@ -126,12 +175,59 @@ export function MediaSelector({
   description = "Nhấp để chọn từ thư viện hoặc kéo thả ảnh vào để tải lên ảnh mới.",
   error,
 }: MediaSelectorProps) {
+  return (
+    <MediaLibrarySelector
+      value={
+        value
+          ? {
+              id: value,
+              displayName: initialDisplayName ?? "Chưa chọn ảnh",
+              previewUrl: initialPreviewUrl ?? `/storage/media/${value}`,
+              mimeType: "image/jpeg",
+            }
+          : null
+      }
+      onChange={(media) => onChange(media?.id ?? null)}
+      previewUrl={initialPreviewUrl}
+      displayName={initialDisplayName}
+      label={label}
+      description={description}
+      error={error}
+      emptyTitle="Chọn ảnh đại diện bài viết"
+      modalTitle="Quản lý & Chọn ảnh đại diện"
+      removeMessage="Đã gỡ bỏ ảnh đại diện."
+      selectMessage="Đã chọn ảnh đại diện từ thư viện."
+      uploadMessage="Đã tải lên và áp dụng ảnh thành công."
+    />
+  );
+}
+
+export function MediaLibrarySelector({
+  value,
+  onChange,
+  previewUrl: initialPreviewUrl,
+  displayName: initialDisplayName,
+  label = "Ảnh",
+  description = "Nhấp để chọn từ thư viện hoặc kéo thả ảnh vào để tải lên ảnh mới.",
+  error,
+  emptyTitle = "Chọn ảnh",
+  modalTitle = "Quản lý & Chọn ảnh",
+  removeMessage = "Đã gỡ bỏ ảnh.",
+  selectMessage = "Đã chọn ảnh từ thư viện.",
+  showLabel = true,
+  uploadMessage = "Đã tải lên và áp dụng ảnh thành công.",
+}: MediaLibrarySelectorProps & {
+  previewUrl?: string | null;
+  displayName?: string | null;
+}) {
   const [uploading, setUploading] = useState(false);
   const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(
-    initialPreviewUrl ?? null,
+    initialPreviewUrl ??
+      (typeof value === "object" ? (value?.previewUrl ?? null) : null),
   );
   const [localDisplayName, setLocalDisplayName] = useState<string | null>(
-    initialDisplayName ?? null,
+    initialDisplayName ??
+      (typeof value === "object" ? (value?.displayName ?? null) : null),
   );
 
   // Modal State
@@ -140,14 +236,16 @@ export function MediaSelector({
   const [activeTab, setActiveTab] = useState<"library" | "upload">("library");
 
   // Media Library State
-  const [libraryItems, setLibraryItems] = useState<MediaItem[]>([]);
+  const [libraryItems, setLibraryItems] = useState<CmsMediaItem[]>([]);
   const [loadingLibrary, setLoadingLibrary] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
   // Synchronize local preview if value is cleared
-  if (value === null && localPreviewUrl !== null) {
+  const currentMediaId = typeof value === "object" ? value?.id : value;
+
+  if (currentMediaId === null && localPreviewUrl !== null) {
     setLocalPreviewUrl(null);
     setLocalDisplayName(null);
   }
@@ -190,13 +288,7 @@ export function MediaSelector({
       const rawItems = data.props?.media?.data ?? data.media?.data ?? [];
       const meta = data.props?.media?.meta ?? data.media?.meta ?? null;
 
-      const formattedItems = rawItems.map((item: any) => ({
-        id: item.id,
-        displayName: item.displayName || item.display_name || "Chưa đặt tên",
-        previewUrl:
-          item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
-        mimeType: item.mimeType || item.mime_type || "image/jpeg",
-      }));
+      const formattedItems = rawItems.map((item: any) => normalizeMediaItem(item));
 
       setLibraryItems(formattedItems);
 
@@ -218,41 +310,14 @@ export function MediaSelector({
     }
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("files[]", files[0]);
 
     try {
-      const response = await fetch(cmsRoutes.media.store.url(), {
-        method: "POST",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          Accept: "application/json",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        toast.error("Không thể tải tập tin lên máy chủ.");
-        setUploading(false);
-
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.media && data.media.length > 0) {
-        const uploadedMedia = data.media[0];
-        onChange(uploadedMedia.id);
-        setLocalPreviewUrl(uploadedMedia.preview_url);
-        setLocalDisplayName(uploadedMedia.display_name);
-        toast.success("Đã tải lên và áp dụng ảnh thành công.");
-        setIsModalOpen(false);
-        setUploading(false);
-
-        return;
-      }
-
-      toast.error("Định dạng phản hồi không hợp lệ.");
+      const uploadedMedia = await uploadCmsMediaFile(files[0]);
+      onChange(uploadedMedia);
+      setLocalPreviewUrl(uploadedMedia.previewUrl);
+      setLocalDisplayName(uploadedMedia.displayName);
+      toast.success(uploadMessage);
+      setIsModalOpen(false);
       setUploading(false);
     } catch (err: any) {
       console.error(err);
@@ -280,15 +345,15 @@ export function MediaSelector({
     setLocalPreviewUrl(null);
     setLocalDisplayName(null);
     setIsModalOpen(false);
-    toast.info("Đã gỡ bỏ ảnh đại diện.");
+    toast.info(removeMessage);
   };
 
-  const handleSelectFromLibrary = (item: MediaItem) => {
-    onChange(item.id);
+  const handleSelectFromLibrary = (item: CmsMediaItem) => {
+    onChange(item);
     setLocalPreviewUrl(item.previewUrl);
     setLocalDisplayName(item.displayName);
     setIsModalOpen(false);
-    toast.success("Đã chọn ảnh đại diện từ thư viện.");
+    toast.success(selectMessage);
   };
 
   const handleCardClick = () => {
@@ -298,13 +363,15 @@ export function MediaSelector({
   };
 
   const currentPreview =
-    localPreviewUrl || (value ? `/storage/media/${value}` : null);
+    localPreviewUrl || (currentMediaId ? `/storage/media/${currentMediaId}` : null);
 
   return (
     <div className="space-y-3">
-      <div className="space-y-1">
-        <Label className="font-semibold text-fg text-sm">{label}</Label>
-      </div>
+      {showLabel ? (
+        <div className="space-y-1">
+          <Label className="font-semibold text-fg text-sm">{label}</Label>
+        </div>
+      ) : null}
 
       {currentPreview ? (
         <div className="group relative w-full overflow-hidden rounded-xl border border-border bg-muted/10 p-3 shadow-xs transition duration-200 hover:border-muted-fg/35 hover:shadow-sm">
@@ -365,7 +432,7 @@ export function MediaSelector({
             </div>
             <div className="space-y-1 mt-3">
               <p className="text-sm font-medium text-fg">
-                {t("Chọn ảnh đại diện bài viết")}
+                {t(emptyTitle)}
               </p>
               <p className="text-xs text-muted-fg">
                 {t("Nhấp để mở thư viện ảnh hoặc tải lên tệp mới")}
@@ -387,7 +454,7 @@ export function MediaSelector({
         {({ close }) => (
           <>
             <ModalHeader>
-              <ModalTitle>Quản lý & Chọn ảnh đại diện</ModalTitle>
+              <ModalTitle>{modalTitle}</ModalTitle>
             </ModalHeader>
             <ModalBody className="space-y-6">
               {/* Tab Navigation */}
@@ -480,7 +547,7 @@ export function MediaSelector({
                     <>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[350px] overflow-y-auto pr-1">
                         {libraryItems.map((item) => {
-                          const isCurrent = value === item.id;
+                          const isCurrent = currentMediaId === item.id;
 
                           return (
                             <button

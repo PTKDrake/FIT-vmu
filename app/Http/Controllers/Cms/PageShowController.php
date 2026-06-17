@@ -24,7 +24,7 @@ final class PageShowController extends Controller
                 'seoDescription' => $page->seo_description,
                 'excerpt' => $page->excerpt,
             ],
-            'dynamicData' => $buildPuckDynamicData(),
+            'dynamicData' => $buildPuckDynamicData(puckPayloads: [$page->content]),
         ]);
     }
 }

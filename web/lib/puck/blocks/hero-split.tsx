@@ -1,4 +1,5 @@
 import { HeroSplit } from "@/components/ui/hero-split";
+import { getPuckImageUrl } from "@/lib/puck/media";
 import { LucideIconRenderer } from "./shared";
 import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
@@ -56,6 +57,7 @@ export const HeroSplitComponentConfig: PageBuilderComponentConfig<"HeroSplit"> =
         className,
       } = props;
       const id = getPuckBlockDomId((props as { id?: string }).id);
+      const resolvedImageUrl = getPuckImageUrl(imageUrl);
 
       return (
       <HeroSplit
@@ -71,7 +73,7 @@ export const HeroSplitComponentConfig: PageBuilderComponentConfig<"HeroSplit"> =
           label: secondaryActionLabel,
           href: secondaryActionHref,
         }}
-        imageUrl={imageUrl}
+        imageUrl={resolvedImageUrl}
         fallbackIcon={<LucideIconRenderer name="School" className="size-8" />}
         stats={stats?.map((stat) => ({
           value: stat.title,

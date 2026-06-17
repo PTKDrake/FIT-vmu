@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Media;
+use App\Models\Page;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\SiteLayout;
@@ -158,6 +160,92 @@ test('puck json post renders with correct content format', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('public/post')
             ->where('post.contentFormat', 'puck_json')
+        );
+});
+
+test('public puck page props include media map for media references', function () {
+    $media = Media::factory()->create([
+        'display_name' => 'hero.jpg',
+        'mime_type' => 'image/jpeg',
+        'path' => 'media/2026/06/hero.jpg',
+    ]);
+
+    Page::factory()->create([
+        'title' => 'Media page',
+        'slug' => 'media-page',
+        'status' => 'published',
+        'visibility' => 'public',
+        'content' => json_encode([
+            'root' => ['props' => []],
+            'content' => [
+                [
+                    'type' => 'Image',
+                    'props' => [
+                        'imageUrl' => [
+                            'mediaId' => $media->id,
+                            'displayName' => 'cached.jpg',
+                        ],
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR),
+    ]);
+
+    $this->get('/media-page')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/page')
+            ->where("dynamicData.media.{$media->id}.id", $media->id)
+            ->where("dynamicData.media.{$media->id}.displayName", 'hero.jpg')
+            ->where("dynamicData.media.{$media->id}.mimeType", 'image/jpeg')
+        );
+});
+
+test('public puck post props include media map and ignore legacy image url strings', function () {
+    $category = PostCategory::factory()->create([
+        'slug' => 'media-posts',
+        'is_active' => true,
+    ]);
+    $media = Media::factory()->create([
+        'display_name' => 'card.jpg',
+        'mime_type' => 'image/jpeg',
+        'path' => 'media/2026/06/card.jpg',
+    ]);
+
+    $post = Post::factory()->create([
+        'slug' => 'media-post',
+        'status' => 'published',
+        'visibility' => 'public',
+        'content_format' => 'puck_json',
+        'content' => json_encode([
+            'root' => ['props' => []],
+            'content' => [
+                [
+                    'type' => 'Card',
+                    'props' => [
+                        'imageUrl' => [
+                            'mediaId' => $media->id,
+                        ],
+                    ],
+                ],
+                [
+                    'type' => 'Image',
+                    'props' => [
+                        'imageUrl' => 'https://example.com/legacy.jpg',
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR),
+    ]);
+    $post->categories()->sync([$category->id]);
+
+    $this->get('/media-posts/media-post')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/post')
+            ->where('post.contentFormat', 'puck_json')
+            ->where("dynamicData.media.{$media->id}.id", $media->id)
+            ->missing('dynamicData.media.0')
         );
 });
 

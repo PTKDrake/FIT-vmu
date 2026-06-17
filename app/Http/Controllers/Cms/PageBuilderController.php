@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cms;
 
+use App\Actions\Puck\BuildPuckDynamicDataAction;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Carbon\CarbonInterface;
@@ -12,7 +13,7 @@ use Inertia\Response;
 
 final class PageBuilderController extends Controller
 {
-    public function __invoke(Request $request, Page $page): Response
+    public function __invoke(Request $request, Page $page, BuildPuckDynamicDataAction $buildPuckDynamicData): Response
     {
         return inertia('cms/pages/builder', [
             'can' => [
@@ -27,6 +28,7 @@ final class PageBuilderController extends Controller
                 'status' => $page->status,
                 'updatedAt' => $this->formatDateTime($page->updated_at) ?? now()->toAtomString(),
             ],
+            'dynamicData' => $buildPuckDynamicData($request->user(), false, [$page->content]),
         ]);
     }
 

@@ -60,7 +60,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-export const update = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -75,7 +75,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-update.url = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { role: args }
     }
@@ -108,7 +108,7 @@ update.url = (args: { role: string | { id: string } } | [role: string | { id: st
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-update.patch = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -118,7 +118,7 @@ update.patch = (args: { role: string | { id: string } } | [role: string | { id: 
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-const updateForm = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -133,7 +133,7 @@ const updateForm = (args: { role: string | { id: string } } | [role: string | { 
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-updateForm.patch = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -150,7 +150,7 @@ update.form = updateForm
 * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
 * @route '/cms/roles-permissions/{role}'
 */
-export const deleteMethod = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const deleteMethod = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
@@ -165,7 +165,7 @@ deleteMethod.definition = {
 * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
 * @route '/cms/roles-permissions/{role}'
 */
-deleteMethod.url = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+deleteMethod.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { role: args }
     }
@@ -198,7 +198,7 @@ deleteMethod.url = (args: { role: string | { id: string } } | [role: string | { 
 * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
 * @route '/cms/roles-permissions/{role}'
 */
-deleteMethod.delete = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+deleteMethod.delete = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
@@ -208,7 +208,7 @@ deleteMethod.delete = (args: { role: string | { id: string } } | [role: string |
 * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
 * @route '/cms/roles-permissions/{role}'
 */
-const deleteMethodForm = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const deleteMethodForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: deleteMethod.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -223,7 +223,7 @@ const deleteMethodForm = (args: { role: string | { id: string } } | [role: strin
 * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
 * @route '/cms/roles-permissions/{role}'
 */
-deleteMethodForm.delete = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+deleteMethodForm.delete = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: deleteMethod.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

@@ -73,8 +73,27 @@ class BuildPublicPagePropsAction
                 'visibility' => $page->visibility,
             ],
             'layout' => $layout,
-            'dynamicData' => ($this->buildPuckDynamicData)($viewer, true),
+            'dynamicData' => ($this->buildPuckDynamicData)(
+                $viewer,
+                true,
+                $this->puckPayloads($page->content, $layout),
+            ),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $layout
+     * @return list<mixed>
+     */
+    private function puckPayloads(?string $content, ?array $layout): array
+    {
+        return array_values(array_filter([
+            $content,
+            $layout['headerData'] ?? null,
+            $layout['footerData'] ?? null,
+            $layout['leftData'] ?? null,
+            $layout['rightData'] ?? null,
+        ]));
     }
 
     private function resolveSiteLayout(Page $page): ?SiteLayout

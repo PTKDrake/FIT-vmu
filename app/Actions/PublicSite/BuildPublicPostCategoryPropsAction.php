@@ -66,6 +66,7 @@ final class BuildPublicPostCategoryPropsAction
 
         /** @var LengthAwarePaginator<array-key, mixed> $typedPaginator */
         $typedPaginator = $paginator;
+        $layout = PublicLayoutResolver::resolve($category->siteLayout, SiteSetting::defaultCategoryLayoutId());
 
         return [
             'category' => [
@@ -85,9 +86,27 @@ final class BuildPublicPostCategoryPropsAction
                 'total' => $typedPaginator->total(),
             ],
             'breadcrumbs' => $this->buildBreadcrumbs($category),
-            'layout' => PublicLayoutResolver::resolve($category->siteLayout, SiteSetting::defaultCategoryLayoutId()),
-            'dynamicData' => ($this->buildPuckDynamicData)($viewer, true),
+            'layout' => $layout,
+            'dynamicData' => ($this->buildPuckDynamicData)(
+                $viewer,
+                true,
+                $this->puckPayloads($layout),
+            ),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $layout
+     * @return list<mixed>
+     */
+    private function puckPayloads(?array $layout): array
+    {
+        return array_values(array_filter([
+            $layout['headerData'] ?? null,
+            $layout['footerData'] ?? null,
+            $layout['leftData'] ?? null,
+            $layout['rightData'] ?? null,
+        ]));
     }
 
     /**

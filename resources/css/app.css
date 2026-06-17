@@ -388,12 +388,41 @@
     }
 
     .vmu-blocknote .bn-toolbar {
+        background-color: var(--overlay);
         border-bottom: 1px solid var(--border);
         padding: 0.5rem;
     }
 
     .vmu-blocknote .bn-side-menu {
         color: var(--muted-fg);
+    }
+
+    .vmu-blocknote .bn-formatting-toolbar,
+    .vmu-blocknote .bn-panel-popover,
+    .vmu-blocknote .bn-popover-content,
+    .vmu-blocknote .bn-suggestion-menu,
+    .vmu-blocknote [role="menu"],
+    .vmu-blocknote [role="listbox"],
+    .bn-container .bn-formatting-toolbar,
+    .bn-container .bn-panel-popover,
+    .bn-container .bn-popover-content,
+    .bn-container .bn-suggestion-menu,
+    .bn-container [role="menu"],
+    .bn-container [role="listbox"] {
+        background-color: var(--overlay);
+        border-color: var(--border);
+        color: var(--fg);
+        box-shadow:
+            0 18px 50px color-mix(in oklch, var(--fg) 16%, transparent),
+            0 0 0 1px color-mix(in oklch, var(--border) 80%, transparent);
+    }
+
+    .vmu-blocknote .bn-menu,
+    .vmu-blocknote .bn-popover,
+    .bn-container .bn-menu,
+    .bn-container .bn-popover {
+        background-color: var(--overlay);
+        color: var(--fg);
     }
 
     .vmu-blocknote--readonly {

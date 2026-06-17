@@ -23,6 +23,7 @@ import { StatsGrid, StatItem } from "@/components/ui/stats";
 import { StepsTimeline } from "@/components/ui/steps-timeline";
 import { TestimonialsGrid, TestimonialCard } from "@/components/ui/testimonial";
 import { Text } from "@/components/ui/text";
+import { getPuckImageUrl } from "@/lib/puck/media";
 import { LucideIconRenderer } from "./shared";
 import { getPuckBlockDomId } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";
@@ -81,6 +82,7 @@ export const AboutSectionComponentConfig: PageBuilderComponentConfig<"AboutSecti
         ...sectionProps
       } = props;
       const id = getPuckBlockDomId(props.id);
+      const imageUrl = getPuckImageUrl(sectionProps.imageUrl);
 
       return (
         <div id={id}>
@@ -99,6 +101,7 @@ export const AboutSectionComponentConfig: PageBuilderComponentConfig<"AboutSecti
               className,
             )}
             {...sectionProps}
+            imageUrl={imageUrl}
             fallbackIcon={
               <LucideIconRenderer
                 name="School"
@@ -812,7 +815,7 @@ export const TestimonialSectionComponentConfig: PageBuilderComponentConfig<"Test
                 name={testimonial.name}
                 role={testimonial.roleAndCompany}
                 content={testimonial.content}
-                avatarUrl={testimonial.avatar}
+                avatarUrl={getPuckImageUrl(testimonial.avatar)}
               />
             ))}
           </TestimonialsGrid>
@@ -944,9 +947,9 @@ export const CarouselSectionComponentConfig: PageBuilderComponentConfig<"Carouse
                   >
                     <Card className="border-border bg-overlay py-0 shadow-xs h-full flex flex-col justify-between group">
                       <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                        {item.imageUrl ? (
+                        {getPuckImageUrl(item.imageUrl) ? (
                           <img
-                            src={item.imageUrl}
+                            src={getPuckImageUrl(item.imageUrl)}
                             alt={item.title}
                             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                           />

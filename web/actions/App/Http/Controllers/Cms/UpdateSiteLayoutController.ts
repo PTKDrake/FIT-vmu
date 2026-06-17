@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-const UpdateSiteLayoutController = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateSiteLayoutController = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateSiteLayoutController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateSiteLayoutController.definition = {
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-UpdateSiteLayoutController.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UpdateSiteLayoutController.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -52,7 +52,7 @@ UpdateSiteLayoutController.url = (args: { siteLayout: string | number | { id: st
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-UpdateSiteLayoutController.patch = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateSiteLayoutController.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateSiteLayoutController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateSiteLayoutController.patch = (args: { siteLayout: string | number | { id: 
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-const UpdateSiteLayoutControllerForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateSiteLayoutControllerForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateSiteLayoutController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateSiteLayoutControllerForm = (args: { siteLayout: string | number | { 
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-UpdateSiteLayoutControllerForm.patch = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateSiteLayoutControllerForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateSiteLayoutController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

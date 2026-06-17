@@ -177,13 +177,26 @@ export function getSurfaceShadowClass(
 export function getSurfaceClassName(
   props: PuckSurfaceStyleProps,
   baseClassName = "",
+  options: { includeDefaults?: boolean } = {},
 ): string {
+  const includeDefaults = options.includeDefaults ?? true;
+
   return twMerge(
     baseClassName,
-    getSurfaceToneClass(props.surfaceTone),
-    getSurfaceBorderClass(props.surfaceBorder),
-    getSurfaceRadiusClass(props.surfaceRadius),
-    getSurfacePaddingClass(props.surfacePadding),
-    getSurfaceShadowClass(props.surfaceShadow),
+    includeDefaults || props.surfaceTone !== undefined
+      ? getSurfaceToneClass(props.surfaceTone)
+      : "",
+    includeDefaults || props.surfaceBorder !== undefined
+      ? getSurfaceBorderClass(props.surfaceBorder)
+      : "",
+    includeDefaults || props.surfaceRadius !== undefined
+      ? getSurfaceRadiusClass(props.surfaceRadius)
+      : "",
+    includeDefaults || props.surfacePadding !== undefined
+      ? getSurfacePaddingClass(props.surfacePadding)
+      : "",
+    includeDefaults || props.surfaceShadow !== undefined
+      ? getSurfaceShadowClass(props.surfaceShadow)
+      : "",
   );
 }

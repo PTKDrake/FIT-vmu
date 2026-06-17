@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-const DeleteStudentGroupController = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeleteStudentGroupController = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteStudentGroupController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeleteStudentGroupController.definition = {
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-DeleteStudentGroupController.url = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+DeleteStudentGroupController.url = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { student_group: args }
     }
@@ -52,7 +52,7 @@ DeleteStudentGroupController.url = (args: { student_group: string | number | { i
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-DeleteStudentGroupController.delete = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeleteStudentGroupController.delete = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteStudentGroupController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeleteStudentGroupController.delete = (args: { student_group: string | number | 
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-const DeleteStudentGroupControllerForm = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeleteStudentGroupControllerForm = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteStudentGroupController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeleteStudentGroupControllerForm = (args: { student_group: string | number
 * @see app/Http/Controllers/Cms/DeleteStudentGroupController.php:13
 * @route '/cms/student-groups/{student_group}'
 */
-DeleteStudentGroupControllerForm.delete = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeleteStudentGroupControllerForm.delete = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteStudentGroupController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

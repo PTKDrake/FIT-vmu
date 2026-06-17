@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdatePostController.php:15
 * @route '/cms/posts/{post}'
 */
-const UpdatePostController = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdatePostController = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePostController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdatePostController.definition = {
 * @see app/Http/Controllers/Cms/UpdatePostController.php:15
 * @route '/cms/posts/{post}'
 */
-UpdatePostController.url = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UpdatePostController.url = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post: args }
     }
@@ -52,7 +52,7 @@ UpdatePostController.url = (args: { post: string | number | { id: string | numbe
 * @see app/Http/Controllers/Cms/UpdatePostController.php:15
 * @route '/cms/posts/{post}'
 */
-UpdatePostController.patch = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdatePostController.patch = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePostController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdatePostController.patch = (args: { post: string | number | { id: string | num
 * @see app/Http/Controllers/Cms/UpdatePostController.php:15
 * @route '/cms/posts/{post}'
 */
-const UpdatePostControllerForm = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdatePostControllerForm = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePostController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdatePostControllerForm = (args: { post: string | number | { id: string |
 * @see app/Http/Controllers/Cms/UpdatePostController.php:15
 * @route '/cms/posts/{post}'
 */
-UpdatePostControllerForm.patch = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdatePostControllerForm.patch = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePostController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

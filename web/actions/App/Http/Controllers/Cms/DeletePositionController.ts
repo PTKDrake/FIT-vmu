@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeletePositionController.php:13
 * @route '/cms/positions/{position}'
 */
-const DeletePositionController = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeletePositionController = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeletePositionController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeletePositionController.definition = {
 * @see app/Http/Controllers/Cms/DeletePositionController.php:13
 * @route '/cms/positions/{position}'
 */
-DeletePositionController.url = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+DeletePositionController.url = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { position: args }
     }
@@ -52,7 +52,7 @@ DeletePositionController.url = (args: { position: string | number | { id: string
 * @see app/Http/Controllers/Cms/DeletePositionController.php:13
 * @route '/cms/positions/{position}'
 */
-DeletePositionController.delete = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeletePositionController.delete = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeletePositionController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeletePositionController.delete = (args: { position: string | number | { id: str
 * @see app/Http/Controllers/Cms/DeletePositionController.php:13
 * @route '/cms/positions/{position}'
 */
-const DeletePositionControllerForm = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeletePositionControllerForm = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeletePositionController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeletePositionControllerForm = (args: { position: string | number | { id: 
 * @see app/Http/Controllers/Cms/DeletePositionController.php:13
 * @route '/cms/positions/{position}'
 */
-DeletePositionControllerForm.delete = (args: { position: string | number | { id: string | number } } | [position: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeletePositionControllerForm.delete = (args: { position: number | { id: number } } | [position: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeletePositionController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

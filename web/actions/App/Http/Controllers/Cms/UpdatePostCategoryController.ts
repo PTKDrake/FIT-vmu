@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-const UpdatePostCategoryController = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdatePostCategoryController = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePostCategoryController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdatePostCategoryController.definition = {
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-UpdatePostCategoryController.url = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+UpdatePostCategoryController.url = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post_category: args }
     }
@@ -52,7 +52,7 @@ UpdatePostCategoryController.url = (args: { post_category: string | number | { i
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-UpdatePostCategoryController.patch = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdatePostCategoryController.patch = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePostCategoryController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdatePostCategoryController.patch = (args: { post_category: string | number | {
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-const UpdatePostCategoryControllerForm = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdatePostCategoryControllerForm = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePostCategoryController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdatePostCategoryControllerForm = (args: { post_category: string | number
 * @see app/Http/Controllers/Cms/UpdatePostCategoryController.php:15
 * @route '/cms/post-categories/{post_category}'
 */
-UpdatePostCategoryControllerForm.patch = (args: { post_category: string | number | { id: string | number } } | [post_category: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdatePostCategoryControllerForm.patch = (args: { post_category: number | { id: number } } | [post_category: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePostCategoryController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

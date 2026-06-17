@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-const NavigationMenuShowController = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const NavigationMenuShowController = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: NavigationMenuShowController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ NavigationMenuShowController.definition = {
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-NavigationMenuShowController.url = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+NavigationMenuShowController.url = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { navigationMenu: args }
     }
@@ -52,7 +52,7 @@ NavigationMenuShowController.url = (args: { navigationMenu: string | number | { 
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-NavigationMenuShowController.get = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+NavigationMenuShowController.get = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: NavigationMenuShowController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ NavigationMenuShowController.get = (args: { navigationMenu: string | number | { 
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-NavigationMenuShowController.head = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+NavigationMenuShowController.head = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: NavigationMenuShowController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ NavigationMenuShowController.head = (args: { navigationMenu: string | number | {
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-const NavigationMenuShowControllerForm = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const NavigationMenuShowControllerForm = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: NavigationMenuShowController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const NavigationMenuShowControllerForm = (args: { navigationMenu: string | numbe
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-NavigationMenuShowControllerForm.get = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+NavigationMenuShowControllerForm.get = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: NavigationMenuShowController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ NavigationMenuShowControllerForm.get = (args: { navigationMenu: string | number 
 * @see app/Http/Controllers/Cms/NavigationMenuShowController.php:17
 * @route '/cms/navigation/{navigationMenu}'
 */
-NavigationMenuShowControllerForm.head = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+NavigationMenuShowControllerForm.head = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: NavigationMenuShowController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

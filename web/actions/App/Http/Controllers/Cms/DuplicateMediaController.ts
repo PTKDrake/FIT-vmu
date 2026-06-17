@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-const DuplicateMediaController = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const DuplicateMediaController = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: DuplicateMediaController.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ DuplicateMediaController.definition = {
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-DuplicateMediaController.url = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+DuplicateMediaController.url = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { media: args }
     }
@@ -52,7 +52,7 @@ DuplicateMediaController.url = (args: { media: string | number | { id: string | 
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-DuplicateMediaController.post = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+DuplicateMediaController.post = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: DuplicateMediaController.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ DuplicateMediaController.post = (args: { media: string | number | { id: string |
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-const DuplicateMediaControllerForm = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DuplicateMediaControllerForm = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DuplicateMediaController.url(args, options),
     method: 'post',
 })
@@ -72,7 +72,7 @@ const DuplicateMediaControllerForm = (args: { media: string | number | { id: str
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-DuplicateMediaControllerForm.post = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DuplicateMediaControllerForm.post = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DuplicateMediaController.url(args, options),
     method: 'post',
 })

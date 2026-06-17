@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-const PageEditorController = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const PageEditorController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PageEditorController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ PageEditorController.definition = {
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-PageEditorController.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+PageEditorController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -52,7 +52,7 @@ PageEditorController.url = (args: { page: string | number | { id: string | numbe
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-PageEditorController.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+PageEditorController.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PageEditorController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ PageEditorController.get = (args: { page: string | number | { id: string | numbe
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-PageEditorController.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+PageEditorController.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: PageEditorController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ PageEditorController.head = (args: { page: string | number | { id: string | numb
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-const PageEditorControllerForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const PageEditorControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageEditorController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const PageEditorControllerForm = (args: { page: string | number | { id: string |
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-PageEditorControllerForm.get = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PageEditorControllerForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageEditorController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ PageEditorControllerForm.get = (args: { page: string | number | { id: string | n
 * @see app/Http/Controllers/Cms/PageEditorController.php:17
 * @route '/cms/pages/{page}/edit'
 */
-PageEditorControllerForm.head = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PageEditorControllerForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PageEditorController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

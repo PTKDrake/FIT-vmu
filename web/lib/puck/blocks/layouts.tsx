@@ -1,6 +1,8 @@
 import { twMerge } from "tailwind-merge";
 import { Separator } from "@/components/ui/separator";
+import { getPuckImageUrl } from "@/lib/puck/media";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
+import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
 // --- HELPER CLASSES & FUNCTIONS ---
@@ -215,6 +217,7 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
       type: "text",
       label: "ID điều hướng",
     },
+    ...puckSurfaceFields,
     background: {
       type: "select",
       label: "Kiểu nền",
@@ -359,6 +362,7 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
       (props as { id?: string }).id,
       anchorId,
     );
+    const resolvedBackgroundImage = getPuckImageUrl(backgroundImage);
 
     // Backward compatibility for paddingY
     const pt = paddingTop ?? paddingY ?? "md";
@@ -387,15 +391,16 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
           getPaddingXClass(paddingX),
           getMinHeightClass(minHeight),
           getBorderRadiusClass(borderRadius),
+          getSurfaceClassName(props, "", { includeDefaults: false }),
           minHeight && minHeight !== "auto" ? "flex flex-col" : "",
           alignClass,
           getHideOnClass(hideOn),
           className,
         )}
         style={
-          backgroundImage
+          resolvedBackgroundImage
             ? {
-              backgroundImage: `url(${backgroundImage})`,
+              backgroundImage: `url(${resolvedBackgroundImage})`,
               backgroundSize: backgroundSize || "cover",
               backgroundPosition: backgroundPosition || "center",
               backgroundRepeat: "no-repeat",
@@ -403,12 +408,12 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
             : undefined
         }
       >
-        {backgroundImage && overlay && overlay !== "none" && (
+        {resolvedBackgroundImage && overlay && overlay !== "none" && (
           <div className={getOverlayClass(overlay)} />
         )}
         <div
           className={twMerge(
-            "relative z-10 w-full min-h-12",
+            "relative z-10 w-full",
             minHeight && minHeight !== "auto"
               ? "flex h-full flex-col grow"
               : "",
@@ -441,6 +446,7 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       type: "text",
       label: "ID điều hướng",
     },
+    ...puckSurfaceFields,
     maxWidth: {
       type: "select",
       label: "Chiều rộng tối đa",
@@ -554,12 +560,13 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
           widthClass,
           getPaddingXClass(resolvedHorizontalPadding),
           getInsetYClass(insetY),
+          getSurfaceClassName(props, "", { includeDefaults: false }),
           getHideOnClass(hideOn),
           className,
         )}
       >
         <Children
-          className={twMerge("w-full min-h-12", emptyPreviewClass)}
+          className={twMerge("w-full", emptyPreviewClass)}
           minEmptyHeight={96}
         />
       </div>
@@ -585,6 +592,7 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
       type: "text",
       label: "ID điều hướng",
     },
+    ...puckSurfaceFields,
     columnRatio: {
       type: "select",
       label: "Tỷ lệ 2 cột",
@@ -698,6 +706,7 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
         )
         : twMerge("grid", ratioClass),
       typeof gap === "number" ? undefined : getGapClass(gap),
+      getSurfaceClassName(props, "", { includeDefaults: false }),
       verticalAlign
         ? {
           top: "items-start",

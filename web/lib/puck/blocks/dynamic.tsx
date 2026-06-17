@@ -11,6 +11,7 @@ import { Link } from "@/components/ui/link";
 import { NavbarItem, NavbarMenu, NavbarSubmenu } from "@/components/ui/navbar";
 import { Text } from "@/components/ui/text";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getPuckImageUrl, type PuckImageValue } from "@/lib/puck/media";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
 import type { SharedData } from "@/types/shared";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
@@ -83,8 +84,16 @@ interface PuckDynamicNavigationMenu {
   slug: string;
 }
 
+interface PuckDynamicMediaItem {
+  displayName: string;
+  id: number;
+  mimeType: string;
+  previewUrl: string;
+}
+
 interface PuckDynamicData {
   categories: PuckDynamicCategory[];
+  media?: Record<number, PuckDynamicMediaItem>;
   navigationMenus: PuckDynamicNavigationMenu[];
   pages: PuckDynamicPage[];
   posts: PuckDynamicPost[];
@@ -956,7 +965,7 @@ interface NavigationMenuBlockProps {
   menuId?: string;
   mobileButtonLabel?: string;
   mobileLogoAlt?: string;
-  mobileLogoUrl?: string;
+  mobileLogoUrl?: PuckImageValue;
   mobilePanelTitle?: string;
   orientation?: string;
   title?: string;
@@ -1055,7 +1064,7 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
         layoutPreset={layoutPreset}
         layoutClassName={layoutClassName}
         logoAlt={props.mobileLogoAlt}
-        logoUrl={props.mobileLogoUrl}
+        logoUrl={getPuckImageUrl(props.mobileLogoUrl)}
         menu={menu}
         panelTitle={props.mobilePanelTitle}
         title={title}

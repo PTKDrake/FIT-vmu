@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-const CloneSiteLayoutController = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const CloneSiteLayoutController = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: CloneSiteLayoutController.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ CloneSiteLayoutController.definition = {
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-CloneSiteLayoutController.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+CloneSiteLayoutController.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -52,7 +52,7 @@ CloneSiteLayoutController.url = (args: { siteLayout: string | number | { id: str
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-CloneSiteLayoutController.post = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+CloneSiteLayoutController.post = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: CloneSiteLayoutController.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ CloneSiteLayoutController.post = (args: { siteLayout: string | number | { id: st
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-const CloneSiteLayoutControllerForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const CloneSiteLayoutControllerForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: CloneSiteLayoutController.url(args, options),
     method: 'post',
 })
@@ -72,7 +72,7 @@ const CloneSiteLayoutControllerForm = (args: { siteLayout: string | number | { i
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-CloneSiteLayoutControllerForm.post = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+CloneSiteLayoutControllerForm.post = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: CloneSiteLayoutController.url(args, options),
     method: 'post',
 })
