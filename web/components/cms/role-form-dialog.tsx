@@ -16,6 +16,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+import { roleRouteArgument } from "@/lib/role-route-argument";
 import rolesPermissions from "@/routes/cms/roles-permissions";
 
 export interface RoleFormValues {
@@ -169,16 +170,29 @@ export function RoleFormDialog({
       return;
     }
 
-    form.patch(rolesPermissions.update.url({ role: initialValues.id ?? 0 }), {
-      onSuccess: () => {
-        toast.success("Cập nhật vai trò thành công!");
-        onOpenChange(false);
+    if (initialValues.id === undefined) {
+      toast.error("Không tìm thấy vai trò cần cập nhật.");
+
+      return;
+    }
+
+    form.patch(
+      rolesPermissions.update.url(
+        roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
+          initialValues.id,
+        ),
+      ),
+      {
+        onSuccess: () => {
+          toast.success("Cập nhật vai trò thành công!");
+          onOpenChange(false);
+        },
+        onError: () => {
+          toast.error("Có lỗi xảy ra khi cập nhật vai trò.");
+        },
+        preserveScroll: true,
       },
-      onError: () => {
-        toast.error("Có lỗi xảy ra khi cập nhật vai trò.");
-      },
-      preserveScroll: true,
-    });
+    );
   }
 
   if (!isOpen) {

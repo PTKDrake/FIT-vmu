@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/PublishPostController.php:15
 * @route '/cms/posts/{post}/publish'
 */
-const PublishPostController = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const PublishPostController = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: PublishPostController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ PublishPostController.definition = {
 * @see app/Http/Controllers/Cms/PublishPostController.php:15
 * @route '/cms/posts/{post}/publish'
 */
-PublishPostController.url = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+PublishPostController.url = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post: args }
     }
@@ -52,7 +52,7 @@ PublishPostController.url = (args: { post: number | { id: number } } | [post: nu
 * @see app/Http/Controllers/Cms/PublishPostController.php:15
 * @route '/cms/posts/{post}/publish'
 */
-PublishPostController.patch = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+PublishPostController.patch = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: PublishPostController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ PublishPostController.patch = (args: { post: number | { id: number } } | [post: 
 * @see app/Http/Controllers/Cms/PublishPostController.php:15
 * @route '/cms/posts/{post}/publish'
 */
-const PublishPostControllerForm = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const PublishPostControllerForm = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: PublishPostController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const PublishPostControllerForm = (args: { post: number | { id: number } } | [po
 * @see app/Http/Controllers/Cms/PublishPostController.php:15
 * @route '/cms/posts/{post}/publish'
 */
-PublishPostControllerForm.patch = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+PublishPostControllerForm.patch = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: PublishPostController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

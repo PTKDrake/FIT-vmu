@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const UpdateStaffProfileController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateStaffProfileController = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateStaffProfileController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateStaffProfileController.definition = {
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-UpdateStaffProfileController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UpdateStaffProfileController.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -52,7 +52,7 @@ UpdateStaffProfileController.url = (args: { staffProfile: number | { id: number 
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-UpdateStaffProfileController.patch = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateStaffProfileController.patch = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateStaffProfileController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateStaffProfileController.patch = (args: { staffProfile: number | { id: numbe
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const UpdateStaffProfileControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateStaffProfileControllerForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateStaffProfileController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateStaffProfileControllerForm = (args: { staffProfile: number | { id: n
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-UpdateStaffProfileControllerForm.patch = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateStaffProfileControllerForm.patch = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateStaffProfileController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

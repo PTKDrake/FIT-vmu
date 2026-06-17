@@ -3,6 +3,7 @@
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Testing\AssertableInertia as Assert;
 
 test('super admin bypasses all ability checks via gate before', function () {
     $this->seed(RoleAndPermissionSeeder::class);
@@ -27,4 +28,20 @@ test('non super admin users still rely on their normal permission checks', funct
         ->and(Gate::forUser($staff)->allows('manage users'))->toBeFalse()
         ->and(Gate::forUser($staff)->allows('view own profile'))->toBeTrue()
         ->and(Gate::forUser($staff)->allows('publish posts'))->toBeFalse();
+});
+
+test('inertia auth share exposes role permissions for cms access', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $this->actingAs($admin);
+
+    $this->get('/cms')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('cms/dashboard')
+            ->where('auth.permissions', $admin->getAllPermissions()->pluck('name')->sort()->values()->all())
+        );
 });

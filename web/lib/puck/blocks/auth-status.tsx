@@ -23,6 +23,7 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@/components/ui/menu";
+import { dashboard as cmsDashboard } from "@/routes/cms";
 import { edit } from "@/routes/profile";
 import type { SharedData } from "@/types/shared";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
@@ -239,10 +240,7 @@ function AuthStatusBlock({
         )}
       >
         <div className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border bg-bg px-2.5 text-sm font-semibold text-fg">
-          <Avatar
-            className="size-8 *:size-8"
-            initials={userInitials}
-          />
+          <Avatar className="size-8 *:size-8" initials={userInitials} />
           {displayText ? (
             <span className="max-w-40 truncate">{displayText}</span>
           ) : null}
@@ -298,9 +296,9 @@ function AuthStatusBlock({
             Đổi mật khẩu
           </MenuItem>
           {showCmsLink && canViewCms ? (
-            <MenuItem href="/cms">
+            <MenuItem href={cmsDashboard.url()}>
               <HomeIcon />
-              CMS
+              Mở CMS
             </MenuItem>
           ) : null}
           <MenuSeparator />

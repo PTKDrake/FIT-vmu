@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-const UnitEditPageController = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const UnitEditPageController = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: UnitEditPageController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ UnitEditPageController.definition = {
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-UnitEditPageController.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UnitEditPageController.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -52,7 +52,7 @@ UnitEditPageController.url = (args: { unit: number | { id: number } } | [unit: n
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-UnitEditPageController.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+UnitEditPageController.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: UnitEditPageController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ UnitEditPageController.get = (args: { unit: number | { id: number } } | [unit: n
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-UnitEditPageController.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+UnitEditPageController.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: UnitEditPageController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ UnitEditPageController.head = (args: { unit: number | { id: number } } | [unit: 
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-const UnitEditPageControllerForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const UnitEditPageControllerForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UnitEditPageController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const UnitEditPageControllerForm = (args: { unit: number | { id: number } } | [u
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-UnitEditPageControllerForm.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+UnitEditPageControllerForm.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UnitEditPageController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ UnitEditPageControllerForm.get = (args: { unit: number | { id: number } } | [uni
 * @see app/Http/Controllers/Cms/UnitEditPageController.php:13
 * @route '/cms/units/{unit}/edit'
 */
-UnitEditPageControllerForm.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+UnitEditPageControllerForm.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UnitEditPageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

@@ -88,11 +88,6 @@ export default function CmsUnitsIndexPage({
 
   const canReorder =
     can.manageUnits && query.search === "" && query.status === "all";
-  useCmsContentRealtime("units", (payload) => {
-    toast.info(payload.message);
-    router.reload({ only: ["units"] });
-  });
-
   const queryRef = useRef(query);
   const unitList = useAsyncList<CmsUnitRow>({
     async load({ signal }) {
@@ -107,6 +102,13 @@ export default function CmsUnitsIndexPage({
       };
     },
   });
+
+  useCmsContentRealtime("units", (payload) => {
+    toast.info(payload.message);
+    setDraftUnits(null);
+    unitList.reload();
+  });
+
   const visibleUnits =
     unitList.loadingState === "loading" && unitList.items.length === 0
       ? units

@@ -141,7 +141,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-export const edit = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -156,7 +156,7 @@ edit.definition = {
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-edit.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+edit.url = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -189,7 +189,7 @@ edit.url = (args: { user: number | { id: number } } | [user: number | { id: numb
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-edit.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -199,7 +199,7 @@ edit.get = (args: { user: number | { id: number } } | [user: number | { id: numb
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-edit.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -209,7 +209,7 @@ edit.head = (args: { user: number | { id: number } } | [user: number | { id: num
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-const editForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -219,7 +219,7 @@ const editForm = (args: { user: number | { id: number } } | [user: number | { id
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-editForm.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -229,7 +229,7 @@ editForm.get = (args: { user: number | { id: number } } | [user: number | { id: 
 * @see app/Http/Controllers/Cms/UserEditPageController.php:15
 * @route '/cms/users/{user}/edit'
 */
-editForm.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -246,7 +246,7 @@ edit.form = editForm
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-export const update = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -261,7 +261,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-update.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update.url = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -294,7 +294,7 @@ update.url = (args: { user: number | { id: number } } | [user: number | { id: nu
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-update.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -304,7 +304,7 @@ update.patch = (args: { user: number | { id: number } } | [user: number | { id: 
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-const updateForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -319,7 +319,7 @@ const updateForm = (args: { user: number | { id: number } } | [user: number | { 
 * @see app/Http/Controllers/Cms/UpdateUserController.php:15
 * @route '/cms/users/{user}'
 */
-updateForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

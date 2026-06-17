@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-const UpdateStudentGroupController = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateStudentGroupController = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateStudentGroupController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateStudentGroupController.definition = {
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-UpdateStudentGroupController.url = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UpdateStudentGroupController.url = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { student_group: args }
     }
@@ -52,7 +52,7 @@ UpdateStudentGroupController.url = (args: { student_group: number | { id: number
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-UpdateStudentGroupController.patch = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateStudentGroupController.patch = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateStudentGroupController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateStudentGroupController.patch = (args: { student_group: number | { id: numb
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-const UpdateStudentGroupControllerForm = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateStudentGroupControllerForm = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateStudentGroupController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateStudentGroupControllerForm = (args: { student_group: number | { id: 
 * @see app/Http/Controllers/Cms/UpdateStudentGroupController.php:16
 * @route '/cms/student-groups/{student_group}'
 */
-UpdateStudentGroupControllerForm.patch = (args: { student_group: number | { id: number } } | [student_group: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateStudentGroupControllerForm.patch = (args: { student_group: string | number | { id: string | number } } | [student_group: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateStudentGroupController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

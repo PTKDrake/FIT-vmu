@@ -67,17 +67,17 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
   );
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useCmsContentRealtime("pages", (payload) => {
-    toast.info(payload.message);
-    router.reload({ only: ["pages"] });
-  });
-
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: pages.meta.perPage,
     defaultSortColumn: "created_at",
     initialItems: pages.data,
     initialMeta: pages.meta,
     resourceKey: "pages",
+  });
+
+  useCmsContentRealtime("pages", (payload) => {
+    toast.info(payload.message);
+    tableQueryState.list.reload();
   });
 
   const columns: Array<ColumnDef<CmsPageTableRow, any>> = [

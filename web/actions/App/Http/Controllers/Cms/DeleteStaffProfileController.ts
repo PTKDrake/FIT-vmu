@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const DeleteStaffProfileController = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeleteStaffProfileController = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteStaffProfileController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeleteStaffProfileController.definition = {
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-DeleteStaffProfileController.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+DeleteStaffProfileController.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -52,7 +52,7 @@ DeleteStaffProfileController.url = (args: { staffProfile: number | { id: number 
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-DeleteStaffProfileController.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeleteStaffProfileController.delete = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteStaffProfileController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeleteStaffProfileController.delete = (args: { staffProfile: number | { id: numb
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const DeleteStaffProfileControllerForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeleteStaffProfileControllerForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteStaffProfileController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeleteStaffProfileControllerForm = (args: { staffProfile: number | { id: n
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-DeleteStaffProfileControllerForm.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeleteStaffProfileControllerForm.delete = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteStaffProfileController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

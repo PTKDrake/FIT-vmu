@@ -45,6 +45,7 @@ import {
 import { Code, Text } from "@/components/ui/text";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
+import { roleRouteArgument } from "@/lib/role-route-argument";
 import rolesPermissions from "@/routes/cms/roles-permissions";
 
 interface RoleData {
@@ -395,7 +396,11 @@ export default function CmsRolesPermissionsPage({
         }
 
         const response = await fetch(
-          rolesPermissions.update.url({ role: roleId }),
+          rolesPermissions.update.url(
+            roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
+              roleId,
+            ),
+          ),
           {
             method: "PATCH",
             headers: {

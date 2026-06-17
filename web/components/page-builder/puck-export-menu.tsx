@@ -55,7 +55,7 @@ export function PuckExportMenu({
     <Tooltip delay={0}>
       <Menu>
         <MenuTrigger
-          aria-label="Xuất JSON"
+          aria-label="Xuất JSON builder"
           className="inline-flex size-8 items-center justify-center rounded-full border border-border transition hover:bg-muted/40"
         >
           <ArrowDownTrayIcon className="size-4 shrink-0" />

@@ -76,17 +76,17 @@ export default function CmsPostsPage({
   const [rejectionReason, setRejectionReason] = useState("");
   const [rejectionError, setRejectionError] = useState("");
 
-  useCmsContentRealtime("posts", (payload) => {
-    toast.info(payload.message);
-    router.reload({ only: ["posts"] });
-  });
-
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: posts.meta.perPage,
     defaultSortColumn: "created_at",
     initialItems: posts.data,
     initialMeta: posts.meta,
     resourceKey: "posts",
+  });
+
+  useCmsContentRealtime("posts", (payload) => {
+    toast.info(payload.message);
+    tableQueryState.list.reload();
   });
 
   const columns: Array<ColumnDef<CmsPostTableRow, any>> = [

@@ -60,7 +60,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-export const rename = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const rename = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: rename.url(args, options),
     method: 'patch',
 })
@@ -75,7 +75,7 @@ rename.definition = {
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-rename.url = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+rename.url = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { media: args }
     }
@@ -108,7 +108,7 @@ rename.url = (args: { media: number | { id: number } } | [media: number | { id: 
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-rename.patch = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+rename.patch = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: rename.url(args, options),
     method: 'patch',
 })
@@ -118,7 +118,7 @@ rename.patch = (args: { media: number | { id: number } } | [media: number | { id
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-const renameForm = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const renameForm = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: rename.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -133,7 +133,7 @@ const renameForm = (args: { media: number | { id: number } } | [media: number | 
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-renameForm.patch = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+renameForm.patch = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: rename.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -150,7 +150,7 @@ rename.form = renameForm
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-export const duplicate = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const duplicate = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: duplicate.url(args, options),
     method: 'post',
 })
@@ -165,7 +165,7 @@ duplicate.definition = {
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-duplicate.url = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+duplicate.url = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { media: args }
     }
@@ -198,7 +198,7 @@ duplicate.url = (args: { media: number | { id: number } } | [media: number | { i
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-duplicate.post = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+duplicate.post = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: duplicate.url(args, options),
     method: 'post',
 })
@@ -208,7 +208,7 @@ duplicate.post = (args: { media: number | { id: number } } | [media: number | { 
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-const duplicateForm = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const duplicateForm = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: duplicate.url(args, options),
     method: 'post',
 })
@@ -218,7 +218,7 @@ const duplicateForm = (args: { media: number | { id: number } } | [media: number
 * @see app/Http/Controllers/Cms/DuplicateMediaController.php:16
 * @route '/cms/media/{media}/duplicate'
 */
-duplicateForm.post = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+duplicateForm.post = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: duplicate.url(args, options),
     method: 'post',
 })
@@ -230,7 +230,7 @@ duplicate.form = duplicateForm
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-export const destroy = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -245,7 +245,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-destroy.url = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { media: args }
     }
@@ -278,7 +278,7 @@ destroy.url = (args: { media: number | { id: number } } | [media: number | { id:
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-destroy.delete = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -288,7 +288,7 @@ destroy.delete = (args: { media: number | { id: number } } | [media: number | { 
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-const destroyForm = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -303,7 +303,7 @@ const destroyForm = (args: { media: number | { id: number } } | [media: number |
 * @see app/Http/Controllers/Cms/DeleteMediaController.php:15
 * @route '/cms/media/{media}'
 */
-destroyForm.delete = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

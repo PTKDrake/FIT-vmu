@@ -1,13 +1,8 @@
 import { useForm } from "@inertiajs/react";
-import type {FormEvent} from "react";
+import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  FieldError,
-  FieldGroup,
-  Fieldset,
-  Label,
-} from "@/components/ui/field";
+import { FieldError, FieldGroup, Fieldset, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   ModalBody,
@@ -19,6 +14,7 @@ import {
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+import { roleRouteArgument } from "@/lib/role-route-argument";
 import rolesPermissions from "@/routes/cms/roles-permissions";
 
 interface RoleData {
@@ -59,7 +55,9 @@ export function RoleActionDialog({
     if (mode === "copy") {
       form.post(rolesPermissions.store.url(), {
         onSuccess: () => {
-          toast.success(`Đã sao chép vai trò thành công thành "${form.data.name}".`);
+          toast.success(
+            `Đã sao chép vai trò thành công thành "${form.data.name}".`,
+          );
           onOpenChange(false);
         },
         onError: () => {
@@ -72,31 +70,45 @@ export function RoleActionDialog({
     }
 
     if (mode === "rename") {
-      form.patch(rolesPermissions.update.url({ role: role.id }), {
-        onSuccess: () => {
-          toast.success(`Đã đổi tên vai trò thành "${form.data.name}".`);
-          onOpenChange(false);
+      form.patch(
+        rolesPermissions.update.url(
+          roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
+            role.id,
+          ),
+        ),
+        {
+          onSuccess: () => {
+            toast.success(`Đã đổi tên vai trò thành "${form.data.name}".`);
+            onOpenChange(false);
+          },
+          onError: () => {
+            toast.error("Có lỗi xảy ra khi đổi tên vai trò.");
+          },
+          preserveScroll: true,
         },
-        onError: () => {
-          toast.error("Có lỗi xảy ra khi đổi tên vai trò.");
-        },
-        preserveScroll: true,
-      });
+      );
 
       return;
     }
 
     if (mode === "delete") {
-      form.delete(rolesPermissions.delete.url({ role: role.id }), {
-        onSuccess: () => {
-          toast.success(`Đã xóa vai trò "${role.name}" thành công.`);
-          onOpenChange(false);
+      form.delete(
+        rolesPermissions.delete.url(
+          roleRouteArgument<Parameters<typeof rolesPermissions.delete.url>[0]>(
+            role.id,
+          ),
+        ),
+        {
+          onSuccess: () => {
+            toast.success(`Đã xóa vai trò "${role.name}" thành công.`);
+            onOpenChange(false);
+          },
+          onError: () => {
+            toast.error("Có lỗi xảy ra khi xóa vai trò.");
+          },
+          preserveScroll: true,
         },
-        onError: () => {
-          toast.error("Có lỗi xảy ra khi xóa vai trò.");
-        },
-        preserveScroll: true,
-      });
+      );
 
       return;
     }
@@ -161,7 +173,8 @@ export function RoleActionDialog({
           ) : (
             <div className="rounded-lg border border-danger-subtle bg-danger-subtle/10 p-3">
               <Text className="text-danger-fg text-xs font-semibold">
-                Cảnh báo: Người dùng đang gán vai trò này sẽ bị mất các quyền tương ứng trừ khi họ được gán vai trò khác.
+                Cảnh báo: Người dùng đang gán vai trò này sẽ bị mất các quyền
+                tương ứng trừ khi họ được gán vai trò khác.
               </Text>
             </div>
           )}
@@ -184,10 +197,10 @@ export function RoleActionDialog({
             {form.processing
               ? "Đang xử lý..."
               : mode === "copy"
-              ? "Sao chép"
-              : mode === "rename"
-              ? "Đổi tên"
-              : "Xóa vai trò"}
+                ? "Sao chép"
+                : mode === "rename"
+                  ? "Đổi tên"
+                  : "Xóa vai trò"}
           </Button>
         </ModalFooter>
       </form>

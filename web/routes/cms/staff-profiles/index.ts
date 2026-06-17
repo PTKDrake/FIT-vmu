@@ -85,7 +85,7 @@ create.form = createForm
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-export const show = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -100,7 +100,7 @@ show.definition = {
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-show.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -133,7 +133,7 @@ show.url = (args: { staffProfile: number | { id: number } } | [staffProfile: num
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-show.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -143,7 +143,7 @@ show.get = (args: { staffProfile: number | { id: number } } | [staffProfile: num
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-show.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -153,7 +153,7 @@ show.head = (args: { staffProfile: number | { id: number } } | [staffProfile: nu
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const showForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -163,7 +163,7 @@ const showForm = (args: { staffProfile: number | { id: number } } | [staffProfil
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-showForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -173,7 +173,7 @@ showForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile:
 * @see app/Http/Controllers/Cms/StaffProfileShowPageController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-showForm.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -190,7 +190,7 @@ show.form = showForm
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-export const edit = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -205,7 +205,7 @@ edit.definition = {
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-edit.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+edit.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -238,7 +238,7 @@ edit.url = (args: { staffProfile: number | { id: number } } | [staffProfile: num
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-edit.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { staffProfile: number | { id: number } } | [staffProfile: num
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-edit.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { staffProfile: number | { id: number } } | [staffProfile: nu
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-const editForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -268,7 +268,7 @@ const editForm = (args: { staffProfile: number | { id: number } } | [staffProfil
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-editForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -278,7 +278,7 @@ editForm.get = (args: { staffProfile: number | { id: number } } | [staffProfile:
 * @see app/Http/Controllers/Cms/StaffProfileEditPageController.php:17
 * @route '/cms/staff-profiles/{staffProfile}/edit'
 */
-editForm.head = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -351,7 +351,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-export const update = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -366,7 +366,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-update.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -399,7 +399,7 @@ update.url = (args: { staffProfile: number | { id: number } } | [staffProfile: n
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-update.patch = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -409,7 +409,7 @@ update.patch = (args: { staffProfile: number | { id: number } } | [staffProfile:
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const updateForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -424,7 +424,7 @@ const updateForm = (args: { staffProfile: number | { id: number } } | [staffProf
 * @see app/Http/Controllers/Cms/UpdateStaffProfileController.php:18
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-updateForm.patch = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -441,7 +441,7 @@ update.form = updateForm
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-export const destroy = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -456,7 +456,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-destroy.url = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { staffProfile: args }
     }
@@ -489,7 +489,7 @@ destroy.url = (args: { staffProfile: number | { id: number } } | [staffProfile: 
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-destroy.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -499,7 +499,7 @@ destroy.delete = (args: { staffProfile: number | { id: number } } | [staffProfil
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-const destroyForm = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -514,7 +514,7 @@ const destroyForm = (args: { staffProfile: number | { id: number } } | [staffPro
 * @see app/Http/Controllers/Cms/DeleteStaffProfileController.php:15
 * @route '/cms/staff-profiles/{staffProfile}'
 */
-destroyForm.delete = (args: { staffProfile: number | { id: number } } | [staffProfile: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { staffProfile: string | number | { id: string | number } } | [staffProfile: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

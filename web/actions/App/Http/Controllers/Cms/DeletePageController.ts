@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-const DeletePageController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeletePageController = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeletePageController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeletePageController.definition = {
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-DeletePageController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+DeletePageController.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -52,7 +52,7 @@ DeletePageController.url = (args: { page: number | { id: number } } | [page: num
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-DeletePageController.delete = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeletePageController.delete = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeletePageController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeletePageController.delete = (args: { page: number | { id: number } } | [page: 
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-const DeletePageControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeletePageControllerForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeletePageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeletePageControllerForm = (args: { page: number | { id: number } } | [pag
 * @see app/Http/Controllers/Cms/DeletePageController.php:15
 * @route '/cms/pages/{page}'
 */
-DeletePageControllerForm.delete = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeletePageControllerForm.delete = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeletePageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
