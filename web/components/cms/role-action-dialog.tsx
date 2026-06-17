@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+import { roleRouteArgument } from "@/lib/role-route-argument";
 import rolesPermissions from "@/routes/cms/roles-permissions";
 
 interface RoleData {
@@ -35,10 +36,6 @@ interface RoleActionDialogProps {
 interface ActionFormValues {
   name: string;
   permissions: string[];
-}
-
-function roleRouteArgument<TRouteArgument>(roleId: number): TRouteArgument {
-  return { id: roleId } as unknown as TRouteArgument;
 }
 
 export function RoleActionDialog({

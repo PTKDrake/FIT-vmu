@@ -45,6 +45,7 @@ import {
 import { Code, Text } from "@/components/ui/text";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
+import { roleRouteArgument } from "@/lib/role-route-argument";
 import rolesPermissions from "@/routes/cms/roles-permissions";
 
 interface RoleData {
@@ -143,10 +144,6 @@ function arraysAreEqual(left: string[], right: string[]): boolean {
   }
 
   return left.every((value, index) => value === right[index]);
-}
-
-function roleRouteArgument<TRouteArgument>(roleId: number): TRouteArgument {
-  return { id: roleId } as unknown as TRouteArgument;
 }
 
 export default function CmsRolesPermissionsPage({
