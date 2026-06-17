@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-const DeleteUnitController = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const DeleteUnitController = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteUnitController.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ DeleteUnitController.definition = {
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-DeleteUnitController.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+DeleteUnitController.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -52,7 +52,7 @@ DeleteUnitController.url = (args: { unit: number | { id: number } } | [unit: num
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-DeleteUnitController.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+DeleteUnitController.delete = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: DeleteUnitController.url(args, options),
     method: 'delete',
 })
@@ -62,7 +62,7 @@ DeleteUnitController.delete = (args: { unit: number | { id: number } } | [unit: 
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-const DeleteUnitControllerForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const DeleteUnitControllerForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteUnitController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -77,7 +77,7 @@ const DeleteUnitControllerForm = (args: { unit: number | { id: number } } | [uni
 * @see app/Http/Controllers/Cms/DeleteUnitController.php:14
 * @route '/cms/units/{unit}'
 */
-DeleteUnitControllerForm.delete = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+DeleteUnitControllerForm.delete = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: DeleteUnitController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

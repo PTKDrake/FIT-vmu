@@ -1,13 +1,8 @@
 import { useForm } from "@inertiajs/react";
-import type {FormEvent} from "react";
+import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  FieldError,
-  FieldGroup,
-  Fieldset,
-  Label,
-} from "@/components/ui/field";
+import { FieldError, FieldGroup, Fieldset, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   ModalBody,
@@ -59,7 +54,9 @@ export function RoleActionDialog({
     if (mode === "copy") {
       form.post(rolesPermissions.store.url(), {
         onSuccess: () => {
-          toast.success(`Đã sao chép vai trò thành công thành "${form.data.name}".`);
+          toast.success(
+            `Đã sao chép vai trò thành công thành "${form.data.name}".`,
+          );
           onOpenChange(false);
         },
         onError: () => {
@@ -72,7 +69,7 @@ export function RoleActionDialog({
     }
 
     if (mode === "rename") {
-      form.patch(rolesPermissions.update.url({ role: role.id }), {
+      form.patch(rolesPermissions.update.url({ role: String(role.id) }), {
         onSuccess: () => {
           toast.success(`Đã đổi tên vai trò thành "${form.data.name}".`);
           onOpenChange(false);
@@ -87,7 +84,7 @@ export function RoleActionDialog({
     }
 
     if (mode === "delete") {
-      form.delete(rolesPermissions.delete.url({ role: role.id }), {
+      form.delete(rolesPermissions.delete.url({ role: String(role.id) }), {
         onSuccess: () => {
           toast.success(`Đã xóa vai trò "${role.name}" thành công.`);
           onOpenChange(false);
@@ -161,7 +158,8 @@ export function RoleActionDialog({
           ) : (
             <div className="rounded-lg border border-danger-subtle bg-danger-subtle/10 p-3">
               <Text className="text-danger-fg text-xs font-semibold">
-                Cảnh báo: Người dùng đang gán vai trò này sẽ bị mất các quyền tương ứng trừ khi họ được gán vai trò khác.
+                Cảnh báo: Người dùng đang gán vai trò này sẽ bị mất các quyền
+                tương ứng trừ khi họ được gán vai trò khác.
               </Text>
             </div>
           )}
@@ -184,10 +182,10 @@ export function RoleActionDialog({
             {form.processing
               ? "Đang xử lý..."
               : mode === "copy"
-              ? "Sao chép"
-              : mode === "rename"
-              ? "Đổi tên"
-              : "Xóa vai trò"}
+                ? "Sao chép"
+                : mode === "rename"
+                  ? "Đổi tên"
+                  : "Xóa vai trò"}
           </Button>
         </ModalFooter>
       </form>

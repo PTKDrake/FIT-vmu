@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-const PostEditPageController = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const PostEditPageController = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PostEditPageController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ PostEditPageController.definition = {
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-PostEditPageController.url = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+PostEditPageController.url = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { post: args }
     }
@@ -52,7 +52,7 @@ PostEditPageController.url = (args: { post: number | { id: number } } | [post: n
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-PostEditPageController.get = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+PostEditPageController.get = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: PostEditPageController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ PostEditPageController.get = (args: { post: number | { id: number } } | [post: n
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-PostEditPageController.head = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+PostEditPageController.head = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: PostEditPageController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ PostEditPageController.head = (args: { post: number | { id: number } } | [post: 
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-const PostEditPageControllerForm = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const PostEditPageControllerForm = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PostEditPageController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const PostEditPageControllerForm = (args: { post: number | { id: number } } | [p
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-PostEditPageControllerForm.get = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PostEditPageControllerForm.get = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PostEditPageController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ PostEditPageControllerForm.get = (args: { post: number | { id: number } } | [pos
 * @see app/Http/Controllers/Cms/PostEditPageController.php:19
 * @route '/cms/posts/{post}/edit'
 */
-PostEditPageControllerForm.head = (args: { post: number | { id: number } } | [post: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+PostEditPageControllerForm.head = (args: { post: string | number | { id: string | number } } | [post: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: PostEditPageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

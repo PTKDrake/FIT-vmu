@@ -169,16 +169,19 @@ export function RoleFormDialog({
       return;
     }
 
-    form.patch(rolesPermissions.update.url({ role: initialValues.id ?? 0 }), {
-      onSuccess: () => {
-        toast.success("Cập nhật vai trò thành công!");
-        onOpenChange(false);
+    form.patch(
+      rolesPermissions.update.url({ role: String(initialValues.id ?? "") }),
+      {
+        onSuccess: () => {
+          toast.success("Cập nhật vai trò thành công!");
+          onOpenChange(false);
+        },
+        onError: () => {
+          toast.error("Có lỗi xảy ra khi cập nhật vai trò.");
+        },
+        preserveScroll: true,
       },
-      onError: () => {
-        toast.error("Có lỗi xảy ra khi cập nhật vai trò.");
-      },
-      preserveScroll: true,
-    });
+    );
   }
 
   if (!isOpen) {

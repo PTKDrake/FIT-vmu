@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdatePageMetadataController.php:15
 * @route '/cms/pages/{page}/metadata'
 */
-const UpdatePageMetadataController = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdatePageMetadataController = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePageMetadataController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdatePageMetadataController.definition = {
 * @see app/Http/Controllers/Cms/UpdatePageMetadataController.php:15
 * @route '/cms/pages/{page}/metadata'
 */
-UpdatePageMetadataController.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UpdatePageMetadataController.url = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
@@ -52,7 +52,7 @@ UpdatePageMetadataController.url = (args: { page: number | { id: number } } | [p
 * @see app/Http/Controllers/Cms/UpdatePageMetadataController.php:15
 * @route '/cms/pages/{page}/metadata'
 */
-UpdatePageMetadataController.patch = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdatePageMetadataController.patch = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdatePageMetadataController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdatePageMetadataController.patch = (args: { page: number | { id: number } } | 
 * @see app/Http/Controllers/Cms/UpdatePageMetadataController.php:15
 * @route '/cms/pages/{page}/metadata'
 */
-const UpdatePageMetadataControllerForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdatePageMetadataControllerForm = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePageMetadataController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdatePageMetadataControllerForm = (args: { page: number | { id: number } 
 * @see app/Http/Controllers/Cms/UpdatePageMetadataController.php:15
 * @route '/cms/pages/{page}/metadata'
 */
-UpdatePageMetadataControllerForm.patch = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdatePageMetadataControllerForm.patch = (args: { page: string | number | { id: string | number } } | [page: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdatePageMetadataController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

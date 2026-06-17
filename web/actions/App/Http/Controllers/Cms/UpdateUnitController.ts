@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-const UpdateUnitController = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateUnitController = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateUnitController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateUnitController.definition = {
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-UpdateUnitController.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UpdateUnitController.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -52,7 +52,7 @@ UpdateUnitController.url = (args: { unit: number | { id: number } } | [unit: num
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-UpdateUnitController.patch = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateUnitController.patch = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateUnitController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateUnitController.patch = (args: { unit: number | { id: number } } | [unit: n
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-const UpdateUnitControllerForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateUnitControllerForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateUnitController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateUnitControllerForm = (args: { unit: number | { id: number } } | [uni
 * @see app/Http/Controllers/Cms/UpdateUnitController.php:15
 * @route '/cms/units/{unit}'
 */
-UpdateUnitControllerForm.patch = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateUnitControllerForm.patch = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateUnitController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

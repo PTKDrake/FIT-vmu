@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-export const sync = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const sync = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: sync.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ sync.definition = {
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-sync.url = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+sync.url = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { navigationMenu: args }
     }
@@ -52,7 +52,7 @@ sync.url = (args: { navigationMenu: number | { id: number } } | [navigationMenu:
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-sync.patch = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+sync.patch = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: sync.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ sync.patch = (args: { navigationMenu: number | { id: number } } | [navigationMen
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-const syncForm = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const syncForm = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: sync.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const syncForm = (args: { navigationMenu: number | { id: number } } | [navigatio
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-syncForm.patch = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+syncForm.patch = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: sync.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

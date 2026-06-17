@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-const UnitShowPageController = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const UnitShowPageController = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: UnitShowPageController.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ UnitShowPageController.definition = {
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-UnitShowPageController.url = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UnitShowPageController.url = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { unit: args }
     }
@@ -52,7 +52,7 @@ UnitShowPageController.url = (args: { unit: number | { id: number } } | [unit: n
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-UnitShowPageController.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+UnitShowPageController.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: UnitShowPageController.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ UnitShowPageController.get = (args: { unit: number | { id: number } } | [unit: n
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-UnitShowPageController.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+UnitShowPageController.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: UnitShowPageController.url(args, options),
     method: 'head',
 })
@@ -72,7 +72,7 @@ UnitShowPageController.head = (args: { unit: number | { id: number } } | [unit: 
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-const UnitShowPageControllerForm = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const UnitShowPageControllerForm = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UnitShowPageController.url(args, options),
     method: 'get',
 })
@@ -82,7 +82,7 @@ const UnitShowPageControllerForm = (args: { unit: number | { id: number } } | [u
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-UnitShowPageControllerForm.get = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+UnitShowPageControllerForm.get = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UnitShowPageController.url(args, options),
     method: 'get',
 })
@@ -92,7 +92,7 @@ UnitShowPageControllerForm.get = (args: { unit: number | { id: number } } | [uni
 * @see app/Http/Controllers/Cms/UnitShowPageController.php:15
 * @route '/cms/units/{unit}'
 */
-UnitShowPageControllerForm.head = (args: { unit: number | { id: number } } | [unit: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+UnitShowPageControllerForm.head = (args: { unit: string | number | { id: string | number } } | [unit: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: UnitShowPageController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

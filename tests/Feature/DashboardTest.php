@@ -42,7 +42,7 @@ test('dashboard shares the authenticated user permission list with inertia', fun
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('cms/dashboard')
-            ->where('auth.permissions', $user->getPermissionNames()->sort()->values()->all())
+            ->where('auth.permissions', $user->getAllPermissions()->pluck('name')->sort()->values()->all())
         );
 });
 

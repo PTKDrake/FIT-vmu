@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-const SyncNavigationMenuItemsController = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const SyncNavigationMenuItemsController = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: SyncNavigationMenuItemsController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ SyncNavigationMenuItemsController.definition = {
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-SyncNavigationMenuItemsController.url = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+SyncNavigationMenuItemsController.url = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { navigationMenu: args }
     }
@@ -52,7 +52,7 @@ SyncNavigationMenuItemsController.url = (args: { navigationMenu: number | { id: 
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-SyncNavigationMenuItemsController.patch = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+SyncNavigationMenuItemsController.patch = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: SyncNavigationMenuItemsController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ SyncNavigationMenuItemsController.patch = (args: { navigationMenu: number | { id
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-const SyncNavigationMenuItemsControllerForm = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const SyncNavigationMenuItemsControllerForm = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: SyncNavigationMenuItemsController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const SyncNavigationMenuItemsControllerForm = (args: { navigationMenu: number | 
 * @see app/Http/Controllers/Cms/SyncNavigationMenuItemsController.php:15
 * @route '/cms/navigation/{navigationMenu}/items'
 */
-SyncNavigationMenuItemsControllerForm.patch = (args: { navigationMenu: number | { id: number } } | [navigationMenu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+SyncNavigationMenuItemsControllerForm.patch = (args: { navigationMenu: string | number | { id: string | number } } | [navigationMenu: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: SyncNavigationMenuItemsController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

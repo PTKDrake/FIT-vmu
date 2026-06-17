@@ -6,6 +6,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { vi as blockNoteAiViDictionary } from "@blocknote/xl-ai/locales";
 import { usePage } from "@inertiajs/react";
+import type { MouseEvent } from "react";
 import { twMerge } from "tailwind-merge";
 import { useTheme } from "@/hooks/use-theme";
 import type { SharedData } from "@/types/shared";
@@ -89,6 +90,7 @@ export function BlockNoteEditor({
           : "",
         className,
       )}
+      onClickCapture={preventEditorButtonSubmit}
     >
       <BlockNoteView
         key={editorKey}
@@ -109,4 +111,26 @@ export function BlockNoteEditor({
       </BlockNoteView>
     </div>
   );
+}
+
+function preventEditorButtonSubmit(event: MouseEvent<HTMLDivElement>): void {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+
+  const button = event.target.closest("button");
+
+  if (!button || !event.currentTarget.contains(button)) {
+    return;
+  }
+
+  if (button.hasAttribute("form")) {
+    return;
+  }
+
+  const buttonType = button.getAttribute("type")?.toLowerCase();
+
+  if (buttonType !== "button" && buttonType !== "reset") {
+    event.preventDefault();
+  }
 }

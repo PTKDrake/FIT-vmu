@@ -9,8 +9,8 @@ import {
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { Head } from "@inertiajs/react";
-import { Fragment, useDeferredValue, useState  } from "react";
-import type {ReactNode} from "react";
+import { Fragment, useDeferredValue, useState } from "react";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { RoleActionDialog } from "@/components/cms/role-action-dialog";
 import { RoleFormDialog } from "@/components/cms/role-form-dialog";
@@ -195,9 +195,8 @@ export default function CmsRolesPermissionsPage({
   >(() =>
     Object.fromEntries(allCategories.map((category) => [category, false])),
   );
-  const [expandCollapseValue, setExpandCollapseValue] = useState<string>(
-    "collapsed",
-  );
+  const [expandCollapseValue, setExpandCollapseValue] =
+    useState<string>("collapsed");
 
   const deferredMatrixSearch = useDeferredValue(matrixSearchQuery);
 
@@ -396,7 +395,7 @@ export default function CmsRolesPermissionsPage({
         }
 
         const response = await fetch(
-          rolesPermissions.update.url({ role: roleId }),
+          rolesPermissions.update.url({ role: String(roleId) }),
           {
             method: "PATCH",
             headers: {

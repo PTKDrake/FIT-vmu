@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-const UpdateRoleController = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const UpdateRoleController = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateRoleController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ UpdateRoleController.definition = {
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-UpdateRoleController.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+UpdateRoleController.url = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { role: args }
     }
@@ -52,7 +52,7 @@ UpdateRoleController.url = (args: { role: number | { id: number } } | [role: num
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-UpdateRoleController.patch = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+UpdateRoleController.patch = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: UpdateRoleController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ UpdateRoleController.patch = (args: { role: number | { id: number } } | [role: n
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-const UpdateRoleControllerForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const UpdateRoleControllerForm = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateRoleController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const UpdateRoleControllerForm = (args: { role: number | { id: number } } | [rol
 * @see app/Http/Controllers/Cms/UpdateRoleController.php:16
 * @route '/cms/roles-permissions/{role}'
 */
-UpdateRoleControllerForm.patch = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+UpdateRoleControllerForm.patch = (args: { role: string | { id: string } } | [role: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: UpdateRoleController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

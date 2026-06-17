@@ -35,7 +35,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user() ? AuthenticatedUserResource::make($request->user()) : null,
                 'permissions' => fn (): array => $request->user()
-                    ? $request->user()->getPermissionNames()->sort()->values()->all()
+                    ? $request->user()->getAllPermissions()->pluck('name')->sort()->values()->all()
                     : [],
                 'social' => [
                     'googleEnabled' => filled(config('services.google.client_id'))

@@ -6,6 +6,7 @@ import {
 } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
 import { AppLogo } from "@/components/brand/app-logo";
 import { home, register } from "@/routes";
+import { dashboard as cmsDashboard } from "@/routes/cms";
 import { edit } from "@/routes/profile";
 import type { SharedData } from "@/types/shared";
 
@@ -27,7 +28,10 @@ export default function AppLayout({ children }: PropsWithChildren) {
             {auth.user ? (
               <>
                 {canAccessAdmin ? (
-                  <Link href="/cms" className="transition hover:text-fg">
+                  <Link
+                    href={cmsDashboard.url()}
+                    className="transition hover:text-fg"
+                  >
                     CMS
                   </Link>
                 ) : null}

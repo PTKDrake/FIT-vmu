@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useForm, Link, router } from "@inertiajs/react";
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MediaSelector } from "@/components/cms/media-selector";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
@@ -98,6 +98,8 @@ export function PostForm({
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [rejectionError, setRejectionError] = useState("");
+  const allowNextSubmitRef = useRef(false);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleApprove = () => {
     if (!initialValues.id) {
@@ -163,7 +165,15 @@ export function PostForm({
   function triggerSubmitWithStatus(status: "draft" | "pending"): void {
     form.setData("status", status);
     setTimeout(() => {
-      document.getElementById("post-form-submit-btn")?.click();
+      allowNextSubmitRef.current = true;
+
+      if (submitButtonRef.current) {
+        submitButtonRef.current.click();
+
+        return;
+      }
+
+      allowNextSubmitRef.current = false;
     }, 50);
   }
 
@@ -192,6 +202,12 @@ export function PostForm({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
+
+    if (!allowNextSubmitRef.current) {
+      return;
+    }
+
+    allowNextSubmitRef.current = false;
     onSubmit(form.data, form);
   }
 
@@ -207,7 +223,12 @@ export function PostForm({
       className="border border/60 rounded-2xl p-4 bg-overlay relative min-h-[85vh] flex flex-col justify-between w-full"
     >
       {/* Hidden native submit button to route form submit action */}
-      <button id="post-form-submit-btn" type="submit" className="hidden" />
+      <button
+        ref={submitButtonRef}
+        id="post-form-submit-btn"
+        type="submit"
+        className="hidden"
+      />
 
       {initialValues.status === "rejected" && initialValues.rejection_reason ? (
         <div className="mb-6 p-4 rounded-xl border border-danger/30 bg-danger/5 flex items-start gap-3 w-full animate-in fade-in duration-200">
@@ -285,6 +306,7 @@ export function PostForm({
 
             {/* Action Row right above the editor with a Fullscreen Toggle Button */}
             <Button
+              type="button"
               aria-label="Mở trình soạn thảo toàn màn hình"
               intent="plain"
               size="sm"
@@ -326,7 +348,10 @@ export function PostForm({
           </TextField>
 
           <div className="space-y-2">
-            <Label className="font-semibold text-fg text-sm" htmlFor="post-visibility">
+            <Label
+              className="font-semibold text-fg text-sm"
+              htmlFor="post-visibility"
+            >
               Phạm vi xem
             </Label>
             <select
@@ -334,7 +359,10 @@ export function PostForm({
               className="w-full rounded-xl border border-input bg-overlay px-3 py-2 text-sm text-fg shadow-xs"
               value={form.data.visibility}
               onChange={(event) =>
-                form.setData("visibility", event.target.value as PostFormValues["visibility"])
+                form.setData(
+                  "visibility",
+                  event.target.value as PostFormValues["visibility"],
+                )
               }
             >
               <option value="public">Công khai</option>
@@ -342,7 +370,9 @@ export function PostForm({
               <option value="students">Mọi sinh viên</option>
               <option value="student_groups">Nhóm sinh viên</option>
             </select>
-            <Description>Chọn phạm vi xem sau khi bài viết được xuất bản.</Description>
+            <Description>
+              Chọn phạm vi xem sau khi bài viết được xuất bản.
+            </Description>
             <FieldError>{form.errors.visibility}</FieldError>
           </div>
 
@@ -350,7 +380,9 @@ export function PostForm({
             <StudentGroupPicker
               allowGlobalScope={allowGlobalGroupCreation}
               error={form.errors.student_group_ids}
-              onChange={(groupIds) => form.setData("student_group_ids", groupIds)}
+              onChange={(groupIds) =>
+                form.setData("student_group_ids", groupIds)
+              }
               options={studentGroupOptions}
               selectedIds={form.data.student_group_ids}
             />
@@ -367,7 +399,7 @@ export function PostForm({
                   keys
                     .map((key) => Number(key))
                     .filter((value) => Number.isInteger(value)),
-                )
+                );
               }}
             >
               <Label className="font-semibold text-fg text-sm">
@@ -415,10 +447,7 @@ export function PostForm({
             <Select
               aria-label="Bố cục bài viết"
               onChange={(key) =>
-                form.setData(
-                  "site_layout_id",
-                  key ? Number(key) : null,
-                )
+                form.setData("site_layout_id", key ? Number(key) : null)
               }
               value={
                 form.data.site_layout_id != null
@@ -442,9 +471,7 @@ export function PostForm({
                   >
                     <SelectLabel>
                       {layout.name}
-                      {layout.id === defaultPostLayoutId
-                        ? " (mặc định)"
-                        : ""}
+                      {layout.id === defaultPostLayoutId ? " (mặc định)" : ""}
                     </SelectLabel>
                   </SelectItem>
                 ))}
@@ -470,6 +497,7 @@ export function PostForm({
           </Link>
           <div className="flex items-center gap-3">
             <Button
+              type="button"
               intent="secondary"
               isDisabled={form.processing || isPublishing}
               onPress={() => triggerSubmitWithStatus("draft")}
@@ -478,6 +506,7 @@ export function PostForm({
             </Button>
 
             <Button
+              type="button"
               intent="primary"
               isDisabled={form.processing || isPublishing}
               onPress={() => triggerSubmitWithStatus("pending")}
@@ -491,6 +520,7 @@ export function PostForm({
               <>
                 <div className="h-6 w-px bg-border mx-1" />
                 <Button
+                  type="button"
                   intent="danger"
                   isDisabled={form.processing || isPublishing}
                   onPress={() => setShowRejectModal(true)}
@@ -498,6 +528,7 @@ export function PostForm({
                   Từ chối duyệt
                 </Button>
                 <Button
+                  type="button"
                   intent="success"
                   isDisabled={form.processing || isPublishing}
                   onPress={handleApprove}
@@ -526,6 +557,7 @@ export function PostForm({
                 </span>
               </div>
               <Button
+                type="button"
                 intent="outline"
                 size="xs"
                 className="flex items-center gap-1.5 hover:text-fg hover:border-border/80 shadow-xs"
@@ -632,6 +664,7 @@ export function PostForm({
           </ModalBody>
           <ModalFooter>
             <Button
+              type="button"
               intent="outline"
               onPress={() => {
                 setShowRejectModal(false);
@@ -642,6 +675,7 @@ export function PostForm({
               Hủy
             </Button>
             <Button
+              type="button"
               intent="danger"
               isDisabled={isPublishing}
               onPress={handleReject}

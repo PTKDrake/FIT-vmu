@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-const RenameMediaController = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+const RenameMediaController = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: RenameMediaController.url(args, options),
     method: 'patch',
 })
@@ -19,7 +19,7 @@ RenameMediaController.definition = {
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-RenameMediaController.url = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+RenameMediaController.url = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { media: args }
     }
@@ -52,7 +52,7 @@ RenameMediaController.url = (args: { media: number | { id: number } } | [media: 
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-RenameMediaController.patch = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+RenameMediaController.patch = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: RenameMediaController.url(args, options),
     method: 'patch',
 })
@@ -62,7 +62,7 @@ RenameMediaController.patch = (args: { media: number | { id: number } } | [media
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-const RenameMediaControllerForm = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const RenameMediaControllerForm = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: RenameMediaController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -77,7 +77,7 @@ const RenameMediaControllerForm = (args: { media: number | { id: number } } | [m
 * @see app/Http/Controllers/Cms/RenameMediaController.php:15
 * @route '/cms/media/{media}/rename'
 */
-RenameMediaControllerForm.patch = (args: { media: number | { id: number } } | [media: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+RenameMediaControllerForm.patch = (args: { media: string | number | { id: string | number } } | [media: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: RenameMediaController.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',

@@ -141,7 +141,7 @@ store.form = storeForm
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-export const edit = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -156,7 +156,7 @@ edit.definition = {
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-edit.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+edit.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -189,7 +189,7 @@ edit.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number 
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-edit.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -199,7 +199,7 @@ edit.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number 
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-edit.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -209,7 +209,7 @@ edit.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-const editForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -219,7 +219,7 @@ const editForm = (args: { siteLayout: number | { id: number } } | [siteLayout: n
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-editForm.get = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
@@ -229,7 +229,7 @@ editForm.get = (args: { siteLayout: number | { id: number } } | [siteLayout: num
 * @see app/Http/Controllers/Cms/SiteLayoutEditController.php:16
 * @route '/cms/layouts/{siteLayout}/edit'
 */
-editForm.head = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -246,7 +246,7 @@ edit.form = editForm
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-export const update = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -261,7 +261,7 @@ update.definition = {
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-update.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -294,7 +294,7 @@ update.url = (args: { siteLayout: number | { id: number } } | [siteLayout: numbe
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-update.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -304,7 +304,7 @@ update.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: num
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-const updateForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -319,7 +319,7 @@ const updateForm = (args: { siteLayout: number | { id: number } } | [siteLayout:
 * @see app/Http/Controllers/Cms/UpdateSiteLayoutController.php:15
 * @route '/cms/layouts/{siteLayout}'
 */
-updateForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -336,7 +336,7 @@ update.form = updateForm
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-export const clone = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const clone = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clone.url(args, options),
     method: 'post',
 })
@@ -351,7 +351,7 @@ clone.definition = {
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-clone.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+clone.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -384,7 +384,7 @@ clone.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-clone.post = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+clone.post = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clone.url(args, options),
     method: 'post',
 })
@@ -394,7 +394,7 @@ clone.post = (args: { siteLayout: number | { id: number } } | [siteLayout: numbe
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-const cloneForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const cloneForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: clone.url(args, options),
     method: 'post',
 })
@@ -404,7 +404,7 @@ const cloneForm = (args: { siteLayout: number | { id: number } } | [siteLayout: 
 * @see app/Http/Controllers/Cms/CloneSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}/clone'
 */
-cloneForm.post = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+cloneForm.post = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: clone.url(args, options),
     method: 'post',
 })
@@ -416,7 +416,7 @@ clone.form = cloneForm
 * @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
-export const defaultMethod = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const defaultMethod = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: defaultMethod.url(args, options),
     method: 'patch',
 })
@@ -431,7 +431,7 @@ defaultMethod.definition = {
 * @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
-defaultMethod.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+defaultMethod.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -464,7 +464,7 @@ defaultMethod.url = (args: { siteLayout: number | { id: number } } | [siteLayout
 * @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
-defaultMethod.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+defaultMethod.patch = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: defaultMethod.url(args, options),
     method: 'patch',
 })
@@ -474,7 +474,7 @@ defaultMethod.patch = (args: { siteLayout: number | { id: number } } | [siteLayo
 * @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
-const defaultMethodForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const defaultMethodForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: defaultMethod.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -489,7 +489,7 @@ const defaultMethodForm = (args: { siteLayout: number | { id: number } } | [site
 * @see app/Http/Controllers/Cms/SetDefaultSiteLayoutController.php:16
 * @route '/cms/layouts/{siteLayout}/default'
 */
-defaultMethodForm.patch = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+defaultMethodForm.patch = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: defaultMethod.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -506,7 +506,7 @@ defaultMethod.form = defaultMethodForm
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-export const destroy = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -521,7 +521,7 @@ destroy.definition = {
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-destroy.url = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteLayout: args }
     }
@@ -554,7 +554,7 @@ destroy.url = (args: { siteLayout: number | { id: number } } | [siteLayout: numb
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-destroy.delete = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -564,7 +564,7 @@ destroy.delete = (args: { siteLayout: number | { id: number } } | [siteLayout: n
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-const destroyForm = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -579,7 +579,7 @@ const destroyForm = (args: { siteLayout: number | { id: number } } | [siteLayout
 * @see app/Http/Controllers/Cms/DeleteSiteLayoutController.php:14
 * @route '/cms/layouts/{siteLayout}'
 */
-destroyForm.delete = (args: { siteLayout: number | { id: number } } | [siteLayout: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { siteLayout: string | number | { id: string | number } } | [siteLayout: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
