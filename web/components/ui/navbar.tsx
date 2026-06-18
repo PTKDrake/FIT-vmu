@@ -340,8 +340,8 @@ const NavbarMenu = ({
           handleOpenState(false);
         }}
         className={twMerge(
-          "relative min-w-0 md:after:pointer-events-none md:after:absolute md:after:left-0 md:after:top-full md:after:z-[200] md:after:h-3 md:after:w-full md:after:content-['']",
-          isOpen ? "z-[200] md:after:pointer-events-auto" : "",
+          "relative min-w-0 md:after:pointer-events-none md:after:absolute md:after:left-0 md:after:top-full md:after:z-200 md:after:h-3 md:after:w-full md:after:content-['']",
+          isOpen ? "z-200 md:after:pointer-events-auto" : "",
           className,
         )}
         {...props}
@@ -396,7 +396,7 @@ const NavbarSubmenu = ({
       className={twMerge(
         [
           "invisible mt-0 flex flex-col bg-bg ps-3 opacity-0 transition-[opacity,transform,visibility] duration-150 data-[open=true]:visible data-[open=true]:opacity-100",
-          "md:pointer-events-none md:absolute md:left-0 md:top-[calc(100%-0.25rem)] md:z-[210] md:min-w-48 md:translate-y-1 md:overflow-hidden md:rounded-md md:border md:border-border md:bg-overlay md:p-1 md:ps-1 md:pt-2 md:text-fg md:shadow-lg md:ring-1 md:ring-border/60 md:data-[open=true]:pointer-events-auto md:data-[open=true]:translate-y-0",
+          "md:pointer-events-none md:absolute md:left-0 md:top-[calc(100%-0.25rem)] md:z-210 md:min-w-48 md:translate-y-1 md:overflow-hidden md:rounded-md md:border md:border-border md:bg-overlay md:p-1 md:ps-1 md:pt-2 md:text-fg md:shadow-lg md:ring-1 md:ring-border/60 md:data-[open=true]:pointer-events-auto md:data-[open=true]:translate-y-0",
         ],
         className,
       )}

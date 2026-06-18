@@ -95,7 +95,7 @@ export function FitNavigationBar({
   return (
     <header
       className={twMerge(
-        "relative z-[200] w-full overflow-visible rounded-3xl border border-border bg-bg/95 px-3 py-2.5 text-fg shadow-xl shadow-fg/5 backdrop-blur md:px-6 md:py-3",
+        "relative z-200 w-full overflow-visible rounded-3xl border border-border bg-bg/95 px-3 py-2.5 text-fg shadow-xl shadow-fg/5 backdrop-blur md:px-6 md:py-3",
         className,
       )}
     >

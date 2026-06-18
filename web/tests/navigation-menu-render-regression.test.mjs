@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const dynamicBlocksSource = readFileSync(
-    new URL("../lib/puck/blocks/dynamic.tsx", import.meta.url),
+    new URL("../lib/puck/blocks/dynamic/navigation.tsx", import.meta.url),
+    "utf8",
+);
+const dynamicSharedSource = readFileSync(
+    new URL("../lib/puck/blocks/dynamic/shared.tsx", import.meta.url),
     "utf8",
 );
 const flexBlockSource = readFileSync(
@@ -61,7 +65,7 @@ test("NavigationMenu block stacks safely before container space allows horizonta
         /md:\[&>\[data-puck-component\]:has\(\[data-vmu-puck-block='navigation-menu'\]\)\]:basis-\[44rem\]/,
     );
     assert.match(
-        dynamicBlocksSource,
+        dynamicSharedSource,
         /return "w-full min-w-0 md:grow md:basis-\[44rem\] md:max-w-none"/,
     );
     assert.match(dynamicBlocksSource, /growFromMd \? "md:grow" : ""/);
@@ -78,7 +82,7 @@ test("NavigationMenu block includes a dedicated mobile drawer path for horizonta
 });
 
 test("Fit navigation header creates an unclipped dropdown stacking layer", () => {
-    assert.match(fitNavigationBarSource, /relative z-\[200\]/);
+    assert.match(fitNavigationBarSource, /relative z-200/);
     assert.match(fitNavigationBarSource, /overflow-visible/);
     assert.match(fitNavigationBarSource, /backdrop-blur/);
     assert.match(fitNavigationBarSource, /<NavbarGroup/);

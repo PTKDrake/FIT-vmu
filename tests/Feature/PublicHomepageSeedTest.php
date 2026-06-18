@@ -51,10 +51,10 @@ test('public homepage is seeded through site layout and page data', function () 
     $footerContent = json_decode($layout->footer_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
     expect(collect($headerContent['content'])->pluck('type')->all())->toBe([
-        'Container',
+        'FitNavigationHeader',
     ])
         ->and(collect($footerContent['content'])->pluck('type')->all())->toBe([
-            'Container',
+            'FitFooter',
         ])
         ->and(homepageBlocksHaveIds($pageContent['content']))->toBeTrue()
         ->and(homepageBlocksHaveIds($headerContent['content']))->toBeTrue()

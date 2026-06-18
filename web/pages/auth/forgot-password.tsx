@@ -1,6 +1,5 @@
 import { Form, Head } from "@inertiajs/react";
-import type { ReactNode } from "react";
-import GuestLayout from "@/layouts/guest-layout";
+import { withAuthLayout } from "@/layouts/auth-layout";
 
 interface ForgotPasswordPageProps {
   status?: string;
@@ -52,11 +51,4 @@ export default function ForgotPasswordPage({
   );
 }
 
-ForgotPasswordPage.layout = (page: ReactNode) => (
-  <GuestLayout
-    header="Quên mật khẩu"
-    description="Nhập địa chỉ email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu."
-  >
-    {page}
-  </GuestLayout>
-);
+ForgotPasswordPage.layout = withAuthLayout("auth/forgot-password");

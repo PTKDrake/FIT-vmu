@@ -53,6 +53,7 @@ export {
   UnitListComponentConfig,
   RelatedPostsComponentConfig,
   FitNavigationHeaderComponentConfig,
+  FitFooterComponentConfig,
   NavigationMenuComponentConfig,
   CategoriesComponentConfig,
   PageLinksComponentConfig,

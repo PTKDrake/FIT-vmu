@@ -1,6 +1,5 @@
 import { Form, Head } from "@inertiajs/react";
-import type { ReactNode } from "react";
-import GuestLayout from "@/layouts/guest-layout";
+import { withAuthLayout } from "@/layouts/auth-layout";
 
 interface VerifyEmailPageProps {
   status?: string;
@@ -36,11 +35,4 @@ export default function VerifyEmailPage({ status }: VerifyEmailPageProps) {
   );
 }
 
-VerifyEmailPage.layout = (page: ReactNode) => (
-  <GuestLayout
-    header="Xác thực email"
-    description="Kiểm tra hộp thư và xác nhận địa chỉ của bạn."
-  >
-    {page}
-  </GuestLayout>
-);
+VerifyEmailPage.layout = withAuthLayout("auth/verify-email");

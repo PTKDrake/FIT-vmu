@@ -12,171 +12,134 @@ class DefaultSiteLayoutSeeder extends Seeder
 {
     public function run(): void
     {
-        $headerData = PuckSeedData::forSlot([
-            [
-                'type' => 'Container',
-                'props' => [
-                    'maxWidth' => 'xl',
-                    'children' => [
-                        [
-                            'type' => 'Heading',
-                            'props' => [
-                                'title' => 'Khoa Công nghệ thông tin',
-                                'subtitle' => 'Trường Đại học Hàng hải Việt Nam',
-                                'fullWidthOnMobile' => true,
-                                'autoWidthFromMd' => true,
-                                'noShrinkFromMd' => true,
+        $layoutData = PuckSeedData::splitSiteLayout(<<<'JSON'
+        {
+            "root": {
+                "props": {}
+            },
+            "content": [
+                {
+                "type": "SiteLayoutFrame",
+                "props": {
+                    "footer": [
+                        {
+                            "type": "FitFooter",
+                            "props": {
+                            "showBrand": true,
+                            "showContact": true,
+                            "showQuickLinks": true,
+                            "showSupportLinks": true,
+                            "showSocialLinks": true,
+                            "showCopyright": true,
+                            "showLegalLinks": true,
+                            "logoUrl": "/logo.png",
+                            "logoAlt": "Logo Khoa CNTT",
+                            "siteName": "Khoa CNTT",
+                            "organizationName": "Trường Đại học Hàng hải Việt Nam",
+                            "description": "Khoa CNTT tiên phong trong đào tạo gắn thực tiễn, phát triển năng lực công nghệ, nghiên cứu ứng dụng và kết nối doanh nghiệp.",
+                            "contactTitle": "Thông tin liên hệ",
+                            "address": "Phòng 301, Nhà A3, 484 Lạch Tray, Ngô Quyền, Hải Phòng",
+                            "phone": "0225 3783 138",
+                            "email": "fit@vimaru.edu.vn",
+                            "quickLinksTitle": "Liên kết nhanh",
+                            "quickLinksMenuId": "1",
+                            "supportTitle": "Hỗ trợ",
+                            "supportLinks": [
+                                {
+                                "label": "Cổng thông tin sinh viên",
+                                "url": "#",
+                                "icon": "users"
+                                },
+                                {
+                                "label": "Email sinh viên",
+                                "url": "mailto:fit@vimaru.edu.vn",
+                                "icon": "mail"
+                                },
+                                {
+                                "label": "Thư viện số",
+                                "url": "#",
+                                "icon": "book"
+                                },
+                                {
+                                "label": "Hướng dẫn",
+                                "url": "#",
+                                "icon": "help"
+                                }
                             ],
-                        ],
-                        [
-                            'type' => 'NavigationMenu',
-                            'props' => [
-                                'menuId' => '1',
-                                'orientation' => 'horizontal',
-                                'mobileButtonLabel' => 'Mở menu điều hướng',
-                                'mobileLogoAlt' => 'FIT VMU',
-                                'mobileLogoUrl' => '/logo.png',
-                                'mobilePanelTitle' => 'Khoa Công nghệ thông tin',
-                                'layoutPreset' => 'headerPrimary',
-                                'fullWidthOnMobile' => true,
-                                'growFromMd' => true,
-                                'basisFromMd' => '44rem',
-                                'maxWidth' => 'none',
-                                'surfaceTone' => 'transparent',
-                                'surfaceBorder' => 'none',
-                                'surfaceRadius' => 'none',
-                                'surfacePadding' => 'none',
-                                'surfaceShadow' => 'none',
-                                'className' => '',
+                            "socialTitle": "Kết nối với chúng tôi",
+                            "socialLinks": [
+                                {
+                                "platform": "facebook",
+                                "url": "https://facebook.com",
+                                "label": ""
+                                },
+                                {
+                                "platform": "youtube",
+                                "url": "https://youtube.com",
+                                "label": ""
+                                },
+                                {
+                                "platform": "email",
+                                "url": "mailto:fit@vimaru.edu.vn",
+                                "label": ""
+                                }
                             ],
-                        ],
-                        [
-                            'type' => 'AuthStatus',
-                            'props' => [
-                                'buttonLabel' => 'Đăng nhập',
-                                'profileVariant' => 'compact',
-                                'layoutPreset' => 'headerActions',
-                                'fullWidthOnMobile' => true,
-                                'autoWidthFromMd' => true,
-                                'noShrinkFromMd' => true,
-                                'className' => '',
+                            "copyrightText": "© {year} Khoa CNTT - Trường Đại học Hàng hải Việt Nam. All rights reserved.",
+                            "legalLinks": [
+                                {
+                                "label": "Chính sách bảo mật",
+                                "url": "#"
+                                },
+                                {
+                                "label": "Điều khoản sử dụng",
+                                "url": "#"
+                                },
+                                {
+                                "label": "Sơ đồ website",
+                                "url": "#"
+                                }
                             ],
-                        ],
+                            "className": "",
+                            "id": "FitFooter-4eb723ee-fe67-4dec-a25c-37e20ed46e39"
+                            }
+                        }
                     ],
-                ],
-            ],
-        ], 'site-layout-header');
-
-        $footerData = PuckSeedData::forSlot([
-            [
-                'type' => 'Container',
-                'props' => [
-                    'maxWidth' => 'xl',
-                    'children' => [
-                        [
-                            'type' => 'ContactInfo',
-                            'props' => [
-                                'title' => 'Liên hệ',
-                                'address' => '484 Lạch Tray, Kênh Dương, Lê Chân, Hải Phòng',
-                                'phone' => '(0225) 3829 109',
-                                'email' => 'fit@vimaru.edu.vn',
-                                'layoutPreset' => 'footerContact',
-                                'maxWidth' => 'sm',
-                                'textAlign' => 'center',
-                                'textAlignFromLg' => 'left',
-                                'positionFromLg' => 'start',
-                                'surfaceTone' => 'transparent',
-                                'surfaceBorder' => 'none',
-                                'surfaceRadius' => 'none',
-                                'surfacePadding' => 'none',
-                                'surfaceShadow' => 'none',
-                                'className' => '',
-                            ],
-                        ],
-                        [
-                            'type' => 'NavigationMenu',
-                            'props' => [
-                                'title' => 'Điều hướng',
-                                'menuId' => '1',
-                                'orientation' => 'vertical',
-                                'layoutPreset' => 'footerMenu',
-                                'maxWidth' => 'sm',
-                                'textAlign' => 'center',
-                                'textAlignFromLg' => 'left',
-                                'positionFromLg' => 'end',
-                                'surfaceTone' => 'transparent',
-                                'surfaceBorder' => 'none',
-                                'surfaceRadius' => 'none',
-                                'surfacePadding' => 'none',
-                                'surfaceShadow' => 'none',
-                                'className' => '',
-                            ],
-                        ],
-                        [
-                            'type' => 'SocialLinks',
-                            'props' => [
-                                'links' => [
-                                    [
-                                        'platform' => 'facebook',
-                                        'url' => 'https://facebook.com/groups/fitvmu',
-                                        'label' => 'Facebook Group',
-                                    ],
-                                    [
-                                        'platform' => 'youtube',
-                                        'url' => 'https://youtube.com/@fitvmu',
-                                        'label' => 'YouTube',
-                                    ],
-                                    [
-                                        'platform' => 'email',
-                                        'url' => 'mailto:fit@vimaru.edu.vn',
-                                        'label' => 'fit@vimaru.edu.vn',
-                                    ],
-                                ],
-                                'layout' => 'horizontal',
-                                'iconSize' => 'md',
-                                'showLabels' => true,
-                                'surfaceTone' => 'transparent',
-                                'surfaceBorder' => 'none',
-                                'surfaceRadius' => 'none',
-                                'surfacePadding' => 'none',
-                                'surfaceShadow' => 'none',
-                                'className' => '',
-                            ],
-                        ],
-                        [
-                            'type' => 'CopyrightBar',
-                            'props' => [
-                                'text' => '© {year} Faculty of Information Technology, VMU. All rights reserved.',
-                                'links' => [
-                                    [
-                                        'label' => 'Chính sách bảo mật',
-                                        'url' => '#',
-                                    ],
-                                    [
-                                        'label' => 'Điều khoản sử dụng',
-                                        'url' => '#',
-                                    ],
-                                ],
-                                'surfaceTone' => 'transparent',
-                                'surfaceBorder' => 'none',
-                                'surfaceRadius' => 'none',
-                                'surfacePadding' => 'md',
-                                'surfaceShadow' => 'none',
-                                'className' => '',
-                            ],
-                        ],
+                    "right": [],
+                    "left": [],
+                    "header": [
+                    {
+                        "type": "FitNavigationHeader",
+                        "props": {
+                        "logoUrl": "/logo.png",
+                        "logoAlt": "Logo Khoa CNTT",
+                        "siteName": "Khoa CNTT",
+                        "organizationName": "Trường Đại học Hàng hải Việt Nam",
+                        "menuId": "1",
+                        "menuAriaLabel": "Menu điều hướng chính",
+                        "searchHref": "/search",
+                        "searchLabel": "Tìm kiếm",
+                        "loginLabel": "Đăng nhập",
+                        "profileLabel": "Tài khoản",
+                        "className": "",
+                        "id": "FitNavigationHeader-51c792d8-e4de-40d7-8c2a-e0f2cb1f4b55"
+                        }
+                    }
                     ],
-                ],
+                    "id": "site-layout-frame"
+                }
+                }
             ],
-        ], 'site-layout-footer');
+            "zones": {}
+        }
+        JSON);
 
         SiteLayout::query()->updateOrCreate(
             ['key' => 'default-page-layout'],
             [
                 'name' => 'Bố cục trang mặc định',
                 'key' => 'default-page-layout',
-                'header_data' => $headerData,
-                'footer_data' => $footerData,
+                'header_data' => $layoutData['header_data'],
+                'footer_data' => $layoutData['footer_data'],
                 'left_data' => null,
                 'right_data' => null,
             ],
@@ -186,8 +149,8 @@ class DefaultSiteLayoutSeeder extends Seeder
             [
                 'name' => 'Bố cục bài viết mặc định',
                 'key' => 'default-post-layout',
-                'header_data' => $headerData,
-                'footer_data' => $footerData,
+                'header_data' => $layoutData['header_data'],
+                'footer_data' => $layoutData['footer_data'],
                 'left_data' => null,
                 'right_data' => null,
             ],

@@ -1,9 +1,8 @@
 import { Form, Head, Link, usePage } from "@inertiajs/react";
-import type { ReactNode } from "react";
 import { store as loginStore } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
 import { redirect as googleRedirect } from "@/actions/App/Http/Controllers/Auth/GoogleOAuthController";
 import { create as registerCreate } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController";
-import GuestLayout from "@/layouts/guest-layout";
+import { withAuthLayout } from "@/layouts/auth-layout";
 import { request as forgotPasswordRequest } from "@/routes/password";
 import type { SharedData } from "@/types/shared";
 
@@ -94,7 +93,9 @@ export default function LoginPage({
               <>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <span className="text-sm text-muted-fg">Hoặc tiếp tục với</span>
+                  <span className="text-sm text-muted-fg">
+                    Hoặc tiếp tục với
+                  </span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -124,15 +125,6 @@ export default function LoginPage({
   );
 }
 
-LoginPage.layout = (page: ReactNode) => (
-  <GuestLayout
-    header="Đăng nhập vào tài khoản"
-    description="Nhập email của bạn bên dưới để đăng nhập vào tài khoản."
-  >
-    {page}
-  </GuestLayout>
-);
-
 function GoogleMark() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className="size-4">
@@ -155,3 +147,5 @@ function GoogleMark() {
     </svg>
   );
 }
+
+LoginPage.layout = withAuthLayout("auth/login");

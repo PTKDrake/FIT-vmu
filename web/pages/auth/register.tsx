@@ -1,9 +1,8 @@
 import { Form, Head, Link, usePage } from "@inertiajs/react";
-import type { ReactNode } from "react";
 import { create as loginCreate } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
 import { redirect as googleRedirect } from "@/actions/App/Http/Controllers/Auth/GoogleOAuthController";
 import { store as registerStore } from "@/actions/App/Http/Controllers/Auth/RegisteredUserController";
-import GuestLayout from "@/layouts/guest-layout";
+import { withAuthLayout } from "@/layouts/auth-layout";
 import type { SharedData } from "@/types/shared";
 
 interface RegisterFieldDefinition {
@@ -95,7 +94,9 @@ export default function RegisterPage() {
               <>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <span className="text-sm text-muted-fg">Hoặc tiếp tục với</span>
+                  <span className="text-sm text-muted-fg">
+                    Hoặc tiếp tục với
+                  </span>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -125,15 +126,6 @@ export default function RegisterPage() {
   );
 }
 
-RegisterPage.layout = (page: ReactNode) => (
-  <GuestLayout
-    header="Tạo tài khoản"
-    description="Điền thông tin bên dưới để tạo tài khoản của bạn."
-  >
-    {page}
-  </GuestLayout>
-);
-
 function GoogleMark() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className="size-4">
@@ -156,3 +148,5 @@ function GoogleMark() {
     </svg>
   );
 }
+
+RegisterPage.layout = withAuthLayout("auth/register");

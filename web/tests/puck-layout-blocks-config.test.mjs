@@ -22,6 +22,34 @@ const siteLayoutFrameSource = readFileSync(
     new URL("../lib/puck/blocks/site-layout-frame.tsx", import.meta.url),
     "utf8",
 );
+const dynamicFooterSource = readFileSync(
+    new URL("../lib/puck/blocks/dynamic/footer.tsx", import.meta.url),
+    "utf8",
+);
+const dynamicFeedsSource = readFileSync(
+    new URL("../lib/puck/blocks/dynamic/feeds.tsx", import.meta.url),
+    "utf8",
+);
+const dynamicNavigationSource = readFileSync(
+    new URL("../lib/puck/blocks/dynamic/navigation.tsx", import.meta.url),
+    "utf8",
+);
+const dynamicSharedSource = readFileSync(
+    new URL("../lib/puck/blocks/dynamic/shared.tsx", import.meta.url),
+    "utf8",
+);
+const sharedSource = readFileSync(
+    new URL("../lib/puck/blocks/shared.tsx", import.meta.url),
+    "utf8",
+);
+const blocksIndexSource = readFileSync(
+    new URL("../lib/puck/blocks/index.ts", import.meta.url),
+    "utf8",
+);
+const pageConfigSource = readFileSync(
+    new URL("../lib/puck/configs/page-config.tsx", import.meta.url),
+    "utf8",
+);
 const layoutConfigsSource = readFileSync(
     new URL("../lib/puck/configs/layout-configs.tsx", import.meta.url),
     "utf8",
@@ -168,6 +196,10 @@ test("page builder data types stay aligned with the new layout fields", () => {
 
 test("site layout builder uses one frame with four puck slots", () => {
     assert.match(dataSource, /SiteLayoutFrame: PuckSurfaceStyleProps & \{/);
+    assert.match(dataSource, /FitFooter: \{/);
+    assert.match(dataSource, /showBrand\?: boolean/);
+    assert.match(dataSource, /quickLinksMenuId\?: string/);
+    assert.match(dataSource, /logoUrl\?: PuckImageValue/);
     assert.match(layoutConfigsSource, /permissions:\s*\{\s*insert:\s*false,\s*\}/);
     assert.match(siteLayoutFrameSource, /defaultProps: \{/);
     assert.match(siteLayoutFrameSource, /permissions: \{/);
@@ -194,9 +226,8 @@ test("site layout builder uses one frame with four puck slots", () => {
     assert.match(siteLayoutFrameSource, /<Left className=\{slotClassName\} minEmptyHeight=\{200\} \/>/);
     assert.match(siteLayoutFrameSource, /<Right className=\{slotClassName\} minEmptyHeight=\{200\} \/>/);
     assert.match(siteLayoutFrameSource, /<Footer className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
-    assert.match(siteLayoutFrameSource, /"SocialLinks"/);
     assert.match(siteLayoutFrameSource, /"NewsletterForm"/);
-    assert.match(siteLayoutFrameSource, /"CopyrightBar"/);
+    assert.match(siteLayoutFrameSource, /"FitFooter"/);
     assert.match(
         siteLayoutFrameSource,
         /<SiteLayoutShellFrame/,
@@ -211,6 +242,37 @@ test("site layout builder uses one frame with four puck slots", () => {
     assert.match(siteLayoutOutlinePluginSource, /Left sidebar/);
     assert.match(siteLayoutOutlinePluginSource, /Right sidebar/);
     assert.match(siteLayoutOutlinePluginSource, /Footer/);
+});
+
+test("FitFooter is registered for layout footer only", () => {
+    assert.match(blocksIndexSource, /FitFooterComponentConfig/);
+    assert.match(pageConfigSource, /FitFooter:\s*FitFooterComponentConfig/);
+    assert.match(layoutConfigsSource, /siteLayoutFooterComponents/);
+    assert.match(layoutConfigsSource, /"FitFooter"/);
+    assert.match(siteLayoutFrameSource, /export const siteLayoutFooterComponents = \[/);
+    assert.match(siteLayoutFrameSource, /"FitFooter"/);
+
+    const pageCategoriesSource = pageConfigSource.slice(
+        pageConfigSource.indexOf("export const pageConfig"),
+    );
+
+    assert.doesNotMatch(pageCategoriesSource, /components:\s*\[[\s\S]*"FitFooter"/);
+});
+
+test("FitFooter fields use cms media, navigation menu source, and toggle-gated details", () => {
+    assert.match(dynamicFooterSource, /export const FitFooterComponentConfig/);
+    assert.match(dynamicFooterSource, /logoUrl:\s*\{\s*type: "text",\s*label: "Logo"/);
+    assert.match(sharedSource, /PUCK_MEDIA_FIELD_NAMES[\s\S]*"logoUrl"/);
+    assert.match(dynamicFooterSource, /quickLinksMenuId:\s*\{\s*type: "select"/);
+    assert.match(dynamicSharedSource, /fetchSourceOptions\("navigation-menus"\)/);
+    assert.match(dynamicFooterSource, /resolveFields:\s*async/);
+    assert.match(dynamicFooterSource, /if \(props\.showBrand\) \{/);
+    assert.match(dynamicFooterSource, /if \(props\.showContact\) \{/);
+    assert.match(dynamicFooterSource, /if \(props\.showQuickLinks\) \{/);
+    assert.match(dynamicFooterSource, /if \(props\.showSupportLinks\) \{/);
+    assert.match(dynamicFooterSource, /if \(props\.showSocialLinks\) \{/);
+    assert.match(dynamicFooterSource, /if \(props\.showCopyright\) \{/);
+    assert.match(dynamicFooterSource, /if \(props\.showLegalLinks\) \{/);
 });
 
 test("site layout builder data helpers compose and split slot payloads", () => {

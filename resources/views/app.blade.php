@@ -34,9 +34,8 @@
         <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
 
         <!-- Scripts -->
-        @php($stylesheet = str_starts_with($page['component'], 'public/') ? 'resources/css/public.css' : 'resources/css/app.css')
         @viteReactRefresh
-        @vite([$stylesheet, 'web/app.tsx', "web/pages/{$page['component']}.tsx"])
+        @vite(['resources/css/public.css', 'resources/css/app.css', 'web/app.tsx', "web/pages/{$page['component']}.tsx"])
         @inertiaHead
     </head>
     <body class="font-sans antialiased">

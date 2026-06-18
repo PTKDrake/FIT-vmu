@@ -5,7 +5,9 @@ import { test } from "node:test";
 const files = [
     "web/lib/puck/blocks/content.tsx",
     "web/lib/puck/blocks/sections.tsx",
-    "web/lib/puck/blocks/dynamic.tsx",
+    "web/lib/puck/blocks/dynamic/feeds.tsx",
+    "web/lib/puck/blocks/dynamic/navigation.tsx",
+    "web/lib/puck/blocks/dynamic/footer.tsx",
     "web/lib/puck/blocks/site-layout-frame.tsx",
     "web/lib/puck/blocks/surface.ts",
 ];

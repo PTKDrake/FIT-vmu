@@ -372,6 +372,54 @@ export interface VmuFitPageBuilderComponents {
     profileLabel?: string;
     className?: string;
   };
+  FitFooter: {
+    showBrand?: boolean;
+    showContact?: boolean;
+    showQuickLinks?: boolean;
+    showSupportLinks?: boolean;
+    showSocialLinks?: boolean;
+    showCopyright?: boolean;
+    showLegalLinks?: boolean;
+    logoUrl?: PuckImageValue;
+    logoAlt?: string;
+    siteName?: string;
+    organizationName?: string;
+    description?: string;
+    contactTitle?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    quickLinksTitle?: string;
+    quickLinksMenuId?: string;
+    supportTitle?: string;
+    supportLinks?: {
+      label: string;
+      url: string;
+      icon: "users" | "mail" | "book" | "help" | "globe";
+    }[];
+    socialTitle?: string;
+    socialLinks?: {
+      platform:
+        | "facebook"
+        | "youtube"
+        | "x"
+        | "instagram"
+        | "github"
+        | "tiktok"
+        | "zalo"
+        | "email"
+        | "phone"
+        | "website";
+      url: string;
+      label?: string;
+    }[];
+    copyrightText?: string;
+    legalLinks?: {
+      label: string;
+      url: string;
+    }[];
+    className?: string;
+  };
   NavigationMenu: PuckSurfaceStyleProps & {
     title?: string;
     menuId?: string;

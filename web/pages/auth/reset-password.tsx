@@ -1,6 +1,5 @@
 import { Form, Head } from "@inertiajs/react";
-import type { ReactNode } from "react";
-import GuestLayout from "@/layouts/guest-layout";
+import { withAuthLayout } from "@/layouts/auth-layout";
 
 interface ResetPasswordPageProps {
   email: string;
@@ -86,11 +85,4 @@ export default function ResetPasswordPage({
   );
 }
 
-ResetPasswordPage.layout = (page: ReactNode) => (
-  <GuestLayout
-    header="Đặt lại mật khẩu"
-    description="Chọn một mật khẩu mới cho tài khoản của bạn."
-  >
-    {page}
-  </GuestLayout>
-);
+ResetPasswordPage.layout = withAuthLayout("auth/reset-password");

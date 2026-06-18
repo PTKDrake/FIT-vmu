@@ -22,66 +22,44 @@ test('public site footer seed stays aligned with social and copyright block prop
      */
     $footerContent = json_decode($layout->footer_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    $socialLinksBlock = findSeededBlockByType($footerContent['content'], 'SocialLinks');
-    $copyrightBarBlock = findSeededBlockByType($footerContent['content'], 'CopyrightBar');
+    $fitFooterBlock = findSeededBlockByType($footerContent['content'], 'FitFooter');
 
-    expect($socialLinksBlock)->not->toBeNull()
-        ->and($socialLinksBlock['props'])->toMatchArray([
-            'layout' => 'horizontal',
-            'iconSize' => 'md',
-            'showLabels' => true,
-            'surfaceTone' => 'transparent',
-            'surfaceBorder' => 'none',
-            'surfaceRadius' => 'none',
-            'surfacePadding' => 'none',
-            'surfaceShadow' => 'none',
-        ])
-        ->and($socialLinksBlock['props']['links'])->toBeArray()
-        ->and($socialLinksBlock['props']['links'])->toHaveCount(3)
-        ->and($socialLinksBlock['props']['links'][0])->toMatchArray([
-            'platform' => 'facebook',
-            'label' => 'Facebook Group',
-        ])
-        ->and($socialLinksBlock['props']['links'][2])->toMatchArray([
-            'platform' => 'email',
-            'label' => 'fit@vimaru.edu.vn',
-        ])
-        ->and($copyrightBarBlock)->not->toBeNull()
-        ->and($copyrightBarBlock['props'])->toMatchArray([
-            'text' => '© {year} Faculty of Information Technology, VMU. All rights reserved.',
-            'surfaceTone' => 'transparent',
-            'surfaceBorder' => 'none',
-            'surfaceRadius' => 'none',
-            'surfacePadding' => 'md',
-            'surfaceShadow' => 'none',
+    expect($fitFooterBlock)->not->toBeNull()
+        ->and($fitFooterBlock['props'])->toMatchArray([
+            'showBrand' => true,
+            'showContact' => true,
+            'showQuickLinks' => true,
+            'showSupportLinks' => true,
+            'showSocialLinks' => true,
+            'showCopyright' => true,
+            'showLegalLinks' => true,
+            'quickLinksMenuId' => '1',
             'className' => '',
         ])
-        ->and($copyrightBarBlock['props']['links'])->toBeArray()
-        ->and($copyrightBarBlock['props']['links'])->toHaveCount(2)
-        ->and($copyrightBarBlock['props']['links'][0])->toMatchArray([
-            'label' => 'Chính sách bảo mật',
-        ]);
-
-    $contactInfoBlock = findSeededBlockByType($footerContent['content'], 'ContactInfo');
-    $footerNavigationBlock = findSeededBlockByType($footerContent['content'], 'NavigationMenu');
-
-    expect($contactInfoBlock)->not->toBeNull()
-        ->and($contactInfoBlock['props'])->toMatchArray([
-            'maxWidth' => 'sm',
-            'textAlign' => 'center',
-            'textAlignFromLg' => 'left',
-            'positionFromLg' => 'start',
+        ->and($fitFooterBlock['props']['socialLinks'])->toBeArray()
+        ->and($fitFooterBlock['props']['socialLinks'])->toHaveCount(3)
+        ->and($fitFooterBlock['props']['socialLinks'][0])->toMatchArray([
+            'platform' => 'facebook',
         ])
-        ->and($footerNavigationBlock)->not->toBeNull()
-        ->and($footerNavigationBlock['props'])->toMatchArray([
-            'maxWidth' => 'sm',
-            'textAlign' => 'center',
-            'textAlignFromLg' => 'left',
-            'positionFromLg' => 'end',
+        ->and($fitFooterBlock['props']['socialLinks'][2])->toMatchArray([
+            'platform' => 'email',
+            'url' => 'mailto:fit@vimaru.edu.vn',
+        ])
+        ->and($fitFooterBlock['props']['legalLinks'])->toBeArray()
+        ->and($fitFooterBlock['props']['legalLinks'])->toHaveCount(3)
+        ->and($fitFooterBlock['props']['legalLinks'][0])->toMatchArray([
+            'label' => 'Chính sách bảo mật',
+        ])
+        ->and($fitFooterBlock['props']['supportLinks'])->toBeArray()
+        ->and($fitFooterBlock['props']['supportLinks'])->toHaveCount(4)
+        ->and($fitFooterBlock['props'])->toMatchArray([
+            'contactTitle' => 'Thông tin liên hệ',
+            'siteName' => 'Khoa CNTT',
+            'organizationName' => 'Trường Đại học Hàng hải Việt Nam',
         ]);
 });
 
-test('public site header seed exposes mobile drawer props for the navigation block', function () {
+test('public site header seed is consolidated into the FIT navigation block', function () {
     $this->seed(DatabaseSeeder::class);
 
     $layout = SiteLayout::query()
@@ -97,40 +75,18 @@ test('public site header seed exposes mobile drawer props for the navigation blo
      */
     $headerContent = json_decode($layout->header_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    $navigationBlock = findSeededBlockByType($headerContent['content'], 'NavigationMenu');
+    $navigationBlock = findSeededBlockByType($headerContent['content'], 'FitNavigationHeader');
 
     expect($navigationBlock)->not->toBeNull()
         ->and($navigationBlock['props'])->toMatchArray([
             'menuId' => '1',
-            'orientation' => 'horizontal',
-            'mobileButtonLabel' => 'Mở menu điều hướng',
-            'mobileLogoAlt' => 'FIT VMU',
-            'mobileLogoUrl' => '/logo.png',
-            'mobilePanelTitle' => 'Khoa Công nghệ thông tin',
-            'fullWidthOnMobile' => true,
-            'growFromMd' => true,
-            'basisFromMd' => '44rem',
-            'maxWidth' => 'none',
-        ]);
-
-    $authStatusBlock = findSeededBlockByType($headerContent['content'], 'AuthStatus');
-    $headingBlock = findSeededBlockByType($headerContent['content'], 'Heading');
-
-    expect($authStatusBlock)->not->toBeNull()
-        ->and($authStatusBlock['props'])->toMatchArray([
-            'buttonLabel' => 'Đăng nhập',
-            'profileVariant' => 'compact',
-            'fullWidthOnMobile' => true,
-            'autoWidthFromMd' => true,
-            'noShrinkFromMd' => true,
-        ])
-        ->and($headingBlock)->not->toBeNull()
-        ->and($headingBlock['props'])->toMatchArray([
-            'title' => 'Khoa Công nghệ thông tin',
-            'subtitle' => 'Trường Đại học Hàng hải Việt Nam',
-            'fullWidthOnMobile' => true,
-            'autoWidthFromMd' => true,
-            'noShrinkFromMd' => true,
+            'logoAlt' => 'Logo Khoa CNTT',
+            'siteName' => 'Khoa CNTT',
+            'organizationName' => 'Trường Đại học Hàng hải Việt Nam',
+            'searchHref' => '/search',
+            'searchLabel' => 'Tìm kiếm',
+            'loginLabel' => 'Đăng nhập',
+            'profileLabel' => 'Tài khoản',
         ]);
 });
 

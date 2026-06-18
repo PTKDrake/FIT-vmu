@@ -2,9 +2,11 @@ import { createInertiaApp } from "@inertiajs/react";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import type { ComponentType } from "react";
 import { lazy, Suspense } from "react";
-import { createRoot  } from "react-dom/client";
-import type {Root} from "react-dom/client";
+import { createRoot } from "react-dom/client";
+import type { Root } from "react-dom/client";
 import { initializeTheme } from "@/hooks/use-theme";
+import { authLayoutProps } from "@/layouts/auth-layout";
+import GuestLayout from "@/layouts/guest-layout";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 const pages = import.meta.glob<{ default: ComponentType }>("./pages/**/*.tsx");
@@ -16,6 +18,18 @@ const Toast = lazy(() =>
 
 void createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
+  layout: (name) => {
+    const props = authLayoutProps[name];
+
+    if (!props) {
+      return null;
+    }
+
+    return {
+      component: GuestLayout,
+      props,
+    };
+  },
   resolve: (name) => {
     const page = pages[`./pages/${name}.tsx`];
 

@@ -1,6 +1,5 @@
 import { Form, Head } from "@inertiajs/react";
-import type { ReactNode } from "react";
-import GuestLayout from "@/layouts/guest-layout";
+import { withAuthLayout } from "@/layouts/auth-layout";
 
 export default function ConfirmPasswordPage() {
   return (
@@ -43,11 +42,4 @@ export default function ConfirmPasswordPage() {
   );
 }
 
-ConfirmPasswordPage.layout = (page: ReactNode) => (
-  <GuestLayout
-    header="Xác nhận mật khẩu"
-    description="Vui lòng xác nhận mật khẩu của bạn trước khi tiếp tục."
-  >
-    {page}
-  </GuestLayout>
-);
+ConfirmPasswordPage.layout = withAuthLayout("auth/confirm-password");

@@ -17,4 +17,8 @@ export default function HomePage() {
   );
 }
 
-HomePage.layout = (page: ReactNode) => <AppLayout>{page}</AppLayout>;
+function HomeLayout({ children }: { children: ReactNode }) {
+  return <AppLayout>{children}</AppLayout>;
+}
+
+HomePage.layout = [HomeLayout];
