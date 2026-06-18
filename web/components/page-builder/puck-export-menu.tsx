@@ -8,14 +8,20 @@ import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { serializePuckPageData } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderData } from "@/lib/puck/page-builder-data";
+import {
+  createPuckSeederExpression,
+  type PuckSeederExportTarget,
+} from "@/lib/puck/seeder-export";
 
 interface PuckExportMenuProps {
   exportName: string;
+  exportTarget: PuckSeederExportTarget;
   getData: () => VmuFitPageBuilderData;
 }
 
 export function PuckExportMenu({
   exportName,
+  exportTarget,
   getData,
 }: PuckExportMenuProps) {
   const { copy } = useClipboard();
@@ -31,6 +37,19 @@ export function PuckExportMenu({
     }
 
     toast.error("Không thể sao chép JSON builder vào clipboard.");
+  }
+
+  async function handleCopySeederExpression(): Promise<void> {
+    const expression = createPuckSeederExpression(getData(), exportTarget);
+    const didCopy = await copy(expression);
+
+    if (didCopy) {
+      toast.success("Đã sao chép đoạn PHP cho seeder vào clipboard.");
+
+      return;
+    }
+
+    toast.error("Không thể sao chép đoạn PHP cho seeder.");
   }
 
   function handleDownload(): void {
@@ -68,6 +87,10 @@ export function PuckExportMenu({
           <MenuItem onAction={() => void handleCopy()}>
             <ClipboardDocumentIcon />
             Sao chép clipboard
+          </MenuItem>
+          <MenuItem onAction={() => void handleCopySeederExpression()}>
+            <ClipboardDocumentIcon />
+            Sao chép cho Seeder
           </MenuItem>
         </MenuContent>
       </Menu>

@@ -82,7 +82,9 @@ export function SiteLayoutShellFrame({
 }: SiteLayoutShellFrameProps) {
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      {header ? <header>{header}</header> : null}
+      {header ? (
+        <header className="relative z-[200] overflow-visible">{header}</header>
+      ) : null}
 
       <div className="mx-auto flex w-full min-w-0 flex-col lg:flex-row lg:items-start">
         {left ? (
@@ -91,7 +93,9 @@ export function SiteLayoutShellFrame({
           </aside>
         ) : null}
 
-        <main className="@container/layout-main min-w-0 flex-1">{children}</main>
+        <main className="@container/layout-main min-w-0 flex-1">
+          {children}
+        </main>
 
         {right ? (
           <aside className="@container/layout-side w-full min-w-0 shrink-0 lg:w-72">

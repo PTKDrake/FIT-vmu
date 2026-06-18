@@ -359,6 +359,19 @@ export interface VmuFitPageBuilderComponents {
     limit: number;
     className?: string;
   };
+  FitNavigationHeader: {
+    logoUrl?: PuckImageValue;
+    logoAlt?: string;
+    siteName?: string;
+    organizationName?: string;
+    menuId?: string;
+    menuAriaLabel?: string;
+    searchHref?: string;
+    searchLabel?: string;
+    loginLabel?: string;
+    profileLabel?: string;
+    className?: string;
+  };
   NavigationMenu: PuckSurfaceStyleProps & {
     title?: string;
     menuId?: string;

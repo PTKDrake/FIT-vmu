@@ -303,6 +303,7 @@ function PuckPageBuilderHeaderActions({
       {canExport ? (
         <PuckExportMenu
           exportName={exportName}
+          exportTarget="page"
           getData={() => getPuck().appState.data as VmuFitPageBuilderData}
         />
       ) : null}

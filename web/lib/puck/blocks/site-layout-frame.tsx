@@ -27,6 +27,7 @@ export const siteLayoutHeaderComponents = [
   "Heading",
   "Image",
   "Button",
+  "FitNavigationHeader",
   "NavigationMenu",
   "AuthStatus",
   "TagList",

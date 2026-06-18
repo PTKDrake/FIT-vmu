@@ -5,159 +5,111 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\SiteLayout;
+use App\Support\PuckSeedData;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DefaultSiteLayoutSeeder extends Seeder
 {
     public function run(): void
     {
-        $defaultHeader = $this->buildSlotData([
+        $headerData = PuckSeedData::forSlot([
             [
                 'type' => 'Container',
                 'props' => [
-                    'id' => 'public-header-container',
-                    'maxWidth' => 'full',
-                    'horizontalPadding' => 'md',
+                    'maxWidth' => 'xl',
                     'children' => [
                         [
-                            'type' => 'Flex',
+                            'type' => 'Heading',
                             'props' => [
-                                'id' => 'public-header-row',
-                                'flexDirection' => 'row',
-                                'mobileDirection' => 'column',
-                                'justifyContent' => 'between',
-                                'alignItems' => 'center',
-                                'gapX' => 'lg',
-                                'gapY' => 'md',
-                                'wrap' => true,
-                                'childWidth' => 'auto',
-                                'insetY' => 'sm',
-                                'children' => [
-                                    [
-                                        'type' => 'Heading',
-                                        'props' => [
-                                            'title' => 'Khoa Công nghệ thông tin',
-                                            'subtitle' => 'Trường Đại học Hàng hải Việt Nam',
-                                            'level' => 4,
-                                            'alignment' => 'left',
-                                            'fullWidthOnMobile' => true,
-                                            'autoWidthFromMd' => true,
-                                            'noShrinkFromMd' => true,
-                                        ],
-                                    ],
-                                    [
-                                        'type' => 'NavigationMenu',
-                                        'props' => [
-                                            'title' => '',
-                                            'menuId' => '1',
-                                            'mobileButtonLabel' => 'Mở menu điều hướng',
-                                            'mobileLogoAlt' => 'FIT VMU',
-                                            'mobileLogoUrl' => '/logo.png',
-                                            'mobilePanelTitle' => 'Khoa Công nghệ thông tin',
-                                            'fullWidthOnMobile' => true,
-                                            'growFromMd' => true,
-                                            'basisFromMd' => '44rem',
-                                            'maxWidth' => 'none',
-                                            'orientation' => 'horizontal',
-                                            'surfaceTone' => 'transparent',
-                                            'surfaceBorder' => 'none',
-                                            'surfaceRadius' => 'none',
-                                            'surfacePadding' => 'none',
-                                            'surfaceShadow' => 'sm',
-                                        ],
-                                    ],
-                                    [
-                                        'type' => 'AuthStatus',
-                                        'props' => [
-                                            'alignment' => 'right',
-                                            'buttonLabel' => 'Đăng nhập',
-                                            'showName' => true,
-                                            'showEmail' => false,
-                                            'showRegisterLink' => false,
-                                            'showCmsLink' => true,
-                                            'profileVariant' => 'compact',
-                                            'fullWidthOnMobile' => true,
-                                            'autoWidthFromMd' => true,
-                                            'noShrinkFromMd' => true,
-                                        ],
-                                    ],
-                                ],
+                                'title' => 'Khoa Công nghệ thông tin',
+                                'subtitle' => 'Trường Đại học Hàng hải Việt Nam',
+                                'fullWidthOnMobile' => true,
+                                'autoWidthFromMd' => true,
+                                'noShrinkFromMd' => true,
+                            ],
+                        ],
+                        [
+                            'type' => 'NavigationMenu',
+                            'props' => [
+                                'menuId' => '1',
+                                'orientation' => 'horizontal',
+                                'mobileButtonLabel' => 'Mở menu điều hướng',
+                                'mobileLogoAlt' => 'FIT VMU',
+                                'mobileLogoUrl' => '/logo.png',
+                                'mobilePanelTitle' => 'Khoa Công nghệ thông tin',
+                                'layoutPreset' => 'headerPrimary',
+                                'fullWidthOnMobile' => true,
+                                'growFromMd' => true,
+                                'basisFromMd' => '44rem',
+                                'maxWidth' => 'none',
+                                'surfaceTone' => 'transparent',
+                                'surfaceBorder' => 'none',
+                                'surfaceRadius' => 'none',
+                                'surfacePadding' => 'none',
+                                'surfaceShadow' => 'none',
+                                'className' => '',
+                            ],
+                        ],
+                        [
+                            'type' => 'AuthStatus',
+                            'props' => [
+                                'buttonLabel' => 'Đăng nhập',
+                                'profileVariant' => 'compact',
+                                'layoutPreset' => 'headerActions',
+                                'fullWidthOnMobile' => true,
+                                'autoWidthFromMd' => true,
+                                'noShrinkFromMd' => true,
+                                'className' => '',
                             ],
                         ],
                     ],
                 ],
             ],
-        ]);
-        $defaultFooter = $this->buildSlotData([
+        ], 'site-layout-header');
+
+        $footerData = PuckSeedData::forSlot([
             [
                 'type' => 'Container',
                 'props' => [
-                    'id' => 'public-footer-container',
                     'maxWidth' => 'xl',
-                    'horizontalPadding' => 'md',
-                    'insetY' => 'lg',
                     'children' => [
                         [
-                            'type' => 'Grid',
+                            'type' => 'ContactInfo',
                             'props' => [
-                                'mobileColumns' => 1,
-                                'tabletColumns' => 1,
-                                'desktopColumns' => 2,
-                                'gapX' => 'xl',
-                                'gapY' => 'lg',
-                                'alignItems' => 'start',
-                                'justifyItems' => 'stretch',
-                                'insetY' => 'xs',
-                                'hideOn' => 'none',
-                                'children' => [
-                                    [
-                                        'type' => 'ContactInfo',
-                                        'props' => [
-                                            'title' => 'Liên hệ',
-                                            'address' => "Phòng 301, Nhà A3\nSố 484 Lạch Tray, Kênh Dương, \nLê Chân, Hải Phòng",
-                                            'phone' => '0225.3735138',
-                                            'email' => 'fit@vimaru.edu.vn',
-                                            'surfaceTone' => 'transparent',
-                                            'surfaceBorder' => 'none',
-                                            'surfaceRadius' => 'none',
-                                            'surfacePadding' => 'none',
-                                            'surfaceShadow' => 'none',
-                                            'maxWidth' => 'sm',
-                                            'textAlign' => 'center',
-                                            'textAlignFromLg' => 'left',
-                                            'positionFromLg' => 'start',
-                                        ],
-                                    ],
-                                    [
-                                        'type' => 'NavigationMenu',
-                                        'props' => [
-                                            'title' => 'Điều hướng',
-                                            'menuId' => '2',
-                                            'maxWidth' => 'sm',
-                                            'textAlign' => 'center',
-                                            'textAlignFromLg' => 'left',
-                                            'positionFromLg' => 'end',
-                                            'orientation' => 'vertical',
-                                            'surfaceTone' => 'transparent',
-                                            'surfaceBorder' => 'none',
-                                            'surfaceRadius' => 'none',
-                                            'surfacePadding' => 'none',
-                                            'surfaceShadow' => 'none',
-                                        ],
-                                    ],
-                                ],
+                                'title' => 'Liên hệ',
+                                'address' => '484 Lạch Tray, Kênh Dương, Lê Chân, Hải Phòng',
+                                'phone' => '(0225) 3829 109',
+                                'email' => 'fit@vimaru.edu.vn',
+                                'layoutPreset' => 'footerContact',
+                                'maxWidth' => 'sm',
+                                'textAlign' => 'center',
+                                'textAlignFromLg' => 'left',
+                                'positionFromLg' => 'start',
+                                'surfaceTone' => 'transparent',
+                                'surfaceBorder' => 'none',
+                                'surfaceRadius' => 'none',
+                                'surfacePadding' => 'none',
+                                'surfaceShadow' => 'none',
+                                'className' => '',
                             ],
                         ],
                         [
-                            'type' => 'Divider',
+                            'type' => 'NavigationMenu',
                             'props' => [
-                                'id' => 'public-footer-divider',
-                                'type' => 'solid',
-                                'color' => 'primary',
-                                'spacingY' => 'sm',
-                                'width' => 'xl',
-                                'align' => 'center',
+                                'title' => 'Điều hướng',
+                                'menuId' => '1',
+                                'orientation' => 'vertical',
+                                'layoutPreset' => 'footerMenu',
+                                'maxWidth' => 'sm',
+                                'textAlign' => 'center',
+                                'textAlignFromLg' => 'left',
+                                'positionFromLg' => 'end',
+                                'surfaceTone' => 'transparent',
+                                'surfaceBorder' => 'none',
+                                'surfaceRadius' => 'none',
+                                'surfacePadding' => 'none',
+                                'surfaceShadow' => 'none',
+                                'className' => '',
                             ],
                         ],
                         [
@@ -166,13 +118,13 @@ class DefaultSiteLayoutSeeder extends Seeder
                                 'links' => [
                                     [
                                         'platform' => 'facebook',
-                                        'url' => 'https://www.facebook.com/groups/fit.vimaru/',
+                                        'url' => 'https://facebook.com/groups/fitvmu',
                                         'label' => 'Facebook Group',
                                     ],
                                     [
-                                        'platform' => 'facebook',
-                                        'url' => 'https://www.facebook.com/khoacntt.dhhhvn/',
-                                        'label' => 'Fanpage Khoa CNTT',
+                                        'platform' => 'youtube',
+                                        'url' => 'https://youtube.com/@fitvmu',
+                                        'label' => 'YouTube',
                                     ],
                                     [
                                         'platform' => 'email',
@@ -188,7 +140,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                                 'surfaceRadius' => 'none',
                                 'surfacePadding' => 'none',
                                 'surfaceShadow' => 'none',
-                                'className' => 'flex flex-wrap items-center justify-center gap-x-6 gap-y-3',
+                                'className' => '',
                             ],
                         ],
                         [
@@ -216,14 +168,15 @@ class DefaultSiteLayoutSeeder extends Seeder
                     ],
                 ],
             ],
-        ]);
+        ], 'site-layout-footer');
+
         SiteLayout::query()->updateOrCreate(
             ['key' => 'default-page-layout'],
             [
                 'name' => 'Bố cục trang mặc định',
                 'key' => 'default-page-layout',
-                'header_data' => $defaultHeader,
-                'footer_data' => $defaultFooter,
+                'header_data' => $headerData,
+                'footer_data' => $footerData,
                 'left_data' => null,
                 'right_data' => null,
             ],
@@ -233,92 +186,11 @@ class DefaultSiteLayoutSeeder extends Seeder
             [
                 'name' => 'Bố cục bài viết mặc định',
                 'key' => 'default-post-layout',
-                'header_data' => $defaultHeader,
-                'footer_data' => $defaultFooter,
+                'header_data' => $headerData,
+                'footer_data' => $footerData,
                 'left_data' => null,
                 'right_data' => null,
             ],
         );
-    }
-
-    /**
-     * @param  list<array{type: string, props: array<string, mixed>}>  $content
-     */
-    private function buildSlotData(array $content): string
-    {
-        return json_encode([
-            'root' => [
-                'props' => [],
-            ],
-            'content' => $this->assignBlockIds($content, 'site-layout-slot'),
-            'zones' => [],
-        ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @param  list<array<string, mixed>>  $blocks
-     * @return list<array<string, mixed>>
-     */
-    private function assignBlockIds(array $blocks, string $prefix): array
-    {
-        /** @var list<array<string, mixed>> $blocksWithIds */
-        $blocksWithIds = array_map(
-            fn (array $block, int $index): array => $this->assignBlockIdsToNode($block, "{$prefix}-".($index + 1)),
-            $blocks,
-            array_keys($blocks),
-        );
-
-        return $blocksWithIds;
-    }
-
-    /**
-     * @param  array<string, mixed>  $block
-     * @return array<string, mixed>
-     */
-    private function assignBlockIdsToNode(array $block, string $prefix): array
-    {
-        if (! is_string($block['type'] ?? null)) {
-            return $block;
-        }
-
-        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
-
-        if (! isset($props['id']) || ! is_string($props['id']) || $props['id'] === '') {
-            $props['id'] = "{$prefix}-".Str::slug($block['type']);
-        }
-
-        $block['id'] = $props['id'];
-
-        foreach ($props as $key => $value) {
-            if (! is_array($value) || ! $this->isBlockList($value)) {
-                continue;
-            }
-
-            $props[$key] = $this->assignBlockIds($value, "{$props['id']}-{$key}");
-        }
-
-        $block['props'] = $props;
-
-        return $block;
-    }
-
-    /**
-     * @param  array<int|string, mixed>  $value
-     *
-     * @phpstan-assert-if-true list<array<string, mixed>> $value
-     */
-    private function isBlockList(array $value): bool
-    {
-        if (! array_is_list($value) || $value === []) {
-            return false;
-        }
-
-        foreach ($value as $item) {
-            if (! is_array($item) || ! is_string($item['type'] ?? null)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

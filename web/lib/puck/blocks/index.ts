@@ -52,6 +52,7 @@ export {
   StaffProfileCardComponentConfig,
   UnitListComponentConfig,
   RelatedPostsComponentConfig,
+  FitNavigationHeaderComponentConfig,
   NavigationMenuComponentConfig,
   CategoriesComponentConfig,
   PageLinksComponentConfig,

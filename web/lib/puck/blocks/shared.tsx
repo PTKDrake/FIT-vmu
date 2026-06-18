@@ -32,6 +32,7 @@ const PUCK_MEDIA_FIELD_NAMES = new Set([
   "avatar",
   "backgroundImage",
   "imageUrl",
+  "logoUrl",
   "mobileLogoUrl",
 ]);
 

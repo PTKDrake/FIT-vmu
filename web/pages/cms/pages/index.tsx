@@ -75,6 +75,10 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
     resourceKey: "pages",
   });
 
+  function reloadPagesList(): void {
+    tableQueryState.list.reload();
+  }
+
   useCmsContentRealtime("pages", (payload) => {
     toast.info(payload.message);
     reloadPagesList();
@@ -214,10 +218,6 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
       },
       preserveScroll: true,
     });
-  }
-
-  function reloadPagesList(): void {
-    tableQueryState.list.reload();
   }
 
   return (

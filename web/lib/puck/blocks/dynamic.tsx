@@ -8,8 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Link } from "@/components/ui/link";
-import { NavbarItem, NavbarMenu, NavbarSubmenu } from "@/components/ui/navbar";
+import {
+  NavbarGroup,
+  NavbarItem,
+  NavbarMenu,
+  NavbarSubmenu,
+} from "@/components/ui/navbar";
 import { Text } from "@/components/ui/text";
+import {
+  FitNavigationBar,
+  type FitNavigationItem,
+} from "@/components/page-builder/fit-navigation-bar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getPuckImageUrl, type PuckImageValue } from "@/lib/puck/media";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
@@ -111,10 +120,13 @@ const emptyPuckDynamicData: PuckDynamicData = {
 };
 
 function usePuckDynamicData(): PuckDynamicData {
-  const pageDynamicData =
-    usePage<SharedData & { dynamicData?: PuckDynamicData }>().props.dynamicData;
+  const pageDynamicData = usePage<
+    SharedData & { dynamicData?: PuckDynamicData }
+  >().props.dynamicData;
 
-  return pageDynamicData ?? readPuckDynamicDataFromWindow() ?? emptyPuckDynamicData;
+  return (
+    pageDynamicData ?? readPuckDynamicDataFromWindow() ?? emptyPuckDynamicData
+  );
 }
 
 function readPuckDynamicDataFromWindow(): PuckDynamicData | null {
@@ -131,9 +143,11 @@ function readPuckDynamicDataFromWindow(): PuckDynamicData | null {
   }
 
   try {
-    const topWindow = window.top as Window & {
-      __VMU_PUCK_DYNAMIC_DATA__?: PuckDynamicData;
-    } | null;
+    const topWindow = window.top as
+      | (Window & {
+          __VMU_PUCK_DYNAMIC_DATA__?: PuckDynamicData;
+        })
+      | null;
 
     return topWindow?.__VMU_PUCK_DYNAMIC_DATA__ ?? null;
   } catch {
@@ -151,9 +165,7 @@ function parseOptionalId(value: string | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function getBlockLayoutPresetClass(
-  preset: string | undefined,
-): string {
+function getBlockLayoutPresetClass(preset: string | undefined): string {
   switch (preset) {
     case "headerPrimary":
       return "w-full min-w-0 md:grow md:basis-[44rem] md:max-w-none";
@@ -315,11 +327,7 @@ function LatestPostsBlock(props: LatestPostsBlockProps) {
         )}
       >
         {posts.map((post) => (
-          <Link
-            key={post.id}
-            href={post.url ?? "#"}
-            className="block"
-          >
+          <Link key={post.id} href={post.url ?? "#"} className="block">
             <Card
               className={twMerge(
                 "overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 group flex flex-col justify-between cursor-pointer",
@@ -908,11 +916,7 @@ function RelatedPostsBlock({
 
       <div className="grid gap-4 md:grid-cols-2 w-full">
         {related.map((post) => (
-          <Link
-            key={post.id}
-            href={post.url ?? "#"}
-            className="block"
-          >
+          <Link key={post.id} href={post.url ?? "#"} className="block">
             <Card
               className={twMerge(
                 "py-0 shadow-none hover:shadow-md transition-shadow group flex flex-col justify-between cursor-pointer",
@@ -976,6 +980,71 @@ interface NavigationMenuBlockProps {
   surfaceTone?: "transparent" | "bg" | "overlay" | "muted" | "subtle";
 }
 
+interface FitNavigationHeaderBlockProps {
+  className?: string;
+  id?: string;
+  logoAlt?: string;
+  logoUrl?: PuckImageValue;
+  loginLabel?: string;
+  menuAriaLabel?: string;
+  menuId?: string;
+  organizationName?: string;
+  profileLabel?: string;
+  searchHref?: string;
+  searchLabel?: string;
+  siteName?: string;
+}
+
+function FitNavigationHeaderBlock(props: FitNavigationHeaderBlockProps) {
+  const {
+    className,
+    id,
+    logoAlt = "Logo Khoa CNTT",
+    logoUrl,
+    loginLabel = "Đăng nhập",
+    menuAriaLabel = "Menu điều hướng chính",
+    menuId,
+    organizationName = "Trường Đại học Hàng hải Việt Nam",
+    profileLabel = "Tài khoản",
+    searchHref = "/search",
+    searchLabel = "Tìm kiếm",
+    siteName = "Khoa CNTT",
+  } = props;
+  const domId = getPuckBlockDomId(id);
+  const dynamicData = usePuckDynamicData();
+  const pageUrl = usePage().url;
+  const { auth } = usePage<SharedData>().props;
+  const selectedMenuId = parseOptionalId(menuId);
+  const menu =
+    dynamicData.navigationMenus.find((navigationMenu) =>
+      selectedMenuId ? navigationMenu.id === selectedMenuId : true,
+    ) ?? null;
+
+  return (
+    <section
+      id={domId}
+      data-vmu-puck-block="fit-navigation-header"
+      className={twMerge("w-full", className)}
+    >
+      <FitNavigationBar
+        authUser={auth.user}
+        canViewCms={auth.permissions.includes("view admin dashboard")}
+        currentPath={pageUrl}
+        loginLabel={loginLabel}
+        logoAlt={logoAlt}
+        logoUrl={getPuckImageUrl(logoUrl)}
+        menuAriaLabel={menuAriaLabel}
+        menuItems={(menu?.items ?? []) as FitNavigationItem[]}
+        organizationName={organizationName}
+        profileLabel={profileLabel}
+        searchHref={searchHref}
+        searchLabel={searchLabel}
+        siteName={siteName}
+      />
+    </section>
+  );
+}
+
 function NavigationMenuBlock(props: NavigationMenuBlockProps) {
   const {
     title,
@@ -1006,18 +1075,15 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const selectedMenuId = parseOptionalId(menuId);
   const previewMenu =
-    selectedMenuId === null ? navigationMenus[0] ?? null : null;
+    selectedMenuId === null ? (navigationMenus[0] ?? null) : null;
 
   const menu =
     navigationMenus.find((navigationMenu) =>
       selectedMenuId ? navigationMenu.id === selectedMenuId : true,
-    ) ??
-    (isPuckEditorPreview() ? previewMenu : null);
+    ) ?? (isPuckEditorPreview() ? previewMenu : null);
 
   if (!menuId && !menu) {
-    return (
-      <EmptyDynamicState label="Chưa chọn menu điều hướng để hiển thị." />
-    );
+    return <EmptyDynamicState label="Chưa chọn menu điều hướng để hiển thị." />;
   }
 
   if (!menu || menu.items.length === 0) {
@@ -1107,17 +1173,16 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
           {title}
         </Heading>
       ) : null}
-      <nav
-        aria-label={menu.name}
-        className={editorPreviewNavClassName}
-      >
-        <div
+      <nav aria-label={menu.name} className={editorPreviewNavClassName}>
+        <NavbarGroup
           className={twMerge(
             editorPreviewItemsClassName,
             orientation === "vertical"
               ? "flex-col items-stretch"
               : "flex-row flex-wrap items-center justify-center xl:justify-between",
           )}
+          delayCloseMs={orientation === "vertical" ? 0 : 150}
+          delayOpenMs={orientation === "vertical" ? 0 : 100}
         >
           {menu.items.map((item) => (
             <NavigationMenuEntry
@@ -1127,7 +1192,7 @@ function NavigationMenuBlock(props: NavigationMenuBlockProps) {
               orientation={orientation}
             />
           ))}
-        </div>
+        </NavbarGroup>
       </nav>
     </section>
   );
@@ -1226,59 +1291,59 @@ function MobileNavigationMenu({
 
       {isOpen
         ? createPortal(
-        <div className="fixed inset-0 z-[120] md:hidden">
-          <button
-            aria-label="Đóng menu điều hướng"
-            className="absolute inset-0 bg-fg/70"
-            type="button"
-            onClick={() => onOpenChange(false)}
-          />
-
-          <div
-            id={`mobile-navigation-${menu.id}`}
-            className="relative isolate h-dvh w-full overflow-y-auto bg-bg pb-8 text-fg shadow-2xl"
-          >
-            <div className="sticky top-0 z-10 border-b border-border bg-bg/95 px-4 pt-3 pb-4 backdrop-blur">
+            <div className="fixed inset-0 z-[120] md:hidden">
               <button
                 aria-label="Đóng menu điều hướng"
-                className="flex h-11 w-full items-center justify-start rounded-lg border border-border bg-overlay px-4 text-fg transition hover:bg-muted"
+                className="absolute inset-0 bg-fg/70"
                 type="button"
                 onClick={() => onOpenChange(false)}
-              >
-                <X className="size-5" />
-              </button>
-              {logoUrl ? (
-                <div className="flex justify-center pt-5">
-                  <img
-                    src={logoUrl}
-                    alt={logoAlt || menu.name}
-                    className="size-16 rounded-full border border-border bg-bg object-contain p-1 shadow-lg"
-                  />
-                </div>
-              ) : null}
-              {panelTitle ? (
-                <p className="pt-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-fg">
-                  {panelTitle}
-                </p>
-              ) : null}
-            </div>
+              />
 
-            <nav aria-label={menu.name} className="px-4 pt-4">
-              <div className="space-y-0.5">
-                {menu.items.map((item) => (
-                  <MobileNavigationMenuEntry
-                    currentPath={currentPath}
-                    item={item}
-                    key={item.id}
-                    onNavigate={() => onOpenChange(false)}
-                  />
-                ))}
+              <div
+                id={`mobile-navigation-${menu.id}`}
+                className="relative isolate h-dvh w-full overflow-y-auto bg-bg pb-8 text-fg shadow-2xl"
+              >
+                <div className="sticky top-0 z-10 border-b border-border bg-bg/95 px-4 pt-3 pb-4 backdrop-blur">
+                  <button
+                    aria-label="Đóng menu điều hướng"
+                    className="flex h-11 w-full items-center justify-start rounded-lg border border-border bg-overlay px-4 text-fg transition hover:bg-muted"
+                    type="button"
+                    onClick={() => onOpenChange(false)}
+                  >
+                    <X className="size-5" />
+                  </button>
+                  {logoUrl ? (
+                    <div className="flex justify-center pt-5">
+                      <img
+                        src={logoUrl}
+                        alt={logoAlt || menu.name}
+                        className="size-16 rounded-full border border-border bg-bg object-contain p-1 shadow-lg"
+                      />
+                    </div>
+                  ) : null}
+                  {panelTitle ? (
+                    <p className="pt-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-fg">
+                      {panelTitle}
+                    </p>
+                  ) : null}
+                </div>
+
+                <nav aria-label={menu.name} className="px-4 pt-4">
+                  <div className="space-y-0.5">
+                    {menu.items.map((item) => (
+                      <MobileNavigationMenuEntry
+                        currentPath={currentPath}
+                        item={item}
+                        key={item.id}
+                        onNavigate={() => onOpenChange(false)}
+                      />
+                    ))}
+                  </div>
+                </nav>
               </div>
-            </nav>
-          </div>
-        </div>,
-        document.body,
-      )
+            </div>,
+            document.body,
+          )
         : null}
     </section>
   );
@@ -1535,214 +1600,214 @@ function PageLinksBlock(props: PageLinksBlockProps) {
 
 // 1. LATEST POSTS BLOCK
 export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts"> =
-{
-  label: "Tin tức mới nhất",
-  defaultProps: {
-    title: "Tin Tức & Hoạt Động Mới",
-    limit: 3,
-    categoryId: "all",
-    layout: "grid",
-    showCTA: true,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số lượng tin tức" },
-    categoryId: {
-      type: "text",
-      label: "ID Danh mục (để trống nếu lấy tất cả)",
+  {
+    label: "Tin tức mới nhất",
+    defaultProps: {
+      title: "Tin Tức & Hoạt Động Mới",
+      limit: 3,
+      categoryId: "all",
+      layout: "grid",
+      showCTA: true,
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
     },
-    layout: {
-      type: "select",
-      label: "Kiểu bố cục",
-      options: [
-        { label: "Dạng lưới", value: "grid" },
-        { label: "Dạng danh sách", value: "list" },
-      ],
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề khối" },
+      limit: { type: "number", label: "Số lượng tin tức" },
+      categoryId: {
+        type: "text",
+        label: "ID Danh mục (để trống nếu lấy tất cả)",
+      },
+      layout: {
+        type: "select",
+        label: "Kiểu bố cục",
+        options: [
+          { label: "Dạng lưới", value: "grid" },
+          { label: "Dạng danh sách", value: "list" },
+        ],
+      },
+      showCTA: {
+        type: "radio",
+        label: "Hiển thị nút 'Xem tất cả'",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    showCTA: {
-      type: "radio",
-      label: "Hiển thị nút 'Xem tất cả'",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <LatestPostsBlock {...props} />,
-};
+    render: (props) => <LatestPostsBlock {...props} />,
+  };
 
 // 2. LATEST ANNOUNCEMENTS BLOCK
 export const LatestAnnouncementsComponentConfig: PageBuilderComponentConfig<"LatestAnnouncements"> =
-{
-  label: "Thông báo mới",
-  defaultProps: {
-    title: "Thông Báo Quan Trọng",
-    limit: 3,
-    layout: "list",
-    showCTA: true,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số lượng thông báo" },
-    layout: {
-      type: "select",
-      label: "Kiểu bố cục",
-      options: [
-        { label: "Dạng danh sách", value: "list" },
-        { label: "Dạng lưới", value: "grid" },
-      ],
+  {
+    label: "Thông báo mới",
+    defaultProps: {
+      title: "Thông Báo Quan Trọng",
+      limit: 3,
+      layout: "list",
+      showCTA: true,
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
     },
-    showCTA: {
-      type: "radio",
-      label: "Hiển thị nút 'Xem tất cả'",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề khối" },
+      limit: { type: "number", label: "Số lượng thông báo" },
+      layout: {
+        type: "select",
+        label: "Kiểu bố cục",
+        options: [
+          { label: "Dạng danh sách", value: "list" },
+          { label: "Dạng lưới", value: "grid" },
+        ],
+      },
+      showCTA: {
+        type: "radio",
+        label: "Hiển thị nút 'Xem tất cả'",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <LatestAnnouncementsBlock {...props} />,
-};
+    render: (props) => <LatestAnnouncementsBlock {...props} />,
+  };
 
 // 3. STAFF GRID BLOCK
 export const StaffGridComponentConfig: PageBuilderComponentConfig<"StaffGrid"> =
-{
-  label: "Đội ngũ giảng viên",
-  defaultProps: {
-    title: "Đội Ngũ Cán Bộ Giảng Viên",
-    limit: 3,
-    departmentId: "all",
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số lượng giảng viên tối đa" },
-    departmentId: {
-      type: "text",
-      label: "ID Bộ môn (để trống nếu lấy tất cả)",
+  {
+    label: "Đội ngũ giảng viên",
+    defaultProps: {
+      title: "Đội Ngũ Cán Bộ Giảng Viên",
+      limit: 3,
+      departmentId: "all",
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
     },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <StaffGridBlock {...props} />,
-};
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề khối" },
+      limit: { type: "number", label: "Số lượng giảng viên tối đa" },
+      departmentId: {
+        type: "text",
+        label: "ID Bộ môn (để trống nếu lấy tất cả)",
+      },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    render: (props) => <StaffGridBlock {...props} />,
+  };
 
 export const StaffProfileCardComponentConfig: PageBuilderComponentConfig<"StaffProfileCard"> =
-{
-  label: "Hồ sơ một cán bộ",
-  defaultProps: {
-    title: "",
-    staffId: "",
-    fallbackRole: "Cán bộ",
-    showEmail: true,
-    showPosition: true,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề phụ" },
-    staffId: {
-      type: "select",
-      label: "Cán bộ",
-      options: [{ label: "Chưa chọn cán bộ", value: "" }],
+  {
+    label: "Hồ sơ một cán bộ",
+    defaultProps: {
+      title: "",
+      staffId: "",
+      fallbackRole: "Cán bộ",
+      showEmail: true,
+      showPosition: true,
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
     },
-    fallbackRole: { type: "text", label: "Chức danh dự phòng" },
-    showEmail: {
-      type: "radio",
-      label: "Hiển thị email",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    showPosition: {
-      type: "radio",
-      label: "Hiển thị chức vụ",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  resolveFields: async (_data, { fields, lastFields }) => {
-    const lastStaffField = lastFields.staffId;
-
-    if (
-      lastStaffField &&
-      "options" in lastStaffField &&
-      Array.isArray(lastStaffField.options) &&
-      lastStaffField.options.length > 1
-    ) {
-      return lastFields;
-    }
-
-    const response = await fetch(layoutBuilderRoutes.sources.url("staff"), {
-      credentials: "same-origin",
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      return fields;
-    }
-
-    const payload = (await response.json()) as {
-      data?: Array<{
-        id: number;
-        label: string;
-        meta?: {
-          position?: string | null;
-        };
-      }>;
-    };
-
-    return {
-      ...fields,
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề phụ" },
       staffId: {
         type: "select",
         label: "Cán bộ",
+        options: [{ label: "Chưa chọn cán bộ", value: "" }],
+      },
+      fallbackRole: { type: "text", label: "Chức danh dự phòng" },
+      showEmail: {
+        type: "radio",
+        label: "Hiển thị email",
         options: [
-          { label: "Chưa chọn cán bộ", value: "" },
-          ...(payload.data ?? []).map((item) => ({
-            label: item.meta?.position
-              ? `${item.label} (${item.meta.position})`
-              : item.label,
-            value: item.id.toString(),
-          })),
+          { label: "Có", value: true },
+          { label: "Không", value: false },
         ],
       },
-    };
-  },
-  render: (props) => <StaffProfileCardBlock {...props} />,
-};
+      showPosition: {
+        type: "radio",
+        label: "Hiển thị chức vụ",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    resolveFields: async (_data, { fields, lastFields }) => {
+      const lastStaffField = lastFields.staffId;
+
+      if (
+        lastStaffField &&
+        "options" in lastStaffField &&
+        Array.isArray(lastStaffField.options) &&
+        lastStaffField.options.length > 1
+      ) {
+        return lastFields;
+      }
+
+      const response = await fetch(layoutBuilderRoutes.sources.url("staff"), {
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return fields;
+      }
+
+      const payload = (await response.json()) as {
+        data?: Array<{
+          id: number;
+          label: string;
+          meta?: {
+            position?: string | null;
+          };
+        }>;
+      };
+
+      return {
+        ...fields,
+        staffId: {
+          type: "select",
+          label: "Cán bộ",
+          options: [
+            { label: "Chưa chọn cán bộ", value: "" },
+            ...(payload.data ?? []).map((item) => ({
+              label: item.meta?.position
+                ? `${item.label} (${item.meta.position})`
+                : item.label,
+              value: item.id.toString(),
+            })),
+          ],
+        },
+      };
+    },
+    render: (props) => <StaffProfileCardBlock {...props} />,
+  };
 
 // 4. UNIT LIST BLOCK
 export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
@@ -1770,219 +1835,311 @@ export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
 
 // 5. RELATED POSTS BLOCK
 export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPosts"> =
-{
-  label: "Tin tức liên quan",
-  defaultProps: {
-    title: "Bài Viết Liên Quan",
-    limit: 2,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số bài viết liên quan" },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <RelatedPostsBlock {...props} />,
-};
+  {
+    label: "Tin tức liên quan",
+    defaultProps: {
+      title: "Bài Viết Liên Quan",
+      limit: 2,
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
+    },
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề khối" },
+      limit: { type: "number", label: "Số bài viết liên quan" },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    render: (props) => <RelatedPostsBlock {...props} />,
+  };
 
-export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"NavigationMenu"> =
-{
-  label: "Menu điều hướng",
-  defaultProps: {
-    title: "",
-    menuId: "",
-    mobileButtonLabel: "Mở menu",
-    mobileLogoAlt: "FIT VMU",
-    mobileLogoUrl: "/logo.png",
-    mobilePanelTitle: "",
-    layoutPreset: "default",
-    fullWidthOnMobile: false,
-    autoWidthFromMd: false,
-    noShrinkFromMd: false,
-    growFromMd: false,
-    basisFromMd: "none",
-    maxWidth: "default",
-    textAlign: "left",
-    textAlignFromLg: "inherit",
-    positionFromLg: "inherit",
-    orientation: "horizontal",
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề phụ" },
-    menuId: {
-      type: "select",
-      label: "Menu điều hướng",
-      options: [{ label: "Chưa chọn menu điều hướng", value: "" }],
+export const FitNavigationHeaderComponentConfig: PageBuilderComponentConfig<"FitNavigationHeader"> =
+  {
+    label: "Header điều hướng FIT",
+    defaultProps: {
+      logoUrl: "/logo.png",
+      logoAlt: "Logo Khoa CNTT",
+      siteName: "Khoa CNTT",
+      organizationName: "Trường Đại học Hàng hải Việt Nam",
+      menuId: "",
+      menuAriaLabel: "Menu điều hướng chính",
+      searchHref: "/search",
+      searchLabel: "Tìm kiếm",
+      loginLabel: "Đăng nhập",
+      profileLabel: "Tài khoản",
+      className: "",
     },
-    orientation: {
-      type: "select",
-      label: "Hướng hiển thị",
-      options: [
-        { label: "Ngang", value: "horizontal" },
-        { label: "Dọc", value: "vertical" },
-      ],
-    },
-    layoutPreset: {
-      type: "select",
-      label: "Bố cục sẵn",
-      options: [
-        { label: "Mặc định", value: "default" },
-        { label: "Menu chính ở header", value: "headerPrimary" },
-        { label: "Menu footer canh phải", value: "footerMenu" },
-      ],
-    },
-    fullWidthOnMobile: {
-      type: "radio",
-      label: "Đầy chiều rộng trên mobile",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    autoWidthFromMd: {
-      type: "radio",
-      label: "Tự co chiều rộng từ tablet",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    noShrinkFromMd: {
-      type: "radio",
-      label: "Giữ kích thước từ tablet",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    growFromMd: {
-      type: "radio",
-      label: "Giãn ra từ tablet",
-      options: [
-        { label: "Có", value: true },
-        { label: "Không", value: false },
-      ],
-    },
-    basisFromMd: {
-      type: "select",
-      label: "Chiều rộng nền từ tablet",
-      options: [
-        { label: "Không đặt", value: "none" },
-        { label: "Rộng (44rem)", value: "44rem" },
-      ],
-    },
-    maxWidth: {
-      type: "select",
-      label: "Chiều rộng tối đa",
-      options: [
-        { label: "Mặc định", value: "default" },
-        { label: "Không giới hạn", value: "none" },
-        { label: "Nhỏ (sm)", value: "sm" },
-      ],
-    },
-    textAlign: {
-      type: "select",
-      label: "Canh chữ trên mobile",
-      options: [
-        { label: "Trái", value: "left" },
-        { label: "Giữa", value: "center" },
-        { label: "Phải", value: "right" },
-      ],
-    },
-    textAlignFromLg: {
-      type: "select",
-      label: "Canh chữ từ desktop",
-      options: [
-        { label: "Giữ như mobile", value: "inherit" },
-        { label: "Trái", value: "left" },
-        { label: "Giữa", value: "center" },
-        { label: "Phải", value: "right" },
-      ],
-    },
-    positionFromLg: {
-      type: "select",
-      label: "Vị trí khối từ desktop",
-      options: [
-        { label: "Giữ mặc định", value: "inherit" },
-        { label: "Bám trái", value: "start" },
-        { label: "Giữa", value: "center" },
-        { label: "Bám phải", value: "end" },
-      ],
-    },
-    mobileButtonLabel: { type: "text", label: "Nhãn trợ năng nút mobile" },
-    mobileLogoUrl: { type: "text", label: "Logo trong menu mobile" },
-    mobileLogoAlt: { type: "text", label: "Mô tả logo mobile" },
-    mobilePanelTitle: { type: "text", label: "Tiêu đề nhỏ trong menu mobile" },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  resolveFields: async (_data, { fields, lastFields }) => {
-    const lastMenuField = lastFields.menuId;
-
-    if (
-      lastMenuField &&
-      "options" in lastMenuField &&
-      Array.isArray(lastMenuField.options) &&
-      lastMenuField.options.length > 1
-    ) {
-      return lastFields;
-    }
-
-    const response = await fetch(
-      layoutBuilderRoutes.sources.url("navigation-menus"),
-      {
-        credentials: "same-origin",
-        headers: {
-          Accept: "application/json",
-        },
-      },
-    );
-
-    if (!response.ok) {
-      return fields;
-    }
-
-    const payload = (await response.json()) as {
-      data?: Array<{
-        id: number;
-        label: string;
-        meta?: {
-          location?: string | null;
-        };
-      }>;
-    };
-
-    return {
-      ...fields,
+    fields: {
+      logoUrl: { type: "text", label: "Logo" },
+      logoAlt: { type: "text", label: "Mô tả logo" },
+      siteName: { type: "text", label: "Tên hiển thị" },
+      organizationName: { type: "text", label: "Tên đơn vị / trường" },
       menuId: {
         type: "select",
         label: "Menu điều hướng",
+        options: [{ label: "Tự động dùng menu đầu tiên", value: "" }],
+      },
+      menuAriaLabel: { type: "text", label: "Nhãn trợ năng menu" },
+      searchHref: { type: "text", label: "Đường dẫn tìm kiếm" },
+      searchLabel: { type: "text", label: "Nhãn nút tìm kiếm" },
+      loginLabel: { type: "text", label: "Nhãn đăng nhập" },
+      profileLabel: { type: "text", label: "Nhãn nhóm hồ sơ mobile" },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    resolveFields: async (_data, { fields, lastFields }) => {
+      const lastMenuField = lastFields.menuId;
+
+      if (
+        lastMenuField &&
+        "options" in lastMenuField &&
+        Array.isArray(lastMenuField.options) &&
+        lastMenuField.options.length > 1
+      ) {
+        return lastFields;
+      }
+
+      const response = await fetch(
+        layoutBuilderRoutes.sources.url("navigation-menus"),
+        {
+          credentials: "same-origin",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        return fields;
+      }
+
+      const payload = (await response.json()) as {
+        data?: Array<{
+          id: number;
+          label: string;
+          meta?: {
+            location?: string | null;
+          };
+        }>;
+      };
+
+      return {
+        ...fields,
+        menuId: {
+          type: "select",
+          label: "Menu điều hướng",
+          options: [
+            { label: "Tự động dùng menu đầu tiên", value: "" },
+            ...(payload.data ?? []).map((item) => ({
+              label: item.meta?.location
+                ? `${item.label} (${item.meta.location})`
+                : item.label,
+              value: item.id.toString(),
+            })),
+          ],
+        },
+      };
+    },
+    render: (props) => <FitNavigationHeaderBlock {...props} />,
+  };
+
+export const NavigationMenuComponentConfig: PageBuilderComponentConfig<"NavigationMenu"> =
+  {
+    label: "Menu điều hướng",
+    defaultProps: {
+      title: "",
+      menuId: "",
+      mobileButtonLabel: "Mở menu",
+      mobileLogoAlt: "FIT VMU",
+      mobileLogoUrl: "/logo.png",
+      mobilePanelTitle: "",
+      layoutPreset: "default",
+      fullWidthOnMobile: false,
+      autoWidthFromMd: false,
+      noShrinkFromMd: false,
+      growFromMd: false,
+      basisFromMd: "none",
+      maxWidth: "default",
+      textAlign: "left",
+      textAlignFromLg: "inherit",
+      positionFromLg: "inherit",
+      orientation: "horizontal",
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
+    },
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề phụ" },
+      menuId: {
+        type: "select",
+        label: "Menu điều hướng",
+        options: [{ label: "Chưa chọn menu điều hướng", value: "" }],
+      },
+      orientation: {
+        type: "select",
+        label: "Hướng hiển thị",
         options: [
-          { label: "Chưa chọn menu điều hướng", value: "" },
-          ...(payload.data ?? []).map((item) => ({
-            label: item.meta?.location
-              ? `${item.label} (${item.meta.location})`
-              : item.label,
-            value: item.id.toString(),
-          })),
+          { label: "Ngang", value: "horizontal" },
+          { label: "Dọc", value: "vertical" },
         ],
       },
-    };
-  },
-  render: (props) => <NavigationMenuBlock {...props} />,
-};
+      layoutPreset: {
+        type: "select",
+        label: "Bố cục sẵn",
+        options: [
+          { label: "Mặc định", value: "default" },
+          { label: "Menu chính ở header", value: "headerPrimary" },
+          { label: "Menu footer canh phải", value: "footerMenu" },
+        ],
+      },
+      fullWidthOnMobile: {
+        type: "radio",
+        label: "Đầy chiều rộng trên mobile",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      autoWidthFromMd: {
+        type: "radio",
+        label: "Tự co chiều rộng từ tablet",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      noShrinkFromMd: {
+        type: "radio",
+        label: "Giữ kích thước từ tablet",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      growFromMd: {
+        type: "radio",
+        label: "Giãn ra từ tablet",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      basisFromMd: {
+        type: "select",
+        label: "Chiều rộng nền từ tablet",
+        options: [
+          { label: "Không đặt", value: "none" },
+          { label: "Rộng (44rem)", value: "44rem" },
+        ],
+      },
+      maxWidth: {
+        type: "select",
+        label: "Chiều rộng tối đa",
+        options: [
+          { label: "Mặc định", value: "default" },
+          { label: "Không giới hạn", value: "none" },
+          { label: "Nhỏ (sm)", value: "sm" },
+        ],
+      },
+      textAlign: {
+        type: "select",
+        label: "Canh chữ trên mobile",
+        options: [
+          { label: "Trái", value: "left" },
+          { label: "Giữa", value: "center" },
+          { label: "Phải", value: "right" },
+        ],
+      },
+      textAlignFromLg: {
+        type: "select",
+        label: "Canh chữ từ desktop",
+        options: [
+          { label: "Giữ như mobile", value: "inherit" },
+          { label: "Trái", value: "left" },
+          { label: "Giữa", value: "center" },
+          { label: "Phải", value: "right" },
+        ],
+      },
+      positionFromLg: {
+        type: "select",
+        label: "Vị trí khối từ desktop",
+        options: [
+          { label: "Giữ mặc định", value: "inherit" },
+          { label: "Bám trái", value: "start" },
+          { label: "Giữa", value: "center" },
+          { label: "Bám phải", value: "end" },
+        ],
+      },
+      mobileButtonLabel: { type: "text", label: "Nhãn trợ năng nút mobile" },
+      mobileLogoUrl: { type: "text", label: "Logo trong menu mobile" },
+      mobileLogoAlt: { type: "text", label: "Mô tả logo mobile" },
+      mobilePanelTitle: {
+        type: "text",
+        label: "Tiêu đề nhỏ trong menu mobile",
+      },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    resolveFields: async (_data, { fields, lastFields }) => {
+      const lastMenuField = lastFields.menuId;
+
+      if (
+        lastMenuField &&
+        "options" in lastMenuField &&
+        Array.isArray(lastMenuField.options) &&
+        lastMenuField.options.length > 1
+      ) {
+        return lastFields;
+      }
+
+      const response = await fetch(
+        layoutBuilderRoutes.sources.url("navigation-menus"),
+        {
+          credentials: "same-origin",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        return fields;
+      }
+
+      const payload = (await response.json()) as {
+        data?: Array<{
+          id: number;
+          label: string;
+          meta?: {
+            location?: string | null;
+          };
+        }>;
+      };
+
+      return {
+        ...fields,
+        menuId: {
+          type: "select",
+          label: "Menu điều hướng",
+          options: [
+            { label: "Chưa chọn menu điều hướng", value: "" },
+            ...(payload.data ?? []).map((item) => ({
+              label: item.meta?.location
+                ? `${item.label} (${item.meta.location})`
+                : item.label,
+              value: item.id.toString(),
+            })),
+          ],
+        },
+      };
+    },
+    render: (props) => <NavigationMenuBlock {...props} />,
+  };
 
 function NavigationMenuEntry({
   currentPath,
@@ -2044,7 +2201,7 @@ function NavigationMenuEntry({
         "group/menu-item",
         isVertical ? "w-full" : "flex w-auto max-w-full flex-col",
       )}
-      delayCloseMs={isVertical ? 0 : 150}
+      menuId={`puck-navigation-item-${item.id}`}
     >
       <NavbarItem
         className={twMerge(
@@ -2133,50 +2290,50 @@ function normalizeNavigationPath(value: string): string {
 }
 
 export const CategoriesComponentConfig: PageBuilderComponentConfig<"Categories"> =
-{
-  label: "Danh mục bài viết",
-  defaultProps: {
-    title: "Danh mục",
-    parentId: "",
-    limit: 8,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
-    limit: { type: "number", label: "Số danh mục tối đa" },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <CategoriesBlock {...props} />,
-};
+  {
+    label: "Danh mục bài viết",
+    defaultProps: {
+      title: "Danh mục",
+      parentId: "",
+      limit: 8,
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
+    },
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề khối" },
+      parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
+      limit: { type: "number", label: "Số danh mục tối đa" },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    render: (props) => <CategoriesBlock {...props} />,
+  };
 
 export const PageLinksComponentConfig: PageBuilderComponentConfig<"PageLinks"> =
-{
-  label: "Liên kết trang",
-  defaultProps: {
-    title: "Trang liên quan",
-    limit: 8,
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề khối" },
-    limit: { type: "number", label: "Số trang tối đa" },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => <PageLinksBlock {...props} />,
-};
+  {
+    label: "Liên kết trang",
+    defaultProps: {
+      title: "Trang liên quan",
+      limit: 8,
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
+    },
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề khối" },
+      limit: { type: "number", label: "Số trang tối đa" },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    render: (props) => <PageLinksBlock {...props} />,
+  };
 
 export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
   label: "Danh sách link tùy chỉnh",
@@ -2269,144 +2426,144 @@ export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
 };
 
 export const ContactInfoComponentConfig: PageBuilderComponentConfig<"ContactInfo"> =
-{
-  label: "Thông tin liên hệ",
-  defaultProps: {
-    title: "Liên hệ",
-    address: "",
-    phone: "",
-    email: "",
-    layoutPreset: "default",
-    maxWidth: "default",
-    textAlign: "left",
-    textAlignFromLg: "inherit",
-    positionFromLg: "inherit",
-    surfaceTone: "transparent",
-    surfaceBorder: "none",
-    surfaceRadius: "none",
-    surfacePadding: "none",
-    surfaceShadow: "none",
-    className: "",
-  },
-  fields: {
-    ...puckSurfaceFields,
-    title: { type: "text", label: "Tiêu đề" },
-    address: { type: "textarea", label: "Địa chỉ" },
-    phone: { type: "text", label: "Số điện thoại" },
-    email: { type: "text", label: "Email" },
-    layoutPreset: {
-      type: "select",
-      label: "Bố cục sẵn",
-      options: [
-        { label: "Mặc định", value: "default" },
-        { label: "Khối liên hệ footer", value: "footerContact" },
-      ],
+  {
+    label: "Thông tin liên hệ",
+    defaultProps: {
+      title: "Liên hệ",
+      address: "",
+      phone: "",
+      email: "",
+      layoutPreset: "default",
+      maxWidth: "default",
+      textAlign: "left",
+      textAlignFromLg: "inherit",
+      positionFromLg: "inherit",
+      surfaceTone: "transparent",
+      surfaceBorder: "none",
+      surfaceRadius: "none",
+      surfacePadding: "none",
+      surfaceShadow: "none",
+      className: "",
     },
-    maxWidth: {
-      type: "select",
-      label: "Chiều rộng tối đa",
-      options: [
-        { label: "Mặc định", value: "default" },
-        { label: "Nhỏ (sm)", value: "sm" },
-      ],
+    fields: {
+      ...puckSurfaceFields,
+      title: { type: "text", label: "Tiêu đề" },
+      address: { type: "textarea", label: "Địa chỉ" },
+      phone: { type: "text", label: "Số điện thoại" },
+      email: { type: "text", label: "Email" },
+      layoutPreset: {
+        type: "select",
+        label: "Bố cục sẵn",
+        options: [
+          { label: "Mặc định", value: "default" },
+          { label: "Khối liên hệ footer", value: "footerContact" },
+        ],
+      },
+      maxWidth: {
+        type: "select",
+        label: "Chiều rộng tối đa",
+        options: [
+          { label: "Mặc định", value: "default" },
+          { label: "Nhỏ (sm)", value: "sm" },
+        ],
+      },
+      textAlign: {
+        type: "select",
+        label: "Canh chữ trên mobile",
+        options: [
+          { label: "Trái", value: "left" },
+          { label: "Giữa", value: "center" },
+          { label: "Phải", value: "right" },
+        ],
+      },
+      textAlignFromLg: {
+        type: "select",
+        label: "Canh chữ từ desktop",
+        options: [
+          { label: "Giữ như mobile", value: "inherit" },
+          { label: "Trái", value: "left" },
+          { label: "Giữa", value: "center" },
+          { label: "Phải", value: "right" },
+        ],
+      },
+      positionFromLg: {
+        type: "select",
+        label: "Vị trí khối từ desktop",
+        options: [
+          { label: "Giữ mặc định", value: "inherit" },
+          { label: "Bám trái", value: "start" },
+          { label: "Giữa", value: "center" },
+          { label: "Bám phải", value: "end" },
+        ],
+      },
+      className: { type: "text", label: "Lớp CSS bổ sung" },
     },
-    textAlign: {
-      type: "select",
-      label: "Canh chữ trên mobile",
-      options: [
-        { label: "Trái", value: "left" },
-        { label: "Giữa", value: "center" },
-        { label: "Phải", value: "right" },
-      ],
-    },
-    textAlignFromLg: {
-      type: "select",
-      label: "Canh chữ từ desktop",
-      options: [
-        { label: "Giữ như mobile", value: "inherit" },
-        { label: "Trái", value: "left" },
-        { label: "Giữa", value: "center" },
-        { label: "Phải", value: "right" },
-      ],
-    },
-    positionFromLg: {
-      type: "select",
-      label: "Vị trí khối từ desktop",
-      options: [
-        { label: "Giữ mặc định", value: "inherit" },
-        { label: "Bám trái", value: "start" },
-        { label: "Giữa", value: "center" },
-        { label: "Bám phải", value: "end" },
-      ],
-    },
-    className: { type: "text", label: "Lớp CSS bổ sung" },
-  },
-  render: (props) => {
-    const {
-      title,
-      address,
-      phone,
-      email,
-      layoutPreset,
-      maxWidth,
-      textAlign,
-      textAlignFromLg,
-      positionFromLg,
-      surfaceTone,
-      surfaceBorder,
-      surfaceRadius,
-      surfacePadding,
-      surfaceShadow,
-      className,
-    } = props;
-    const id = getPuckBlockDomId((props as { id?: string }).id);
-    const layoutClassName = twMerge(
-      getBlockLayoutPresetClass(layoutPreset),
-      getResponsiveMaxWidthClass(maxWidth),
-      getResponsiveTextAlignClass(textAlign),
-      textAlignFromLg === "inherit"
-        ? ""
-        : getResponsiveTextAlignClass(textAlignFromLg, "lg"),
-      positionFromLg === "inherit"
-        ? ""
-        : getResponsivePositionClass(positionFromLg, "lg"),
-    );
+    render: (props) => {
+      const {
+        title,
+        address,
+        phone,
+        email,
+        layoutPreset,
+        maxWidth,
+        textAlign,
+        textAlignFromLg,
+        positionFromLg,
+        surfaceTone,
+        surfaceBorder,
+        surfaceRadius,
+        surfacePadding,
+        surfaceShadow,
+        className,
+      } = props;
+      const id = getPuckBlockDomId((props as { id?: string }).id);
+      const layoutClassName = twMerge(
+        getBlockLayoutPresetClass(layoutPreset),
+        getResponsiveMaxWidthClass(maxWidth),
+        getResponsiveTextAlignClass(textAlign),
+        textAlignFromLg === "inherit"
+          ? ""
+          : getResponsiveTextAlignClass(textAlignFromLg, "lg"),
+        positionFromLg === "inherit"
+          ? ""
+          : getResponsivePositionClass(positionFromLg, "lg"),
+      );
 
-    return (
-      <section
-        id={id}
-        className={twMerge(
-          "space-y-3 text-sm",
-          getSurfaceClassName(
-            {
-              surfaceTone,
-              surfaceBorder,
-              surfaceRadius,
-              surfacePadding,
-              surfaceShadow,
-            },
-            "",
-          ),
-          layoutClassName,
-          className,
-        )}
-      >
-        <Heading level={3} className="text-base font-bold text-fg">
-          {title}
-        </Heading>
-        <div className="space-y-2 text-muted-fg">
-          {address ? <p className="whitespace-pre-line">{address}</p> : null}
-          {phone ? <p>Điện thoại: {phone}</p> : null}
-          {email ? (
-            <p>
-              Email:{" "}
-              <Link className="text-primary" href={`mailto:${email}`}>
-                {email}
-              </Link>
-            </p>
-          ) : null}
-        </div>
-      </section>
-    );
-  },
-};
+      return (
+        <section
+          id={id}
+          className={twMerge(
+            "space-y-3 text-sm",
+            getSurfaceClassName(
+              {
+                surfaceTone,
+                surfaceBorder,
+                surfaceRadius,
+                surfacePadding,
+                surfaceShadow,
+              },
+              "",
+            ),
+            layoutClassName,
+            className,
+          )}
+        >
+          <Heading level={3} className="text-base font-bold text-fg">
+            {title}
+          </Heading>
+          <div className="space-y-2 text-muted-fg">
+            {address ? <p className="whitespace-pre-line">{address}</p> : null}
+            {phone ? <p>Điện thoại: {phone}</p> : null}
+            {email ? (
+              <p>
+                Email:{" "}
+                <Link className="text-primary" href={`mailto:${email}`}>
+                  {email}
+                </Link>
+              </p>
+            ) : null}
+          </div>
+        </section>
+      );
+    },
+  };

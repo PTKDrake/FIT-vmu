@@ -28,16 +28,31 @@ test("puck export menu supports both file download and clipboard copy", () => {
     assert.match(exportMenuSource, /aria-label="Xuất JSON builder"/);
     assert.match(exportMenuSource, /Tải file JSON/);
     assert.match(exportMenuSource, /Sao chép clipboard/);
+    assert.match(exportMenuSource, /Sao chép cho Seeder/);
     assert.match(exportMenuSource, /serializePuckPageData\(getData\(\)\)/);
+    assert.match(exportMenuSource, /createPuckSeederExpression\(getData\(\), exportTarget\)/);
     assert.match(exportMenuSource, /navigator\.clipboard|useClipboard/);
     assert.match(exportMenuSource, /URL\.createObjectURL/);
+});
+
+test("site layout seeder export emits direct assignment lines instead of array spread", () => {
+    const seederExportSource = readFileSync(
+        new URL("../lib/puck/seeder-export.ts", import.meta.url),
+        "utf8",
+    );
+
+    assert.match(seederExportSource, /\$layoutData = /);
+    assert.match(seederExportSource, /'header_data' => \$layoutData\['header_data'\],/);
+    assert.doesNotMatch(seederExportSource, /\.\.\.PuckSeedData::splitSiteLayout/);
 });
 
 test("page and layout builders gate export controls behind explicit permissions", () => {
     assert.match(pageBuilderSource, /canExport\?: boolean;/);
     assert.match(pageBuilderSource, /<PuckExportMenu/);
+    assert.match(pageBuilderSource, /exportTarget="page"/);
     assert.match(layoutBuilderSource, /canExport\?: boolean;/);
     assert.match(layoutBuilderSource, /<PuckExportMenu/);
+    assert.match(layoutBuilderSource, /exportTarget="site-layout"/);
     assert.match(pageBuilderPageSource, /canExport=\{can\.exportPuckJson\}/);
     assert.match(layoutEditPageSource, /canExport=\{can\.exportPuckJson\}/);
 });

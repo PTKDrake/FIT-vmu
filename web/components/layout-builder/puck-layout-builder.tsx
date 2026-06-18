@@ -265,6 +265,7 @@ function PuckLayoutBuilderHeaderActions({
       {canExport ? (
         <PuckExportMenu
           exportName={exportName}
+          exportTarget="site-layout"
           getData={() =>
             normalizeData(getPuck().appState.data as VmuFitPageBuilderData)
           }
