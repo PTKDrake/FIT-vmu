@@ -10,6 +10,8 @@ export { HeroBannerComponentConfig } from "./hero-banner";
 export { HeroSplitComponentConfig } from "./hero-split";
 export { HeroCustomComponentConfig } from "./hero-custom";
 export { StatsCustomComponentConfig } from "./stats-custom";
+export { ProgramsCustomComponentConfig } from "./programs-custom";
+export { AboutCustomComponentConfig } from "./about-custom";
 
 // --- LAYOUT BLOCKS ---
 export {

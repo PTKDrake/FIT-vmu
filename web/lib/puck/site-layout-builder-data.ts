@@ -64,9 +64,9 @@ export function splitCombinedSiteLayoutData(
 ): SiteLayoutSplitValues {
   const sanitizedData = sanitizeCombinedSiteLayoutData(data);
 
-  const frame = sanitizedData.content.find((item) => item.type === "SiteLayoutFrame") as
-    | { props?: SiteLayoutFrameProps }
-    | undefined;
+  const frame = sanitizedData.content.find(
+    (item) => item.type === "SiteLayoutFrame",
+  ) as { props?: SiteLayoutFrameProps } | undefined;
 
   return {
     header_data: serializeSlotData(frame?.props?.header),

@@ -1,6 +1,6 @@
 import { createUsePuck } from "@puckeditor/core";
-import { useState   } from "react";
-import type {ComponentType, ReactNode} from "react";
+import { useState } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { ListBox } from "react-aria-components/ListBox";
 import { PopoverContent } from "@/components/ui/popover";
 import {
@@ -50,8 +50,8 @@ function toOptionKey(value: FieldOption["value"]): string {
 function getDeep(node: unknown, path: string): unknown {
   return path.split(".").reduce<unknown>((acc, key) => {
     if (acc == null || typeof acc !== "object") {
-return undefined;
-}
+      return undefined;
+    }
 
     return (acc as Record<string, unknown>)[key];
   }, node);
@@ -75,11 +75,12 @@ export function PuckSelectField({
   const isSearchable = options.length > SEARCH_THRESHOLD;
   const [search, setSearch] = useState("");
 
-  const filteredOptions = isSearchable && search !== ""
-    ? options.filter((opt) =>
-        opt.label.toLowerCase().includes(search.toLowerCase()),
-      )
-    : options;
+  const filteredOptions =
+    isSearchable && search !== ""
+      ? options.filter((opt) =>
+          opt.label.toLowerCase().includes(search.toLowerCase()),
+        )
+      : options;
 
   function handleSelect(key: string | number | null): void {
     if (key === null) {

@@ -39,21 +39,21 @@ export const HeroBannerComponentConfig: PageBuilderComponentConfig<"HeroBanner">
       const id = getPuckBlockDomId((props as { id?: string }).id);
 
       return (
-      <HeroBanner
-        id={id}
-        className={className}
-        eyebrow={eyebrow}
-        title={title}
-        description={description}
-        primaryAction={{
-          label: primaryActionLabel,
-          href: primaryActionHref,
-        }}
-        secondaryAction={{
-          label: secondaryActionLabel,
-          href: secondaryActionHref,
-        }}
-      />
+        <HeroBanner
+          id={id}
+          className={className}
+          eyebrow={eyebrow}
+          title={title}
+          description={description}
+          primaryAction={{
+            label: primaryActionLabel,
+            href: primaryActionHref,
+          }}
+          secondaryAction={{
+            label: secondaryActionLabel,
+            href: secondaryActionHref,
+          }}
+        />
       );
     },
   };

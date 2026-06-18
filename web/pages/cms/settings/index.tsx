@@ -96,7 +96,10 @@ export default function SiteSettingsPage({
             <FieldGroup className="grid gap-5 lg:grid-cols-2">
               <SelectField
                 error={form.errors.homepage_page}
-                items={pageOptions.map((p) => ({ id: String(p.id), label: p.title }))}
+                items={pageOptions.map((p) => ({
+                  id: String(p.id),
+                  label: p.title,
+                }))}
                 label="Trang chủ"
                 value={form.data.homepage_page}
                 onChange={(value) => form.setData("homepage_page", value)}
@@ -104,7 +107,10 @@ export default function SiteSettingsPage({
 
               <SelectField
                 error={form.errors.not_found_page}
-                items={pageOptions.map((p) => ({ id: String(p.id), label: p.title }))}
+                items={pageOptions.map((p) => ({
+                  id: String(p.id),
+                  label: p.title,
+                }))}
                 label="Trang 404"
                 value={form.data.not_found_page}
                 onChange={(value) => form.setData("not_found_page", value)}
@@ -112,12 +118,13 @@ export default function SiteSettingsPage({
 
               <SelectField
                 error={form.errors.student_home_page}
-                items={pageOptions.map((p) => ({ id: String(p.id), label: p.title }))}
+                items={pageOptions.map((p) => ({
+                  id: String(p.id),
+                  label: p.title,
+                }))}
                 label="Trang sinh viên"
                 value={form.data.student_home_page}
-                onChange={(value) =>
-                  form.setData("student_home_page", value)
-                }
+                onChange={(value) => form.setData("student_home_page", value)}
               />
 
               <SelectField
@@ -128,9 +135,7 @@ export default function SiteSettingsPage({
                 }))}
                 label="Layout trang mặc định"
                 value={form.data.default_page_layout}
-                onChange={(value) =>
-                  form.setData("default_page_layout", value)
-                }
+                onChange={(value) => form.setData("default_page_layout", value)}
               />
 
               <SelectField
@@ -154,9 +159,7 @@ export default function SiteSettingsPage({
                 }))}
                 label="Layout bài viết mặc định"
                 value={form.data.default_post_layout}
-                onChange={(value) =>
-                  form.setData("default_post_layout", value)
-                }
+                onChange={(value) => form.setData("default_post_layout", value)}
               />
             </FieldGroup>
 
@@ -215,6 +218,4 @@ function SelectField({
   );
 }
 
-SiteSettingsPage.layout = (page: ReactNode) => (
-  <CmsLayout>{page}</CmsLayout>
-);
+SiteSettingsPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;

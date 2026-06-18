@@ -77,7 +77,8 @@ function normalizeMediaItem(item: any): CmsMediaItem {
   return {
     id: item.id,
     displayName: item.displayName || item.display_name || "Chưa đặt tên",
-    previewUrl: item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
+    previewUrl:
+      item.previewUrl || item.preview_url || `/storage/media/${item.id}`,
     mimeType: item.mimeType || item.mime_type || "image/jpeg",
   };
 }
@@ -288,7 +289,9 @@ export function MediaLibrarySelector({
       const rawItems = data.props?.media?.data ?? data.media?.data ?? [];
       const meta = data.props?.media?.meta ?? data.media?.meta ?? null;
 
-      const formattedItems = rawItems.map((item: any) => normalizeMediaItem(item));
+      const formattedItems = rawItems.map((item: any) =>
+        normalizeMediaItem(item),
+      );
 
       setLibraryItems(formattedItems);
 
@@ -363,7 +366,8 @@ export function MediaLibrarySelector({
   };
 
   const currentPreview =
-    localPreviewUrl || (currentMediaId ? `/storage/media/${currentMediaId}` : null);
+    localPreviewUrl ||
+    (currentMediaId ? `/storage/media/${currentMediaId}` : null);
 
   return (
     <div className="space-y-3">
@@ -431,9 +435,7 @@ export function MediaLibrarySelector({
               <PhotoIcon className="size-5 text-muted-fg" />
             </div>
             <div className="space-y-1 mt-3">
-              <p className="text-sm font-medium text-fg">
-                {t(emptyTitle)}
-              </p>
+              <p className="text-sm font-medium text-fg">{t(emptyTitle)}</p>
               <p className="text-xs text-muted-fg">
                 {t("Nhấp để mở thư viện ảnh hoặc tải lên tệp mới")}
               </p>

@@ -176,7 +176,10 @@ function StudentGroupFormDialogContent({
         };
 
         for (const [field, messages] of Object.entries(payload.errors ?? {})) {
-          form.setError(field as keyof StudentGroupFormValues, messages[0] ?? "Dữ liệu không hợp lệ.");
+          form.setError(
+            field as keyof StudentGroupFormValues,
+            messages[0] ?? "Dữ liệu không hợp lệ.",
+          );
         }
 
         return;
@@ -240,9 +243,7 @@ function StudentGroupFormDialogContent({
   return (
     <ModalContent
       aria-label={
-        mode === "create"
-          ? "Tạo nhóm sinh viên mới"
-          : "Cập nhật nhóm sinh viên"
+        mode === "create" ? "Tạo nhóm sinh viên mới" : "Cập nhật nhóm sinh viên"
       }
       isOpen={true}
       onOpenChange={onOpenChange}
@@ -275,7 +276,9 @@ function StudentGroupFormDialogContent({
                     <Input
                       id="student-group-name"
                       value={form.data.name}
-                      onChange={(event) => form.setData("name", event.target.value)}
+                      onChange={(event) =>
+                        form.setData("name", event.target.value)
+                      }
                     />
                     <FieldError>{form.errors.name}</FieldError>
                   </div>
@@ -326,20 +329,24 @@ function StudentGroupFormDialogContent({
                   <FieldError>{form.errors.scope}</FieldError>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="student-group-members">Danh sách mã sinh viên</Label>
+                  <Label htmlFor="student-group-members">
+                    Danh sách mã sinh viên
+                  </Label>
                   <Textarea
                     className="field-sizing-fixed resize-y overflow-y-auto"
                     id="student-group-members"
                     placeholder={"94903\n123456\n20240001"}
                     rows={10}
                     value={studentCodesText}
-                    onChange={(event) => setStudentCodesText(event.target.value)}
+                    onChange={(event) =>
+                      setStudentCodesText(event.target.value)
+                    }
                   />
                   <Description>
                     Mỗi dòng là một `student_code` chỉ gồm số. Hệ thống sẽ lưu
-                    danh sách sau khi loại bỏ mã trùng lặp, không kiểm tra sự tồn
-                    tại của tài khoản tương ứng. Có thể dán bằng dấu cách, dấu
-                    phẩy hoặc xuống dòng.
+                    danh sách sau khi loại bỏ mã trùng lặp, không kiểm tra sự
+                    tồn tại của tài khoản tương ứng. Có thể dán bằng dấu cách,
+                    dấu phẩy hoặc xuống dòng.
                   </Description>
                   <FieldError>{form.errors.student_codes}</FieldError>
                 </div>

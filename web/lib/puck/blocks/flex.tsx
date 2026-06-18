@@ -150,10 +150,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       classes, // backwards compatibility
       children: Children,
     } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
     const mobileDirClass = {
       row: "flex-row",
@@ -214,9 +211,9 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       typeof gap === "number"
         ? undefined
         : twMerge(
-          getGapAxisClass("x", gapX ?? gap),
-          getGapAxisClass("y", gapY ?? gap),
-        ),
+            getGapAxisClass("x", gapX ?? gap),
+            getGapAxisClass("y", gapY ?? gap),
+          ),
       emptyPreviewClass,
       editorPreviewPuckWrapperClass,
       getSurfaceClassName(props, "", { includeDefaults: false }),
@@ -228,9 +225,7 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     return (
       <Children
         collisionAxis={
-          mobileDirection === "row" && flexDirection === "row"
-            ? "x"
-            : "dynamic"
+          mobileDirection === "row" && flexDirection === "row" ? "x" : "dynamic"
         }
         id={id}
         className={resolvedClassName}

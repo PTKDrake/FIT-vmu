@@ -24,8 +24,8 @@ function createSiteLayoutSeederSnippet(json: string): string {
   const helperCall = `PuckSeedData::splitSiteLayout(${createJsonHeredoc(json)})`;
 
   return [
-    '$layoutData = ' + helperCall + ';',
-    '',
+    "$layoutData = " + helperCall + ";",
+    "",
     "'header_data' => $layoutData['header_data'],",
     "'footer_data' => $layoutData['footer_data'],",
     "'left_data' => $layoutData['left_data'],",

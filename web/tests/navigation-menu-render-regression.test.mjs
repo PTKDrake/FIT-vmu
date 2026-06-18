@@ -87,10 +87,19 @@ test("Fit navigation header creates an unclipped dropdown stacking layer", () =>
     assert.match(fitNavigationBarSource, /backdrop-blur/);
     assert.match(fitNavigationBarSource, /<NavbarGroup/);
     assert.match(fitNavigationBarSource, /delayOpenMs=\{100\}/);
-    assert.match(fitNavigationBarSource, /overlay=\{\{ className: "z-\[300\]" \}\}/);
-    assert.match(fitNavigationBarSource, /aria-label=\{`Mở hoặc đóng menu \$\{item\.title\}`\}/);
+    assert.match(
+        fitNavigationBarSource,
+        /overlay=\{\{ className: "z-\[300\]" \}\}/,
+    );
+    assert.match(
+        fitNavigationBarSource,
+        /aria-label=\{`Mở hoặc đóng menu \$\{item\.title\}`\}/,
+    );
     assert.match(fitNavigationBarSource, /href=\{item\.url\}/);
-    assert.match(fitNavigationBarSource, /inset-ring-transparent bg-transparent/);
+    assert.match(
+        fitNavigationBarSource,
+        /inset-ring-transparent bg-transparent/,
+    );
     assert.match(fitNavigationBarSource, /space-y-1 pl-4/);
     assert.doesNotMatch(fitNavigationBarSource, /Tất cả \{item\.title\}/);
     assert.match(

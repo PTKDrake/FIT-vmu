@@ -275,7 +275,9 @@ function isOutlineBlockData(item: unknown): item is OutlineBlockData {
   return typeof item.type === "string";
 }
 
-function readBlockId(item: { props?: Record<string, unknown> } | undefined): string | null {
+function readBlockId(
+  item: { props?: Record<string, unknown> } | undefined,
+): string | null {
   const blockId = item?.props?.id;
 
   return typeof blockId === "string" && blockId !== "" ? blockId : null;

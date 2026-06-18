@@ -62,13 +62,9 @@ export function SiteLayoutBuilderEditor({
   function saveCombinedLayout(nextData: VmuFitPageBuilderData): void {
     const payload = applySlotData(nextData);
 
-    router.patch(
-      layoutRoutes.update.url({ siteLayout: layout.id }),
-      payload,
-      {
-        preserveScroll: true,
-      },
-    );
+    router.patch(layoutRoutes.update.url({ siteLayout: layout.id }), payload, {
+      preserveScroll: true,
+    });
   }
 
   const combinedLayoutData = createCombinedSiteLayoutData({

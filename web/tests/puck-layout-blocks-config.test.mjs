@@ -63,7 +63,10 @@ const contentSource = readFileSync(
     "utf8",
 );
 const layoutBuilderSource = readFileSync(
-    new URL("../components/layout-builder/puck-layout-builder.tsx", import.meta.url),
+    new URL(
+        "../components/layout-builder/puck-layout-builder.tsx",
+        import.meta.url,
+    ),
     "utf8",
 );
 const siteLayoutShellSource = readFileSync(
@@ -71,11 +74,17 @@ const siteLayoutShellSource = readFileSync(
     "utf8",
 );
 const siteLayoutBuilderEditorSource = readFileSync(
-    new URL("../components/layout-builder/site-layout-builder-editor.tsx", import.meta.url),
+    new URL(
+        "../components/layout-builder/site-layout-builder-editor.tsx",
+        import.meta.url,
+    ),
     "utf8",
 );
 const siteLayoutOutlinePluginSource = readFileSync(
-    new URL("../components/layout-builder/site-layout-outline-plugin.tsx", import.meta.url),
+    new URL(
+        "../components/layout-builder/site-layout-outline-plugin.tsx",
+        import.meta.url,
+    ),
     "utf8",
 );
 
@@ -112,9 +121,18 @@ test("layout blocks include common design fields for spacing and presentation", 
     assert.match(flexSource, /gapY: \{/);
     assert.match(flexSource, /insetY: \{/);
     assert.match(flexSource, /puckSurfaceFields/);
-    assert.match(layoutsSource, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
-    assert.match(gridSource, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
-    assert.match(flexSource, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
+    assert.match(
+        layoutsSource,
+        /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
+    );
+    assert.match(
+        gridSource,
+        /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
+    );
+    assert.match(
+        flexSource,
+        /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
+    );
 });
 
 test("puck layout primitives use responsive classes without making grid a container root", () => {
@@ -144,17 +162,11 @@ test("page builder data types stay aligned with the new layout fields", () => {
         dataSource,
         /insetY\?: "none" \| "xs" \| "sm" \| "md" \| "lg"/,
     );
-    assert.match(
-        dataSource,
-        /layoutPreset\?: "default" \| "headerBrand"/,
-    );
+    assert.match(dataSource, /layoutPreset\?: "default" \| "headerBrand"/);
     assert.match(dataSource, /fullWidthOnMobile\?: boolean/);
     assert.match(dataSource, /autoWidthFromMd\?: boolean/);
     assert.match(dataSource, /noShrinkFromMd\?: boolean/);
-    assert.match(
-        dataSource,
-        /layoutPreset\?: "default" \| "containedWide"/,
-    );
+    assert.match(dataSource, /layoutPreset\?: "default" \| "containedWide"/);
     assert.match(dataSource, /align\?: "left" \| "center" \| "right"/);
     assert.match(dataSource, /maxWidth\?: "none" \| "4xl"/);
     assert.match(
@@ -171,14 +183,8 @@ test("page builder data types stay aligned with the new layout fields", () => {
         dataSource,
         /positionFromLg\?: "inherit" \| "start" \| "center" \| "end"/,
     );
-    assert.match(
-        dataSource,
-        /layoutPreset\?: "default" \| "footerContact"/,
-    );
-    assert.match(
-        dataSource,
-        /layoutPreset\?: "default" \| "headerActions"/,
-    );
+    assert.match(dataSource, /layoutPreset\?: "default" \| "footerContact"/);
+    assert.match(dataSource, /layoutPreset\?: "default" \| "headerActions"/);
     assert.match(dataSource, /paddingX\?: "none" \| "sm" \| "md" \| "lg"/);
     assert.match(
         dataSource,
@@ -200,7 +206,10 @@ test("site layout builder uses one frame with four puck slots", () => {
     assert.match(dataSource, /showBrand\?: boolean/);
     assert.match(dataSource, /quickLinksMenuId\?: string/);
     assert.match(dataSource, /logoUrl\?: PuckImageValue/);
-    assert.match(layoutConfigsSource, /permissions:\s*\{\s*insert:\s*false,\s*\}/);
+    assert.match(
+        layoutConfigsSource,
+        /permissions:\s*\{\s*insert:\s*false,\s*\}/,
+    );
     assert.match(siteLayoutFrameSource, /defaultProps: \{/);
     assert.match(siteLayoutFrameSource, /permissions: \{/);
     assert.match(siteLayoutFrameSource, /delete: false/);
@@ -222,21 +231,33 @@ test("site layout builder uses one frame with four puck slots", () => {
         siteLayoutFrameSource,
         /getSurfaceShadowClass\(surfaceShadow\),\s+className,/,
     );
-    assert.match(siteLayoutFrameSource, /<Header className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
-    assert.match(siteLayoutFrameSource, /<Left className=\{slotClassName\} minEmptyHeight=\{200\} \/>/);
-    assert.match(siteLayoutFrameSource, /<Right className=\{slotClassName\} minEmptyHeight=\{200\} \/>/);
-    assert.match(siteLayoutFrameSource, /<Footer className=\{slotClassName\} minEmptyHeight=\{120\} \/>/);
-    assert.match(siteLayoutFrameSource, /"NewsletterForm"/);
-    assert.match(siteLayoutFrameSource, /"FitFooter"/);
     assert.match(
         siteLayoutFrameSource,
-        /<SiteLayoutShellFrame/,
+        /<Header className=\{slotClassName\} minEmptyHeight=\{120\} \/>/,
     );
+    assert.match(
+        siteLayoutFrameSource,
+        /<Left className=\{slotClassName\} minEmptyHeight=\{200\} \/>/,
+    );
+    assert.match(
+        siteLayoutFrameSource,
+        /<Right className=\{slotClassName\} minEmptyHeight=\{200\} \/>/,
+    );
+    assert.match(
+        siteLayoutFrameSource,
+        /<Footer className=\{slotClassName\} minEmptyHeight=\{120\} \/>/,
+    );
+    assert.match(siteLayoutFrameSource, /"NewsletterForm"/);
+    assert.match(siteLayoutFrameSource, /"FitFooter"/);
+    assert.match(siteLayoutFrameSource, /<SiteLayoutShellFrame/);
     assert.match(layoutConfigsSource, /export const layoutBuilderConfig/);
     assert.match(layoutConfigsSource, /const layoutBuilderComponentNames = \[/);
     assert.match(layoutConfigsSource, /"SiteLayoutFrame"/);
     assert.match(siteLayoutShellSource, /export function SiteLayoutShellFrame/);
-    assert.match(siteLayoutBuilderEditorSource, /plugins=\{\[createSiteLayoutOutlinePlugin\(\)\]\}/);
+    assert.match(
+        siteLayoutBuilderEditorSource,
+        /plugins=\{\[createSiteLayoutOutlinePlugin\(\)\]\}/,
+    );
     assert.match(siteLayoutOutlinePluginSource, /name: "outline"/);
     assert.match(siteLayoutOutlinePluginSource, /Header/);
     assert.match(siteLayoutOutlinePluginSource, /Left sidebar/);
@@ -249,22 +270,37 @@ test("FitFooter is registered for layout footer only", () => {
     assert.match(pageConfigSource, /FitFooter:\s*FitFooterComponentConfig/);
     assert.match(layoutConfigsSource, /siteLayoutFooterComponents/);
     assert.match(layoutConfigsSource, /"FitFooter"/);
-    assert.match(siteLayoutFrameSource, /export const siteLayoutFooterComponents = \[/);
+    assert.match(
+        siteLayoutFrameSource,
+        /export const siteLayoutFooterComponents = \[/,
+    );
     assert.match(siteLayoutFrameSource, /"FitFooter"/);
 
     const pageCategoriesSource = pageConfigSource.slice(
         pageConfigSource.indexOf("export const pageConfig"),
     );
 
-    assert.doesNotMatch(pageCategoriesSource, /components:\s*\[[\s\S]*"FitFooter"/);
+    assert.doesNotMatch(
+        pageCategoriesSource,
+        /components:\s*\[[\s\S]*"FitFooter"/,
+    );
 });
 
 test("FitFooter fields use cms media, navigation menu source, and toggle-gated details", () => {
     assert.match(dynamicFooterSource, /export const FitFooterComponentConfig/);
-    assert.match(dynamicFooterSource, /logoUrl:\s*\{\s*type: "text",\s*label: "Logo"/);
+    assert.match(
+        dynamicFooterSource,
+        /logoUrl:\s*\{\s*type: "text",\s*label: "Logo"/,
+    );
     assert.match(sharedSource, /PUCK_MEDIA_FIELD_NAMES[\s\S]*"logoUrl"/);
-    assert.match(dynamicFooterSource, /quickLinksMenuId:\s*\{\s*type: "select"/);
-    assert.match(dynamicSharedSource, /fetchSourceOptions\("navigation-menus"\)/);
+    assert.match(
+        dynamicFooterSource,
+        /quickLinksMenuId:\s*\{\s*type: "select"/,
+    );
+    assert.match(
+        dynamicSharedSource,
+        /fetchSourceOptions\("navigation-menus"\)/,
+    );
     assert.match(dynamicFooterSource, /resolveFields:\s*async/);
     assert.match(dynamicFooterSource, /if \(props\.showBrand\) \{/);
     assert.match(dynamicFooterSource, /if \(props\.showContact\) \{/);

@@ -7,7 +7,10 @@ test("CMS posts realtime refreshes the async table list", async () => {
 
     assert.match(source, /useCmsContentRealtime\("posts", \(payload\) => \{/);
     assert.match(source, /reloadPostsList\(\);/);
-    assert.match(source, /function reloadPostsList\(\): void \{\s*tableQueryState\.list\.reload\(\);\s*\}/);
+    assert.match(
+        source,
+        /function reloadPostsList\(\): void \{\s*tableQueryState\.list\.reload\(\);\s*\}/,
+    );
     assert.doesNotMatch(source, /router\.reload\(\{ only: \["posts"\] \}\);/);
 });
 
@@ -23,7 +26,10 @@ test("CMS page realtime, clone, and delete actions refresh the async table list"
     const source = await readFile("web/pages/cms/pages/index.tsx", "utf8");
 
     assert.match(source, /useCmsContentRealtime\("pages", \(payload\) => \{/);
-    assert.match(source, /function reloadPagesList\(\): void \{\s*tableQueryState\.list\.reload\(\);\s*\}/);
+    assert.match(
+        source,
+        /function reloadPagesList\(\): void \{\s*tableQueryState\.list\.reload\(\);\s*\}/,
+    );
     assert.match(source, /onSuccess: reloadPagesList/);
     assert.match(source, /setDeleteTarget\(null\);\s*reloadPagesList\(\);/);
 });

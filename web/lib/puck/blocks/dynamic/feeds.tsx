@@ -384,7 +384,9 @@ function StaffGridBlock({
                   {record.position ?? "Cán bộ"}
                 </Text>
                 <Text className="text-xs text-muted-fg leading-relaxed">
-                  {record.expertise ? `Đơn vị: ${record.expertise}` : record.phone}
+                  {record.expertise
+                    ? `Đơn vị: ${record.expertise}`
+                    : record.phone}
                 </Text>
               </div>
               <div className="pt-2 w-full border-t border-border/50 flex items-center justify-center gap-1.5 text-xs text-muted-fg">

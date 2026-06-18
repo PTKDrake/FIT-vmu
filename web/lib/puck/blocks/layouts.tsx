@@ -98,9 +98,7 @@ export function getPaddingXClass(paddingX?: "none" | "sm" | "md" | "lg") {
   return paddingX ? pxClasses[paddingX] : "";
 }
 
-export function getInsetYClass(
-  insetY?: "none" | "xs" | "sm" | "md" | "lg",
-) {
+export function getInsetYClass(insetY?: "none" | "xs" | "sm" | "md" | "lg") {
   const insetClasses = {
     none: "py-0",
     xs: "py-2",
@@ -358,10 +356,7 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
       className,
       children: Children,
     } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
     const resolvedBackgroundImage = getPuckImageUrl(backgroundImage);
 
     // Backward compatibility for paddingY
@@ -374,10 +369,10 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
     const alignClass =
       minHeight && minHeight !== "auto"
         ? {
-          top: "justify-start",
-          center: "justify-center",
-          bottom: "justify-end",
-        }[contentAlign || "top"]
+            top: "justify-start",
+            center: "justify-center",
+            bottom: "justify-end",
+          }[contentAlign || "top"]
         : "";
 
     return (
@@ -400,11 +395,11 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
         style={
           resolvedBackgroundImage
             ? {
-              backgroundImage: `url(${resolvedBackgroundImage})`,
-              backgroundSize: backgroundSize || "cover",
-              backgroundPosition: backgroundPosition || "center",
-              backgroundRepeat: "no-repeat",
-            }
+                backgroundImage: `url(${resolvedBackgroundImage})`,
+                backgroundSize: backgroundSize || "cover",
+                backgroundPosition: backgroundPosition || "center",
+                backgroundRepeat: "no-repeat",
+              }
             : undefined
         }
       >
@@ -431,326 +426,317 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
 
 // 2. CONTAINER LAYOUT BLOCK
 export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
-{
-  label: "Giới hạn chiều rộng (Container)",
-  defaultProps: {
-    maxWidth: "lg",
-    horizontalPadding: "md",
-    align: "center",
-    insetY: "none",
-    hideOn: "none",
-    className: "",
-  },
-  fields: {
-    anchorId: {
-      type: "text",
-      label: "ID điều hướng",
+  {
+    label: "Giới hạn chiều rộng (Container)",
+    defaultProps: {
+      maxWidth: "lg",
+      horizontalPadding: "md",
+      align: "center",
+      insetY: "none",
+      hideOn: "none",
+      className: "",
     },
-    ...puckSurfaceFields,
-    maxWidth: {
-      type: "select",
-      label: "Chiều rộng tối đa",
-      options: [
-        { label: "Nhỏ", value: "sm" },
-        { label: "Vừa", value: "md" },
-        { label: "Lớn", value: "lg" },
-        { label: "Rất lớn", value: "xl" },
-        { label: "Cực lớn", value: "2xl" },
-        { label: "Tràn màn hình", value: "full" },
-      ],
+    fields: {
+      anchorId: {
+        type: "text",
+        label: "ID điều hướng",
+      },
+      ...puckSurfaceFields,
+      maxWidth: {
+        type: "select",
+        label: "Chiều rộng tối đa",
+        options: [
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+          { label: "Rất lớn", value: "xl" },
+          { label: "Cực lớn", value: "2xl" },
+          { label: "Tràn màn hình", value: "full" },
+        ],
+      },
+      horizontalPadding: {
+        type: "select",
+        label: "Khoảng đệm ngang",
+        options: [
+          { label: "Không", value: "none" },
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+        ],
+      },
+      align: {
+        type: "select",
+        label: "Canh container",
+        options: [
+          { label: "Giữa", value: "center" },
+          { label: "Trái", value: "left" },
+          { label: "Phải", value: "right" },
+        ],
+      },
+      insetY: {
+        type: "select",
+        label: "Khoảng đệm trên và dưới",
+        options: [
+          { label: "Không", value: "none" },
+          { label: "Rất nhỏ", value: "xs" },
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+        ],
+      },
+      hideOn: {
+        type: "select",
+        label: "Ẩn theo thiết bị",
+        options: [
+          { label: "Không ẩn", value: "none" },
+          { label: "Di động", value: "mobile" },
+          { label: "Máy tính bảng", value: "tablet" },
+          { label: "Máy tính", value: "desktop" },
+        ],
+      },
+      className: {
+        type: "text",
+        label: "CSS class bổ sung",
+      },
+      children: {
+        type: "slot",
+        label: "Nội dung",
+      },
     },
-    horizontalPadding: {
-      type: "select",
-      label: "Khoảng đệm ngang",
-      options: [
-        { label: "Không", value: "none" },
-        { label: "Nhỏ", value: "sm" },
-        { label: "Vừa", value: "md" },
-        { label: "Lớn", value: "lg" },
-      ],
-    },
-    align: {
-      type: "select",
-      label: "Canh container",
-      options: [
-        { label: "Giữa", value: "center" },
-        { label: "Trái", value: "left" },
-        { label: "Phải", value: "right" },
-      ],
-    },
-    insetY: {
-      type: "select",
-      label: "Khoảng đệm trên và dưới",
-      options: [
-        { label: "Không", value: "none" },
-        { label: "Rất nhỏ", value: "xs" },
-        { label: "Nhỏ", value: "sm" },
-        { label: "Vừa", value: "md" },
-        { label: "Lớn", value: "lg" },
-      ],
-    },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
-    className: {
-      type: "text",
-      label: "CSS class bổ sung",
-    },
-    children: {
-      type: "slot",
-      label: "Nội dung",
-    },
-  },
-  render: (props) => {
-    const {
-      anchorId,
-      maxWidth,
-      paddingX,
-      horizontalPadding,
-      align,
-      insetY,
-      hideOn,
-      className,
-      children: Children,
-    } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    render: (props) => {
+      const {
+        anchorId,
+        maxWidth,
+        paddingX,
+        horizontalPadding,
+        align,
+        insetY,
+        hideOn,
+        className,
+        children: Children,
+      } = props;
+      const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
-    const widthClass = {
-      sm: "max-w-3xl",
-      md: "max-w-5xl",
-      lg: "max-w-7xl",
-      xl: "max-w-[1440px]",
-      "2xl": "max-w-[1680px]",
-      full: "max-w-full",
-    }[maxWidth || "lg"];
+      const widthClass = {
+        sm: "max-w-3xl",
+        md: "max-w-5xl",
+        lg: "max-w-7xl",
+        xl: "max-w-[1440px]",
+        "2xl": "max-w-[1680px]",
+        full: "max-w-full",
+      }[maxWidth || "lg"];
 
-    const alignClass = {
-      center: "mx-auto",
-      left: "mr-auto ml-0",
-      right: "ml-auto mr-0",
-    }[align || "center"];
+      const alignClass = {
+        center: "mx-auto",
+        left: "mr-auto ml-0",
+        right: "ml-auto mr-0",
+      }[align || "center"];
 
-    const resolvedHorizontalPadding =
-      horizontalPadding ??
-      (paddingX === false || paddingX === "no"
-        ? "none"
-        : paddingX === true || paddingX === "yes" || paddingX === undefined
-          ? "md"
-          : "none");
-    const emptyPreviewClass = isPuckEditorPreview()
-      ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
-      : "";
+      const resolvedHorizontalPadding =
+        horizontalPadding ??
+        (paddingX === false || paddingX === "no"
+          ? "none"
+          : paddingX === true || paddingX === "yes" || paddingX === undefined
+            ? "md"
+            : "none");
+      const emptyPreviewClass = isPuckEditorPreview()
+        ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
+        : "";
 
-    return (
-      <div
-        id={id}
-        className={twMerge(
-          "@container w-full min-w-0",
-          alignClass,
-          widthClass,
-          getPaddingXClass(resolvedHorizontalPadding),
-          getInsetYClass(insetY),
-          getSurfaceClassName(props, "", { includeDefaults: false }),
-          getHideOnClass(hideOn),
-          className,
-        )}
-      >
-        <Children
-          className={twMerge("w-full", emptyPreviewClass)}
-          minEmptyHeight={96}
-        />
-      </div>
-    );
-  },
-};
+      return (
+        <div
+          id={id}
+          className={twMerge(
+            "@container w-full min-w-0",
+            alignClass,
+            widthClass,
+            getPaddingXClass(resolvedHorizontalPadding),
+            getInsetYClass(insetY),
+            getSurfaceClassName(props, "", { includeDefaults: false }),
+            getHideOnClass(hideOn),
+            className,
+          )}
+        >
+          <Children
+            className={twMerge("w-full", emptyPreviewClass)}
+            minEmptyHeight={96}
+          />
+        </div>
+      );
+    },
+  };
 
 // 3. TWO COLUMNS LAYOUT BLOCK
 export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns"> =
-{
-  label: "2 cột nội dung",
-  defaultProps: {
-    columnRatio: "equal",
-    gap: "lg",
-    stackOnMobile: true,
-    reverseOnMobile: false,
-    verticalAlign: "center",
-    hideOn: "none",
-    className: "",
-  },
-  fields: {
-    anchorId: {
-      type: "text",
-      label: "ID điều hướng",
+  {
+    label: "2 cột nội dung",
+    defaultProps: {
+      columnRatio: "equal",
+      gap: "lg",
+      stackOnMobile: true,
+      reverseOnMobile: false,
+      verticalAlign: "center",
+      hideOn: "none",
+      className: "",
     },
-    ...puckSurfaceFields,
-    columnRatio: {
-      type: "select",
-      label: "Tỷ lệ 2 cột",
-      options: [
-        { label: "Đều nhau", value: "equal" },
-        { label: "Trái rộng", value: "leftWide" },
-        { label: "Phải rộng", value: "rightWide" },
-      ],
+    fields: {
+      anchorId: {
+        type: "text",
+        label: "ID điều hướng",
+      },
+      ...puckSurfaceFields,
+      columnRatio: {
+        type: "select",
+        label: "Tỷ lệ 2 cột",
+        options: [
+          { label: "Đều nhau", value: "equal" },
+          { label: "Trái rộng", value: "leftWide" },
+          { label: "Phải rộng", value: "rightWide" },
+        ],
+      },
+      gap: {
+        type: "select",
+        label: "Khoảng cách giữa 2 cột",
+        options: [
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+          { label: "Rất lớn", value: "xl" },
+        ],
+      },
+      stackOnMobile: {
+        type: "radio",
+        label: "Xếp thành 1 cột trên mobile",
+        options: [
+          { label: "Có", value: true as any },
+          { label: "Không", value: false as any },
+        ],
+      },
+      reverseOnMobile: {
+        type: "radio",
+        label: "Đảo thứ tự trên mobile",
+        options: [
+          { label: "Có", value: true as any },
+          { label: "Không", value: false as any },
+        ],
+      },
+      verticalAlign: {
+        type: "select",
+        label: "Canh 2 cột theo chiều dọc",
+        options: [
+          { label: "Trên", value: "top" },
+          { label: "Giữa", value: "center" },
+          { label: "Dưới", value: "bottom" },
+          { label: "Kéo giãn", value: "stretch" },
+        ],
+      },
+      hideOn: {
+        type: "select",
+        label: "Ẩn theo thiết bị",
+        options: [
+          { label: "Không ẩn", value: "none" },
+          { label: "Di động", value: "mobile" },
+          { label: "Máy tính bảng", value: "tablet" },
+          { label: "Máy tính", value: "desktop" },
+        ],
+      },
+      className: {
+        type: "text",
+        label: "CSS class bổ sung",
+      },
+      left: {
+        type: "slot",
+        label: "Nội dung cột trái",
+      },
+      right: {
+        type: "slot",
+        label: "Nội dung cột phải",
+      },
     },
-    gap: {
-      type: "select",
-      label: "Khoảng cách giữa 2 cột",
-      options: [
-        { label: "Nhỏ", value: "sm" },
-        { label: "Vừa", value: "md" },
-        { label: "Lớn", value: "lg" },
-        { label: "Rất lớn", value: "xl" },
-      ],
-    },
-    stackOnMobile: {
-      type: "radio",
-      label: "Xếp thành 1 cột trên mobile",
-      options: [
-        { label: "Có", value: true as any },
-        { label: "Không", value: false as any },
-      ],
-    },
-    reverseOnMobile: {
-      type: "radio",
-      label: "Đảo thứ tự trên mobile",
-      options: [
-        { label: "Có", value: true as any },
-        { label: "Không", value: false as any },
-      ],
-    },
-    verticalAlign: {
-      type: "select",
-      label: "Canh 2 cột theo chiều dọc",
-      options: [
-        { label: "Trên", value: "top" },
-        { label: "Giữa", value: "center" },
-        { label: "Dưới", value: "bottom" },
-        { label: "Kéo giãn", value: "stretch" },
-      ],
-    },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
-    className: {
-      type: "text",
-      label: "CSS class bổ sung",
-    },
-    left: {
-      type: "slot",
-      label: "Nội dung cột trái",
-    },
-    right: {
-      type: "slot",
-      label: "Nội dung cột phải",
-    },
-  },
-  render: (props) => {
-    const {
-      columnRatio,
-      gap,
-      stackOnMobile,
-      reverseOnMobile,
-      verticalAlign,
-      anchorId,
-      hideOn,
-      className,
-      left: Left,
-      right: Right,
-    } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    render: (props) => {
+      const {
+        columnRatio,
+        gap,
+        stackOnMobile,
+        reverseOnMobile,
+        verticalAlign,
+        anchorId,
+        hideOn,
+        className,
+        left: Left,
+        right: Right,
+      } = props;
+      const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
-    const ratioClass = {
-      equal: "grid-cols-1 md:grid-cols-2 @3xl:grid-cols-2",
-      leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr] @3xl:grid-cols-[2fr_1fr]",
-      rightWide: "grid-cols-1 md:grid-cols-[1fr_2fr] @3xl:grid-cols-[1fr_2fr]",
-      // Backwards compatibility mappings:
-      "1:1": "grid-cols-1 md:grid-cols-2 @3xl:grid-cols-2",
-      "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr] @3xl:grid-cols-[2fr_1fr]",
-      "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr] @3xl:grid-cols-[1fr_2fr]",
-    }[columnRatio || "equal"];
+      const ratioClass = {
+        equal: "grid-cols-1 md:grid-cols-2 @3xl:grid-cols-2",
+        leftWide: "grid-cols-1 md:grid-cols-[2fr_1fr] @3xl:grid-cols-[2fr_1fr]",
+        rightWide:
+          "grid-cols-1 md:grid-cols-[1fr_2fr] @3xl:grid-cols-[1fr_2fr]",
+        // Backwards compatibility mappings:
+        "1:1": "grid-cols-1 md:grid-cols-2 @3xl:grid-cols-2",
+        "2:1": "grid-cols-1 md:grid-cols-[2fr_1fr] @3xl:grid-cols-[2fr_1fr]",
+        "1:2": "grid-cols-1 md:grid-cols-[1fr_2fr] @3xl:grid-cols-[1fr_2fr]",
+      }[columnRatio || "equal"];
 
-    const isStack = stackOnMobile !== false;
-    const isReverse = reverseOnMobile === true;
+      const isStack = stackOnMobile !== false;
+      const isReverse = reverseOnMobile === true;
 
-    const gapStyle =
-      typeof gap === "number" ? { gap: `${gap}px` } : undefined;
+      const gapStyle =
+        typeof gap === "number" ? { gap: `${gap}px` } : undefined;
 
-    const wrapperClass = twMerge(
-      "@container grid w-full min-w-0 items-start gap-6 md:gap-8",
-      isStack
-        ? twMerge(
-          "flex",
-          isReverse ? "flex-col-reverse" : "flex-col",
-          "md:grid @3xl:grid",
-          ratioClass,
-        )
-        : twMerge("grid", ratioClass),
-      typeof gap === "number" ? undefined : getGapClass(gap),
-      getSurfaceClassName(props, "", { includeDefaults: false }),
-      verticalAlign
-        ? {
-          top: "items-start",
-          center: "items-center",
-          bottom: "items-end",
-          stretch: "items-stretch",
-        }[verticalAlign]
-        : "items-center",
-      getHideOnClass(hideOn),
-      className,
-    );
+      const wrapperClass = twMerge(
+        "@container grid w-full min-w-0 items-start gap-6 md:gap-8",
+        isStack
+          ? twMerge(
+              "flex",
+              isReverse ? "flex-col-reverse" : "flex-col",
+              "md:grid @3xl:grid",
+              ratioClass,
+            )
+          : twMerge("grid", ratioClass),
+        typeof gap === "number" ? undefined : getGapClass(gap),
+        getSurfaceClassName(props, "", { includeDefaults: false }),
+        verticalAlign
+          ? {
+              top: "items-start",
+              center: "items-center",
+              bottom: "items-end",
+              stretch: "items-stretch",
+            }[verticalAlign]
+          : "items-center",
+        getHideOnClass(hideOn),
+        className,
+      );
 
-    const emptyPreviewClass = isPuckEditorPreview()
-      ? "empty:min-h-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20 empty:flex empty:items-center empty:justify-center"
-      : "";
+      const emptyPreviewClass = isPuckEditorPreview()
+        ? "empty:min-h-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20 empty:flex empty:items-center empty:justify-center"
+        : "";
 
-    return (
-      <div
-        id={id}
-        className={wrapperClass}
-        style={gapStyle}
-      >
-        <div className="flex h-full w-full flex-col">
-          <Left
-            className={twMerge(
-              "w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs",
-              emptyPreviewClass,
-            )}
-            minEmptyHeight={96}
-          />
+      return (
+        <div id={id} className={wrapperClass} style={gapStyle}>
+          <div className="flex h-full w-full flex-col">
+            <Left
+              className={twMerge(
+                "w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs",
+                emptyPreviewClass,
+              )}
+              minEmptyHeight={96}
+            />
+          </div>
+          <div className="flex h-full w-full flex-col">
+            <Right
+              className={twMerge(
+                "w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs",
+                emptyPreviewClass,
+              )}
+              minEmptyHeight={96}
+            />
+          </div>
         </div>
-        <div className="flex h-full w-full flex-col">
-          <Right
-            className={twMerge(
-              "w-full rounded-2xl border border-border/60 bg-overlay/50 p-4 shadow-xs",
-              emptyPreviewClass,
-            )}
-            minEmptyHeight={96}
-          />
-        </div>
-      </div>
-    );
-  },
-};
+      );
+    },
+  };
 
 // 4. SPACER LAYOUT BLOCK
 export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
@@ -805,10 +791,7 @@ export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
   },
   render: (props) => {
     const { anchorId, height, mobileHeight, hideOn, className } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
     const desktopHeightClass = {
       xs: "sm:h-4",
@@ -924,20 +907,9 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
     },
   },
   render: (props) => {
-    const {
-      type,
-      color,
-      spacingY,
-      width,
-      align,
-      anchorId,
-      hideOn,
-      className,
-    } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    const { type, color, spacingY, width, align, anchorId, hideOn, className } =
+      props;
+    const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
     const activeColor =
       (color as string) === "border" ? "default" : color || "default";

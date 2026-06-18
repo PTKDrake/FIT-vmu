@@ -92,105 +92,105 @@ export default function CmsPostCategoriesPage({
   });
 
   const columns: Array<ColumnDef<CmsPostCategoryRow, any>> = [
-      categoryColumnHelper.accessor("name", {
-        header: "Danh mục",
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()}</Text>
-        ),
-      }),
-      categoryColumnHelper.accessor("slug", {
-        id: "slug",
-        header: "Slug",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
-        ),
-      }),
-      categoryColumnHelper.accessor("parentName", {
-        header: "Danh mục cha",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <Text className="text-sm text-muted-fg">
-            {getValue() ? (
-              <DataTableBadge intent="info">{getValue()}</DataTableBadge>
-            ) : (
-              <span className="text-muted-fg/60 italic">Cấp cao nhất</span>
-            )}
-          </Text>
-        ),
-      }),
-      categoryColumnHelper.accessor("sortOrder", {
-        id: "sort_order",
-        header: "Thứ tự",
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()}</Text>
-        ),
-      }),
-      categoryColumnHelper.accessor("postCount", {
-        header: "Số bài viết",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()} bài viết</Text>
-        ),
-      }),
-      categoryColumnHelper.accessor("childrenCount", {
-        header: "Danh mục con",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()} con</Text>
-        ),
-      }),
-      categoryColumnHelper.accessor("isActive", {
-        header: "Trạng thái",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <DataTableBadge intent={getValue() ? "success" : "secondary"}>
-            {getValue() ? "Đang hoạt động" : "Đang ẩn"}
-          </DataTableBadge>
-        ),
-      }),
-      categoryColumnHelper.accessor("updatedAt", {
-        header: "Cập nhật",
-        enableSorting: false,
-        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-      }),
-      categoryColumnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) =>
-          can.manageCategories ? (
-            <DataTableActions
-              triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
+    categoryColumnHelper.accessor("name", {
+      header: "Danh mục",
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()}</Text>
+      ),
+    }),
+    categoryColumnHelper.accessor("slug", {
+      id: "slug",
+      header: "Slug",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
+      ),
+    }),
+    categoryColumnHelper.accessor("parentName", {
+      header: "Danh mục cha",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <Text className="text-sm text-muted-fg">
+          {getValue() ? (
+            <DataTableBadge intent="info">{getValue()}</DataTableBadge>
+          ) : (
+            <span className="text-muted-fg/60 italic">Cấp cao nhất</span>
+          )}
+        </Text>
+      ),
+    }),
+    categoryColumnHelper.accessor("sortOrder", {
+      id: "sort_order",
+      header: "Thứ tự",
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()}</Text>
+      ),
+    }),
+    categoryColumnHelper.accessor("postCount", {
+      header: "Số bài viết",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()} bài viết</Text>
+      ),
+    }),
+    categoryColumnHelper.accessor("childrenCount", {
+      header: "Danh mục con",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()} con</Text>
+      ),
+    }),
+    categoryColumnHelper.accessor("isActive", {
+      header: "Trạng thái",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <DataTableBadge intent={getValue() ? "success" : "secondary"}>
+          {getValue() ? "Đang hoạt động" : "Đang ẩn"}
+        </DataTableBadge>
+      ),
+    }),
+    categoryColumnHelper.accessor("updatedAt", {
+      header: "Cập nhật",
+      enableSorting: false,
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+    }),
+    categoryColumnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) =>
+        can.manageCategories ? (
+          <DataTableActions
+            triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
+          >
+            <MenuItem
+              onAction={() => {
+                setDialogMode("edit");
+                setActiveCategory({
+                  description: row.original.description ?? "",
+                  id: row.original.id,
+                  is_active: row.original.isActive,
+                  name: row.original.name,
+                  parent_id: row.original.parentId,
+                  slug: row.original.slug,
+                  sort_order: row.original.sortOrder,
+                  site_layout_id: row.original.siteLayoutId,
+                });
+                setDialogOpen(true);
+              }}
             >
-              <MenuItem
-                onAction={() => {
-                  setDialogMode("edit");
-                  setActiveCategory({
-                    description: row.original.description ?? "",
-                    id: row.original.id,
-                    is_active: row.original.isActive,
-                    name: row.original.name,
-                    parent_id: row.original.parentId,
-                    slug: row.original.slug,
-                    sort_order: row.original.sortOrder,
-                    site_layout_id: row.original.siteLayoutId,
-                  });
-                  setDialogOpen(true);
-                }}
-              >
-                <PencilSquareIcon />
-                Chỉnh sửa
-              </MenuItem>
-              <MenuItem
-                intent="danger"
-                onAction={() => setDeleteTarget(row.original)}
-              >
-                <TrashIcon />
-                Xóa danh mục
-              </MenuItem>
-            </DataTableActions>
-          ) : null,
-      }),
+              <PencilSquareIcon />
+              Chỉnh sửa
+            </MenuItem>
+            <MenuItem
+              intent="danger"
+              onAction={() => setDeleteTarget(row.original)}
+            >
+              <TrashIcon />
+              Xóa danh mục
+            </MenuItem>
+          </DataTableActions>
+        ) : null,
+    }),
   ];
 
   function deleteCategory(): void {

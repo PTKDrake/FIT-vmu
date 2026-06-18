@@ -28,9 +28,12 @@ import {
   getResponsivePositionClass,
   getResponsiveTextAlignClass,
   parseOptionalId,
-  usePuckDynamicData
+  usePuckDynamicData,
 } from "./shared";
-import type {PuckDynamicNavigationItem, PuckDynamicNavigationMenu} from "./shared";
+import type {
+  PuckDynamicNavigationItem,
+  PuckDynamicNavigationMenu,
+} from "./shared";
 
 interface NavigationMenuBlockProps {
   className?: string;

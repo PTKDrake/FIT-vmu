@@ -255,10 +255,7 @@ export function CategoryFormDialog({
               <Select
                 aria-label="Bố cục danh mục"
                 onChange={(key) =>
-                  form.setData(
-                    "site_layout_id",
-                    key ? Number(key) : null,
-                  )
+                  form.setData("site_layout_id", key ? Number(key) : null)
                 }
                 value={
                   form.data.site_layout_id != null

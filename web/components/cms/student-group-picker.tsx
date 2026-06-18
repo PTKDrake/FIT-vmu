@@ -3,11 +3,7 @@ import { useState } from "react";
 import { StudentGroupFormDialog } from "@/components/cms/student-group-form-dialog";
 import type { StudentGroupFormValues } from "@/components/cms/student-group-form-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Description,
-  FieldError,
-  Label,
-} from "@/components/ui/field";
+import { Description, FieldError, Label } from "@/components/ui/field";
 import {
   MultipleSelect,
   MultipleSelectContent,
@@ -79,7 +75,11 @@ export function StudentGroupPicker({
         <Description>
           Chỉ sinh viên thuộc các nhóm đã chọn mới xem được nội dung này.
         </Description>
-        <Button intent="outline" size="sm" onPress={() => setIsDialogOpen(true)}>
+        <Button
+          intent="outline"
+          size="sm"
+          onPress={() => setIsDialogOpen(true)}
+        >
           <PlusIcon />
           Tạo nhanh group
         </Button>

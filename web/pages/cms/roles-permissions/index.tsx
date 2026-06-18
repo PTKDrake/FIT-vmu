@@ -397,9 +397,9 @@ export default function CmsRolesPermissionsPage({
 
         const response = await fetch(
           rolesPermissions.update.url(
-            roleRouteArgument<Parameters<typeof rolesPermissions.update.url>[0]>(
-              roleId,
-            ),
+            roleRouteArgument<
+              Parameters<typeof rolesPermissions.update.url>[0]
+            >(roleId),
           ),
           {
             method: "PATCH",

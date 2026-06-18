@@ -52,10 +52,19 @@ test("auth status menu links CMS access through the shared gate result", () => {
 });
 
 test("public Puck render hydrates missing block fields from builder defaults", () => {
-    assert.match(renderSource, /applyPuckDefaultProps\(parsedData, resolvedConfig\)/);
-    assert.match(pageBuilderDataSource, /export function applyPuckDefaultProps/);
+    assert.match(
+        renderSource,
+        /applyPuckDefaultProps\(parsedData, resolvedConfig\)/,
+    );
+    assert.match(
+        pageBuilderDataSource,
+        /export function applyPuckDefaultProps/,
+    );
     assert.match(pageBuilderDataSource, /componentConfig\?\.defaultProps/);
     assert.match(pageBuilderDataSource, /if \(value === undefined\)/);
-    assert.match(pageBuilderDataSource, /normalizePuckComponentList\(\s+data\.content,\s+config,\s+\)/);
+    assert.match(
+        pageBuilderDataSource,
+        /normalizePuckComponentList\(\s+data\.content,\s+config,\s+\)/,
+    );
     assert.match(pageBuilderDataSource, /normalizePuckZones/);
 });

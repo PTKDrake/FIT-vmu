@@ -78,7 +78,6 @@ export function DashboardMainPanel({
               ))}
             </div>
           </div>
-
         </div>
 
         <div className="space-y-4">

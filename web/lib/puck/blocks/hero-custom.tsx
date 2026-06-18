@@ -15,6 +15,7 @@ export const HeroCustomComponentConfig: PageBuilderComponentConfig<"HeroCustom">
       primaryActionHref: "#",
       secondaryActionLabel: "Tuyển sinh",
       secondaryActionHref: "#",
+      theme: "light",
       className: "",
     },
     fields: {
@@ -26,6 +27,14 @@ export const HeroCustomComponentConfig: PageBuilderComponentConfig<"HeroCustom">
       primaryActionHref: { type: "text", label: "Liên kết chính" },
       secondaryActionLabel: { type: "text", label: "Nút hành động phụ" },
       secondaryActionHref: { type: "text", label: "Liên kết phụ" },
+      theme: {
+        type: "select",
+        label: "Kiểu nền",
+        options: [
+          { label: "Nền sáng (Mặc định)", value: "light" },
+          { label: "Nền tối", value: "dark" },
+        ],
+      },
       className: { type: "text", label: "Lớp CSS bổ sung" },
     },
     render: (props) => {
@@ -38,6 +47,7 @@ export const HeroCustomComponentConfig: PageBuilderComponentConfig<"HeroCustom">
         primaryActionHref,
         secondaryActionLabel,
         secondaryActionHref,
+        theme,
         className,
       } = props;
       const id = getPuckBlockDomId((props as { id?: string }).id);
@@ -53,6 +63,7 @@ export const HeroCustomComponentConfig: PageBuilderComponentConfig<"HeroCustom">
             primaryActionHref={primaryActionHref}
             secondaryActionLabel={secondaryActionLabel}
             secondaryActionHref={secondaryActionHref}
+            theme={theme}
             className={className}
           />
         </div>

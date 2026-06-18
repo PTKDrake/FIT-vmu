@@ -1,18 +1,14 @@
 import { createUsePuck } from "@puckeditor/core";
 import type { ComponentType, ReactNode } from "react";
-import {
-  MediaLibrarySelector
-  
-} from "@/components/cms/media-selector";
-import type {CmsMediaItem} from "@/components/cms/media-selector";
+import { MediaLibrarySelector } from "@/components/cms/media-selector";
+import type { CmsMediaItem } from "@/components/cms/media-selector";
 import {
   createPuckMediaReference,
   getPuckImageUrl,
   getPuckMediaDisplayName,
-  getPuckMediaId
-  
+  getPuckMediaId,
 } from "@/lib/puck/media";
-import type {PuckImageValue} from "@/lib/puck/media";
+import type { PuckImageValue } from "@/lib/puck/media";
 
 interface PuckLabelProps {
   children: ReactNode;
@@ -68,9 +64,10 @@ export function PuckMediaField({
           id: mediaId,
           displayName: getPuckMediaDisplayName(value) ?? "Ảnh đã chọn",
           previewUrl: getPuckImageUrl(value) || `/storage/media/${mediaId}`,
-          mimeType: typeof value === "object" && value?.mimeType
-            ? value.mimeType
-            : "image/jpeg",
+          mimeType:
+            typeof value === "object" && value?.mimeType
+              ? value.mimeType
+              : "image/jpeg",
         };
 
   function handleChange(media: CmsMediaItem | null): void {

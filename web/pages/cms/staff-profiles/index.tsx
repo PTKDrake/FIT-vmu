@@ -63,97 +63,97 @@ export default function CmsStaffProfilesPage({
   });
 
   const columns: Array<ColumnDef<CmsStaffProfileRow, any>> = [
-      columnHelper.accessor("fullName", {
-        id: "full_name",
-        header: "Cán bộ",
-        cell: ({ row }) => {
-          const profile = row.original;
+    columnHelper.accessor("fullName", {
+      id: "full_name",
+      header: "Cán bộ",
+      cell: ({ row }) => {
+        const profile = row.original;
 
-          return (
-            <div className="flex items-center gap-3 py-1">
-              <Avatar
-                src={profile.avatarUrl ?? undefined}
-                initials={profile.fullName.substring(0, 2).toUpperCase()}
-                className="size-9 rounded-full border border-border"
-                aria-label={`Ảnh đại diện của ${profile.displayName}`}
-              />
-              <Link
-                href={show.url({ staffProfile: profile.id })}
-                className="font-medium text-fg transition hover:text-primary text-sm"
-              >
-                {profile.displayName}
-              </Link>
-            </div>
-          );
-        },
-      }),
-      columnHelper.accessor("userEmail", {
-        id: "user_email",
-        header: "Tài khoản liên kết",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <span className="font-mono text-xs text-muted-fg">
-            {getValue() || "Không có"}
-          </span>
-        ),
-      }),
-      columnHelper.accessor("email", {
-        header: "Email",
-        enableSorting: false,
-        cell: ({ getValue }) => getValue() ?? "Chưa thiết lập",
-      }),
-      columnHelper.accessor("phone", {
-        header: "Điện thoại",
-        enableSorting: false,
-        cell: ({ getValue }) => getValue() ?? "Chưa thiết lập",
-      }),
-      columnHelper.accessor("isPublic", {
-        header: "Trạng thái",
-        enableSorting: false,
-        cell: ({ row }) => (
-          <DataTableBadge
-            intent={row.original.isPublic ? "success" : "secondary"}
-          >
-            {row.original.isPublic ? "Công khai" : "Ẩn / Nội bộ"}
-          </DataTableBadge>
-        ),
-      }),
-      columnHelper.accessor("updatedAt", {
-        header: "Cập nhật",
-        enableSorting: false,
-        cell: ({ getValue }) => formatDateTime(getValue()),
-      }),
-      columnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) => {
-          const profile = row.original;
-
-          return (
-            <DataTableActions
-              triggerAriaLabel={`Tác vụ cho ${profile.displayName}`}
+        return (
+          <div className="flex items-center gap-3 py-1">
+            <Avatar
+              src={profile.avatarUrl ?? undefined}
+              initials={profile.fullName.substring(0, 2).toUpperCase()}
+              className="size-9 rounded-full border border-border"
+              aria-label={`Ảnh đại diện của ${profile.displayName}`}
+            />
+            <Link
+              href={show.url({ staffProfile: profile.id })}
+              className="font-medium text-fg transition hover:text-primary text-sm"
             >
-              <MenuItem href={show.url({ staffProfile: profile.id })}>
-                <EyeIcon />
-                Xem chi tiết
+              {profile.displayName}
+            </Link>
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("userEmail", {
+      id: "user_email",
+      header: "Tài khoản liên kết",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <span className="font-mono text-xs text-muted-fg">
+          {getValue() || "Không có"}
+        </span>
+      ),
+    }),
+    columnHelper.accessor("email", {
+      header: "Email",
+      enableSorting: false,
+      cell: ({ getValue }) => getValue() ?? "Chưa thiết lập",
+    }),
+    columnHelper.accessor("phone", {
+      header: "Điện thoại",
+      enableSorting: false,
+      cell: ({ getValue }) => getValue() ?? "Chưa thiết lập",
+    }),
+    columnHelper.accessor("isPublic", {
+      header: "Trạng thái",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <DataTableBadge
+          intent={row.original.isPublic ? "success" : "secondary"}
+        >
+          {row.original.isPublic ? "Công khai" : "Ẩn / Nội bộ"}
+        </DataTableBadge>
+      ),
+    }),
+    columnHelper.accessor("updatedAt", {
+      header: "Cập nhật",
+      enableSorting: false,
+      cell: ({ getValue }) => formatDateTime(getValue()),
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) => {
+        const profile = row.original;
+
+        return (
+          <DataTableActions
+            triggerAriaLabel={`Tác vụ cho ${profile.displayName}`}
+          >
+            <MenuItem href={show.url({ staffProfile: profile.id })}>
+              <EyeIcon />
+              Xem chi tiết
+            </MenuItem>
+            <MenuItem href={edit.url({ staffProfile: profile.id })}>
+              <PencilSquareIcon />
+              Chỉnh sửa
+            </MenuItem>
+            {can.deleteStaffProfile ? (
+              <MenuItem
+                intent="danger"
+                onAction={() => setDeleteTarget(profile)}
+              >
+                <TrashIcon />
+                Xóa hồ sơ
               </MenuItem>
-              <MenuItem href={edit.url({ staffProfile: profile.id })}>
-                <PencilSquareIcon />
-                Chỉnh sửa
-              </MenuItem>
-              {can.deleteStaffProfile ? (
-                <MenuItem
-                  intent="danger"
-                  onAction={() => setDeleteTarget(profile)}
-                >
-                  <TrashIcon />
-                  Xóa hồ sơ
-                </MenuItem>
-              ) : null}
-            </DataTableActions>
-          );
-        },
-      }),
+            ) : null}
+          </DataTableActions>
+        );
+      },
+    }),
   ];
 
   function deleteProfile(): void {

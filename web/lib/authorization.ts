@@ -149,10 +149,7 @@ const PERMISSION_GROUPS = [
   },
   {
     label: "Nhóm sinh viên",
-    permissions: [
-      "manage student groups",
-      "manage shared student groups",
-    ],
+    permissions: ["manage student groups", "manage shared student groups"],
   },
   {
     label: "Truy cập và hồ sơ",

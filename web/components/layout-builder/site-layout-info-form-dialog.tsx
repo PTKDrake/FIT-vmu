@@ -2,11 +2,7 @@ import { useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { Form } from "react-aria-components/Form";
 import { Button } from "@/components/ui/button";
-import {
-  FieldError,
-  FieldGroup,
-  Label,
-} from "@/components/ui/field";
+import { FieldError, FieldGroup, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   ModalBody,
@@ -38,7 +34,7 @@ export function SiteLayoutInfoFormDialog({
   isOpen,
   onOpenChange,
 }: SiteLayoutInfoFormDialogProps) {
-  if (! isOpen) {
+  if (!isOpen) {
     return null;
   }
 

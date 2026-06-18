@@ -85,82 +85,82 @@ export default function CmsPositionsPage({
   });
 
   const columns: Array<ColumnDef<CmsPositionRow, any>> = [
-      positionColumnHelper.accessor("name", {
-        header: "Chức vụ",
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()}</Text>
-        ),
-      }),
-      positionColumnHelper.accessor("slug", {
-        id: "slug",
-        header: "Slug",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
-        ),
-      }),
-      positionColumnHelper.accessor("sortOrder", {
-        id: "sort_order",
-        header: "Thứ tự",
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()}</Text>
-        ),
-      }),
-      positionColumnHelper.accessor("appointmentCount", {
-        header: "Đang dùng",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
-        ),
-      }),
-      positionColumnHelper.accessor("isActive", {
-        header: "Trạng thái",
-        enableSorting: false,
-        cell: ({ getValue }) => (
-          <DataTableBadge intent={getValue() ? "success" : "secondary"}>
-            {getValue() ? "Đang hoạt động" : "Đang ẩn"}
-          </DataTableBadge>
-        ),
-      }),
-      positionColumnHelper.accessor("updatedAt", {
-        header: "Cập nhật",
-        enableSorting: false,
-        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-      }),
-      positionColumnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) =>
-          can.managePositions ? (
-            <DataTableActions
-              triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
+    positionColumnHelper.accessor("name", {
+      header: "Chức vụ",
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()}</Text>
+      ),
+    }),
+    positionColumnHelper.accessor("slug", {
+      id: "slug",
+      header: "Slug",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
+      ),
+    }),
+    positionColumnHelper.accessor("sortOrder", {
+      id: "sort_order",
+      header: "Thứ tự",
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()}</Text>
+      ),
+    }),
+    positionColumnHelper.accessor("appointmentCount", {
+      header: "Đang dùng",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <Text className="font-medium text-fg">{getValue()} bổ nhiệm</Text>
+      ),
+    }),
+    positionColumnHelper.accessor("isActive", {
+      header: "Trạng thái",
+      enableSorting: false,
+      cell: ({ getValue }) => (
+        <DataTableBadge intent={getValue() ? "success" : "secondary"}>
+          {getValue() ? "Đang hoạt động" : "Đang ẩn"}
+        </DataTableBadge>
+      ),
+    }),
+    positionColumnHelper.accessor("updatedAt", {
+      header: "Cập nhật",
+      enableSorting: false,
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+    }),
+    positionColumnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) =>
+        can.managePositions ? (
+          <DataTableActions
+            triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
+          >
+            <MenuItem
+              onAction={() => {
+                setDialogMode("edit");
+                setActivePosition({
+                  id: row.original.id,
+                  is_active: row.original.isActive,
+                  name: row.original.name,
+                  slug: row.original.slug,
+                  sort_order: row.original.sortOrder,
+                });
+                setDialogOpen(true);
+              }}
             >
-              <MenuItem
-                onAction={() => {
-                  setDialogMode("edit");
-                  setActivePosition({
-                    id: row.original.id,
-                    is_active: row.original.isActive,
-                    name: row.original.name,
-                    slug: row.original.slug,
-                    sort_order: row.original.sortOrder,
-                  });
-                  setDialogOpen(true);
-                }}
-              >
-                <PencilSquareIcon />
-                Chỉnh sửa
-              </MenuItem>
-              <MenuItem
-                intent="danger"
-                onAction={() => setDeleteTarget(row.original)}
-              >
-                <TrashIcon />
-                Xóa chức vụ
-              </MenuItem>
-            </DataTableActions>
-          ) : null,
-      }),
+              <PencilSquareIcon />
+              Chỉnh sửa
+            </MenuItem>
+            <MenuItem
+              intent="danger"
+              onAction={() => setDeleteTarget(row.original)}
+            >
+              <TrashIcon />
+              Xóa chức vụ
+            </MenuItem>
+          </DataTableActions>
+        ) : null,
+    }),
   ];
 
   function deletePosition(): void {

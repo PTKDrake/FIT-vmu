@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
-import { useState  } from "react";
-import type {Key} from "react";
+import { useState } from "react";
+import type { Key } from "react";
 import {
   CMS_SIDEBAR_EXPANDED_GROUPS_STORAGE_KEY,
   getCmsNavigationCompactLabel,

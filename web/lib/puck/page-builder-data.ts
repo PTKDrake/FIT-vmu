@@ -534,6 +534,7 @@ export interface VmuFitPageBuilderComponents {
     primaryActionHref?: string;
     secondaryActionLabel?: string;
     secondaryActionHref?: string;
+    theme?: "light" | "dark";
     className?: string;
   };
   StatsCustom: {
@@ -545,6 +546,43 @@ export interface VmuFitPageBuilderComponents {
       value?: string;
       label?: string;
     }[];
+    className?: string;
+  };
+  ProgramsCustom: {
+    badge?: string;
+    title?: string;
+    description?: string;
+    actionLabel?: string;
+    actionHref?: string;
+    programs?: {
+      icon?: string;
+      title?: string;
+      description?: string;
+      href?: string;
+    }[];
+    className?: string;
+  };
+  AboutCustom: {
+    badge?: string;
+    title?: string;
+    imageUrl?: PuckImageValue;
+    imageMaxHeight?: "xs" | "sm" | "md" | "lg" | "xl" | "none";
+    mobileHighlightText?: string;
+    aboutDescription?: string;
+    features?: {
+      icon?: string;
+      title?: string;
+      description?: string;
+    }[];
+    cardTitle?: string;
+    cardSubtitle?: string;
+    cardHighlightText?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    website?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
     className?: string;
   };
 }

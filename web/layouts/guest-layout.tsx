@@ -100,12 +100,12 @@ export default function GuestLayout({
                     VMUFit Portal
                   </p>
                   <p className="text-balance text-2xl font-semibold leading-tight text-fg xl:text-[2.1rem]">
-                    Khoa Công nghệ Thông tin – Tiên phong chuyển đổi số, kiến tạo
-                    tri thức, phụng sự cộng đồng và phát triển đất nước.
+                    Khoa Công nghệ Thông tin – Tiên phong chuyển đổi số, kiến
+                    tạo tri thức, phụng sự cộng đồng và phát triển đất nước.
                   </p>
                   <p className="mx-auto max-w-lg text-sm leading-7 text-muted-fg">
-                    Hệ thống quản trị và trải nghiệm số dành cho sinh viên, giảng
-                    viên và đội ngũ vận hành của khoa.
+                    Hệ thống quản trị và trải nghiệm số dành cho sinh viên,
+                    giảng viên và đội ngũ vận hành của khoa.
                   </p>
                 </div>
               </div>

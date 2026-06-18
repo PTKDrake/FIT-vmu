@@ -74,7 +74,9 @@ function normalizeFieldDefinitions(
     let nextField = field;
 
     if (field.type === "array" && field.arrayFields) {
-      const normalizedArrayFields = normalizeFieldDefinitions(field.arrayFields);
+      const normalizedArrayFields = normalizeFieldDefinitions(
+        field.arrayFields,
+      );
       const currentDefaultItemProps = isRecord(field.defaultItemProps)
         ? field.defaultItemProps
         : {};
@@ -97,7 +99,9 @@ function normalizeFieldDefinitions(
     }
 
     if (field.type === "object" && field.objectFields) {
-      const normalizedObjectFields = normalizeFieldDefinitions(field.objectFields);
+      const normalizedObjectFields = normalizeFieldDefinitions(
+        field.objectFields,
+      );
 
       if (normalizedObjectFields !== field.objectFields) {
         nextField = {

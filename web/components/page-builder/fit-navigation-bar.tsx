@@ -346,7 +346,7 @@ function DesktopAuthAction({
         className="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-primary px-3 text-sm font-bold text-primary-fg transition [--text:var(--color-primary-fg)] hover:bg-primary/90"
         href={loginCreate.url()}
       >
-        <UserIcon className="size-5"/>
+        <UserIcon className="size-5" />
         {loginLabel}
       </Link>
     );
@@ -541,7 +541,7 @@ function MobileAuthSection({
         className="flex min-h-12 items-center gap-3 rounded-2xl bg-primary text-base font-bold text-primary-fg [--text:var(--color-primary-fg)]"
         href={loginCreate.url()}
       >
-        <UserIcon className="size-5"/>
+        <UserIcon className="size-5" />
         {loginLabel}
       </Link>
     );

@@ -161,8 +161,8 @@ export function UnsavedChangesProvider({
   const [contextValue] = useState<UnsavedChangesContextType>(() => ({
     setDirty(id, isDirty, onSave) {
       if (id === "__proto__" || id === "constructor" || id === "prototype") {
-return;
-}
+        return;
+      }
 
       const safeId = `safe_${id}`;
       onSaveRefs.current[safeId] = onSave;
@@ -173,8 +173,8 @@ return;
     },
     removeDirty(id) {
       if (id === "__proto__" || id === "constructor" || id === "prototype") {
-return;
-}
+        return;
+      }
 
       const safeId = `safe_${id}`;
       delete onSaveRefs.current[safeId];

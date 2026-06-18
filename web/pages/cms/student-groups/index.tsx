@@ -104,7 +104,8 @@ export default function CmsStudentGroupsPage({
               <div className="space-y-1">
                 <CardTitle>Chưa có nhóm sinh viên nào</CardTitle>
                 <Text className="text-muted-fg">
-                  Tạo nhóm đầu tiên để gắn vào các nội dung cần kiểm soát truy cập.
+                  Tạo nhóm đầu tiên để gắn vào các nội dung cần kiểm soát truy
+                  cập.
                 </Text>
               </div>
               {can.createGroup ? (
@@ -135,7 +136,8 @@ export default function CmsStudentGroupsPage({
                         {group.memberCount} mã sinh viên
                       </span>
                       <span className="rounded-full bg-muted px-2 py-1">
-                        Cập nhật {dateFormatter.format(new Date(group.updatedAt))}
+                        Cập nhật{" "}
+                        {dateFormatter.format(new Date(group.updatedAt))}
                       </span>
                     </div>
                     {group.ownerName ? (
@@ -179,7 +181,10 @@ export default function CmsStudentGroupsPage({
                   <div className="max-h-10 overflow-y-auto flex flex-wrap gap-2">
                     {group.studentCodes.map((code, index) => {
                       return (
-                        <Badge intent="primary" key={`${group.id}-${code}-${index}`}>
+                        <Badge
+                          intent="primary"
+                          key={`${group.id}-${code}-${index}`}
+                        >
                           {code}
                         </Badge>
                       );
@@ -256,4 +261,6 @@ export default function CmsStudentGroupsPage({
   );
 }
 
-CmsStudentGroupsPage.layout = (page: ReactNode) => <CmsLayout>{page}</CmsLayout>;
+CmsStudentGroupsPage.layout = (page: ReactNode) => (
+  <CmsLayout>{page}</CmsLayout>
+);

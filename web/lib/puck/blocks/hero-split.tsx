@@ -60,26 +60,26 @@ export const HeroSplitComponentConfig: PageBuilderComponentConfig<"HeroSplit"> =
       const resolvedImageUrl = getPuckImageUrl(imageUrl);
 
       return (
-      <HeroSplit
-        id={id}
-        className={className}
-        title={title}
-        description={description}
-        primaryAction={{
-          label: primaryActionLabel,
-          href: primaryActionHref,
-        }}
-        secondaryAction={{
-          label: secondaryActionLabel,
-          href: secondaryActionHref,
-        }}
-        imageUrl={resolvedImageUrl}
-        fallbackIcon={<LucideIconRenderer name="School" className="size-8" />}
-        stats={stats?.map((stat) => ({
-          value: stat.title,
-          label: stat.subtitle,
-        }))}
-      />
+        <HeroSplit
+          id={id}
+          className={className}
+          title={title}
+          description={description}
+          primaryAction={{
+            label: primaryActionLabel,
+            href: primaryActionHref,
+          }}
+          secondaryAction={{
+            label: secondaryActionLabel,
+            href: secondaryActionHref,
+          }}
+          imageUrl={resolvedImageUrl}
+          fallbackIcon={<LucideIconRenderer name="School" className="size-8" />}
+          stats={stats?.map((stat) => ({
+            value: stat.title,
+            label: stat.subtitle,
+          }))}
+        />
       );
     },
   };

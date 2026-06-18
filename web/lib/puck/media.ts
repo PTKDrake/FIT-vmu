@@ -52,9 +52,7 @@ export function getPuckMediaDisplayName(value: PuckImageValue): string | null {
   }
 
   return (
-    value.displayName ??
-    readPuckMediaMap()[value.mediaId]?.displayName ??
-    null
+    value.displayName ?? readPuckMediaMap()[value.mediaId]?.displayName ?? null
   );
 }
 
@@ -82,11 +80,13 @@ function readPuckMediaMap(): Record<number, PuckDynamicMediaItem> {
   }
 
   try {
-    const topWindow = window.top as Window & {
-      __VMU_PUCK_DYNAMIC_DATA__?: {
-        media?: Record<number, PuckDynamicMediaItem>;
-      };
-    } | null;
+    const topWindow = window.top as
+      | (Window & {
+          __VMU_PUCK_DYNAMIC_DATA__?: {
+            media?: Record<number, PuckDynamicMediaItem>;
+          };
+        })
+      | null;
 
     return topWindow?.__VMU_PUCK_DYNAMIC_DATA__?.media ?? {};
   } catch {

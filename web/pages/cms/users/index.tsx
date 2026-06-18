@@ -93,122 +93,122 @@ export default function CmsUsersPage({
     (auth.permissions.length >= 35 ? ["super-admin"] : []);
 
   const columns: Array<ColumnDef<CmsUserTableRow, any>> = [
-      columnHelper.accessor("name", {
-        header: "Người dùng",
-        cell: ({ row }) => {
-          // Gravatar URL fallback
-          const gravatarUrl = `https://www.gravatar.com/avatar/${row.original.id}?d=mp`;
+    columnHelper.accessor("name", {
+      header: "Người dùng",
+      cell: ({ row }) => {
+        // Gravatar URL fallback
+        const gravatarUrl = `https://www.gravatar.com/avatar/${row.original.id}?d=mp`;
 
+        return (
+          <div className="flex items-center gap-3">
+            <Avatar
+              src={gravatarUrl}
+              initials={row.original.name.substring(0, 2).toUpperCase()}
+              alt={row.original.name}
+              className="size-9 bg-primary/10 text-primary font-medium"
+            />
+            <span className="font-semibold text-fg text-sm">
+              {row.original.name}
+            </span>
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("email", {
+      id: "email",
+      header: "Email",
+      cell: ({ getValue }) => (
+        <span className="font-mono text-xs text-muted-fg">{getValue()}</span>
+      ),
+    }),
+    columnHelper.accessor("roles", {
+      header: "Vai trò",
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const roles = getValue() as string[];
+
+        if (roles.length === 0) {
           return (
-            <div className="flex items-center gap-3">
-              <Avatar
-                src={gravatarUrl}
-                initials={row.original.name.substring(0, 2).toUpperCase()}
-                alt={row.original.name}
-                className="size-9 bg-primary/10 text-primary font-medium"
-              />
-              <span className="font-semibold text-fg text-sm">
-                {row.original.name}
-              </span>
-            </div>
+            <span className="text-xs text-muted-fg italic">
+              {t("Chưa có vai trò")}
+            </span>
           );
-        },
-      }),
-      columnHelper.accessor("email", {
-        id: "email",
-        header: "Email",
-        cell: ({ getValue }) => (
-          <span className="font-mono text-xs text-muted-fg">{getValue()}</span>
-        ),
-      }),
-      columnHelper.accessor("roles", {
-        header: "Vai trò",
-        enableSorting: false,
-        cell: ({ getValue }) => {
-          const roles = getValue() as string[];
+        }
 
-          if (roles.length === 0) {
-            return (
-              <span className="text-xs text-muted-fg italic">
-                {t("Chưa có vai trò")}
-              </span>
-            );
-          }
+        return (
+          <div className="flex flex-wrap gap-1 max-w-[200px]">
+            {roles.map((role) => {
+              const isSuper = role === "super-admin";
+              const isAdmin = role === "admin";
 
-          return (
-            <div className="flex flex-wrap gap-1 max-w-[200px]">
-              {roles.map((role) => {
-                const isSuper = role === "super-admin";
-                const isAdmin = role === "admin";
+              return (
+                <DataTableBadge
+                  key={role}
+                  intent={
+                    isSuper ? "danger" : isAdmin ? "primary" : "secondary"
+                  }
+                >
+                  {role}
+                </DataTableBadge>
+              );
+            })}
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("status", {
+      id: "email_verified_at",
+      header: "Xác thực email",
+      cell: ({ row }) => (
+        <DataTableBadge
+          intent={row.original.isVerified ? "success" : "warning"}
+        >
+          {row.original.isVerified ? "Đã xác thực" : "Chưa xác thực"}
+        </DataTableBadge>
+      ),
+    }),
+    columnHelper.accessor("createdAt", {
+      id: "created_at",
+      header: "Ngày tạo",
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+    }),
+    columnHelper.accessor("updatedAt", {
+      header: "Cập nhật",
+      enableSorting: false,
+      cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) => {
+        const isTargetSuperAdmin = row.original.roles.includes("super-admin");
+        const isCurrentUserSuperAdmin =
+          currentUserRoles.includes("super-admin");
 
-                return (
-                  <DataTableBadge
-                    key={role}
-                    intent={
-                      isSuper ? "danger" : isAdmin ? "primary" : "secondary"
-                    }
-                  >
-                    {role}
-                  </DataTableBadge>
-                );
-              })}
-            </div>
-          );
-        },
-      }),
-      columnHelper.accessor("status", {
-        id: "email_verified_at",
-        header: "Xác thực email",
-        cell: ({ row }) => (
-          <DataTableBadge
-            intent={row.original.isVerified ? "success" : "warning"}
+        // Non-super-admins cannot update super-admins
+        const isActionsDisabled =
+          isTargetSuperAdmin && !isCurrentUserSuperAdmin;
+
+        if (!can.manageUsers || isActionsDisabled) {
+          return null;
+        }
+
+        return (
+          <DataTableActions
+            triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
           >
-            {row.original.isVerified ? "Đã xác thực" : "Chưa xác thực"}
-          </DataTableBadge>
-        ),
-      }),
-      columnHelper.accessor("createdAt", {
-        id: "created_at",
-        header: "Ngày tạo",
-        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-      }),
-      columnHelper.accessor("updatedAt", {
-        header: "Cập nhật",
-        enableSorting: false,
-        cell: ({ getValue }) => dateFormatter.format(new Date(getValue())),
-      }),
-      columnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) => {
-          const isTargetSuperAdmin = row.original.roles.includes("super-admin");
-          const isCurrentUserSuperAdmin =
-            currentUserRoles.includes("super-admin");
-
-          // Non-super-admins cannot update super-admins
-          const isActionsDisabled =
-            isTargetSuperAdmin && !isCurrentUserSuperAdmin;
-
-          if (!can.manageUsers || isActionsDisabled) {
-            return null;
-          }
-
-          return (
-            <DataTableActions
-              triggerAriaLabel={`Tác vụ cho ${row.original.name}`}
+            <MenuItem
+              onAction={() => {
+                router.visit(usersRoutes.edit.url({ user: row.original.id }));
+              }}
             >
-              <MenuItem
-                onAction={() => {
-                  router.visit(usersRoutes.edit.url({ user: row.original.id }));
-                }}
-              >
-                <PencilSquareIcon />
-                Chỉnh sửa
-              </MenuItem>
-            </DataTableActions>
-          );
-        },
-      }),
+              <PencilSquareIcon />
+              Chỉnh sửa
+            </MenuItem>
+          </DataTableActions>
+        );
+      },
+    }),
   ];
 
   return (

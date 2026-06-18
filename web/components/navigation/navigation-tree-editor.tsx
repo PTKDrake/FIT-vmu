@@ -351,7 +351,9 @@ export function NavigationTreeEditor({
       return;
     }
 
-    const items = flattenNavigationTree(normalizeNavigationTree(activeMenu.items));
+    const items = flattenNavigationTree(
+      normalizeNavigationTree(activeMenu.items),
+    );
 
     router.patch(
       syncNavigationMenuItems.url({ navigationMenu: activeMenu.id }),
@@ -666,7 +668,10 @@ function NavigationItemEditorModal({
     return null;
   }
 
-  const activeResourceOptions = resolveResourceOptions(item.type, resourceCatalog);
+  const activeResourceOptions = resolveResourceOptions(
+    item.type,
+    resourceCatalog,
+  );
 
   return (
     <ModalContent
@@ -709,7 +714,7 @@ function NavigationItemEditorModal({
                 linkableId:
                   nextType === "custom_url"
                     ? null
-                  : resolveDefaultResourceId(nextType, resourceCatalog),
+                    : resolveDefaultResourceId(nextType, resourceCatalog),
                 linkableType: nextType === "custom_url" ? null : nextType,
                 url: nextType === "custom_url" ? (currentItem.url ?? "") : null,
               }));
@@ -837,7 +842,9 @@ function NavigationItemEditorModal({
           <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3">
             <Text className="text-muted-fg">Đích hiện tại</Text>
             <Text className="mt-1 text-fg">
-              <Strong>{describeNavigationDestination(item, resourceCatalog)}</Strong>
+              <Strong>
+                {describeNavigationDestination(item, resourceCatalog)}
+              </Strong>
             </Text>
           </div>
         </FieldGroup>

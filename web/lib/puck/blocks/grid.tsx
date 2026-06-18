@@ -6,10 +6,7 @@ import {
   getJustifyItemsClass,
   getInsetYClass,
 } from "./layouts";
-import {
-  getPuckBlockDomId,
-  isPuckEditorPreview,
-} from "./shared";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
 
@@ -149,10 +146,7 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       className,
       children: Children,
     } = props;
-    const id = getPuckBlockDomId(
-      (props as { id?: string }).id,
-      anchorId,
-    );
+    const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
     // Backwards compatibility for old columns count
     const finalDesktopCols =

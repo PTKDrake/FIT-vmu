@@ -20,8 +20,7 @@ export function DashboardStatGrid({
     {
       icon: UsersIcon,
       label: "Hồ sơ cán bộ công khai",
-      value:
-        overview.stats.find((stat) => stat.key === "staff")?.value ?? 0,
+      value: overview.stats.find((stat) => stat.key === "staff")?.value ?? 0,
     },
     {
       icon: PhotoIcon,

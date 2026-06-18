@@ -1,92 +1,133 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import {
+  queryParams,
+  type RouteQueryOptions,
+  type RouteDefinition,
+  type RouteFormDefinition,
+  applyUrlDefaults,
+} from "./../../../../../wayfinder";
 /**
-* @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
-* @see app/Http/Controllers/Cms/UpdateUserController.php:15
-* @route '/cms/users/{user}'
-*/
-const UpdateUserController = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: UpdateUserController.url(args, options),
-    method: 'patch',
-})
+ * @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
+ * @see app/Http/Controllers/Cms/UpdateUserController.php:15
+ * @route '/cms/users/{user}'
+ */
+const UpdateUserController = (
+  args:
+    | { user: number | { id: number } }
+    | [user: number | { id: number }]
+    | number
+    | { id: number },
+  options?: RouteQueryOptions,
+): RouteDefinition<"patch"> => ({
+  url: UpdateUserController.url(args, options),
+  method: "patch",
+});
 
 UpdateUserController.definition = {
-    methods: ["patch"],
-    url: '/cms/users/{user}',
-} satisfies RouteDefinition<["patch"]>
+  methods: ["patch"],
+  url: "/cms/users/{user}",
+} satisfies RouteDefinition<["patch"]>;
 
 /**
-* @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
-* @see app/Http/Controllers/Cms/UpdateUserController.php:15
-* @route '/cms/users/{user}'
-*/
-UpdateUserController.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
+ * @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
+ * @see app/Http/Controllers/Cms/UpdateUserController.php:15
+ * @route '/cms/users/{user}'
+ */
+UpdateUserController.url = (
+  args:
+    | { user: number | { id: number } }
+    | [user: number | { id: number }]
+    | number
+    | { id: number },
+  options?: RouteQueryOptions,
+) => {
+  if (typeof args === "string" || typeof args === "number") {
+    args = { user: args };
+  }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { user: args.id }
-    }
+  if (typeof args === "object" && !Array.isArray(args) && "id" in args) {
+    args = { user: args.id };
+  }
 
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
+  if (Array.isArray(args)) {
+    args = {
+      user: args[0],
+    };
+  }
 
-    args = applyUrlDefaults(args)
+  args = applyUrlDefaults(args);
 
-    const parsedArgs = {
-        user: typeof args.user === 'object'
-        ? args.user.id
-        : args.user,
-    }
+  const parsedArgs = {
+    user: typeof args.user === "object" ? args.user.id : args.user,
+  };
 
-    return UpdateUserController.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
-* @see app/Http/Controllers/Cms/UpdateUserController.php:15
-* @route '/cms/users/{user}'
-*/
-UpdateUserController.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: UpdateUserController.url(args, options),
-    method: 'patch',
-})
+  return (
+    UpdateUserController.definition.url
+      .replace("{user}", parsedArgs.user.toString())
+      .replace(/\/+$/, "") + queryParams(options)
+  );
+};
 
 /**
-* @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
-* @see app/Http/Controllers/Cms/UpdateUserController.php:15
-* @route '/cms/users/{user}'
-*/
-const UpdateUserControllerForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: UpdateUserController.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
+ * @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
+ * @see app/Http/Controllers/Cms/UpdateUserController.php:15
+ * @route '/cms/users/{user}'
+ */
+UpdateUserController.patch = (
+  args:
+    | { user: number | { id: number } }
+    | [user: number | { id: number }]
+    | number
+    | { id: number },
+  options?: RouteQueryOptions,
+): RouteDefinition<"patch"> => ({
+  url: UpdateUserController.url(args, options),
+  method: "patch",
+});
 
 /**
-* @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
-* @see app/Http/Controllers/Cms/UpdateUserController.php:15
-* @route '/cms/users/{user}'
-*/
-UpdateUserControllerForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: UpdateUserController.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
+ * @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
+ * @see app/Http/Controllers/Cms/UpdateUserController.php:15
+ * @route '/cms/users/{user}'
+ */
+const UpdateUserControllerForm = (
+  args:
+    | { user: number | { id: number } }
+    | [user: number | { id: number }]
+    | number
+    | { id: number },
+  options?: RouteQueryOptions,
+): RouteFormDefinition<"post"> => ({
+  action: UpdateUserController.url(args, {
+    [options?.mergeQuery ? "mergeQuery" : "query"]: {
+      _method: "PATCH",
+      ...(options?.query ?? options?.mergeQuery ?? {}),
+    },
+  }),
+  method: "post",
+});
 
-UpdateUserController.form = UpdateUserControllerForm
+/**
+ * @see \App\Http\Controllers\Cms\UpdateUserController::__invoke
+ * @see app/Http/Controllers/Cms/UpdateUserController.php:15
+ * @route '/cms/users/{user}'
+ */
+UpdateUserControllerForm.patch = (
+  args:
+    | { user: number | { id: number } }
+    | [user: number | { id: number }]
+    | number
+    | { id: number },
+  options?: RouteQueryOptions,
+): RouteFormDefinition<"post"> => ({
+  action: UpdateUserController.url(args, {
+    [options?.mergeQuery ? "mergeQuery" : "query"]: {
+      _method: "PATCH",
+      ...(options?.query ?? options?.mergeQuery ?? {}),
+    },
+  }),
+  method: "post",
+});
 
-export default UpdateUserController
+UpdateUserController.form = UpdateUserControllerForm;
+
+export default UpdateUserController;

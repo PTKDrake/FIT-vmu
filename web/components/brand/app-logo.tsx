@@ -36,10 +36,14 @@ export function AppLogo({
       />
       {showWordmark ? (
         <div className="flex flex-col leading-none">
-          <span className={cn("font-semibold text-fg", wordmarkSizeClasses[size])}>
+          <span
+            className={cn("font-semibold text-fg", wordmarkSizeClasses[size])}
+          >
             VMUFit
           </span>
-          <span className="text-xs text-muted-fg">Khoa Công nghệ Thông tin</span>
+          <span className="text-xs text-muted-fg">
+            Khoa Công nghệ Thông tin
+          </span>
         </div>
       ) : null}
     </div>

@@ -46,6 +46,8 @@ import {
   SocialLinksComponentConfig,
   NewsletterFormComponentConfig,
   CopyrightBarComponentConfig,
+  ProgramsCustomComponentConfig,
+  AboutCustomComponentConfig,
 } from "../blocks";
 import { withSelectFieldDefaults } from "../blocks/shared";
 import type { PageBuilderConfig } from "../blocks/types";
@@ -84,6 +86,8 @@ const components = withSelectFieldDefaults({
   HeroSplit: HeroSplitComponentConfig,
   HeroCustom: HeroCustomComponentConfig,
   StatsCustom: StatsCustomComponentConfig,
+  ProgramsCustom: ProgramsCustomComponentConfig,
+  AboutCustom: AboutCustomComponentConfig,
 
   LatestPosts: LatestPostsComponentConfig,
   LatestAnnouncements: LatestAnnouncementsComponentConfig,
@@ -151,6 +155,8 @@ export const pageConfig: PageBuilderConfig = {
         "HeroSplit",
         "HeroCustom",
         "StatsCustom",
+        "ProgramsCustom",
+        "AboutCustom",
       ],
     },
     dynamic_blocks: {

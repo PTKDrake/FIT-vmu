@@ -7,6 +7,7 @@ import { cx } from "@/lib/primitive";
 import { twMerge } from "tailwind-merge";
 import { getPuckImageUrl } from "@/lib/puck/media";
 import type { PuckImageValue } from "@/lib/puck/media";
+import { useTheme } from "@/hooks/use-theme";
 
 export interface HeroCustomProps {
   badge?: string;
@@ -17,6 +18,7 @@ export interface HeroCustomProps {
   primaryActionHref?: string;
   secondaryActionLabel?: string;
   secondaryActionHref?: string;
+  theme?: "light" | "dark";
   className?: string;
 }
 
@@ -29,16 +31,20 @@ export function HeroCustom({
   primaryActionHref,
   secondaryActionLabel,
   secondaryActionHref,
+  theme = "light",
   className,
 }: HeroCustomProps) {
   const resolvedImageUrl = getPuckImageUrl(imageUrl);
+  const { resolvedTheme } = useTheme();
+  const isDark = theme === "dark" || resolvedTheme === "dark";
 
   return (
     <div
       className={twMerge(
         "relative overflow-hidden rounded-3xl p-6 md:p-12 lg:p-16 flex flex-col md:flex-row items-center gap-8",
         "bg-gradient-to-b from-[#0e56cc] to-[#083a96] text-white",
-        "md:bg-gradient-to-r md:from-[#ebf3fe] md:via-[#f1f7ff] md:to-white md:text-fg",
+        !isDark &&
+          "md:bg-gradient-to-r md:from-[#ebf3fe] md:via-[#f1f7ff] md:to-white md:text-fg",
         "shadow-xs transition duration-300 hover:shadow-sm",
         className,
       )}
@@ -50,19 +56,35 @@ export function HeroCustom({
             className={twMerge(
               "inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold shadow-xs select-none w-fit border",
               "border-white/20 bg-white/10 text-white",
-              "md:border-primary/10 md:bg-white/90 md:text-primary md:backdrop-blur-xs",
+              !isDark &&
+                "md:border-primary/10 md:bg-white/90 md:text-primary md:backdrop-blur-xs dark:md:border-white/20 dark:md:bg-white/10 dark:md:text-white",
             )}
           >
-            <School className="size-4 shrink-0 text-white md:text-primary" />
+            <School
+              className={twMerge(
+                "size-4 shrink-0 text-white",
+                !isDark && "md:text-primary dark:md:text-white",
+              )}
+            />
             <span>{badge}</span>
           </div>
         )}
 
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white md:text-fg">
+        <h1
+          className={twMerge(
+            "text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white",
+            !isDark && "md:text-fg dark:md:text-white",
+          )}
+        >
           {title}
         </h1>
 
-        <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line text-blue-100 md:text-muted-fg max-w-xl">
+        <p
+          className={twMerge(
+            "text-sm sm:text-base leading-relaxed whitespace-pre-line text-blue-100",
+            !isDark && "md:text-muted-fg dark:md:text-blue-100",
+          )}
+        >
           {description}
         </p>
 
@@ -74,7 +96,9 @@ export function HeroCustom({
                 buttonStyles({ size: "lg" }),
                 "w-full sm:w-auto justify-center gap-2 group/btn cursor-pointer font-semibold",
                 "bg-white text-[#0e56cc] hover:bg-blue-50 border-transparent",
-                "md:bg-primary md:text-primary-fg md:hover:bg-primary/95",
+                !isDark
+                  ? "md:bg-primary md:text-primary-fg md:hover:bg-primary/95 dark:md:bg-white dark:md:text-[#0e56cc] dark:md:hover:bg-blue-50 dark:md:border-transparent"
+                  : "",
               )}
             >
               <span>{primaryActionLabel}</span>
@@ -91,7 +115,9 @@ export function HeroCustom({
                 buttonStyles({ size: "lg" }),
                 "w-full sm:w-auto justify-center gap-2 group/btn cursor-pointer font-semibold",
                 "border-white/30 text-white hover:bg-white/10 bg-transparent",
-                "md:border-primary/20 md:text-primary md:hover:bg-primary-subtle/25",
+                !isDark
+                  ? "md:border-primary/20 md:text-primary md:hover:bg-primary-subtle/25 dark:md:border-white/30 dark:md:text-white dark:md:hover:bg-white/10 dark:md:bg-transparent"
+                  : "",
               )}
             >
               <span>{secondaryActionLabel}</span>

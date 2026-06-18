@@ -36,8 +36,10 @@ export interface NavigationItemDraft {
   children: NavigationItemDraft[];
 }
 
-export interface NavigationItemSyncPayload
-  extends Record<string, FormDataConvertible> {
+export interface NavigationItemSyncPayload extends Record<
+  string,
+  FormDataConvertible
+> {
   id: number;
   is_active: boolean;
   linkable_id: number | null;

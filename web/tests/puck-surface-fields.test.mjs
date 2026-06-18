@@ -40,6 +40,9 @@ test("Puck layout blocks share configurable surface fields without changing lega
         const source = await readFile(file, "utf8");
 
         assert.match(source, /puckSurfaceFields/);
-        assert.match(source, /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/);
+        assert.match(
+            source,
+            /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
+        );
     }
 });

@@ -54,18 +54,9 @@ test("default site layout seed keeps header navigation responsive", () => {
     assert.match(defaultSiteLayoutSeederSource, /'wrap' => true/);
     assert.match(defaultSiteLayoutSeederSource, /'childWidth' => 'auto'/);
     assert.match(defaultSiteLayoutSeederSource, /'insetY' => 'sm'/);
-    assert.match(
-        defaultSiteLayoutSeederSource,
-        /'fullWidthOnMobile' => true/,
-    );
-    assert.match(
-        defaultSiteLayoutSeederSource,
-        /'buttonLabel' => 'Đăng nhập'/,
-    );
-    assert.match(
-        defaultSiteLayoutSeederSource,
-        /'growFromMd' => true/,
-    );
+    assert.match(defaultSiteLayoutSeederSource, /'fullWidthOnMobile' => true/);
+    assert.match(defaultSiteLayoutSeederSource, /'buttonLabel' => 'Đăng nhập'/);
+    assert.match(defaultSiteLayoutSeederSource, /'growFromMd' => true/);
     assert.match(
         defaultSiteLayoutSeederSource,
         /'id' => 'public-footer-container'/,

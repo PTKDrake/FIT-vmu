@@ -8,11 +8,8 @@ import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { serializePuckPageData } from "@/lib/puck/page-builder-data";
 import type { VmuFitPageBuilderData } from "@/lib/puck/page-builder-data";
-import {
-  createPuckSeederExpression
-  
-} from "@/lib/puck/seeder-export";
-import type {PuckSeederExportTarget} from "@/lib/puck/seeder-export";
+import { createPuckSeederExpression } from "@/lib/puck/seeder-export";
+import type { PuckSeederExportTarget } from "@/lib/puck/seeder-export";
 
 interface PuckExportMenuProps {
   exportName: string;

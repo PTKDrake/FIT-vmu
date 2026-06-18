@@ -29,16 +29,15 @@ import { getSurfaceClassName, puckSurfaceFields } from "../surface";
 import type { PageBuilderComponentConfig } from "../types";
 import {
   EmptyDynamicState,
-  
   buildNavigationMenuFieldOptions,
   getBlockLayoutPresetClass,
   getResponsiveMaxWidthClass,
   getResponsivePositionClass,
   getResponsiveTextAlignClass,
   parseOptionalId,
-  usePuckDynamicData
+  usePuckDynamicData,
 } from "./shared";
-import type {PuckDynamicNavigationItem} from "./shared";
+import type { PuckDynamicNavigationItem } from "./shared";
 
 type FitFooterSupportIcon = "users" | "mail" | "book" | "help" | "globe";
 
@@ -505,7 +504,7 @@ function FitFooterContact({
               className="flex items-start gap-4 border-sidebar-border/65 pb-5 last:pb-0 lg:border-b lg:last:border-b-0"
               key={`${title}-${item.label}`}
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-primary lg:size-9">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary lg:size-9">
                 <IconComponent className="size-6 lg:size-5" />
               </span>
               <p className="pt-2 text-lg leading-8 text-sidebar-fg lg:pt-1 lg:text-sm lg:leading-6">
@@ -618,7 +617,7 @@ function FitFooterSocial({
           return (
             <Link
               aria-label={label}
-              className="flex size-10 items-center justify-center rounded-full bg-accent text-(--fit-footer-social-color) [--text:var(--fit-footer-social-color)] transition hover:bg-(--fit-footer-social-color) hover:text-primary-fg hover:[--text:var(--color-primary-fg)] lg:size-9"
+              className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-(--fit-footer-social-color) [--text:var(--fit-footer-social-color)] transition hover:bg-(--fit-footer-social-color) hover:text-primary-fg hover:[--text:var(--color-primary-fg)] lg:size-9"
               href={link.url || "#"}
               key={`${link.platform}-${link.url}-${label}`}
               rel="noopener noreferrer"

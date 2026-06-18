@@ -37,7 +37,9 @@ interface PublicPostPageProps extends SharedData {
     thumbnailUrl: string | null;
     categoryNames: string[];
   }>;
-  layout: (SiteLayoutShellData & { id: number; key: string; name: string }) | null;
+  layout:
+    | (SiteLayoutShellData & { id: number; key: string; name: string })
+    | null;
 }
 
 export default function PublicPost({
@@ -81,7 +83,10 @@ export default function PublicPost({
               </div>
             ) : null}
 
-            <Heading level={1} className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <Heading
+              level={1}
+              className="text-3xl font-extrabold tracking-tight sm:text-4xl"
+            >
               {post.title}
             </Heading>
 

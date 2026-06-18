@@ -194,7 +194,8 @@ export const SocialLinksComponentConfig: PageBuilderComponentConfig<"SocialLinks
               const displayLabel =
                 link.label || PLATFORM_LABEL_MAP[link.platform] || "";
               const href = link.url || "#";
-              const IconComponent = PLATFORM_ICON_MAP[link.platform] || LinkIcon;
+              const IconComponent =
+                PLATFORM_ICON_MAP[link.platform] || LinkIcon;
 
               return (
                 <Link

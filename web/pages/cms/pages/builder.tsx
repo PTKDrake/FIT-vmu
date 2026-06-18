@@ -15,10 +15,7 @@ interface CmsPageBuilderPageProps extends SharedData {
   page: CmsPageEditorPageProps["page"];
 }
 
-export default function CmsPageBuilder({
-  can,
-  page,
-}: CmsPageBuilderPageProps) {
+export default function CmsPageBuilder({ can, page }: CmsPageBuilderPageProps) {
   const initialJson = page.content ?? "";
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
