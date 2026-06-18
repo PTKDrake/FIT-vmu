@@ -33,7 +33,7 @@ test('public site footer seed stays aligned with social and copyright block prop
             'showSocialLinks' => true,
             'showCopyright' => true,
             'showLegalLinks' => true,
-            'quickLinksMenuId' => '1',
+            'quickLinksMenuId' => '2',
             'className' => '',
         ])
         ->and($fitFooterBlock['props']['socialLinks'])->toBeArray()

@@ -42,7 +42,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                             "phone": "0225 3783 138",
                             "email": "fit@vimaru.edu.vn",
                             "quickLinksTitle": "Liên kết nhanh",
-                            "quickLinksMenuId": "1",
+                            "quickLinksMenuId": "2",
                             "supportTitle": "Hỗ trợ",
                             "supportLinks": [
                                 {
