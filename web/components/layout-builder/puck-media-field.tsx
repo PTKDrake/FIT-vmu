@@ -1,16 +1,18 @@
 import { createUsePuck } from "@puckeditor/core";
 import type { ComponentType, ReactNode } from "react";
 import {
-  MediaLibrarySelector,
-  type CmsMediaItem,
+  MediaLibrarySelector
+  
 } from "@/components/cms/media-selector";
+import type {CmsMediaItem} from "@/components/cms/media-selector";
 import {
   createPuckMediaReference,
   getPuckImageUrl,
   getPuckMediaDisplayName,
-  getPuckMediaId,
-  type PuckImageValue,
+  getPuckMediaId
+  
 } from "@/lib/puck/media";
+import type {PuckImageValue} from "@/lib/puck/media";
 
 interface PuckLabelProps {
   children: ReactNode;

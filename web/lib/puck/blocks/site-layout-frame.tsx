@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
-import { Text } from "@/components/ui/text";
 import { SiteLayoutShellFrame } from "@/components/site-layout/site-layout-shell";
+import { Text } from "@/components/ui/text";
 import { getPuckBlockDomId } from "./shared";
 import {
   getSurfaceBorderClass,

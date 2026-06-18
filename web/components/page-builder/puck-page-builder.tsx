@@ -4,8 +4,8 @@ import {
   ArrowUturnRightIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
-import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
 import { usePage } from "@inertiajs/react";
+import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { PuckMediaField } from "@/components/layout-builder/puck-media-field";

@@ -343,10 +343,10 @@ function DesktopAuthAction({
   if (!authUser) {
     return (
       <Link
-        className="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-primary px-5 text-sm font-bold text-primary-fg transition [--text:var(--color-primary-fg)] hover:bg-primary/90"
+        className="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-primary px-3 text-sm font-bold text-primary-fg transition [--text:var(--color-primary-fg)] hover:bg-primary/90"
         href={loginCreate.url()}
       >
-        <UserIcon />
+        <UserIcon className="size-5"/>
         {loginLabel}
       </Link>
     );
@@ -538,10 +538,10 @@ function MobileAuthSection({
   if (!authUser) {
     return (
       <Link
-        className="flex min-h-12 items-center gap-3 rounded-2xl bg-primary px-4 text-base font-bold text-primary-fg [--text:var(--color-primary-fg)]"
+        className="flex min-h-12 items-center gap-3 rounded-2xl bg-primary text-base font-bold text-primary-fg [--text:var(--color-primary-fg)]"
         href={loginCreate.url()}
       >
-        <UserIcon />
+        <UserIcon className="size-5"/>
         {loginLabel}
       </Link>
     );

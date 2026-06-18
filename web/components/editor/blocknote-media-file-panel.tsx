@@ -1,9 +1,10 @@
-import { PhotoIcon } from "@heroicons/react/24/outline";
 import { useBlockNoteEditor } from "@blocknote/react";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 import {
-  MediaLibrarySelector,
-  type CmsMediaItem,
+  MediaLibrarySelector
+  
 } from "@/components/cms/media-selector";
+import type {CmsMediaItem} from "@/components/cms/media-selector";
 import { Button } from "@/components/ui/button";
 
 interface BlockNoteMediaFilePanelProps {

@@ -5,8 +5,8 @@ import {
   CheckIcon,
 } from "@heroicons/react/24/outline";
 import { usePage } from "@inertiajs/react";
-import type { Permissions } from "@puckeditor/core";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
+import type { Permissions } from "@puckeditor/core";
 import type { Plugin } from "@puckeditor/core";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";

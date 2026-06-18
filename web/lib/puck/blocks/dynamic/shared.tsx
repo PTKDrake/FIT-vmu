@@ -1,6 +1,6 @@
 import { usePage } from "@inertiajs/react";
-import type { SharedData } from "@/types/shared";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
+import type { SharedData } from "@/types/shared";
 
 export interface PuckDynamicPost {
   author: string | null;

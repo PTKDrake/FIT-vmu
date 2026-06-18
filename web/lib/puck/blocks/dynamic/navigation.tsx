@@ -22,16 +22,15 @@ import { getSurfaceClassName, puckSurfaceFields } from "../surface";
 import type { PageBuilderComponentConfig } from "../types";
 import {
   EmptyDynamicState,
-  type PuckDynamicNavigationItem,
-  type PuckDynamicNavigationMenu,
   buildNavigationMenuFieldOptions,
   getBlockLayoutPresetClass,
   getResponsiveMaxWidthClass,
   getResponsivePositionClass,
   getResponsiveTextAlignClass,
   parseOptionalId,
-  usePuckDynamicData,
+  usePuckDynamicData
 } from "./shared";
+import type {PuckDynamicNavigationItem, PuckDynamicNavigationMenu} from "./shared";
 
 interface NavigationMenuBlockProps {
   className?: string;

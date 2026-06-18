@@ -29,15 +29,16 @@ import { getSurfaceClassName, puckSurfaceFields } from "../surface";
 import type { PageBuilderComponentConfig } from "../types";
 import {
   EmptyDynamicState,
-  type PuckDynamicNavigationItem,
+  
   buildNavigationMenuFieldOptions,
   getBlockLayoutPresetClass,
   getResponsiveMaxWidthClass,
   getResponsivePositionClass,
   getResponsiveTextAlignClass,
   parseOptionalId,
-  usePuckDynamicData,
+  usePuckDynamicData
 } from "./shared";
+import type {PuckDynamicNavigationItem} from "./shared";
 
 type FitFooterSupportIcon = "users" | "mail" | "book" | "help" | "globe";
 

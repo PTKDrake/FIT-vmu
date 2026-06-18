@@ -1,4 +1,3 @@
-import { PhotoIcon } from "@heroicons/react/24/outline";
 import {
   FormattingToolbar,
   getFormattingToolbarItems,
@@ -6,6 +5,7 @@ import {
   useComponentsContext,
   useEditorState,
 } from "@blocknote/react";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { BlockNoteMediaFilePanel } from "./blocknote-media-file-panel";
