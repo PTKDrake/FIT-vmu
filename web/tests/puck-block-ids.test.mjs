@@ -19,6 +19,11 @@ test("Puck blocks map props.id to public render DOM ids", async () => {
         "web/lib/puck/blocks/auth-status.tsx",
         "utf8",
     );
+    const milestonesSource = await readFile(
+        "web/lib/puck/blocks/milestones.tsx",
+        "utf8",
+    );
+    const newsSource = await readFile("web/lib/puck/blocks/news.tsx", "utf8");
 
     assert.match(contentSource, /const id = getPuckBlockDomId\(props\.id\)/);
     assert.match(contentSource, /<figure\s+id=\{id\}/s);
@@ -31,9 +36,15 @@ test("Puck blocks map props.id to public render DOM ids", async () => {
     assert.match(layoutFrameSource, /const domId = getPuckBlockDomId\(id\)/);
     assert.match(
         layoutFrameSource,
-        /<div id=\{domId\} className=\{frameClassName\}>/,
+        /<div id={domId} className={frameClassName}>/,
     );
 
     assert.match(authStatusSource, /const domId = getPuckBlockDomId\(id\)/);
     assert.match(authStatusSource, /id=\{domId\}/);
+
+    assert.match(milestonesSource, /const id = getPuckBlockDomId/);
+    assert.match(milestonesSource, /<div id=\{id\} className="w-full">/);
+
+    assert.match(newsSource, /const id = getPuckBlockDomId/);
+    assert.match(newsSource, /<div id=\{id\} className="w-full">/);
 });

@@ -74,3 +74,7 @@ export {
 
 // --- AUTH BLOCKS ---
 export { AuthStatusComponentConfig } from "./auth-status";
+
+// --- MILESTONES & NEWS CUSTOM BLOCKS ---
+export { MilestonesComponentConfig } from "./milestones";
+export { NewsCustomComponentConfig } from "./news";
