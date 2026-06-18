@@ -173,7 +173,6 @@ test('public puck page props include media map for media references', function (
     Page::factory()->create([
         'title' => 'Media page',
         'slug' => 'media-page',
-        'status' => 'published',
         'visibility' => 'public',
         'content' => json_encode([
             'root' => ['props' => []],

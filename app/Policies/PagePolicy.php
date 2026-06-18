@@ -36,7 +36,7 @@ class PagePolicy
 
     public function publish(User $user, Page $page): bool
     {
-        return $user->can('publish pages');
+        return false;
     }
 
     public function restore(User $user, Page $page): bool

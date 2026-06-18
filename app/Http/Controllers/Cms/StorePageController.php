@@ -29,8 +29,7 @@ final class StorePageController extends Controller
          *     visibility: string,
          *     student_group_ids?: list<int>,
          *     site_layout_id?: ?int,
-         *     thumbnail_id?: ?int,
-         *     status: string
+         *     thumbnail_id?: ?int
          * } $validated
          */
         $page = $createPage(

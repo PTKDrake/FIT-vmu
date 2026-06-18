@@ -142,7 +142,6 @@ test('page data preserves the puck content format convention', function () {
     $page = new Page([
         'title' => 'Giới thiệu',
         'slug' => 'gioi-thieu',
-        'status' => 'draft',
     ]);
 
     expect(PageData::fromModel($page)->contentFormat)->toBe('puck_json');

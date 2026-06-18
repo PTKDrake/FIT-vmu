@@ -35,7 +35,6 @@ class Page extends Model
         'site_layout_id',
         'thumbnail_id',
         'author_id',
-        'status',
         'published_at',
     ];
 
@@ -47,7 +46,6 @@ class Page extends Model
     protected $attributes = [
         'content_format' => 'puck_json',
         'visibility' => 'public',
-        'status' => 'draft',
     ];
 
     /**

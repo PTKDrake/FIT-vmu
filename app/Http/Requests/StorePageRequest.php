@@ -51,7 +51,7 @@ class StorePageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::visibilities())],
+            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::pageVisibilities())],
             'title' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',
@@ -83,7 +83,6 @@ class StorePageRequest extends FormRequest
             ],
             'site_layout_id' => ['nullable', 'integer', Rule::exists((new SiteLayout)->getTable(), 'id')],
             'thumbnail_id' => ['nullable', 'integer', Rule::exists((new Media)->getTable(), 'id')],
-            'status' => ['required', 'string', Rule::in(['draft', 'pending'])],
         ];
     }
 

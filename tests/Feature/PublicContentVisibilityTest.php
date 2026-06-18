@@ -5,13 +5,13 @@ use App\Models\SiteSetting;
 use App\Models\Student;
 use App\Models\StudentGroup;
 use App\Models\User;
+use Database\Seeders\RoleAndPermissionSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('homepage resolves through site settings when configured', function () {
     $page = Page::factory()->create([
         'title' => 'Trang chủ VMUFit',
         'slug' => 'trang-chu-vmufit',
-        'status' => 'published',
         'visibility' => 'public',
     ]);
 
@@ -29,7 +29,6 @@ test('student group protected public page only opens for matching students', fun
     $page = Page::factory()->create([
         'title' => 'Trang cho sinh viên nhóm riêng',
         'slug' => 'trang-cho-sinh-vien-nhom-rieng',
-        'status' => 'published',
         'visibility' => 'student_groups',
     ]);
 
@@ -65,5 +64,35 @@ test('student group protected public page only opens for matching students', fun
         ->assertInertia(fn (Assert $inertia) => $inertia
             ->component('public/page')
             ->where('page.slug', 'trang-cho-sinh-vien-nhom-rieng')
+        );
+});
+
+test('hidden public page is only visible to cms users', function () {
+    $this->seed(RoleAndPermissionSeeder::class);
+
+    $page = Page::factory()->create([
+        'title' => 'Trang nội bộ quản trị',
+        'slug' => 'trang-noi-bo-quan-tri',
+        'visibility' => 'hidden',
+    ]);
+
+    $guestResponse = $this->get('/trang-noi-bo-quan-tri');
+    $guestResponse->assertRedirect(route('login'));
+
+    $regularUser = User::factory()->create();
+
+    $this->actingAs($regularUser)
+        ->get('/trang-noi-bo-quan-tri')
+        ->assertForbidden();
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $this->actingAs($admin)
+        ->get('/trang-noi-bo-quan-tri')
+        ->assertOk()
+        ->assertInertia(fn (Assert $inertia) => $inertia
+            ->component('public/page')
+            ->where('page.slug', $page->slug)
         );
 });

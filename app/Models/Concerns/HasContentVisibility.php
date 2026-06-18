@@ -48,15 +48,12 @@ trait HasContentVisibility
 
     public function isVisibleTo(?User $user): bool
     {
-        if (($this->getAttribute('status') ?? null) !== 'published') {
-            return false;
-        }
-
         return match ($this->getAttribute('visibility') ?? 'public') {
             'public' => true,
             'authenticated' => $user instanceof User,
             'students' => $this->studentCodeFor($user) !== null,
             'student_groups' => $this->isStudentGroupAllowed($this->studentCodeFor($user)),
+            'hidden' => $user?->can('view admin dashboard') ?? false,
             default => false,
         };
     }

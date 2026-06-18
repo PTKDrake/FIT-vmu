@@ -20,7 +20,6 @@ class ClonePageAction
     {
         return DB::transaction(function () use ($page, $author): Page {
             $clone = $page->replicate([
-                'published_at',
                 'created_at',
                 'updated_at',
             ]);
@@ -30,8 +29,7 @@ class ClonePageAction
             $clone->title = sprintf('%s (Bản sao)', $page->title);
             $clone->slug = $this->generateUniqueSlug($page->slug);
             $clone->author_id = $authorId;
-            $clone->status = 'draft';
-            $clone->published_at = null;
+            $clone->published_at = now()->toDateTimeString();
             $clone->save();
 
             ($this->syncContentStudentGroups)($clone, $page->studentGroupIds());

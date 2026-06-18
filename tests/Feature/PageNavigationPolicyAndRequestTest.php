@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Requests\PublishPageRequest;
 use App\Http\Requests\StoreNavigationItemRequest;
 use App\Http\Requests\StoreNavigationMenuRequest;
 use App\Http\Requests\StorePageRequest;
@@ -42,7 +41,7 @@ test('page category and navigation policies follow permission checks', function 
         ->and(Gate::forUser($editor)->allows('create', Page::class))->toBeTrue()
         ->and(Gate::forUser($editor)->allows('update', $page))->toBeTrue()
         ->and(Gate::forUser($editor)->allows('delete', $page))->toBeTrue()
-        ->and(Gate::forUser($editor)->allows('publish', $page))->toBeTrue()
+        ->and(Gate::forUser($editor)->allows('publish', $page))->toBeFalse()
         ->and(Gate::forUser($editor)->allows('viewAny', PostCategory::class))->toBeTrue()
         ->and(Gate::forUser($editor)->allows('create', PostCategory::class))->toBeTrue()
         ->and(Gate::forUser($editor)->allows('update', $postCategory))->toBeTrue()
@@ -75,9 +74,7 @@ test('page requests authorize against the page policy', function () {
     expect(makeStorePageRequest([], $editor)->authorize())->toBeTrue()
         ->and(makeStorePageRequest([], $staff)->authorize())->toBeFalse()
         ->and(makeUpdatePageRequest([], $editor, $page)->authorize())->toBeTrue()
-        ->and(makeUpdatePageRequest([], $staff, $page)->authorize())->toBeFalse()
-        ->and(makePublishPageRequest([], $editor, $page)->authorize())->toBeTrue()
-        ->and(makePublishPageRequest([], $staff, $page)->authorize())->toBeFalse();
+        ->and(makeUpdatePageRequest([], $staff, $page)->authorize())->toBeFalse();
 });
 
 test('page requests validate content workflow payloads', function () {
@@ -91,7 +88,6 @@ test('page requests validate content workflow payloads', function () {
         'content_format' => 'puck_json',
         'thumbnail_id' => $page->thumbnail_id,
         'visibility' => 'public',
-        'status' => 'draft',
     ];
 
     expect(validatePageNavigationRequest(makeStorePageRequest($validData), $validData)->passes())->toBeTrue()
@@ -109,18 +105,7 @@ test('page requests validate content workflow payloads', function () {
             ...$validData,
             'content_format' => 'blocknote_json',
         ])->errors()->keys())->toContain('content_format')
-        ->and(validatePageNavigationRequest(makePublishPageRequest([
-            'status' => 'published',
-            'published_at' => now()->toDateTimeString(),
-        ], null, $page), [
-            'status' => 'published',
-            'published_at' => now()->toDateTimeString(),
-        ])->passes())->toBeTrue()
-        ->and(validatePageNavigationRequest(makePublishPageRequest([
-            'status' => 'draft',
-        ], null, $page), [
-            'status' => 'draft',
-        ])->errors()->keys())->toContain('status');
+        ->and(validatePageNavigationRequest(makeUpdatePageRequest($validData, null, $page), $validData)->passes())->toBeTrue();
 });
 
 test('page requests reject auth and settings slugs', function () {
@@ -133,14 +118,12 @@ test('page requests reject auth and settings slugs', function () {
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
         'visibility' => 'public',
-        'status' => 'draft',
     ]), [
         'title' => 'Trang tĩnh',
         'slug' => 'auth/google/redirect',
         'excerpt' => 'Tóm tắt trang',
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
-        'status' => 'draft',
     ]);
 
     $updateRequest = validatePageNavigationRequest(makeUpdatePageRequest([
@@ -150,14 +133,12 @@ test('page requests reject auth and settings slugs', function () {
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
         'visibility' => 'public',
-        'status' => 'draft',
     ], null, $page), [
         'title' => 'Trang tĩnh',
         'slug' => '/settings/profile',
         'excerpt' => 'Tóm tắt trang',
         'content' => '{"root":{"props":{"title":"VMU"}}}',
         'content_format' => 'puck_json',
-        'status' => 'draft',
     ]);
 
     $metadataRequest = validatePageNavigationRequest(makeUpdatePageMetadataRequest([
@@ -198,7 +179,6 @@ test('page requests require accessible student groups for student_groups visibil
         'thumbnail_id' => $page->thumbnail_id,
         'visibility' => 'student_groups',
         'student_group_ids' => [$globalGroup->getKey(), $privateGroup->getKey()],
-        'status' => 'draft',
     ];
 
     expect(validatePageNavigationRequest(makeStorePageRequest($validData, $editor), $validData)->passes())->toBeTrue()
@@ -387,16 +367,6 @@ function makeUpdatePageMetadataRequest(array $data, ?User $user = null, ?Page $p
 {
     /** @var UpdatePageMetadataRequest $request */
     $request = UpdatePageMetadataRequest::create('/pages/'.($page?->getKey() ?? 'page').'/metadata', 'PATCH', $data);
-    $request->setUserResolver(static fn (): ?User => $user);
-    $request->setRouteResolver(static fn (): object => routeParameterMap(['page' => $page]));
-
-    return $request;
-}
-
-function makePublishPageRequest(array $data, ?User $user = null, ?Page $page = null): PublishPageRequest
-{
-    /** @var PublishPageRequest $request */
-    $request = PublishPageRequest::create('/pages/'.($page?->getKey() ?? 'page').'/publish', 'PATCH', $data);
     $request->setUserResolver(static fn (): ?User => $user);
     $request->setRouteResolver(static fn (): object => routeParameterMap(['page' => $page]));
 

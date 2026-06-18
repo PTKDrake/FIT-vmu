@@ -245,6 +245,14 @@ export default function EditPage({
                       >
                         <SelectLabel>Nhóm sinh viên</SelectLabel>
                       </SelectItem>
+                      <SelectItem
+                        id="hidden"
+                        textValue="Ẩn (chỉ quản trị viên có thể xem)"
+                      >
+                        <SelectLabel>
+                          Ẩn (chỉ quản trị viên có thể xem)
+                        </SelectLabel>
+                      </SelectItem>
                     </SelectContent>
                     {form.errors.visibility ? (
                       <FieldError>{form.errors.visibility}</FieldError>

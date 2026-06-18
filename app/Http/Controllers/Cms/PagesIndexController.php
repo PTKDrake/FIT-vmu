@@ -19,15 +19,15 @@ final class PagesIndexController extends Controller
     private const ALLOWED_PER_PAGE = [10, 25, 50];
 
     /** @var list<string> */
-    private const ALLOWED_SORTS = ['title', 'status', 'published_at', 'created_at', 'updated_at', 'author'];
+    private const ALLOWED_SORTS = ['title', 'visibility', 'created_at', 'updated_at', 'author'];
 
     /** @var list<string> */
-    private const ALLOWED_STATUSES = ['all', 'draft', 'pending', 'published', 'rejected'];
+    private const ALLOWED_VISIBILITIES = ['all', 'public', 'authenticated', 'students', 'student_groups', 'hidden'];
 
     public function __invoke(Request $request): Response
     {
         $search = trim((string) $request->query('search', ''));
-        $status = $this->resolveStatus((string) $request->query('status', 'all'));
+        $visibility = $this->resolveVisibility((string) $request->query('status', 'all'));
         $sort = $this->resolveSort((string) $request->query('sort', 'created_at'));
         $direction = $this->resolveDirection((string) $request->query('direction', 'desc'));
         $page = max((int) $request->query('page', 1), 1);
@@ -39,7 +39,7 @@ final class PagesIndexController extends Controller
             array_filter([
                 'filter' => array_filter([
                     'search' => $search !== '' ? $search : null,
-                    'status' => $status !== 'all' ? $status : null,
+                    'visibility' => $visibility !== 'all' ? $visibility : null,
                 ]),
                 'sort' => ($direction === 'desc' ? '-' : '').$sort,
             ]),
@@ -96,10 +96,10 @@ final class PagesIndexController extends Controller
         return 'created_at';
     }
 
-    private function resolveStatus(string $status): string
+    private function resolveVisibility(string $visibility): string
     {
-        if (in_array($status, self::ALLOWED_STATUSES, true)) {
-            return $status;
+        if (in_array($visibility, self::ALLOWED_VISIBILITIES, true)) {
+            return $visibility;
         }
 
         return 'all';
@@ -114,9 +114,8 @@ final class PagesIndexController extends Controller
      *     excerpt: ?string,
      *     seoTitle: ?string,
      *     seoDescription: ?string,
-     *     status: string,
+     *     visibility: string,
      *     authorName: ?string,
-     *     publishedAt: ?string,
      *     updatedAt: string
      * }
      */
@@ -133,9 +132,8 @@ final class PagesIndexController extends Controller
             'excerpt' => $page->excerpt,
             'seoTitle' => $page->seo_title,
             'seoDescription' => $page->seo_description,
-            'status' => $page->status,
+            'visibility' => $page->visibility,
             'authorName' => $page->author?->name,
-            'publishedAt' => $this->formatDateTime($page->published_at),
             'updatedAt' => $this->formatDateTime($page->updated_at) ?? now()->toAtomString(),
         ];
     }

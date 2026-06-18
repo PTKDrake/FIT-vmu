@@ -33,11 +33,9 @@ test('cms settings page persists page and layout relations', function () {
     $admin->assignRole('admin');
 
     $homepage = Page::factory()->create([
-        'status' => 'published',
         'visibility' => 'public',
     ]);
     $notFound = Page::factory()->create([
-        'status' => 'published',
         'visibility' => 'public',
     ]);
     $pageLayout = SiteLayout::factory()->createOne([

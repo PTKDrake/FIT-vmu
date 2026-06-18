@@ -25,7 +25,6 @@ final class PageBuilderController extends Controller
                 'slug' => $page->slug,
                 'content' => $page->content,
                 'contentFormat' => $page->content_format,
-                'status' => $page->status,
                 'updatedAt' => $this->formatDateTime($page->updated_at) ?? now()->toAtomString(),
             ],
             'dynamicData' => $buildPuckDynamicData($request->user(), false, [$page->content]),

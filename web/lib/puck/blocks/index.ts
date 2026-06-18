@@ -8,6 +8,8 @@ export { SiteLayoutFrameComponentConfig } from "./site-layout-frame";
 // --- HERO BLOCKS ---
 export { HeroBannerComponentConfig } from "./hero-banner";
 export { HeroSplitComponentConfig } from "./hero-split";
+export { HeroCustomComponentConfig } from "./hero-custom";
+export { StatsCustomComponentConfig } from "./stats-custom";
 
 // --- LAYOUT BLOCKS ---
 export {

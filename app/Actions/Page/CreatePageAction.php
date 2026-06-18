@@ -28,8 +28,7 @@ class CreatePageAction
      *     visibility: string,
      *     student_group_ids?: list<int>,
      *     site_layout_id?: ?int,
-     *     thumbnail_id?: ?int,
-     *     status: string
+     *     thumbnail_id?: ?int
      * } $attributes
      */
     public function __invoke(User $author, array $attributes): Page
@@ -48,7 +47,7 @@ class CreatePageAction
                 'site_layout_id' => $attributes['site_layout_id'] ?? null,
                 'thumbnail_id' => $attributes['thumbnail_id'] ?? null,
                 'author_id' => $author->getKey(),
-                'status' => $attributes['status'],
+                'published_at' => now(),
             ]);
 
             ($this->syncContentStudentGroups)(

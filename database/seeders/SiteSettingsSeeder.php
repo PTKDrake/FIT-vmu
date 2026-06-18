@@ -14,7 +14,6 @@ class SiteSettingsSeeder extends Seeder
     public function run(): void
     {
         $homepage = Page::query()
-            ->where('status', 'published')
             ->whereIn('slug', ['trang-chu-vmu', 'gioi-thieu-vmu'])
             ->orderByRaw("slug = 'trang-chu-vmu' desc")
             ->orderBy('id')
@@ -22,11 +21,9 @@ class SiteSettingsSeeder extends Seeder
 
         $notFoundPage = Page::query()
             ->where('slug', '404')
-            ->where('status', 'published')
             ->first();
 
         $studentHome = Page::query()
-            ->where('status', 'published')
             ->whereIn('visibility', ['students', 'student_groups'])
             ->orderBy('id')
             ->first();

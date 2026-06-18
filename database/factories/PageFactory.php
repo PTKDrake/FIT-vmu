@@ -47,7 +47,6 @@ class PageFactory extends Factory
             'site_layout_id' => null,
             'thumbnail_id' => Media::factory(),
             'author_id' => User::factory(),
-            'status' => $this->faker->randomElement(['draft', 'pending', 'published', 'rejected']),
             'published_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
         ];
     }

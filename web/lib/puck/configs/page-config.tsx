@@ -3,6 +3,8 @@ import {
   FlexComponentConfig,
   HeroBannerComponentConfig,
   HeroSplitComponentConfig,
+  HeroCustomComponentConfig,
+  StatsCustomComponentConfig,
   SectionComponentConfig,
   ContainerComponentConfig,
   TwoColumnsComponentConfig,
@@ -80,6 +82,8 @@ const components = withSelectFieldDefaults({
   CarouselSection: CarouselSectionComponentConfig,
   HeroBanner: HeroBannerComponentConfig,
   HeroSplit: HeroSplitComponentConfig,
+  HeroCustom: HeroCustomComponentConfig,
+  StatsCustom: StatsCustomComponentConfig,
 
   LatestPosts: LatestPostsComponentConfig,
   LatestAnnouncements: LatestAnnouncementsComponentConfig,
@@ -145,6 +149,8 @@ export const pageConfig: PageBuilderConfig = {
         "CarouselSection",
         "HeroBanner",
         "HeroSplit",
+        "HeroCustom",
+        "StatsCustom",
       ],
     },
     dynamic_blocks: {

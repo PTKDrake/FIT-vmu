@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
             $notFoundPageId = SiteSetting::notFoundPageId();
             $notFoundPage = $notFoundPageId !== null ? Page::query()->find($notFoundPageId) : null;
 
-            if (! $notFoundPage || $notFoundPage->status !== 'published' || ! $notFoundPage->isVisibleTo($response->request->user())) {
+            if (! $notFoundPage || ! $notFoundPage->isVisibleTo($response->request->user())) {
                 return null;
             }
 

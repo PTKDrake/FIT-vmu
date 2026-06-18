@@ -89,14 +89,18 @@ export interface CmsPageTableRow {
   authorName: string | null;
   excerpt: string | null;
   id: number;
-  publishedAt: string | null;
   seoDescription: string | null;
   seoTitle: string | null;
   slug: string;
-  status: "draft" | "pending" | "published" | "rejected";
   title: string;
   updatedAt: string;
   urlPath: string;
+  visibility:
+    | "public"
+    | "authenticated"
+    | "students"
+    | "student_groups"
+    | "hidden";
 }
 
 export interface CmsPagesPageProps extends SharedData {
@@ -252,10 +256,14 @@ export interface CmsPageEditorPageProps extends SharedData {
     siteLayoutId: number | null;
     slug: string;
     studentGroupIds: number[];
-    status: "draft" | "pending" | "published" | "rejected";
     title: string;
     updatedAt: string;
-    visibility: "public" | "authenticated" | "students" | "student_groups";
+    visibility:
+      | "public"
+      | "authenticated"
+      | "students"
+      | "student_groups"
+      | "hidden";
   };
   studentGroupOptions: CmsStudentGroupOption[];
 }

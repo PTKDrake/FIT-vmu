@@ -47,12 +47,13 @@ import {
 
 const columnHelper = createColumnHelper<CmsPageTableRow>();
 
-const statusOptions = [
-  { label: "Tất cả trạng thái", value: "all" },
-  { label: "Bản nháp", value: "draft" },
-  { label: "Chờ duyệt", value: "pending" },
-  { label: "Đã xuất bản", value: "published" },
-  { label: "Bị từ chối", value: "rejected" },
+const visibilityOptions = [
+  { label: "Tất cả phạm vi", value: "all" },
+  { label: "Công khai", value: "public" },
+  { label: "Cần đăng nhập", value: "authenticated" },
+  { label: "Mọi sinh viên", value: "students" },
+  { label: "Nhóm sinh viên", value: "student_groups" },
+  { label: "Ẩn", value: "hidden" },
 ] as const;
 
 const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
@@ -138,17 +139,17 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
         </Text>
       ),
     }),
-    columnHelper.accessor("status", {
-      header: "Trạng thái",
+    columnHelper.accessor("visibility", {
+      header: "Phạm vi",
       cell: ({ getValue }) => {
-        const value = getValue() as CmsPageTableRow["status"];
+        const value = getValue() as CmsPageTableRow["visibility"];
 
         return (
           <DataTableBadge
-            intent={statusIntentMap[value]}
+            intent={visibilityIntentMap[value]}
             className="capitalize"
           >
-            {statusLabelMap[value]}
+            {visibilityLabelMap[value]}
           </DataTableBadge>
         );
       },
@@ -267,7 +268,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
           description="Quản lý trang tĩnh, đường dẫn hiển thị và thông tin SEO."
           emptyDescription="Tạo trang đầu tiên để bắt đầu quản lý nội dung."
           emptyTitle="Chưa có trang nào"
-          filterOptions={statusOptions.map((option) => ({ ...option }))}
+          filterOptions={visibilityOptions.map((option) => ({ ...option }))}
           filterValue={tableQueryState.query.status}
           isReloading={tableQueryState.isReloading}
           meta={tableQueryState.meta}
@@ -307,16 +308,18 @@ function formatDate(value: string | null): string {
   return dateFormatter.format(new Date(value));
 }
 
-const statusIntentMap = {
-  draft: "secondary",
-  pending: "warning",
-  published: "success",
-  rejected: "danger",
+const visibilityIntentMap = {
+  public: "success",
+  authenticated: "secondary",
+  students: "primary",
+  student_groups: "warning",
+  hidden: "danger",
 } as const;
 
-const statusLabelMap = {
-  draft: "Bản nháp",
-  pending: "Chờ duyệt",
-  published: "Đã xuất bản",
-  rejected: "Bị từ chối",
+const visibilityLabelMap = {
+  public: "Công khai",
+  authenticated: "Cần đăng nhập",
+  students: "Mọi sinh viên",
+  student_groups: "Nhóm sinh viên",
+  hidden: "Ẩn",
 } as const;

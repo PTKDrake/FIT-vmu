@@ -24,7 +24,6 @@ final class SiteSettingsIndexController extends Controller
                 'default_post_layout' => SiteSetting::defaultPostLayoutId(),
             ],
             'pageOptions' => Page::query()
-                ->where('status', 'published')
                 ->orderBy('title')
                 ->get(['id', 'title', 'slug'])
                 ->map(fn (Page $page): array => [

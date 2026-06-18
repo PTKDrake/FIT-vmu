@@ -131,14 +131,11 @@ final class CmsSiteLayoutsTest extends TestCase
             'content_format' => 'puck_json',
             'visibility' => 'public',
             'site_layout_id' => $assignedLayout->getKey(),
-            'status' => 'draft',
         ])->assertRedirect();
 
         $page = Page::query()->where('slug', 'trang-public')->firstOrFail();
 
         expect($page->site_layout_id)->toBe($assignedLayout->getKey());
-
-        $page->update(['status' => 'published']);
 
         $this->get('/trang-public')
             ->assertOk()
@@ -253,7 +250,6 @@ final class CmsSiteLayoutsTest extends TestCase
         Page::factory()->createOne([
             'title' => 'Dynamic Page',
             'slug' => 'dynamic-page',
-            'status' => 'published',
             'content' => '{"root":{"props":{"title":"Dynamic Page"}},"content":[{"type":"LatestPosts","props":{"id":"latest","title":"Tin mới","limit":3,"categoryId":"all","layout":"grid","showCTA":false}}]}',
         ]);
 

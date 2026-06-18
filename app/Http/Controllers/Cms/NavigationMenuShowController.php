@@ -48,8 +48,7 @@ final class NavigationMenuShowController extends Controller
     {
         return [
             'page' => Page::query()
-                ->select(['id', 'title', 'slug', 'status', 'published_at'])
-                ->where('status', 'published')
+                ->select(['id', 'title', 'slug', 'visibility'])
                 ->orderBy('title')
                 ->get()
                 ->map(static function (Page $page): array {

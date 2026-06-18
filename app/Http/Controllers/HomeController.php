@@ -25,7 +25,7 @@ class HomeController extends Controller
         /** @var User|null $viewer */
         $viewer = $request->user();
 
-        if ($homepage !== null && $homepage->status === 'published') {
+        if ($homepage !== null) {
             if (! $homepage->isVisibleTo($viewer)) {
                 if (! $viewer instanceof User && $homepage->requiresAuthenticationForViewing()) {
                     return to_route('login');

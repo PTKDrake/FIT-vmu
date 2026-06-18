@@ -50,7 +50,6 @@ export function PageFormDialog({
     seo_description: initialValues.seo_description,
     seo_title: initialValues.seo_title,
     slug: initialValues.slug,
-    status: "draft" as const,
     title: initialValues.title,
   });
 

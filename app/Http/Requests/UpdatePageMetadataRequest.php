@@ -55,7 +55,7 @@ class UpdatePageMetadataRequest extends FormRequest
         $pageId = $page instanceof Page ? $page->getKey() : null;
 
         return [
-            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::visibilities())],
+            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::pageVisibilities())],
             'title' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',

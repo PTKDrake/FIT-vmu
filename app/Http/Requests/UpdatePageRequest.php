@@ -46,7 +46,7 @@ class UpdatePageRequest extends FormRequest
         $pageId = $page instanceof Page ? $page->getKey() : null;
 
         return [
-            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::visibilities())],
+            'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::pageVisibilities())],
             'title' => ['required', 'string', 'max:255'],
             'slug' => [
                 'required',
@@ -77,7 +77,6 @@ class UpdatePageRequest extends FormRequest
                 ),
             ],
             'thumbnail_id' => ['nullable', 'integer', Rule::exists((new Media)->getTable(), 'id')],
-            'status' => ['required', 'string', Rule::in(['draft', 'pending', 'published', 'rejected'])],
         ];
     }
 

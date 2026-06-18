@@ -53,10 +53,14 @@ interface CreatePageFormData {
   seo_title: string;
   site_layout_id: string;
   slug: string;
-  status: "draft";
   student_group_ids: number[];
   title: string;
-  visibility: "public" | "authenticated" | "students" | "student_groups";
+  visibility:
+    | "public"
+    | "authenticated"
+    | "students"
+    | "student_groups"
+    | "hidden";
 }
 
 function slugify(text: string): string {
@@ -98,7 +102,6 @@ export default function CreatePage({
     visibility: "public" as const,
     student_group_ids: [] as number[],
     site_layout_id: "",
-    status: "draft" as const,
   });
 
   const templateValue = Array.from(selectedTemplate)[0] as any;
@@ -228,6 +231,14 @@ export default function CreatePage({
                         textValue="Nhóm sinh viên"
                       >
                         <SelectLabel>Nhóm sinh viên</SelectLabel>
+                      </SelectItem>
+                      <SelectItem
+                        id="hidden"
+                        textValue="Ẩn (chỉ quản trị viên có thể xem)"
+                      >
+                        <SelectLabel>
+                          Ẩn (chỉ quản trị viên có thể xem)
+                        </SelectLabel>
                       </SelectItem>
                     </SelectContent>
                     {form.errors.visibility ? (

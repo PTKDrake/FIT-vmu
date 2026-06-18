@@ -16,4 +16,13 @@ class ContentVisibilityOptions
             'student_groups',
         ];
     }
+
+    /** @return list<string> */
+    public static function pageVisibilities(): array
+    {
+        return [
+            ...self::visibilities(),
+            'hidden',
+        ];
+    }
 }

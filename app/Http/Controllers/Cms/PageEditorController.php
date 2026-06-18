@@ -31,7 +31,6 @@ final class PageEditorController extends Controller
                 'visibility' => $page->visibility,
                 'studentGroupIds' => $page->studentGroupIds(),
                 'siteLayoutId' => $page->site_layout_id,
-                'status' => $page->status,
                 'updatedAt' => $this->formatDateTime($page->updated_at) ?? now()->toAtomString(),
             ],
             'layoutOptions' => SiteLayout::query()

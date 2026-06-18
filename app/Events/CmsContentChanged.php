@@ -51,7 +51,7 @@ final class CmsContentChanged implements ShouldBroadcast, ShouldDispatchAfterCom
             resource: 'pages',
             recordId: self::normalizeRecordId($page->getKey()),
             title: $page->title,
-            status: $page->status,
+            status: $page->visibility,
             action: $action,
             message: $message,
             updatedAt: self::toIsoString($page->updated_at),

@@ -59,7 +59,6 @@ test('cms navigation show renders the selected menu and resource catalog', funct
     $publishedPage = Page::factory()->for($author, 'author')->create([
         'title' => 'Trang giới thiệu',
         'slug' => 'gioi-thieu',
-        'status' => 'published',
     ]);
 
     $publishedPost = Post::factory()->for($author, 'author')->create([
@@ -130,7 +129,6 @@ test('cms navigation tree sync persists nested items from the frontend editor', 
     $publishedPage = Page::factory()->create([
         'title' => 'Trang giới thiệu',
         'slug' => 'gioi-thieu',
-        'status' => 'published',
     ]);
 
     $menu = NavigationMenu::factory()->create([

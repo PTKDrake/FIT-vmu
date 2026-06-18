@@ -33,8 +33,6 @@ final class PublicSlugController extends Controller
         $page = Page::query()->where('slug', $slug)->first();
 
         if ($page instanceof Page) {
-            abort_unless($page->status === 'published', 404);
-
             if (! $page->isVisibleTo($viewer)) {
                 if (! $viewer instanceof User && $page->requiresAuthenticationForViewing()) {
                     return to_route('login');

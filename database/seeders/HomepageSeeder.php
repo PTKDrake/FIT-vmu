@@ -673,7 +673,6 @@ class HomepageSeeder extends Seeder
                 'visibility' => 'public',
                 'thumbnail_id' => null,
                 'author_id' => $author->getKey(),
-                'status' => 'published',
                 'published_at' => now(),
             ],
         );

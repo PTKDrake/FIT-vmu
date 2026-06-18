@@ -20,21 +20,21 @@ test('cms pages query builder applies allowed filters sorts and includes', funct
     Page::factory()->for($otherAuthor, 'author')->create([
         'title' => 'Trang cũ',
         'slug' => 'trang-cu',
-        'excerpt' => 'Bị loại vì trạng thái',
-        'status' => 'draft',
+        'excerpt' => 'Bị loại vì phạm vi',
+        'visibility' => 'hidden',
     ]);
 
     Page::factory()->for($matchingAuthor, 'author')->create([
         'title' => 'Giới thiệu khoa FIT',
         'slug' => 'gioi-thieu-fit',
         'excerpt' => 'Trang giới thiệu chính thức',
-        'status' => 'published',
+        'visibility' => 'students',
     ]);
 
     bindPageNavigationQueryBuilderRequest([
         'filter' => [
             'search' => 'FIT',
-            'status' => 'published',
+            'visibility' => 'students',
             'author_id' => (string) $matchingAuthor->getKey(),
         ],
         'sort' => 'title',
@@ -152,7 +152,7 @@ test('cms navigation menu and item query builders apply allowed filters sorts an
 test('cms page and navigation query builders reject unknown filters and sorts', function () {
     bindPageNavigationQueryBuilderRequest([
         'filter' => [
-            'visibility' => 'public',
+            'status' => 'published',
         ],
     ]);
 

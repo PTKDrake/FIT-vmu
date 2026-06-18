@@ -24,7 +24,6 @@ test('cms pages create edit clone and delete flows persist page data', function 
         'content' => '{"root":{"props":{"title":"Trang gioi thieu"}},"content":[]}',
         'content_format' => 'puck_json',
         'visibility' => 'public',
-        'status' => 'draft',
     ]);
 
     $page = Page::query()->where('slug', 'trang-gioi-thieu')->firstOrFail();
@@ -36,6 +35,7 @@ test('cms pages create edit clone and delete flows persist page data', function 
         ->and($page->slug)->toBe('trang-gioi-thieu')
         ->and($page->seo_title)->toBe('SEO gioi thieu')
         ->and($page->seo_description)->toBe('Mo ta SEO gioi thieu')
+        ->and($page->published_at)->not->toBeNull()
         ->and($page->author_id)->toBe($editor->getKey());
 
     // Test GET create page
@@ -107,7 +107,7 @@ test('cms pages create edit clone and delete flows persist page data', function 
         ->firstOrFail();
 
     expect($clone->title)->toBe('Trang gioi thieu moi (Bản sao)')
-        ->and($clone->status)->toBe('draft')
+        ->and($clone->published_at)->not->toBeNull()
         ->and($clone->author_id)->toBe($editor->getKey())
         ->and($clone->content)->toBe($page->content);
 

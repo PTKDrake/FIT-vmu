@@ -18,13 +18,12 @@ final class CmsPagesQueryBuilder
         return QueryBuilder::for(Page::query())
             ->allowedFilters(
                 AllowedFilter::callback('search', self::searchFilter(...)),
-                AllowedFilter::exact('status'),
+                AllowedFilter::exact('visibility'),
                 AllowedFilter::exact('author_id'),
             )
             ->allowedSorts(
                 'title',
-                'status',
-                'published_at',
+                'visibility',
                 'created_at',
                 AllowedSort::field('author', 'author_id'),
             )

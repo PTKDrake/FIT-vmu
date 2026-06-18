@@ -525,6 +525,28 @@ export interface VmuFitPageBuilderComponents {
     noShrinkFromMd?: boolean;
     className?: string;
   };
+  HeroCustom: {
+    badge?: string;
+    title?: string;
+    description?: string;
+    imageUrl?: PuckImageValue;
+    primaryActionLabel?: string;
+    primaryActionHref?: string;
+    secondaryActionLabel?: string;
+    secondaryActionHref?: string;
+    className?: string;
+  };
+  StatsCustom: {
+    title?: string;
+    viewAllLabel?: string;
+    viewAllHref?: string;
+    stats?: {
+      icon?: string;
+      value?: string;
+      label?: string;
+    }[];
+    className?: string;
+  };
 }
 
 export interface PageBuilderRootProps {
