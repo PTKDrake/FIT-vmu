@@ -1,10 +1,6 @@
-import {
-  filterSuggestionItems,
-  FormattingToolbarExtension,
-} from "@blocknote/core/extensions";
+import { FormattingToolbarExtension } from "@blocknote/core/extensions";
 import {
   FormattingToolbarController,
-  getDefaultReactSlashMenuItems,
   SuggestionMenuController,
   useComponentsContext,
   useBlockNoteEditor,
@@ -19,6 +15,10 @@ import {
 } from "@blocknote/xl-ai";
 import { Sparkles } from "lucide-react";
 import { BlockNoteFormattingToolbar } from "./blocknote-formatting-toolbar";
+import {
+  blockNoteSchema,
+  getBlockNoteSlashMenuItems,
+} from "./blocknote-schema";
 
 let blockNoteAiPromptTarget: "cursor" | "selection" = "selection";
 
@@ -31,7 +31,7 @@ function BlockNoteAiFormattingToolbar() {
 }
 
 function BlockNoteAiToolbarButton() {
-  const editor = useBlockNoteEditor();
+  const editor = useBlockNoteEditor(blockNoteSchema);
   const ai = useExtension(AIExtension);
   const components = useComponentsContext();
   const formattingToolbar = useExtension(FormattingToolbarExtension);
@@ -66,7 +66,7 @@ function BlockNoteAiToolbarButton() {
 }
 
 function BlockNoteAiMenu(props: AIMenuProps) {
-  const editor = useBlockNoteEditor();
+  const editor = useBlockNoteEditor(blockNoteSchema);
   const ai = useExtension(AIExtension);
 
   return (
@@ -89,7 +89,7 @@ function BlockNoteAiMenu(props: AIMenuProps) {
 }
 
 export function BlockNoteAiControllers() {
-  const editor = useBlockNoteEditor();
+  const editor = useBlockNoteEditor(blockNoteSchema);
 
   return (
     <>
@@ -99,40 +99,38 @@ export function BlockNoteAiControllers() {
       <SuggestionMenuController
         triggerCharacter="/"
         getItems={async (query) =>
-          filterSuggestionItems(
-            [
-              ...getAISlashMenuItems(editor).map((item) => {
-                const itemKey = (item as { key?: string }).key;
-
-                if (itemKey !== "ai") {
-                  return item;
-                }
-
-                return {
-                  ...item,
-                  onItemClick: () => {
-                    const ai = editor.getExtension(AIExtension);
-
-                    if (!ai) {
-                      return;
-                    }
-
-                    blockNoteAiPromptTarget = "cursor";
-                    const cursor = editor.getTextCursorPosition();
-                    const blockId =
-                      Array.isArray(cursor.block.content) &&
-                      cursor.block.content.length === 0 &&
-                      cursor.prevBlock
-                        ? cursor.prevBlock.id
-                        : cursor.block.id;
-
-                    ai.openAIMenuAtBlock(blockId);
-                  },
-                };
-              }),
-              ...getDefaultReactSlashMenuItems(editor),
-            ],
+          getBlockNoteSlashMenuItems(
+            editor,
             query,
+            getAISlashMenuItems(editor).map((item) => {
+              const itemKey = (item as { key?: string }).key;
+
+              if (itemKey !== "ai") {
+                return item;
+              }
+
+              return {
+                ...item,
+                onItemClick: () => {
+                  const ai = editor.getExtension(AIExtension);
+
+                  if (!ai) {
+                    return;
+                  }
+
+                  blockNoteAiPromptTarget = "cursor";
+                  const cursor = editor.getTextCursorPosition();
+                  const blockId =
+                    Array.isArray(cursor.block.content) &&
+                    cursor.block.content.length === 0 &&
+                    cursor.prevBlock
+                      ? cursor.prevBlock.id
+                      : cursor.block.id;
+
+                  ai.openAIMenuAtBlock(blockId);
+                },
+              };
+            }),
           )
         }
       />

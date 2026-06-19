@@ -35,7 +35,7 @@ class UpdateNavigationItemRequest extends FormRequest
             'menu_id' => ['required', 'integer', Rule::exists((new NavigationMenu)->getTable(), 'id')],
             'parent_id' => ['nullable', 'integer', Rule::exists((new NavigationItem)->getTable(), 'id')],
             'title' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'string', Rule::in(['custom_url', 'post_category', 'page', 'post'])],
+            'type' => ['required', 'string', Rule::in(['custom_url', 'post_category', 'page', 'post', 'none'])],
             'linkable_type' => ['nullable', 'string', Rule::in([PostCategory::class, Page::class, Post::class])],
             'linkable_id' => ['nullable', 'integer'],
             'url' => ['nullable', 'string', 'max:2048'],
@@ -99,6 +99,22 @@ class UpdateNavigationItemRequest extends FormRequest
 
             if ($linkableId !== null) {
                 $validator->errors()->add('linkable_id', 'The linkable id must be empty when type is custom_url.');
+            }
+
+            return;
+        }
+
+        if ($type === 'none') {
+            if ($url !== '') {
+                $validator->errors()->add('url', 'The url field must be empty when type is none.');
+            }
+
+            if ($linkableType !== '') {
+                $validator->errors()->add('linkable_type', 'The linkable type must be empty when type is none.');
+            }
+
+            if ($linkableId !== null) {
+                $validator->errors()->add('linkable_id', 'The linkable id must be empty when type is none.');
             }
 
             return;

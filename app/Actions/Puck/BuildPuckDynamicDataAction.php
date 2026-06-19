@@ -113,6 +113,7 @@ class BuildPuckDynamicDataAction
                     $unitChildren = $activeUnits->map(fn (Unit $unit): array => [
                         'id' => 100000 + $unit->id,
                         'title' => $unit->name,
+                        'type' => 'unit',
                         'url' => '/don-vi/'.$unit->slug,
                         'target' => '_self',
                         'children' => [],
@@ -121,6 +122,7 @@ class BuildPuckDynamicDataAction
                     return [[
                         'id' => $item->id,
                         'title' => $item->title,
+                        'type' => $item->type,
                         'url' => '#',
                         'target' => $item->target,
                         'children' => $unitChildren,
@@ -130,6 +132,7 @@ class BuildPuckDynamicDataAction
                 return [[
                     'id' => $item->id,
                     'title' => $item->title,
+                    'type' => $item->type,
                     'url' => $this->navigationItemUrl($item),
                     'target' => $item->target,
                     'children' => $this->buildNavigationTree($items, $item->id),

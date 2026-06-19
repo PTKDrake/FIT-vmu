@@ -299,10 +299,24 @@ test('navigation item requests validate custom urls linkable targets and parent 
         'is_active' => true,
     ];
 
+    $validNoneData = [
+        'menu_id' => $menu->getKey(),
+        'parent_id' => $parentItem->getKey(),
+        'title' => 'Nhóm menu',
+        'type' => 'none',
+        'linkable_type' => null,
+        'linkable_id' => null,
+        'url' => null,
+        'target' => '_self',
+        'sort_order' => 3,
+        'is_active' => true,
+    ];
+
     expect(makeStoreNavigationItemRequest([], $editor)->authorize())->toBeTrue()
         ->and(makeUpdateNavigationItemRequest([], $editor, $item)->authorize())->toBeTrue()
         ->and(validatePageNavigationRequest(makeStoreNavigationItemRequest($validCustomUrlData), $validCustomUrlData)->passes())->toBeTrue()
         ->and(validatePageNavigationRequest(makeStoreNavigationItemRequest($validPageLinkData), $validPageLinkData)->passes())->toBeTrue()
+        ->and(validatePageNavigationRequest(makeStoreNavigationItemRequest($validNoneData), $validNoneData)->passes())->toBeTrue()
         ->and(validatePageNavigationRequest(makeStoreNavigationItemRequest([
             ...$validCustomUrlData,
             'url' => null,
@@ -328,6 +342,13 @@ test('navigation item requests validate custom urls linkable targets and parent 
             'linkable_type' => Post::class,
             'url' => 'https://example.com',
         ])->errors()->keys())->toContain('linkable_type', 'url')
+        ->and(validatePageNavigationRequest(makeStoreNavigationItemRequest([
+            ...$validNoneData,
+            'url' => '/khong-hop-le',
+        ]), [
+            ...$validNoneData,
+            'url' => '/khong-hop-le',
+        ])->errors()->keys())->toContain('url')
         ->and(validatePageNavigationRequest(makeStoreNavigationItemRequest([
             ...$validPageLinkData,
             'parent_id' => $foreignParent->getKey(),

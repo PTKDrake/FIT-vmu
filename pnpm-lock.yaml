@@ -26,6 +26,9 @@ importers:
       '@blocknote/xl-ai':
         specifier: ^0.51.4
         version: 0.51.4(@floating-ui/dom@1.7.6)(@mantine/core@9.3.1(@mantine/hooks@9.3.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.3.1(react@19.2.7))(@tiptap/pm@3.26.0)(@types/hast@3.0.4)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(y-protocols@1.0.7(yjs@13.6.31))(yjs@13.6.31)(zod@4.4.3)
+      '@blocknote/xl-multi-column':
+        specifier: ^0.51.4
+        version: 0.51.4(@floating-ui/dom@1.7.6)(@tiptap/pm@3.26.0)(@types/hast@3.0.4)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@chenglou/pretext':
         specifier: ^0.0.7
         version: 0.0.7
@@ -471,6 +474,12 @@ packages:
 
   '@blocknote/xl-ai@0.51.4':
     resolution: {integrity: sha512-YVyTCnjSqeM+4mOLgzwFymEWMXUUs/tgf5nO0KBShwqyfe56Kv52e6hT7nd9neSxJQ/nncTNHOcukgL2E28zZQ==}
+    peerDependencies:
+      react: ^18.0 || ^19.0 || >= 19.0.0-rc
+      react-dom: ^18.0 || ^19.0 || >= 19.0.0-rc
+
+  '@blocknote/xl-multi-column@0.51.4':
+    resolution: {integrity: sha512-4B60OvNNnb2duAXo741AiPJxzOQTwRzAr+5fxM10wBlv23VuSmVTrD0wtGK3Ve85I64CAFB8uEUJrMXXKNynQA==}
     peerDependencies:
       react: ^18.0 || ^19.0 || >= 19.0.0-rc
       react-dom: ^18.0 || ^19.0 || >= 19.0.0-rc
@@ -5770,6 +5779,32 @@ snapshots:
       - y-protocols
       - yjs
       - zod
+
+  '@blocknote/xl-multi-column@0.51.4(@floating-ui/dom@1.7.6)(@tiptap/pm@3.26.0)(@types/hast@3.0.4)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@blocknote/core': 0.51.4(@types/hast@3.0.4)
+      '@blocknote/react': 0.51.4(@floating-ui/dom@1.7.6)(@types/hast@3.0.4)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tiptap/core': 3.26.0(@tiptap/pm@3.26.0)
+      prosemirror-model: 1.25.8
+      prosemirror-state: 1.4.4
+      prosemirror-tables: 1.8.5
+      prosemirror-transform: 1.12.0
+      prosemirror-view: 1.41.9
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      react-icons: 5.6.0(react@19.2.7)
+    transitivePeerDependencies:
+      - '@floating-ui/dom'
+      - '@lezer/common'
+      - '@lezer/highlight'
+      - '@tiptap/pm'
+      - '@types/hast'
+      - '@types/react'
+      - '@types/react-dom'
+      - highlight.js
+      - lowlight
+      - refractor
+      - sugar-high
 
   '@chenglou/pretext@0.0.7': {}
 

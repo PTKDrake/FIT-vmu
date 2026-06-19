@@ -55,6 +55,75 @@ test('navigation menu sync validates and stores items of type unit', function ()
     ]);
 });
 
+test('navigation menu sync stores none items with manual children', function () {
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $menu = NavigationMenu::factory()->create([
+        'location' => 'header',
+        'is_active' => true,
+    ]);
+
+    $syncData = [
+        'items' => [
+            [
+                'id' => 1,
+                'parent_id' => null,
+                'title' => 'Tài nguyên',
+                'type' => 'none',
+                'linkable_type' => null,
+                'linkable_id' => null,
+                'url' => null,
+                'target' => '_self',
+                'sort_order' => 0,
+                'is_active' => true,
+            ],
+            [
+                'id' => 2,
+                'parent_id' => 1,
+                'title' => 'Trang con',
+                'type' => 'custom_url',
+                'linkable_type' => null,
+                'linkable_id' => null,
+                'url' => '/trang-con',
+                'target' => '_self',
+                'sort_order' => 0,
+                'is_active' => true,
+            ],
+        ],
+    ];
+
+    $response = $this->actingAs($editor)
+        ->patch(route('cms.navigation.items.sync', $menu), $syncData);
+
+    $response->assertRedirect();
+
+    $noneItem = NavigationItem::query()
+        ->where('menu_id', $menu->id)
+        ->where('type', 'none')
+        ->firstOrFail();
+
+    $this->assertDatabaseHas('navigation_items', [
+        'menu_id' => $menu->id,
+        'parent_id' => $noneItem->id,
+        'title' => 'Trang con',
+        'type' => 'custom_url',
+        'url' => '/trang-con',
+    ]);
+
+    /** @var BuildPuckDynamicDataAction $builder */
+    $builder = app(BuildPuckDynamicDataAction::class);
+    $data = $builder(null, true);
+
+    $headerMenu = collect($data['navigationMenus'])->firstWhere('id', $menu->id);
+    expect($headerMenu)->not->toBeNull()
+        ->and($headerMenu['items'][0]['title'])->toBe('Tài nguyên')
+        ->and($headerMenu['items'][0]['type'])->toBe('none')
+        ->and($headerMenu['items'][0]['url'])->toBe('#')
+        ->and($headerMenu['items'][0]['children'])->toHaveCount(1)
+        ->and($headerMenu['items'][0]['children'][0]['url'])->toBe('/trang-con');
+});
+
 test('navigation menu sync rejects invalid unit item configuration', function () {
     $editor = User::factory()->create();
     $editor->assignRole('editor');

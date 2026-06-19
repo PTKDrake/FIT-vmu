@@ -17,6 +17,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type MouseEvent,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -94,6 +95,7 @@ export interface FitNavigationItem {
   id: number;
   target: string;
   title: string;
+  type?: string;
   url: string;
 }
 
@@ -340,6 +342,7 @@ function DesktopNavigationEntry({
 }) {
   const isCurrent = isNavigationBranchCurrent(item, currentPath);
   const hasChildren = item.children.length > 0;
+  const isDisabled = isNavigationItemDisabled(item);
 
   return (
     <NavbarMenu
@@ -354,6 +357,7 @@ function DesktopNavigationEntry({
         )}
         href={item.url}
         isCurrent={isCurrent}
+        onClick={isDisabled ? preventNavigation : undefined}
         target={item.target === "_blank" ? "_blank" : undefined}
       >
         {item.title}
@@ -370,6 +374,9 @@ function DesktopNavigationEntry({
               )}
               href={child.url}
               key={child.id}
+              onClick={
+                isNavigationItemDisabled(child) ? preventNavigation : undefined
+              }
               target={child.target === "_blank" ? "_blank" : undefined}
             >
               {child.title}
@@ -516,6 +523,7 @@ function MobileNavigationEntry({
 }) {
   const hasChildren = item.children.length > 0;
   const isCurrent = isNavigationBranchCurrent(item, currentPath);
+  const isDisabled = isNavigationItemDisabled(item);
 
   if (!hasChildren) {
     return (
@@ -525,6 +533,7 @@ function MobileNavigationEntry({
           isCurrent ? "bg-primary-subtle [--text:var(--color-primary)]" : "",
         )}
         href={item.url}
+        onClick={isDisabled ? preventNavigation : undefined}
         target={item.target === "_blank" ? "_blank" : undefined}
       >
         {item.title}
@@ -544,6 +553,7 @@ function MobileNavigationEntry({
                 : "",
             )}
             href={item.url}
+            onClick={isDisabled ? preventNavigation : undefined}
             target={item.target === "_blank" ? "_blank" : undefined}
           >
             {item.title}
@@ -565,6 +575,11 @@ function MobileNavigationEntry({
                 )}
                 href={child.url}
                 key={child.id}
+                onClick={
+                  isNavigationItemDisabled(child)
+                    ? preventNavigation
+                    : undefined
+                }
                 target={child.target === "_blank" ? "_blank" : undefined}
               >
                 {child.title}
@@ -820,6 +835,14 @@ function isNavigationBranchCurrent(
       isNavigationItemCurrent(child.url, currentPath),
     )
   );
+}
+
+function isNavigationItemDisabled(item: FitNavigationItem): boolean {
+  return item.type === "none";
+}
+
+function preventNavigation(event: MouseEvent<Element>): void {
+  event.preventDefault();
 }
 
 function isNavigationItemCurrent(

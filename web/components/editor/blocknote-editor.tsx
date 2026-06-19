@@ -2,7 +2,11 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
 import "@blocknote/xl-ai/style.css";
 import { vi as blockNoteViDictionary } from "@blocknote/core/locales";
-import { FilePanelController, useCreateBlockNote } from "@blocknote/react";
+import {
+  FilePanelController,
+  SuggestionMenuController,
+  useCreateBlockNote,
+} from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { vi as blockNoteAiViDictionary } from "@blocknote/xl-ai/locales";
 import { usePage } from "@inertiajs/react";
@@ -21,6 +25,12 @@ import {
   parseBlockNoteContent,
   serializeBlockNoteContent,
 } from "./blocknote-parse";
+import {
+  blockNoteMultiColumnDictionary,
+  blockNoteSchema,
+  getBlockNoteSlashMenuItems,
+  multiColumnDropCursor,
+} from "./blocknote-schema";
 import type { BlockNoteContent, BlockNoteValue } from "./blocknote-types";
 import { uploadBlockNoteCmsMedia } from "./blocknote-upload";
 
@@ -77,9 +87,12 @@ export function BlockNoteEditor({
       dictionary: {
         ...blockNoteViDictionary,
         ai: blockNoteAiDictionary,
+        ...blockNoteMultiColumnDictionary,
       },
+      dropCursor: multiColumnDropCursor,
       extensions: blockNoteAiEnabled ? [createBlockNoteAiExtension()] : [],
       initialContent,
+      schema: blockNoteSchema,
       uploadFile: uploadFile ?? uploadBlockNoteCmsMedia,
     },
     [blockNoteAiEnabled, editorKey],
@@ -118,7 +131,7 @@ export function BlockNoteEditor({
         linkToolbar={isEditable}
         onChange={handleEditorChange}
         sideMenu={isEditable}
-        slashMenu={blockNoteAiEnabled ? false : isEditable}
+        slashMenu={false}
         tableHandles={isEditable}
         formattingToolbar={false}
       >
@@ -126,7 +139,13 @@ export function BlockNoteEditor({
           <FilePanelController filePanel={BlockNoteMediaFilePanel} />
         ) : null}
         {isEditable && !blockNoteAiEnabled ? (
-          <BlockNoteFormattingToolbar />
+          <>
+            <BlockNoteFormattingToolbar />
+            <SuggestionMenuController
+              triggerCharacter="/"
+              getItems={(query) => getBlockNoteSlashMenuItems(editor, query)}
+            />
+          </>
         ) : null}
         {blockNoteAiEnabled ? <BlockNoteAiControllers /> : null}
       </BlockNoteView>

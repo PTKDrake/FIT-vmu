@@ -5,11 +5,12 @@ export type NavigationItemType =
   | "post_category"
   | "page"
   | "post"
-  | "unit";
+  | "unit"
+  | "none";
 
 export type NavigationInternalResourceType = Exclude<
   NavigationItemType,
-  "custom_url" | "unit"
+  "custom_url" | "unit" | "none"
 >;
 
 export type NavigationItemTarget = "_self" | "_blank";
@@ -852,6 +853,10 @@ export function describeNavigationDestination(
     return "Tự động tải danh sách đơn vị";
   }
 
+  if (item.type === "none") {
+    return "Không điều hướng";
+  }
+
   const selectedResource = item.linkableType
     ? resourceCatalog[item.linkableType].find(
         (resource) => resource.id === item.linkableId,
@@ -873,14 +878,14 @@ export function flattenNavigationTree(
     {
       id: item.id,
       is_active: item.isActive,
-      linkable_id: item.linkableId,
-      linkable_type: item.linkableType,
+      linkable_id: item.type === "none" ? null : item.linkableId,
+      linkable_type: item.type === "none" ? null : item.linkableType,
       parent_id: parentId,
       sort_order: index + 1,
       target: item.target,
       title: item.title,
       type: item.type,
-      url: item.url,
+      url: item.type === "none" ? null : item.url,
     },
     ...flattenNavigationTree(item.children, item.id),
   ]);

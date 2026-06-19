@@ -59,6 +59,7 @@ export interface PuckDynamicNavigationItem {
   id: number;
   target: string;
   title: string;
+  type?: string;
   url: string;
 }
 

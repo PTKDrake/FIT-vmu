@@ -74,6 +74,7 @@ const navigationTypeLabels: Record<NavigationItemType, string> = {
   post: "Bài viết",
   post_category: "Danh mục bài viết",
   unit: "Đơn vị (Tự động tải danh sách)",
+  none: "Không điều hướng",
 };
 
 const navigationTargetLabels: Record<NavigationItemTarget, string> = {
@@ -710,7 +711,10 @@ function NavigationItemEditorModal({
               const nextType = String(key) as NavigationItemType;
 
               onItemFieldChange(item.id, (currentItem) => {
-                const isInternal = nextType !== "custom_url" && nextType !== "unit";
+                const isInternal =
+                  nextType !== "custom_url" &&
+                  nextType !== "unit" &&
+                  nextType !== "none";
                 return {
                   ...currentItem,
                   type: nextType,
@@ -720,7 +724,8 @@ function NavigationItemEditorModal({
                   linkableType: isInternal
                     ? (nextType as NavigationInternalResourceType)
                     : null,
-                  url: nextType === "custom_url" ? (currentItem.url ?? "") : null,
+                  url:
+                    nextType === "custom_url" ? (currentItem.url ?? "") : null,
                 };
               });
             }}
@@ -754,41 +759,51 @@ function NavigationItemEditorModal({
 
           {item.type === "unit" && (
             <div className="rounded-xl border border-border/60 bg-muted/20 p-4 text-xs text-muted-fg leading-relaxed">
-              Các đơn vị hoạt động trong cơ sở dữ liệu sẽ tự động được tải làm menu con của mục này. Bạn không cần chọn cụ thể đơn vị nào.
+              Các đơn vị hoạt động trong cơ sở dữ liệu sẽ tự động được tải làm
+              menu con của mục này. Bạn không cần chọn cụ thể đơn vị nào.
             </div>
           )}
 
-          {item.type !== "custom_url" && item.type !== "unit" && (
-            <Select
-              aria-label="Tài nguyên nội bộ"
-              selectedKey={String(item.linkableId ?? "")}
-              onSelectionChange={(key) => {
-                onItemFieldChange(item.id, (currentItem) => ({
-                  ...currentItem,
-                  linkableId: Number(key),
-                  linkableType:
-                    currentItem.type as NavigationInternalResourceType,
-                  url: null,
-                }));
-              }}
-            >
-              <Label>Tài nguyên nội bộ</Label>
-              <SelectTrigger />
-              <SelectContent>
-                {activeResourceOptions.map((resource) => (
-                  <SelectItem
-                    key={resource.id}
-                    id={String(resource.id)}
-                    textValue={resource.label}
-                  >
-                    <SelectLabel>
-                      {resource.label} · {resource.meta}
-                    </SelectLabel>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {item.type === "none" && (
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-4 text-xs text-muted-fg leading-relaxed">
+              Mục này chỉ dùng để gom nhóm menu con và không mở liên kết khi
+              người dùng bấm vào.
+            </div>
           )}
+
+          {item.type !== "custom_url" &&
+            item.type !== "unit" &&
+            item.type !== "none" && (
+              <Select
+                aria-label="Tài nguyên nội bộ"
+                selectedKey={String(item.linkableId ?? "")}
+                onSelectionChange={(key) => {
+                  onItemFieldChange(item.id, (currentItem) => ({
+                    ...currentItem,
+                    linkableId: Number(key),
+                    linkableType:
+                      currentItem.type as NavigationInternalResourceType,
+                    url: null,
+                  }));
+                }}
+              >
+                <Label>Tài nguyên nội bộ</Label>
+                <SelectTrigger />
+                <SelectContent>
+                  {activeResourceOptions.map((resource) => (
+                    <SelectItem
+                      key={resource.id}
+                      id={String(resource.id)}
+                      textValue={resource.label}
+                    >
+                      <SelectLabel>
+                        {resource.label} · {resource.meta}
+                      </SelectLabel>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
           <Select
             aria-label="Parent item"
@@ -994,7 +1009,7 @@ function resolveResourceOptions(
     NavigationResourceOption[]
   >,
 ): NavigationResourceOption[] {
-  if (type === "custom_url" || type === "unit") {
+  if (type === "custom_url" || type === "unit" || type === "none") {
     return [];
   }
 

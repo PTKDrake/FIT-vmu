@@ -5,6 +5,7 @@ import { BlockNoteView } from "@blocknote/shadcn";
 import { twMerge } from "tailwind-merge";
 import { useTheme } from "@/hooks/use-theme";
 import { parseBlockNoteContent } from "./blocknote-parse";
+import { blockNoteSchema } from "./blocknote-schema";
 import type { BlockNoteValue } from "./blocknote-types";
 
 interface BlockNoteReadonlyProps {
@@ -23,6 +24,7 @@ export function BlockNoteReadonly({
     {
       defaultStyles: true,
       initialContent: parseBlockNoteContent(content),
+      schema: blockNoteSchema,
     },
     [editorKey],
   );

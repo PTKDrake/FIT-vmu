@@ -1,7 +1,20 @@
 import type { Block, PartialBlock } from "@blocknote/core";
+import type {
+  VmuBlockSchema,
+  VmuInlineContentSchema,
+  VmuStyleSchema,
+} from "./blocknote-schema";
 
-export type BlockNoteContent = Block[];
-export type BlockNoteInitialContent = PartialBlock[];
+export type BlockNoteContent = Block<
+  VmuBlockSchema,
+  VmuInlineContentSchema,
+  VmuStyleSchema
+>[];
+export type BlockNoteInitialContent = PartialBlock<
+  VmuBlockSchema,
+  VmuInlineContentSchema,
+  VmuStyleSchema
+>[];
 export type BlockNoteFormat = "blocknote_json";
 export type BlockNoteValue =
   | BlockNoteContent

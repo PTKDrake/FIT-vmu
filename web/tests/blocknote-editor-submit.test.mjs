@@ -6,6 +6,18 @@ const editorSource = readFileSync(
     new URL("../components/editor/blocknote-editor.tsx", import.meta.url),
     "utf8",
 );
+const readonlySource = readFileSync(
+    new URL("../components/editor/blocknote-readonly.tsx", import.meta.url),
+    "utf8",
+);
+const aiSource = readFileSync(
+    new URL("../components/editor/blocknote-ai.tsx", import.meta.url),
+    "utf8",
+);
+const schemaSource = readFileSync(
+    new URL("../components/editor/blocknote-schema.ts", import.meta.url),
+    "utf8",
+);
 const postFormSource = readFileSync(
     new URL("../components/cms/post-form.tsx", import.meta.url),
     "utf8",
@@ -24,6 +36,27 @@ test("BlockNote editor prevents internal buttons from submitting parent forms", 
         /buttonType !== "button" && buttonType !== "reset"/,
     );
     assert.match(editorSource, /event\.preventDefault\(\)/);
+});
+
+test("BlockNote editor enables multi-column blocks consistently", () => {
+    assert.match(schemaSource, /@blocknote\/xl-multi-column/);
+    assert.match(
+        schemaSource,
+        /withMultiColumn\(BlockNoteSchema\.create\(\)\)/,
+    );
+    assert.match(schemaSource, /multiColumnDropCursor/);
+    assert.match(schemaSource, /getMultiColumnSlashMenuItems\(editor\)/);
+    assert.match(schemaSource, /multiColumnLocales\.vi/);
+    assert.match(editorSource, /schema: blockNoteSchema/);
+    assert.match(editorSource, /dropCursor: multiColumnDropCursor/);
+    assert.match(editorSource, /slashMenu=\{false\}/);
+    assert.match(
+        editorSource,
+        /<SuggestionMenuController[\s\S]*?getBlockNoteSlashMenuItems\(editor, query\)/,
+    );
+    assert.match(readonlySource, /schema: blockNoteSchema/);
+    assert.match(aiSource, /useBlockNoteEditor\(blockNoteSchema\)/);
+    assert.match(aiSource, /getBlockNoteSlashMenuItems\(/);
 });
 
 test("Post form only accepts explicit toolbar-triggered submits", () => {
@@ -100,8 +133,5 @@ test("Pending post edit mode collapses workflow actions into a single save butto
         postFormSource,
         /className=\{isPendingEdit \? "hidden" : undefined\}/,
     );
-    assert.match(
-        postFormSource,
-        /canPublish &&[\s\S]*!isPendingEdit \? \(/,
-    );
+    assert.match(postFormSource, /canPublish &&[\s\S]*!isPendingEdit \? \(/);
 });

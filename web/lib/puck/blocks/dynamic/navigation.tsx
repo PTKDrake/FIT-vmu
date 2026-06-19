@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import { useState } from "react";
+import type { MouseEvent } from "react";
 import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
 import { FitNavigationBar } from "@/components/page-builder/fit-navigation-bar";
@@ -441,6 +442,7 @@ function MobileNavigationMenuEntry({
 }) {
   const hasChildren = item.children.length > 0;
   const isCurrent = isNavigationItemCurrent(item.url, currentPath);
+  const isDisabled = isNavigationItemDisabled(item);
   const hasCurrentChild = item.children.some((child) =>
     isNavigationItemCurrent(child.url, currentPath),
   );
@@ -457,7 +459,13 @@ function MobileNavigationMenuEntry({
         )}
         href={item.url}
         target={item.target === "_blank" ? "_blank" : undefined}
-        onClick={onNavigate}
+        onClick={
+          isDisabled
+            ? preventNavigation
+            : () => {
+                onNavigate();
+              }
+        }
       >
         {item.title}
       </Link>
@@ -474,7 +482,13 @@ function MobileNavigationMenuEntry({
           )}
           href={item.url}
           target={item.target === "_blank" ? "_blank" : undefined}
-          onClick={onNavigate}
+          onClick={
+            isDisabled
+              ? preventNavigation
+              : () => {
+                  onNavigate();
+                }
+          }
         >
           {item.title}
         </Link>
@@ -507,7 +521,13 @@ function MobileNavigationMenuEntry({
               href={child.url}
               key={child.id}
               target={child.target === "_blank" ? "_blank" : undefined}
-              onClick={onNavigate}
+              onClick={
+                isNavigationItemDisabled(child)
+                  ? preventNavigation
+                  : () => {
+                      onNavigate();
+                    }
+              }
             >
               {child.title}
             </Link>
@@ -531,6 +551,7 @@ function NavigationMenuEntry({
   const isVertical = orientation === "vertical";
   const isCurrent = isNavigationBranchCurrent(item, currentPath);
   const hasChildren = item.children.length > 0;
+  const isDisabled = isNavigationItemDisabled(item);
 
   if (isEditorPreview) {
     return (
@@ -561,6 +582,11 @@ function NavigationMenuEntry({
                 )}
                 href={child.url}
                 key={child.id}
+                onClick={
+                  isNavigationItemDisabled(child)
+                    ? preventNavigation
+                    : undefined
+                }
                 target={child.target === "_blank" ? "_blank" : undefined}
               >
                 {child.title}
@@ -587,6 +613,7 @@ function NavigationMenuEntry({
         )}
         href={item.url}
         isCurrent={isCurrent}
+        onClick={isDisabled ? preventNavigation : undefined}
         target={item.target === "_blank" ? "_blank" : undefined}
       >
         {item.title}
@@ -609,6 +636,9 @@ function NavigationMenuEntry({
               )}
               href={child.url}
               key={child.id}
+              onClick={
+                isNavigationItemDisabled(child) ? preventNavigation : undefined
+              }
               target={child.target === "_blank" ? "_blank" : undefined}
             >
               {child.title}
@@ -618,6 +648,14 @@ function NavigationMenuEntry({
       ) : null}
     </NavbarMenu>
   );
+}
+
+function isNavigationItemDisabled(item: PuckDynamicNavigationItem): boolean {
+  return item.type === "none";
+}
+
+function preventNavigation(event: MouseEvent<Element>): void {
+  event.preventDefault();
 }
 
 function isNavigationBranchCurrent(
