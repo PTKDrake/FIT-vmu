@@ -92,7 +92,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
         <div className="space-y-1">
           <p className="font-medium text-fg">{row.original.title}</p>
           <Text className="line-clamp-2 text-sm text-muted-fg">
-            {row.original.excerpt ?? `Slug: ${row.original.slug}`}
+            {row.original.excerpt ?? `Đường dẫn: ${row.original.slug}`}
           </Text>
         </div>
       ),
@@ -106,7 +106,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
     }),
     columnHelper.accessor("slug", {
       id: "slug",
-      header: "Slug",
+      header: "Đường dẫn",
       enableSorting: false,
       cell: ({ getValue }) => (
         <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
@@ -285,7 +285,7 @@ export default function CmsPagesPage({ pages }: CmsPagesPageProps) {
               Tạo trang
             </Button>
           }
-          searchPlaceholder="Tìm theo tiêu đề, slug, mô tả hoặc SEO"
+          searchPlaceholder="Tìm theo tiêu đề, đường dẫn, mô tả hoặc SEO"
           searchValue={tableQueryState.query.search}
           sort={{
             column: tableQueryState.query.sort,

@@ -61,7 +61,7 @@ class StoreNavigationItemRequest extends FormRequest
         $parent = NavigationItem::query()->find($parentId);
 
         if ($parent instanceof NavigationItem && (int) $parent->menu_id !== $menuId) {
-            $validator->errors()->add('parent_id', 'The selected parent item must belong to the same menu.');
+            $validator->errors()->add('parent_id', 'Mục cha đã chọn phải thuộc cùng một menu.');
         }
     }
 
@@ -74,17 +74,17 @@ class StoreNavigationItemRequest extends FormRequest
 
         if ($type === 'custom_url') {
             if ($url === '') {
-                $validator->errors()->add('url', 'The url field is required when type is custom_url.');
+                $validator->errors()->add('url', 'Trường URL là bắt buộc khi loại mục là URL tùy chỉnh.');
             } elseif (! $this->isValidNavigationUrl($url)) {
-                $validator->errors()->add('url', 'The url field must be a valid relative path or absolute URL.');
+                $validator->errors()->add('url', 'Trường URL phải là đường dẫn tương đối hoặc URL tuyệt đối hợp lệ.');
             }
 
             if ($linkableType !== '') {
-                $validator->errors()->add('linkable_type', 'The linkable type must be empty when type is custom_url.');
+                $validator->errors()->add('linkable_type', 'Loại liên kết phải để trống khi loại mục là URL tùy chỉnh.');
             }
 
             if ($linkableId !== null) {
-                $validator->errors()->add('linkable_id', 'The linkable id must be empty when type is custom_url.');
+                $validator->errors()->add('linkable_id', 'ID liên kết phải để trống khi loại mục là URL tùy chỉnh.');
             }
 
             return;
@@ -92,15 +92,15 @@ class StoreNavigationItemRequest extends FormRequest
 
         if ($type === 'none') {
             if ($url !== '') {
-                $validator->errors()->add('url', 'The url field must be empty when type is none.');
+                $validator->errors()->add('url', 'Trường URL phải để trống khi loại mục là không liên kết.');
             }
 
             if ($linkableType !== '') {
-                $validator->errors()->add('linkable_type', 'The linkable type must be empty when type is none.');
+                $validator->errors()->add('linkable_type', 'Loại liên kết phải để trống khi loại mục là không liên kết.');
             }
 
             if ($linkableId !== null) {
-                $validator->errors()->add('linkable_id', 'The linkable id must be empty when type is none.');
+                $validator->errors()->add('linkable_id', 'ID liên kết phải để trống khi loại mục là không liên kết.');
             }
 
             return;
@@ -113,19 +113,19 @@ class StoreNavigationItemRequest extends FormRequest
         }
 
         if ($url !== '') {
-            $validator->errors()->add('url', 'The url field must be empty unless type is custom_url.');
+            $validator->errors()->add('url', 'Trường URL phải để trống trừ khi loại mục là URL tùy chỉnh.');
         }
 
         if ($linkableType === '') {
-            $validator->errors()->add('linkable_type', 'The linkable type field is required for the selected item type.');
+            $validator->errors()->add('linkable_type', 'Loại liên kết là bắt buộc cho loại mục đã chọn.');
         } elseif ($linkableType !== $expectedLinkableType) {
-            $validator->errors()->add('linkable_type', 'The linkable type does not match the selected navigation item type.');
+            $validator->errors()->add('linkable_type', 'Loại liên kết không khớp với loại mục điều hướng đã chọn.');
         }
 
         if ($linkableId === null) {
-            $validator->errors()->add('linkable_id', 'The linkable id field is required for the selected item type.');
+            $validator->errors()->add('linkable_id', 'ID liên kết là bắt buộc cho loại mục đã chọn.');
         } elseif ($linkableType === $expectedLinkableType && ! $this->linkableExists($linkableType, $linkableId)) {
-            $validator->errors()->add('linkable_id', 'The selected link target is invalid.');
+            $validator->errors()->add('linkable_id', 'Đích liên kết đã chọn không hợp lệ.');
         }
     }
 

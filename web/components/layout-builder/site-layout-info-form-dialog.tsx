@@ -92,13 +92,13 @@ function SiteLayoutInfoFormDialogContent({
         <ModalHeader>
           <ModalTitle>Chỉnh sửa thông tin</ModalTitle>
           <ModalDescription>
-            Cập nhật tên hiển thị và key định danh của layout.
+            Cập nhật tên hiển thị và mã định danh của bố cục.
           </ModalDescription>
         </ModalHeader>
         <ModalBody>
           <FieldGroup className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="layout-info-name">Tên layout</Label>
+              <Label htmlFor="layout-info-name">Tên bố cục</Label>
               <Input
                 id="layout-info-name"
                 value={form.data.name}
@@ -109,7 +109,7 @@ function SiteLayoutInfoFormDialogContent({
               ) : null}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="layout-info-key">Key</Label>
+              <Label htmlFor="layout-info-key">Mã định danh</Label>
               <Input
                 id="layout-info-key"
                 value={form.data.key}

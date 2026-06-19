@@ -82,7 +82,7 @@ export function SiteLayoutBuilderEditor({
         content={combinedLayoutData}
         editorKey={`site-layout-${layout.id}`}
         exportName={layout.key}
-        headerTitle="Site layout"
+        headerTitle="Bố cục website"
         isSaving={form.processing}
         normalizeData={sanitizeCombinedSiteLayoutData}
         onSave={(value) => saveCombinedLayout(value.data)}

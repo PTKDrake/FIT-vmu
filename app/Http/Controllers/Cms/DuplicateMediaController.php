@@ -30,7 +30,7 @@ final class DuplicateMediaController extends Controller
         }
 
         return to_route('cms.media')
-            ->with('message', 'Đã tạo bản sao media.')
+            ->with('message', 'Đã tạo bản sao tệp.')
             ->with('type', 'success');
     }
 }

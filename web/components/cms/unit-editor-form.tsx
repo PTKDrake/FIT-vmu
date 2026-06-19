@@ -81,7 +81,7 @@ export function UnitEditorForm({
               value={data.slug}
               onChange={(value) => onUpdate("slug", value)}
             >
-              <Label>Slug</Label>
+              <Label>Đường dẫn</Label>
               <Input placeholder="khoa-cong-nghe-thong-tin" />
               <FieldError>{errors.slug}</FieldError>
               <Description>

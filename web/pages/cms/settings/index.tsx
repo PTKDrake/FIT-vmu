@@ -93,14 +93,14 @@ export default function SiteSettingsPage({
 
   return (
     <>
-      <Head title="Cài đặt site" />
+      <Head title="Cài đặt website" />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <form onSubmit={submit}>
           <Fieldset className="space-y-6 rounded-2xl border border-border bg-overlay px-5 py-5">
             <div>
-              <Legend>Cài đặt site</Legend>
+              <Legend>Cài đặt website</Legend>
               <Text className="mt-1 text-muted-fg">
-                Chọn trang chủ, trang 404, trang sinh viên và layout mặc định
+                Chọn trang chủ, trang 404, trang sinh viên và bố cục mặc định
                 cho từng loại nội dung công khai.
               </Text>
             </div>
@@ -145,7 +145,7 @@ export default function SiteSettingsPage({
                   id: String(l.id),
                   label: l.name,
                 }))}
-                label="Layout trang mặc định"
+                label="Bố cục trang mặc định"
                 value={form.data.default_page_layout}
                 onChange={(value) => form.setData("default_page_layout", value)}
               />
@@ -156,7 +156,7 @@ export default function SiteSettingsPage({
                   id: String(l.id),
                   label: l.name,
                 }))}
-                label="Layout danh mục mặc định"
+                label="Bố cục danh mục mặc định"
                 value={form.data.default_category_layout}
                 onChange={(value) =>
                   form.setData("default_category_layout", value)
@@ -169,7 +169,7 @@ export default function SiteSettingsPage({
                   id: String(l.id),
                   label: l.name,
                 }))}
-                label="Layout bài viết mặc định"
+                label="Bố cục bài viết mặc định"
                 value={form.data.default_post_layout}
                 onChange={(value) => form.setData("default_post_layout", value)}
               />

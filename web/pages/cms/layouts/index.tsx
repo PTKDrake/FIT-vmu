@@ -101,7 +101,7 @@ export default function CmsLayoutsPage({
       />
       {deleteTarget ? (
         <ModalContent
-          aria-label="Xác nhận xóa layout"
+          aria-label="Xác nhận xóa bố cục"
           isOpen={deleteTarget !== null}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
@@ -112,19 +112,19 @@ export default function CmsLayoutsPage({
           size="lg"
         >
           <ModalHeader>
-            <ModalTitle>Xóa layout</ModalTitle>
+            <ModalTitle>Xóa bố cục</ModalTitle>
             <ModalDescription>
-              Bạn sắp xóa layout <strong>{deleteTarget.name}</strong>. Thao tác
+              Bạn sắp xóa bố cục <strong>{deleteTarget.name}</strong>. Thao tác
               này sẽ gỡ bố cục khỏi hệ thống và có thể ảnh hưởng đến các bản ghi
-              đang tham chiếu tới layout này.
+              đang tham chiếu tới bố cục này.
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
-                Layout đang được dùng trong `site_settings` sẽ không thể xóa.
-                Hãy kiểm tra page, post hoặc category đang gán layout này trước
-                khi xác nhận.
+                Bố cục đang được dùng trong cài đặt website sẽ không thể xóa.
+                Hãy kiểm tra trang, bài viết hoặc danh mục đang gán bố cục này
+                trước khi xác nhận.
               </Text>
             </div>
           </ModalBody>

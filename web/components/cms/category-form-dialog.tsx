@@ -137,7 +137,7 @@ export function CategoryFormDialog({
           </ModalTitle>
           <ModalDescription>
             Tạo hoặc cập nhật danh mục bài viết để phân loại tin tức và hiển thị
-            trên navigation menu.
+            trên menu điều hướng.
           </ModalDescription>
         </ModalHeader>
 
@@ -188,7 +188,7 @@ export function CategoryFormDialog({
                   value={form.data.slug}
                   onChange={(value) => form.setData("slug", value)}
                 >
-                  <Label>Slug</Label>
+                  <Label>Đường dẫn</Label>
                   <Input placeholder="dao-tao-chinh-quy" />
                   <FieldError>{form.errors.slug}</FieldError>
                   <Description>
@@ -274,8 +274,8 @@ export function CategoryFormDialog({
                 <Label>Bố cục danh mục</Label>
                 <SelectTrigger />
                 <SelectContent>
-                  <SelectItem id="" textValue="Dùng layout mặc định">
-                    <SelectLabel>Dùng layout mặc định</SelectLabel>
+                  <SelectItem id="" textValue="Dùng bố cục mặc định">
+                    <SelectLabel>Dùng bố cục mặc định</SelectLabel>
                   </SelectItem>
                   {layoutOptions.map((layout) => (
                     <SelectItem

@@ -40,7 +40,7 @@ class UpdatePostCategoryRequest extends FormRequest
                 Rule::exists((new PostCategory)->getTable(), 'id'),
                 function (string $attribute, mixed $value, Closure $fail) use ($postCategory): void {
                     if ($postCategory instanceof PostCategory && $value === $postCategory->getKey()) {
-                        $fail('The selected parent category is invalid.');
+                        $fail('Danh mục cha đã chọn không hợp lệ.');
                     }
                 },
             ],

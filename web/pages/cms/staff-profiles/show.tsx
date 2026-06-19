@@ -62,7 +62,7 @@ export default function CmsStaffProfileShowPage({
                   {profile.displayName}
                 </h2>
                 <Text className="text-xs text-muted-fg mt-1">
-                  Slug: {profile.slug}
+                  Đường dẫn: {profile.slug}
                 </Text>
 
                 <div className="mt-4 flex items-center gap-2">

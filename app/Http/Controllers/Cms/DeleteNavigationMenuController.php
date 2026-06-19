@@ -15,7 +15,7 @@ final class DeleteNavigationMenuController extends Controller
     {
         $deleteNavigationMenu($navigationMenu);
 
-        flash('Đã xóa navigation menu.');
+        flash('Đã xóa menu điều hướng.');
 
         return to_route('cms.navigation');
     }

@@ -385,7 +385,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
     }
 
     window.open(selectedMedia.previewUrl, "_blank", "noopener,noreferrer");
-    toast.info("Đã mở media ở tab mới.");
+    toast.info("Đã mở tệp ở tab mới.");
   }
 
   function openMediaViewer(mediaId: number): void {
@@ -464,7 +464,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
   return (
     <>
-      <Head title="Thư viện media" />
+      <Head title="Thư viện tệp" />
       {flash?.message ? (
         <MediaFlashToast
           key={`${flash.type}:${flash.message}`}
@@ -479,7 +479,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-2">
                 <p className="text-lg font-semibold text-fg">
-                  {t("Quản lý media")}
+                  {t("Quản lý tệp")}
                 </p>
                 <p className="max-w-3xl text-sm text-muted-fg">
                   {t(
@@ -514,7 +514,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
                 {canUploadMedia ? (
                   <Button onPress={() => setIsUploadOpen(true)}>
-                    Tải media lên
+                    Tải tệp lên
                   </Button>
                 ) : null}
               </div>
@@ -542,7 +542,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <SearchField
                 key={query.search}
-                aria-label="Tìm media"
+                aria-label="Tìm tệp"
                 defaultValue={query.search}
                 onClear={() => {
                   void syncQuery({ search: "" }, { resetPage: true });
@@ -560,13 +560,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           <div className="space-y-4 px-5 py-4">
             <div className="flex items-center justify-between gap-3">
               <Text className="text-sm text-muted-fg">
-                {mediaMeta.total} tệp media
+                {mediaMeta.total} tệp
                 {mediaList.isLoading ? " · đang làm mới" : ""}
               </Text>
 
               <Select
                 className="w-36 min-w-36"
-                aria-label="Số tệp media mỗi trang"
+                aria-label="Số tệp mỗi trang"
                 selectedKey={String(mediaMeta.perPage)}
                 onSelectionChange={(key) => {
                   if (key !== null) {
@@ -600,7 +600,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     className="group relative rounded-2xl border border-border bg-bg transition hover:border-muted-fg/30 hover:bg-muted/20"
                   >
                     <button
-                      aria-label={`Xem media ${item.displayName}`}
+                      aria-label={`Xem tệp ${item.displayName}`}
                       className="absolute inset-0 rounded-2xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
                       type="button"
                       onClick={() => {
@@ -762,7 +762,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             {visibleMedia.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border bg-muted/10 px-6 py-12 text-center">
                 <p className="font-medium text-fg">
-                  {t("Chưa có media phù hợp")}
+                  {t("Chưa có tệp phù hợp")}
                 </p>
                 <Text className="mt-2 text-muted-fg">
                   {t(
@@ -775,7 +775,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
             <div className="flex flex-col gap-3 border-t border-border pt-4 md:flex-row md:items-center md:justify-between">
               <Text className="text-sm text-muted-fg">
                 {t("Hiển thị")} {mediaMeta.from ?? 0}-{mediaMeta.to ?? 0}{" "}
-                {t("trên")} {mediaMeta.total} tệp media
+                {t("trên")} {mediaMeta.total} tệp
               </Text>
 
               <Pagination>
@@ -817,13 +817,13 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
       {isUploadOpen ? (
         <ModalContent
-          aria-label="Tải media lên"
+          aria-label="Tải tệp lên"
           isOpen={isUploadOpen}
           onOpenChange={setIsUploadOpen}
           size="2xl"
         >
           <ModalHeader>
-            <ModalTitle>{t("Tải media lên")}</ModalTitle>
+            <ModalTitle>{t("Tải tệp lên")}</ModalTitle>
             <ModalDescription>
               {t(
                 "Chỉ nhận ảnh, video và âm thanh dùng trong CMS. Không dùng thư viện này cho tài liệu hoặc Excel.",
@@ -833,7 +833,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
           <ModalBody>
             <Fieldset>
-              <Legend>{t("Khu vực thả media")}</Legend>
+              <Legend>{t("Khu vực thả tệp")}</Legend>
               <Text>
                 {t("Hỗ trợ")} <Code>{t("JPG")}</Code>, <Code>{t("PNG")}</Code>,{" "}
                 <Code>{t("WEBP")}</Code>, <Code>{t("GIF")}</Code>,{" "}
@@ -848,7 +848,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                   data-slot="control"
                   {...dropzoneRootProps}
                   type="button"
-                  aria-label={t("Khu vực tải media")}
+                  aria-label={t("Khu vực tải tệp")}
                 >
                   <DropZone
                     className={twMerge(
@@ -872,11 +872,11 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                         <Strong className="text-fg">
                           {isDragActive
                             ? t("Thả tệp vào đây")
-                            : t("Kéo thả media hoặc chọn từ máy")}
+                            : t("Kéo thả tệp hoặc chọn từ máy")}
                         </Strong>
                         <Text className="text-sm text-muted-fg">
                           {t(
-                            "Tải nhiều media trong một lượt để bổ sung nhanh cho thư viện.",
+                            "Tải nhiều tệp trong một lượt để bổ sung nhanh cho thư viện.",
                           )}
                         </Text>
                       </div>
@@ -1006,7 +1006,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
       {renameTargetMedia ? (
         <ModalContent
-          aria-label={`Đổi tên media ${renameTargetMedia.displayName}`}
+          aria-label={`Đổi tên tệp ${renameTargetMedia.displayName}`}
           isOpen={isRenameOpen}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
@@ -1016,7 +1016,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           size="lg"
         >
           <ModalHeader>
-            <ModalTitle>{t("Đổi tên media")}</ModalTitle>
+            <ModalTitle>{t("Đổi tên tệp")}</ModalTitle>
             <ModalDescription>
               {t("Chỉ thay đổi tên hiển thị. Đuôi tệp")}{" "}
               <Code>.{renameTargetMedia.extension}</Code>{" "}
@@ -1026,9 +1026,9 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
           <ModalBody>
             <Fieldset>
-              <Legend>Tên media</Legend>
+              <Legend>Tên tệp</Legend>
               <FieldGroup>
-                <TextField aria-label="Tên media">
+                <TextField aria-label="Tên tệp">
                   <Input
                     autoFocus
                     value={renameForm.data.name}
@@ -1062,7 +1062,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
       {selectedMedia ? (
         <ModalContent
-          aria-label={`Xem media ${selectedMedia.displayName}`}
+          aria-label={`Xem tệp ${selectedMedia.displayName}`}
           className="w-screen max-w-none bg-transparent shadow-none ring-0 inset-shadow-none"
           closeButton={false}
           isOpen={selectedMedia !== null}
@@ -1079,7 +1079,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               <div className="flex min-h-0 overflow-hidden flex-col gap-4">
                 <div className="flex items-center gap-4">
                   <Button
-                    aria-label="Đóng trình xem media"
+                    aria-label="Đóng trình xem tệp"
                     intent="plain"
                     size="sq-sm"
                     onPress={closeMediaViewer}
@@ -1191,7 +1191,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                     <section className="space-y-3">
                       <div className="space-y-2 rounded-2xl border border-border bg-bg px-4 py-4">
                         <MetadataRow
-                          label="Tên media"
+                          label="Tên tệp"
                           value={selectedMedia.displayName}
                         />
                         <MetadataRow
@@ -1246,7 +1246,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
                         />
                       </div>
                       <Text className="text-sm text-muted-fg">
-                        Tổng số nơi đang dùng tệp media này:{" "}
+                        Tổng số nơi đang dùng tệp này:{" "}
                         {selectedMedia.usage.total}.
                       </Text>
                     </section>
@@ -1260,7 +1260,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
 
       {deleteTargetMedia && isDeleteConfirmOpen ? (
         <ModalContent
-          aria-label="Xác nhận xóa media"
+          aria-label="Xác nhận xóa tệp"
           isOpen={isDeleteConfirmOpen}
           onOpenChange={(isOpen) => {
             setIsDeleteConfirmOpen(isOpen);
@@ -1273,10 +1273,10 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
           size="md"
         >
           <ModalHeader>
-            <ModalTitle>Xóa tệp media này?</ModalTitle>
+            <ModalTitle>Xóa tệp này?</ModalTitle>
             <ModalDescription>
-              Hành động này sẽ xóa tệp đã lưu khỏi thư viện media. Bạn chỉ nên
-              tiếp tục khi chắc chắn tệp media này không còn cần dùng.
+              Hành động này sẽ xóa tệp đã lưu khỏi thư viện. Bạn chỉ nên tiếp
+              tục khi chắc chắn tệp này không còn cần dùng.
             </ModalDescription>
           </ModalHeader>
 
@@ -1291,7 +1291,7 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
               </Text>
               {deleteTargetMedia.usage.total > 0 ? (
                 <Text className="mt-3 text-sm text-warning-subtle-fg">
-                  {t("Tệp media này đang được dùng ở")}{" "}
+                  {t("Tệp này đang được dùng ở")}{" "}
                   {deleteTargetMedia.usage.total}{" "}
                   {t("nơi nên hiện chưa thể xóa.")}
                 </Text>
@@ -1373,7 +1373,7 @@ function MediaActionsMenu({
   return (
     <Menu>
       <MenuTrigger
-        aria-label={`Tác vụ cho media ${mediaName}`}
+        aria-label={`Tác vụ cho tệp ${mediaName}`}
         className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-bg/95 text-muted-fg transition hover:text-fg"
         onClick={(event) => {
           event.stopPropagation();

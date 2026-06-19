@@ -36,7 +36,7 @@ final class SyncNavigationMenuItemsController extends Controller
 
         $syncNavigationMenuItems($navigationMenu, array_values($validated['items']));
 
-        flash('Đã cập nhật navigation menu.');
+        flash('Đã cập nhật menu điều hướng.');
 
         return back();
     }

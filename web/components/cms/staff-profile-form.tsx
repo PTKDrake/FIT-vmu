@@ -235,7 +235,7 @@ export function StaffProfileForm({
             value={data.slug}
             onChange={(value) => onUpdate("slug", value)}
           >
-            <Label>Slug</Label>
+            <Label>Đường dẫn</Label>
             <Input placeholder="nguyen-van-a" />
             <FieldError>{errors.slug}</FieldError>
             <Description>

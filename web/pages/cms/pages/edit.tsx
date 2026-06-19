@@ -150,7 +150,7 @@ export default function EditPage({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="page-slug">Đường dẫn (Slug)</Label>
+                    <Label htmlFor="page-slug">Đường dẫn</Label>
                     <Input
                       id="page-slug"
                       name="slug"
@@ -194,8 +194,8 @@ export default function EditPage({
                     <Label>Bố cục trang</Label>
                     <SelectTrigger />
                     <SelectContent>
-                      <SelectItem id="" textValue="Dùng layout mặc định">
-                        <SelectLabel>Dùng layout mặc định</SelectLabel>
+                      <SelectItem id="" textValue="Dùng bố cục mặc định">
+                        <SelectLabel>Dùng bố cục mặc định</SelectLabel>
                       </SelectItem>
                       {layoutOptions.map((layout) => (
                         <SelectItem

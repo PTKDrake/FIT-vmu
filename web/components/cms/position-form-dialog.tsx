@@ -96,7 +96,7 @@ export function PositionFormDialog({
             {mode === "create" ? "Tạo chức vụ mới" : "Cập nhật chức vụ"}
           </ModalTitle>
           <ModalDescription>
-            Khai báo danh mục chức vụ để tái sử dụng cho staff appointments và
+            Khai báo danh mục chức vụ để tái sử dụng cho phân công cán bộ và
             sắp xếp hiển thị.
           </ModalDescription>
         </ModalHeader>
@@ -127,7 +127,7 @@ export function PositionFormDialog({
                 value={form.data.slug}
                 onChange={(value) => form.setData("slug", value)}
               >
-                <Label>Slug</Label>
+                <Label>Đường dẫn</Label>
                 <Input placeholder="truong-bo-mon" />
                 <FieldError>{form.errors.slug}</FieldError>
                 <Description>

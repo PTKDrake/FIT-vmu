@@ -31,14 +31,14 @@ test("cms navigation labels are localized to vietnamese", () => {
     assert.match(navigationSource, /Bảng điều khiển/);
     assert.match(navigationSource, /Bố cục/);
     assert.match(navigationSource, /Điều hướng/);
-    assert.match(navigationSource, /Thư viện media/);
+    assert.match(navigationSource, /Thư viện tệp/);
 });
 
 test("cms media page uses vietnamese labels", () => {
-    assert.match(mediaPageSource, /Quản lý media/);
-    assert.match(mediaPageSource, /Khu vực thả media/);
+    assert.match(mediaPageSource, /Quản lý tệp/);
+    assert.match(mediaPageSource, /Khu vực thả tệp/);
     assert.match(mediaPageSource, /Kiểu MIME/);
-    assert.match(mediaPageSource, /Tệp media này đang được dùng ở/);
+    assert.match(mediaPageSource, /Tệp này đang được dùng ở/);
 });
 
 test("cms page builder and preview screens are localized", () => {

@@ -79,7 +79,7 @@ interface CmsRolesPermissionsPageProps {
 }
 
 const categoryTranslations: Record<string, string> = {
-  media: "Thư viện media",
+  media: "Thư viện tệp",
   navigation: "Điều hướng",
   "navigation menus": "Điều hướng",
   pages: "Trang",

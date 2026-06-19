@@ -446,7 +446,7 @@ export function NavigationTreeEditor({
         <ScrollArea className="h-full" orientation="vertical">
           {activeItems.length > 0 ? (
             <Tree
-              aria-label="Cây navigation item"
+              aria-label="Cây mục điều hướng"
               key={activeMenu?.id ?? "empty-menu"}
               className="navigation-tree-editor__tree"
               dragAndDropHooks={dragAndDropHooks}
@@ -470,14 +470,14 @@ export function NavigationTreeEditor({
             <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
               <FolderOpenIcon className="size-10 text-muted-fg" />
               <div className="space-y-1">
-                <Text className="font-medium">Menu này chưa có item.</Text>
+                <Text className="font-medium">Menu này chưa có mục.</Text>
                 <Text className="text-muted-fg">
-                  Tạo item đầu tiên để bắt đầu sắp xếp cây navigation.
+                  Tạo mục đầu tiên để bắt đầu sắp xếp cây điều hướng.
                 </Text>
               </div>
               <Button intent="secondary" onPress={() => handleAddItem(null)}>
                 <PlusIcon />
-                Thêm item đầu tiên
+                Thêm mục đầu tiên
               </Button>
             </div>
           )}
@@ -492,7 +492,7 @@ export function NavigationTreeEditor({
             className="w-full sm:w-auto"
           >
             <PlusIcon />
-            Thêm item gốc
+            Thêm mục gốc
           </Button>
 
           <div className="flex items-center justify-end gap-2 w-full sm:w-auto">
@@ -591,22 +591,22 @@ function NavigationConfirmModal({
       ? {
           confirmIntent: "danger" as const,
           confirmLabel: "Xóa",
-          description: "Item navigation này sẽ bị xóa khỏi cây hiện tại.",
-          title: "Xác nhận xóa item",
+          description: "Mục điều hướng này sẽ bị xóa khỏi cây hiện tại.",
+          title: "Xác nhận xóa mục",
         }
       : confirmation.kind === "discard"
         ? {
             confirmIntent: "outline" as const,
             confirmLabel: "Hủy thay đổi",
             description:
-              "Toàn bộ thay đổi chưa lưu của navigation này sẽ bị bỏ.",
+              "Toàn bộ thay đổi chưa lưu của điều hướng này sẽ bị bỏ.",
             title: "Xác nhận hủy thay đổi",
           }
         : {
             confirmIntent: "primary" as const,
             confirmLabel: "Lưu",
             description:
-              "Các thay đổi hiện tại sẽ được lưu vào bản nháp navigation.",
+              "Các thay đổi hiện tại sẽ được lưu vào bản nháp điều hướng.",
             title: "Xác nhận lưu thay đổi",
           };
 
@@ -686,7 +686,7 @@ function NavigationItemEditorModal({
 
   return (
     <ModalContent
-      aria-label="Chỉnh sửa navigation item"
+      aria-label="Chỉnh sửa mục điều hướng"
       closeButton={false}
       isDismissable
       isOpen={isOpen}
@@ -694,13 +694,13 @@ function NavigationItemEditorModal({
       size="2xl"
     >
       <ModalHeader>
-        <ModalTitle>Chỉnh sửa item</ModalTitle>
+        <ModalTitle>Chỉnh sửa mục</ModalTitle>
       </ModalHeader>
 
       <ModalBody>
         <FieldGroup className="space-y-4 pb-2">
           <TextField
-            aria-label="Tiêu đề item"
+            aria-label="Tiêu đề mục"
             value={item.title}
             onChange={(value) => {
               onItemFieldChange(item.id, (currentItem) => ({
@@ -714,7 +714,7 @@ function NavigationItemEditorModal({
           </TextField>
 
           <Select
-            aria-label="Loại navigation item"
+            aria-label="Loại mục điều hướng"
             selectedKey={item.type}
             onSelectionChange={(key) => {
               const nextType = String(key) as NavigationItemType;
@@ -739,7 +739,7 @@ function NavigationItemEditorModal({
               });
             }}
           >
-            <Label>Loại item</Label>
+            <Label>Loại mục</Label>
             <SelectTrigger />
             <SelectContent>
               {Object.entries(navigationTypeLabels).map(([type, label]) => (
@@ -815,7 +815,7 @@ function NavigationItemEditorModal({
             )}
 
           <Select
-            aria-label="Parent item"
+            aria-label="Mục cha"
             selectedKey={
               item.parentId === null ? "root" : String(item.parentId)
             }
@@ -823,11 +823,11 @@ function NavigationItemEditorModal({
               onParentChange(item.id, key);
             }}
           >
-            <Label>Parent item</Label>
+            <Label>Mục cha</Label>
             <SelectTrigger />
             <SelectContent>
-              <SelectItem id="root" textValue="Không có parent">
-                <SelectLabel>Không có parent</SelectLabel>
+              <SelectItem id="root" textValue="Không có mục cha">
+                <SelectLabel>Không có mục cha</SelectLabel>
               </SelectItem>
               {parentOptions.map((option) => (
                 <SelectItem
@@ -872,7 +872,7 @@ function NavigationItemEditorModal({
                 }));
               }}
             >
-              <SwitchLabel>Kích hoạt item</SwitchLabel>
+              <SwitchLabel>Kích hoạt mục</SwitchLabel>
             </Switch>
           </div>
 
@@ -951,13 +951,13 @@ function NavigationTreeItems({
                 onPress={() => onAddChild(item)}
               />
               <IconActionButton
-                label="Chỉnh sửa item"
+                label="Chỉnh sửa mục"
                 icon={<PencilSquareIcon />}
                 size="sq-xs"
                 onPress={() => onEdit(item)}
               />
               <IconActionButton
-                label="Xóa item"
+                label="Xóa mục"
                 icon={<TrashIcon />}
                 intent="danger"
                 size="sq-xs"

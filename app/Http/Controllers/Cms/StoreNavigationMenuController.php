@@ -24,7 +24,7 @@ final class StoreNavigationMenuController extends Controller
 
         $createNavigationMenu($validated);
 
-        flash('Đã tạo navigation menu mới.');
+        flash('Đã tạo menu điều hướng mới.');
 
         return to_route('cms.navigation');
     }

@@ -98,7 +98,7 @@ export default function CmsPositionsPage({
     }),
     positionColumnHelper.accessor("slug", {
       id: "slug",
-      header: "Slug",
+      header: "Đường dẫn",
       enableSorting: false,
       cell: ({ getValue }) => (
         <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
@@ -200,7 +200,7 @@ export default function CmsPositionsPage({
           columns={columns}
           data={tableQueryState.data}
           defaultSort={{ column: "sort_order", direction: "asc" }}
-          description="Quản lý danh mục chức vụ dùng chung cho staff appointments và thứ tự hiển thị."
+          description="Quản lý danh mục chức vụ dùng chung cho phân công cán bộ và thứ tự hiển thị."
           emptyDescription="Tạo chức vụ đầu tiên để hồ sơ cán bộ có thể gắn vai trò theo từng đơn vị."
           emptyTitle="Chưa có chức vụ nào"
           filterOptions={statusOptions.map((option) => ({ ...option }))}
@@ -228,7 +228,7 @@ export default function CmsPositionsPage({
               </Button>
             ) : null
           }
-          searchPlaceholder="Tìm theo tên chức vụ hoặc slug"
+          searchPlaceholder="Tìm theo tên chức vụ hoặc đường dẫn"
           searchValue={tableQueryState.query.search}
           sort={{
             column: tableQueryState.query.sort,
@@ -270,7 +270,7 @@ export default function CmsPositionsPage({
             <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
                 {t(
-                  "Việc xóa danh mục chức vụ có thể ảnh hưởng đến dữ liệu staff appointments đã tồn tại.",
+                  "Việc xóa danh mục chức vụ có thể ảnh hưởng đến dữ liệu phân công cán bộ đã tồn tại.",
                 )}
               </Text>
             </div>

@@ -96,8 +96,8 @@ export function PageFormDialog({
           </ModalTitle>
           <ModalDescription>
             {mode === "create"
-              ? "Khởi tạo thông tin trang trước, sau đó chuyển sang trình dựng nội dung Puck."
-              : "Cập nhật tiêu đề, đường dẫn và metadata SEO của trang."}
+              ? "Khởi tạo thông tin trang trước, sau đó chuyển sang trình dựng nội dung."
+              : "Cập nhật tiêu đề, đường dẫn và siêu dữ liệu SEO của trang."}
           </ModalDescription>
         </ModalHeader>
 
@@ -147,7 +147,7 @@ export function PageFormDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="page-seo-title">SEO title</Label>
+              <Label htmlFor="page-seo-title">Tiêu đề SEO</Label>
               <Input
                 id="page-seo-title"
                 name="seo_title"
@@ -162,7 +162,7 @@ export function PageFormDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="page-seo-description">SEO description</Label>
+              <Label htmlFor="page-seo-description">Mô tả SEO</Label>
               <Textarea
                 autosize
                 id="page-seo-description"
@@ -190,7 +190,7 @@ export function PageFormDialog({
             Hủy
           </Button>
           <Button isDisabled={form.processing} type="submit">
-            {mode === "create" ? "Tạo và mở builder" : "Lưu thay đổi"}
+            {mode === "create" ? "Tạo và mở trình dựng" : "Lưu thay đổi"}
           </Button>
         </ModalFooter>
       </form>

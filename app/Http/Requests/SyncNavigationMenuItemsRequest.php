@@ -88,13 +88,13 @@ class SyncNavigationMenuItemsRequest extends FormRequest
             }
 
             if ((int) $item['parent_id'] === $itemId) {
-                $validator->errors()->add('items.'.$this->findItemIndex($items, $itemId).'.parent_id', 'The selected parent item is invalid.');
+                $validator->errors()->add('items.'.$this->findItemIndex($items, $itemId).'.parent_id', 'Mục cha đã chọn không hợp lệ.');
 
                 continue;
             }
 
             if (! in_array((int) $item['parent_id'], $itemIds, true)) {
-                $validator->errors()->add('items.'.$this->findItemIndex($items, $itemId).'.parent_id', 'The selected parent item must exist in the submitted navigation tree.');
+                $validator->errors()->add('items.'.$this->findItemIndex($items, $itemId).'.parent_id', 'Mục cha đã chọn phải tồn tại trong cây điều hướng đã gửi.');
 
                 continue;
             }
@@ -104,7 +104,7 @@ class SyncNavigationMenuItemsRequest extends FormRequest
 
             while ($nextParentId !== null) {
                 if (isset($visitedIds[$nextParentId])) {
-                    $validator->errors()->add('items.'.$this->findItemIndex($items, $itemId).'.parent_id', 'The selected parent item creates a circular navigation tree.');
+                    $validator->errors()->add('items.'.$this->findItemIndex($items, $itemId).'.parent_id', 'Mục cha đã chọn tạo vòng lặp trong cây điều hướng.');
 
                     break;
                 }
@@ -140,17 +140,17 @@ class SyncNavigationMenuItemsRequest extends FormRequest
 
             if ($type === 'custom_url') {
                 if ($url === '') {
-                    $validator->errors()->add("items.{$index}.url", 'The url field is required when type is custom_url.');
+                    $validator->errors()->add("items.{$index}.url", 'Trường URL là bắt buộc khi loại mục là URL tùy chỉnh.');
                 } elseif (! $this->isValidNavigationUrl($url)) {
-                    $validator->errors()->add("items.{$index}.url", 'The url field must be a valid relative path or absolute URL.');
+                    $validator->errors()->add("items.{$index}.url", 'Trường URL phải là đường dẫn tương đối hoặc URL tuyệt đối hợp lệ.');
                 }
 
                 if ($linkableType !== null) {
-                    $validator->errors()->add("items.{$index}.linkable_type", 'The linkable type must be empty when type is custom_url.');
+                    $validator->errors()->add("items.{$index}.linkable_type", 'Loại liên kết phải để trống khi loại mục là URL tùy chỉnh.');
                 }
 
                 if ($linkableId !== null) {
-                    $validator->errors()->add("items.{$index}.linkable_id", 'The linkable id must be empty when type is custom_url.');
+                    $validator->errors()->add("items.{$index}.linkable_id", 'ID liên kết phải để trống khi loại mục là URL tùy chỉnh.');
                 }
 
                 continue;
@@ -158,15 +158,15 @@ class SyncNavigationMenuItemsRequest extends FormRequest
 
             if ($type === 'unit' || $type === 'none') {
                 if ($url !== '') {
-                    $validator->errors()->add("items.{$index}.url", "The url field must be empty when type is {$type}.");
+                    $validator->errors()->add("items.{$index}.url", "Trường URL phải để trống khi loại mục là {$type}.");
                 }
 
                 if ($linkableType !== null) {
-                    $validator->errors()->add("items.{$index}.linkable_type", "The linkable type must be empty when type is {$type}.");
+                    $validator->errors()->add("items.{$index}.linkable_type", "Loại liên kết phải để trống khi loại mục là {$type}.");
                 }
 
                 if ($linkableId !== null) {
-                    $validator->errors()->add("items.{$index}.linkable_id", "The linkable id must be empty when type is {$type}.");
+                    $validator->errors()->add("items.{$index}.linkable_id", "ID liên kết phải để trống khi loại mục là {$type}.");
                 }
 
                 continue;
@@ -179,19 +179,19 @@ class SyncNavigationMenuItemsRequest extends FormRequest
             }
 
             if ($url !== '') {
-                $validator->errors()->add("items.{$index}.url", 'The url field must be empty unless type is custom_url.');
+                $validator->errors()->add("items.{$index}.url", 'Trường URL phải để trống trừ khi loại mục là URL tùy chỉnh.');
             }
 
             if ($linkableType === null) {
-                $validator->errors()->add("items.{$index}.linkable_type", 'The linkable type field is required for the selected item type.');
+                $validator->errors()->add("items.{$index}.linkable_type", 'Loại liên kết là bắt buộc cho loại mục đã chọn.');
             } elseif ($linkableType !== $expectedLinkableType) {
-                $validator->errors()->add("items.{$index}.linkable_type", 'The linkable type does not match the selected navigation item type.');
+                $validator->errors()->add("items.{$index}.linkable_type", 'Loại liên kết không khớp với loại mục điều hướng đã chọn.');
             }
 
             if ($linkableId === null) {
-                $validator->errors()->add("items.{$index}.linkable_id", 'The linkable id field is required for the selected item type.');
+                $validator->errors()->add("items.{$index}.linkable_id", 'ID liên kết là bắt buộc cho loại mục đã chọn.');
             } elseif ($linkableType === $expectedLinkableType && ! $this->linkableExists($linkableType, (int) $linkableId)) {
-                $validator->errors()->add("items.{$index}.linkable_id", 'The selected link target is invalid.');
+                $validator->errors()->add("items.{$index}.linkable_id", 'Đích liên kết đã chọn không hợp lệ.');
             }
         }
     }
@@ -221,7 +221,7 @@ class SyncNavigationMenuItemsRequest extends FormRequest
             'post_category' => PostCategory::class,
             'page' => Page::class,
             'post' => Post::class,
-            default => throw new \InvalidArgumentException('Unsupported navigation linkable type.'),
+            default => throw new \InvalidArgumentException('Loại liên kết điều hướng không được hỗ trợ.'),
         };
     }
 

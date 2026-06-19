@@ -38,7 +38,7 @@ final class StoreMediaController extends Controller
         }
 
         return to_route('cms.media')
-            ->with('message', 'Đã tải media lên thành công.')
+            ->with('message', 'Đã tải tệp lên thành công.')
             ->with('type', 'success');
     }
 }

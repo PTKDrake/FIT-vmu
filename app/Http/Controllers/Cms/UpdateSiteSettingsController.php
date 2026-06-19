@@ -43,10 +43,10 @@ final class UpdateSiteSettingsController extends Controller
         event(CmsContentChanged::forResource(
             resource: 'settings',
             recordId: 0,
-            title: 'Cài đặt site',
+            title: 'Cài đặt website',
             status: 'updated',
             action: 'updated',
-            message: 'Đã cập nhật cài đặt site.',
+            message: 'Đã cập nhật cài đặt website.',
             updatedAt: now(),
         ));
 

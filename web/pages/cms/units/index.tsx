@@ -294,7 +294,7 @@ export default function CmsUnitsIndexPage({
                 }}
                 className="w-full sm:w-64"
               >
-                <SearchInput placeholder="Tìm theo tên, slug hoặc mô tả" />
+                <SearchInput placeholder="Tìm theo tên, đường dẫn hoặc mô tả" />
               </SearchField>
             </div>
           </div>
@@ -309,7 +309,7 @@ export default function CmsUnitsIndexPage({
                 <TableColumn id="name" isRowHeader>
                   {t("Đơn vị")}
                 </TableColumn>
-                <TableColumn id="slug">{t("Slug")}</TableColumn>
+                <TableColumn id="slug">{t("Đường dẫn")}</TableColumn>
                 <TableColumn id="status">{t("Trạng thái")}</TableColumn>
                 <TableColumn id="sortOrder">{t("Thứ tự")}</TableColumn>
                 <TableColumn id="updatedAt">{t("Cập nhật")}</TableColumn>

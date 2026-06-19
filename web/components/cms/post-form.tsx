@@ -310,7 +310,7 @@ export function PostForm({
   const selectedCategoryValues = form.data.category_ids.map((id) => String(id));
   const { contains } = useFilter({ sensitivity: "base" });
   const searchableLayoutOptions = [
-    { id: "", name: "Dùng layout mặc định" },
+    { id: "", name: "Dùng bố cục mặc định" },
     ...layoutOptions.map((layout) => ({
       id: String(layout.id),
       name: `${layout.name}${layout.id === defaultPostLayoutId ? " (mặc định)" : ""}`,
@@ -441,7 +441,7 @@ export function PostForm({
             onChange={(value) => form.setData("slug", value)}
           >
             <Label className="font-semibold text-fg text-sm">
-              Đườn dẫn liên kết
+              Đường dẫn liên kết
             </Label>
             <Input placeholder="tieu-de-cau-chuyen" />
             <FieldError>{form.errors.slug}</FieldError>
@@ -531,7 +531,7 @@ export function PostForm({
             onChange={(value) => form.setData("excerpt", value)}
           >
             <Label className="font-semibold text-fg text-sm">
-              Tóm tắt ngắn (Excerpt)
+              Tóm tắt ngắn
             </Label>
             <Textarea
               autosize

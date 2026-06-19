@@ -23,7 +23,7 @@ final class DeleteMediaController extends Controller
         }
 
         return to_route('cms.media')
-            ->with('message', 'Đã xóa media.')
+            ->with('message', 'Đã xóa tệp.')
             ->with('type', 'success');
     }
 }

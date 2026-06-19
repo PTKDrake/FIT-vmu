@@ -20,7 +20,7 @@ final class RenameMediaController extends Controller
         $renameMedia($media, (string) $request->string('name'));
 
         return to_route('cms.media')
-            ->with('message', 'Đã đổi tên media.')
+            ->with('message', 'Đã đổi tên tệp.')
             ->with('type', 'success');
     }
 }

@@ -400,7 +400,7 @@ function DeleteUserDialog({
           <ModalTitle>Xóa người dùng</ModalTitle>
           <ModalDescription>
             Hành động này không thể hoàn tác. Tài khoản "{user.name}" sẽ bị xóa
-            khỏi hệ thống nếu không còn liên kết với nội dung hoặc media.
+            khỏi hệ thống nếu không còn liên kết với nội dung hoặc tệp.
           </ModalDescription>
         </ModalHeader>
 

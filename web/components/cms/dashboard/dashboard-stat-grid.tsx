@@ -24,7 +24,7 @@ export function DashboardStatGrid({
     },
     {
       icon: PhotoIcon,
-      label: "Tệp media",
+      label: "Tệp",
       value: overview.workspace.mediaAssets,
     },
   ];

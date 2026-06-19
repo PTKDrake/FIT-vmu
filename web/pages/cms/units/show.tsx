@@ -37,7 +37,7 @@ export default function CmsUnitShowPage({ can, unit }: CmsUnitShowPageProps) {
 
               <div className="space-y-2">
                 <p className="text-xl font-semibold text-fg">{unit.name}</p>
-                <p className="text-sm text-muted-fg">Slug: {unit.slug}</p>
+                <p className="text-sm text-muted-fg">Đường dẫn: {unit.slug}</p>
               </div>
             </div>
 

@@ -105,7 +105,7 @@ export default function CmsPostCategoriesPage({
     }),
     categoryColumnHelper.accessor("slug", {
       id: "slug",
-      header: "Slug",
+      header: "Đường dẫn",
       enableSorting: false,
       cell: ({ getValue }) => (
         <Text className="text-xs text-muted-fg font-mono">{getValue()}</Text>
@@ -233,7 +233,7 @@ export default function CmsPostCategoriesPage({
           columns={columns}
           data={tableQueryState.data}
           defaultSort={{ column: "sort_order", direction: "asc" }}
-          description="Quản lý danh mục bài viết dùng để phân loại bài viết, tin tức trên website và làm đích liên kết cho menu navigation."
+          description="Quản lý danh mục bài viết dùng để phân loại bài viết, tin tức trên trang web và làm đích liên kết cho menu điều hướng."
           emptyDescription="Tạo danh mục đầu tiên để có thể phân loại các bài viết trong hệ thống."
           emptyTitle="Chưa có danh mục nào"
           filterOptions={statusOptions.map((option) => ({ ...option }))}
@@ -261,7 +261,7 @@ export default function CmsPostCategoriesPage({
               </Button>
             ) : null
           }
-          searchPlaceholder="Tìm theo tên danh mục hoặc slug"
+          searchPlaceholder="Tìm theo tên danh mục hoặc đường dẫn"
           searchValue={tableQueryState.query.search}
           sort={{
             column: tableQueryState.query.sort,

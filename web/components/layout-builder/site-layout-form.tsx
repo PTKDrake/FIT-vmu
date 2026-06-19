@@ -119,14 +119,14 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
       >
         <Fieldset className="space-y-6 rounded-2xl border border-border bg-overlay px-5 py-5">
           <div>
-            <Legend>{isEditing ? "Chỉnh sửa layout" : "Tạo layout"}</Legend>
+            <Legend>{isEditing ? "Chỉnh sửa bố cục" : "Tạo bố cục"}</Legend>
             <Text className="mt-1 text-muted-fg">
-              Cấu hình định danh và nội dung shell public dùng chung.
+              Cấu hình định danh và nội dung khung công khai dùng chung.
             </Text>
           </div>
           <FieldGroup className="grid gap-5 lg:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="layout-name">Tên layout</Label>
+              <Label htmlFor="layout-name">Tên bố cục</Label>
               <Input
                 id="layout-name"
                 value={form.data.name}
@@ -137,7 +137,7 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
               ) : null}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="layout-key">Key</Label>
+              <Label htmlFor="layout-key">Mã định danh</Label>
               <Input
                 id="layout-key"
                 value={form.data.key}
@@ -156,7 +156,7 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
               Hủy
             </Link>
             <Button isDisabled={form.processing} type="submit">
-              {form.processing ? "Đang lưu..." : "Lưu layout"}
+              {form.processing ? "Đang lưu..." : "Lưu bố cục"}
             </Button>
           </div>
         </Fieldset>
@@ -165,7 +165,7 @@ export function SiteLayoutForm({ layout }: SiteLayoutFormProps) {
         config={layoutBuilderConfig}
         content={combinedLayoutData}
         editorKey={`site-layout-${layout?.id ?? "new"}`}
-        headerTitle="Site layout"
+        headerTitle="Bố cục website"
         isSaving={form.processing}
         normalizeData={sanitizeCombinedSiteLayoutData}
         onSave={(value) => saveCombinedLayout(value.data)}

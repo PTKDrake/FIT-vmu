@@ -345,7 +345,7 @@ export default function CmsPostsPage({
               </Link>
             ) : null
           }
-          searchPlaceholder="Tìm theo tiêu đề, slug hoặc mô tả"
+          searchPlaceholder="Tìm theo tiêu đề, đường dẫn hoặc mô tả"
           searchValue={tableQueryState.query.search}
           sort={{
             column: tableQueryState.query.sort,

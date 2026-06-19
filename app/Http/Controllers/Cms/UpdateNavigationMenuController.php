@@ -25,7 +25,7 @@ final class UpdateNavigationMenuController extends Controller
 
         $updateNavigationMenu($navigationMenu, $validated);
 
-        flash('Đã cập nhật navigation menu.');
+        flash('Đã cập nhật menu điều hướng.');
 
         return back();
     }
