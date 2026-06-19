@@ -63,7 +63,7 @@ export default function PublicPostCategoryPage({
       <Head>
         <title>{category.name}</title>
         {category.description ? (
-          <meta name="description" content={category.name} />
+          <meta name="description" content={category.description} />
         ) : null}
       </Head>
 

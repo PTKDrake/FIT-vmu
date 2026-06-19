@@ -1,10 +1,9 @@
 import {
-  NewspaperIcon,
-  PhotoIcon,
-  UsersIcon,
+  DocumentTextIcon,
+  DocumentIcon,
+  FolderIcon,
 } from "@heroicons/react/24/outline";
 import type { DashboardOverview } from "@/components/cms/types";
-import { Text } from "@/components/ui/text";
 
 export function DashboardStatGrid({
   overview,
@@ -13,19 +12,28 @@ export function DashboardStatGrid({
 }) {
   const statCards = [
     {
-      icon: NewspaperIcon,
-      label: "Bài viết đã xuất bản",
+      icon: DocumentTextIcon,
+      label: "Bài viết",
       value: overview.stats.find((stat) => stat.key === "posts")?.value ?? 0,
+      subtext: "Đã xuất bản",
+      iconBg: "bg-primary-subtle",
+      iconColor: "text-primary",
     },
     {
-      icon: UsersIcon,
-      label: "Hồ sơ cán bộ công khai",
-      value: overview.stats.find((stat) => stat.key === "staff")?.value ?? 0,
+      icon: DocumentIcon,
+      label: "Trang",
+      value: overview.workspace.pagesCount ?? 0,
+      subtext: "Đã xuất bản",
+      iconBg: "bg-success-subtle",
+      iconColor: "text-success",
     },
     {
-      icon: PhotoIcon,
+      icon: FolderIcon,
       label: "Tệp",
-      value: overview.workspace.mediaAssets,
+      value: overview.workspace.mediaAssets ?? 0,
+      subtext: "Trong thư viện",
+      iconBg: "bg-[oklch(0.6_0.2_295)/0.1]",
+      iconColor: "text-[oklch(0.6_0.2_295)]",
     },
   ];
 
@@ -37,17 +45,22 @@ export function DashboardStatGrid({
         return (
           <div
             key={card.label}
-            className="rounded-2xl border border-border bg-overlay"
+            className="rounded-2xl border border-border bg-overlay px-6 py-5 shadow-xs"
           >
-            <div className="px-5 py-4">
-              <div className="space-y-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-muted text-fg">
-                  <Icon className="size-5" />
-                </div>
-                <div className="space-y-1">
-                  <p className="font-medium text-fg">{card.label}</p>
-                  <Text>{card.value.toLocaleString("vi-VN")} mục</Text>
-                </div>
+            <div className="flex items-center gap-5">
+              <div
+                className={`flex size-14 shrink-0 items-center justify-center rounded-2xl ${card.iconBg} ${card.iconColor}`}
+              >
+                <Icon className="size-7" />
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium text-muted-fg">
+                  {card.label}
+                </p>
+                <p className="text-3xl font-bold tracking-tight text-fg">
+                  {card.value.toLocaleString("vi-VN")}
+                </p>
+                <p className="text-xs text-muted-fg">{card.subtext}</p>
               </div>
             </div>
           </div>

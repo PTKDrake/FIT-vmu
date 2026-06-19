@@ -1,6 +1,6 @@
 import { measureNaturalWidth, prepareWithSegments } from "@chenglou/pretext";
 import { Link as InertiaLink, router } from "@inertiajs/react";
-import { useMemo, useRef, useState, type RefObject } from "react";
+import { useRef, useState, type RefObject } from "react";
 import { BlockNoteReadonly } from "@/components/editor/blocknote-readonly";
 import { Calendar, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { twMerge } from "tailwind-merge";
@@ -91,6 +91,90 @@ function measureCategoryBadgeWidth(label: string): number {
   return nextWidth;
 }
 
+function normalizeCategoryNames(categoryNames: string[]): string[] {
+  const uniqueCategoryNames = new Set<string>();
+
+  for (const categoryName of categoryNames) {
+    const normalizedCategoryName = categoryName.trim();
+
+    if (normalizedCategoryName.length === 0) {
+      continue;
+    }
+
+    uniqueCategoryNames.add(normalizedCategoryName);
+  }
+
+  return [...uniqueCategoryNames];
+}
+
+function resolveVisibleCategoryBadges(
+  categoryNames: string[],
+  containerInlineSize: number,
+): { hiddenCount: number; visibleNames: string[] } {
+  const normalizedCategoryNames = normalizeCategoryNames(categoryNames);
+
+  if (normalizedCategoryNames.length === 0) {
+    return {
+      hiddenCount: 0,
+      visibleNames: ["Tin tức"],
+    };
+  }
+
+  if (containerInlineSize <= 0) {
+    return {
+      hiddenCount: Math.max(normalizedCategoryNames.length - 1, 0),
+      visibleNames: normalizedCategoryNames.slice(0, 1),
+    };
+  }
+
+  const categoryWidths = normalizedCategoryNames.map((categoryName) =>
+    measureCategoryBadgeWidth(categoryName),
+  );
+  const totalCategoryWidth = categoryWidths.reduce(
+    (sum, width) => sum + width,
+    0,
+  );
+  const fullWidth =
+    totalCategoryWidth +
+    Math.max(categoryWidths.length - 1, 0) * categoryBadgeGap;
+
+  if (fullWidth <= containerInlineSize) {
+    return {
+      hiddenCount: 0,
+      visibleNames: normalizedCategoryNames,
+    };
+  }
+
+  for (
+    let visibleCount = normalizedCategoryNames.length - 1;
+    visibleCount >= 0;
+    visibleCount -= 1
+  ) {
+    const hiddenCount = normalizedCategoryNames.length - visibleCount;
+    const visibleWidth = categoryWidths
+      .slice(0, visibleCount)
+      .reduce((sum, width) => sum + width, 0);
+    const overflowWidth = measureCategoryBadgeWidth(`+${hiddenCount}`);
+    const renderedBadgeCount = visibleCount + 1;
+    const occupiedWidth =
+      visibleWidth +
+      overflowWidth +
+      Math.max(renderedBadgeCount - 1, 0) * categoryBadgeGap;
+
+    if (occupiedWidth <= containerInlineSize) {
+      return {
+        hiddenCount,
+        visibleNames: normalizedCategoryNames.slice(0, visibleCount),
+      };
+    }
+  }
+
+  return {
+    hiddenCount: normalizedCategoryNames.length,
+    visibleNames: [],
+  };
+}
+
 function useElementInlineSize<TElement extends HTMLElement>(
   elementRef: RefObject<TElement | null>,
 ): number {
@@ -140,83 +224,10 @@ function useElementInlineSize<TElement extends HTMLElement>(
 function PostCategoryBadges({ categoryNames }: { categoryNames: string[] }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const containerInlineSize = useElementInlineSize(containerRef);
-  const normalizedCategoryNames = useMemo(() => {
-    const uniqueCategoryNames = new Set<string>();
-
-    for (const categoryName of categoryNames) {
-      const normalizedCategoryName = categoryName.trim();
-
-      if (normalizedCategoryName.length === 0) {
-        continue;
-      }
-
-      uniqueCategoryNames.add(normalizedCategoryName);
-    }
-
-    return [...uniqueCategoryNames];
-  }, [categoryNames]);
-  const visibleCategoryBadges = useMemo(() => {
-    if (normalizedCategoryNames.length === 0) {
-      return {
-        hiddenCount: 0,
-        visibleNames: ["Tin tức"],
-      };
-    }
-
-    if (containerInlineSize <= 0) {
-      return {
-        hiddenCount: Math.max(normalizedCategoryNames.length - 1, 0),
-        visibleNames: normalizedCategoryNames.slice(0, 1),
-      };
-    }
-
-    const categoryWidths = normalizedCategoryNames.map((categoryName) =>
-      measureCategoryBadgeWidth(categoryName),
-    );
-    const totalCategoryWidth = categoryWidths.reduce(
-      (sum, width) => sum + width,
-      0,
-    );
-    const fullWidth =
-      totalCategoryWidth +
-      Math.max(categoryWidths.length - 1, 0) * categoryBadgeGap;
-
-    if (fullWidth <= containerInlineSize) {
-      return {
-        hiddenCount: 0,
-        visibleNames: normalizedCategoryNames,
-      };
-    }
-
-    for (
-      let visibleCount = normalizedCategoryNames.length - 1;
-      visibleCount >= 0;
-      visibleCount -= 1
-    ) {
-      const hiddenCount = normalizedCategoryNames.length - visibleCount;
-      const visibleWidth = categoryWidths
-        .slice(0, visibleCount)
-        .reduce((sum, width) => sum + width, 0);
-      const overflowWidth = measureCategoryBadgeWidth(`+${hiddenCount}`);
-      const renderedBadgeCount = visibleCount + 1;
-      const occupiedWidth =
-        visibleWidth +
-        overflowWidth +
-        Math.max(renderedBadgeCount - 1, 0) * categoryBadgeGap;
-
-      if (occupiedWidth <= containerInlineSize) {
-        return {
-          hiddenCount,
-          visibleNames: normalizedCategoryNames.slice(0, visibleCount),
-        };
-      }
-    }
-
-    return {
-      hiddenCount: normalizedCategoryNames.length,
-      visibleNames: [],
-    };
-  }, [containerInlineSize, normalizedCategoryNames]);
+  const visibleCategoryBadges = resolveVisibleCategoryBadges(
+    categoryNames,
+    containerInlineSize,
+  );
 
   return (
     <div ref={containerRef} className="min-w-0">

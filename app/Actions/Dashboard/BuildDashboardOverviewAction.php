@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Dashboard;
 
 use App\Models\Media;
+use App\Models\Page;
 use App\Models\Position;
 use App\Models\Post;
 use App\Models\StaffAppointment;
@@ -56,8 +57,13 @@ class BuildDashboardOverviewAction
         $startOfMonth = now()->startOfMonth();
 
         $publishedPostsCount = Post::query()->where('status', 'published')->count();
-        $pendingPostsCount = $this->countPendingPosts();
-        $publicStaffProfilesCount = StaffProfile::query()->where('is_public', true)->count();
+        $publishedPagesCount = Page::query()->count();
+        $mediaAssetsCount = Media::query()->count();
+
+        $unitsCount = Unit::query()->count();
+        $positionsCount = Position::query()->count();
+        $appointmentsCount = StaffAppointment::query()->count();
+        $usersCount = User::query()->count();
 
         return [
             'stats' => [
@@ -70,27 +76,32 @@ class BuildDashboardOverviewAction
                     'intent' => 'primary',
                 ],
                 [
-                    'key' => 'pending',
-                    'label' => 'Bài viết chờ duyệt',
-                    'value' => $pendingPostsCount,
-                    'helper' => 'Cần xử lý trước khi xuất bản',
-                    'change' => $pendingPostsCount,
-                    'intent' => 'info',
+                    'key' => 'pages',
+                    'label' => 'Trang đã xuất bản',
+                    'value' => $publishedPagesCount,
+                    'helper' => 'Các trang tĩnh trên hệ thống',
+                    'change' => 0,
+                    'intent' => 'success',
                 ],
                 [
-                    'key' => 'staff',
-                    'label' => 'Hồ sơ cán bộ công khai',
-                    'value' => $publicStaffProfilesCount,
-                    'helper' => $this->countStaffProfilesCreatedSince($startOfMonth).' hồ sơ mới trong tháng',
-                    'change' => $this->countStaffProfilesCreatedSince($startOfMonth),
+                    'key' => 'media',
+                    'label' => 'Tệp trong thư viện',
+                    'value' => $mediaAssetsCount,
+                    'helper' => 'Các tệp đa phương tiện đã tải lên',
+                    'change' => 0,
                     'intent' => 'success',
                 ],
             ],
             'workspace' => [
                 'accessibleCollections' => 6,
                 'studentRecords' => Student::query()->count(),
-                'mediaAssets' => Media::query()->count(),
-                'organizationNodes' => Unit::query()->count() + Position::query()->count() + StaffAppointment::query()->count(),
+                'mediaAssets' => $mediaAssetsCount,
+                'organizationNodes' => $unitsCount + $positionsCount + $appointmentsCount,
+                'pagesCount' => $publishedPagesCount,
+                'unitsCount' => $unitsCount,
+                'positionsCount' => $positionsCount,
+                'appointmentsCount' => $appointmentsCount,
+                'usersCount' => $usersCount,
             ],
             'recentActivity' => $this->recentActivity(),
             'pendingReview' => $this->pendingReviewItems(),
@@ -102,18 +113,6 @@ class BuildDashboardOverviewAction
         return Post::query()
             ->where('status', 'published')
             ->where('published_at', '>=', $date)
-            ->count();
-    }
-
-    private function countPendingPosts(): int
-    {
-        return Post::query()->where('status', 'pending')->count();
-    }
-
-    private function countStaffProfilesCreatedSince(CarbonInterface $date): int
-    {
-        return StaffProfile::query()
-            ->where('created_at', '>=', $date)
             ->count();
     }
 
@@ -142,29 +141,54 @@ class BuildDashboardOverviewAction
                     'id' => 'post-'.$post->id,
                     'kind' => 'Bài viết',
                     'title' => $post->title,
-                    'description' => 'Cập nhật bởi '.($author instanceof User ? $author->name : 'hệ thống'),
+                    'description' => 'Bài viết được '.($post->created_at == $post->updated_at ? 'tạo' : 'cập nhật').' bởi '.($author instanceof User ? $author->name : 'hệ thống'),
                     'status' => $post->status,
                     'updatedAt' => $this->toIsoString($post->updated_at),
                 ];
             })
             ->all();
 
-        $staffProfileItems = StaffProfile::query()
+        $pageItems = Page::query()
+            ->with('author:id,name')
             ->latest('updated_at')
             ->limit(3)
             ->get()
-            ->map(fn (StaffProfile $profile): array => [
-                'id' => 'staff-'.$profile->id,
-                'kind' => 'Hồ sơ cán bộ',
-                'title' => $profile->full_name,
-                'description' => $profile->is_public ? 'Đang hiển thị công khai' : 'Đang được chuẩn bị',
-                'status' => $profile->is_public ? 'published' : 'draft',
-                'updatedAt' => $this->toIsoString($profile->updated_at),
-            ])
+            ->map(function (Page $page): array {
+                /** @var User|null $author */
+                $author = $page->author;
+
+                return [
+                    'id' => 'page-'.$page->id,
+                    'kind' => 'Trang',
+                    'title' => $page->title,
+                    'description' => 'Trang được '.($page->created_at == $page->updated_at ? 'tạo' : 'cập nhật').' bởi '.($author instanceof User ? $author->name : 'hệ thống'),
+                    'status' => 'published',
+                    'updatedAt' => $this->toIsoString($page->updated_at),
+                ];
+            })
+            ->all();
+
+        $staffProfileItems = StaffProfile::query()
+            ->with('user:id,name')
+            ->latest('updated_at')
+            ->limit(3)
+            ->get()
+            ->map(function (StaffProfile $profile): array {
+                $updaterName = $profile->user->name ?? 'hệ thống';
+
+                return [
+                    'id' => 'staff-'.$profile->id,
+                    'kind' => 'Hồ sơ cán bộ',
+                    'title' => 'Hồ sơ cán bộ: '.($profile->academic_title ? $profile->academic_title.'. ' : '').$profile->full_name,
+                    'description' => 'Hồ sơ được cập nhật bởi '.$updaterName,
+                    'status' => $profile->is_public ? 'published' : 'draft',
+                    'updatedAt' => $this->toIsoString($profile->updated_at),
+                ];
+            })
             ->all();
 
         /** @var Collection<int, array{id: string, kind: string, title: string, description: string, status: string, updatedAt: string}> $items */
-        $items = collect(array_merge($postItems, $staffProfileItems))
+        $items = collect(array_merge($postItems, $pageItems, $staffProfileItems))
             ->sortByDesc('updatedAt')
             ->take(8)
             ->values();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Media;
+use App\Models\Page;
 use App\Models\Post;
 use App\Models\StaffProfile;
 use App\Models\User;
@@ -75,6 +76,11 @@ test('dashboard overview shares operational summary data', function () {
         'is_public' => true,
     ]);
 
+    Page::factory()->create([
+        'author_id' => $user->id,
+        'thumbnail_id' => null,
+    ]);
+
     $this->actingAs($user);
 
     $this->get('/cms')
@@ -86,6 +92,9 @@ test('dashboard overview shares operational summary data', function () {
             ->where('overview.stats.2.value', 1)
             ->has('overview.recentActivity')
             ->has('overview.pendingReview', 1)
+            ->where('overview.workspace.pagesCount', 1)
+            ->where('overview.workspace.mediaAssets', 1)
+            ->where('overview.workspace.usersCount', 1)
         );
 });
 

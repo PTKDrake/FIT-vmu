@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    @php
+        $siteName = config('app.name', 'VMUFit');
+        $siteDescription = 'Khoa Công nghệ thông tin - Trường Đại học Hàng hải Việt Nam.';
+        $previewImage = asset('logo.png');
+    @endphp
     <head>
         <script>
             (function () {
@@ -29,7 +34,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ $siteName }}</title>
+        <meta data-inertia="description" name="description" content="{{ $siteDescription }}">
+        <meta data-inertia="og:type" property="og:type" content="website">
+        <meta data-inertia="og:site_name" property="og:site_name" content="{{ $siteName }}">
+        <meta data-inertia="og:title" property="og:title" content="{{ $siteName }}">
+        <meta data-inertia="og:description" property="og:description" content="{{ $siteDescription }}">
+        <meta data-inertia="og:url" property="og:url" content="{{ url()->current() }}">
+        <meta data-inertia="og:image" property="og:image" content="{{ $previewImage }}">
+        <meta data-inertia="og:image:secure_url" property="og:image:secure_url" content="{{ $previewImage }}">
+        <meta data-inertia="og:image:type" property="og:image:type" content="image/png">
+        <meta data-inertia="og:image:width" property="og:image:width" content="300">
+        <meta data-inertia="og:image:height" property="og:image:height" content="300">
+        <meta data-inertia="og:image:alt" property="og:image:alt" content="{{ $siteName }}">
+        <meta data-inertia="twitter:card" name="twitter:card" content="summary">
+        <meta data-inertia="twitter:title" name="twitter:title" content="{{ $siteName }}">
+        <meta data-inertia="twitter:description" name="twitter:description" content="{{ $siteDescription }}">
+        <meta data-inertia="twitter:image" name="twitter:image" content="{{ $previewImage }}">
         <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
         <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
         <link rel="preconnect" href="https://fonts.googleapis.com">

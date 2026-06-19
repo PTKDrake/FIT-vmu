@@ -34,6 +34,11 @@ export interface DashboardOverview {
     mediaAssets: number;
     organizationNodes: number;
     studentRecords: number;
+    pagesCount: number;
+    unitsCount: number;
+    positionsCount: number;
+    appointmentsCount: number;
+    usersCount: number;
   };
 }
 
