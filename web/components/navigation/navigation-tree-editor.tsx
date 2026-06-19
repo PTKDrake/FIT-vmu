@@ -11,14 +11,18 @@ import {
 import { router } from "@inertiajs/react";
 import { startTransition, useRef, useState } from "react";
 import type { Key, ReactNode } from "react";
+import { Autocomplete, useFilter } from "react-aria-components/Autocomplete";
 import { Collection } from "react-aria-components/Collection";
+import { Popover } from "react-aria-components/Popover";
 import { useDragAndDrop } from "react-aria-components/useDragAndDrop";
 import syncNavigationMenuItems from "@/actions/App/Http/Controllers/Cms/SyncNavigationMenuItemsController";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { FieldGroup, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ListBox } from "@/components/ui/list-box";
 import {
   ModalBody,
   ModalContent,
@@ -35,6 +39,7 @@ import {
   SelectLabel,
   SelectTrigger,
 } from "@/components/ui/select";
+import { SearchField, SearchInput } from "@/components/ui/search-field";
 import { Switch, SwitchLabel } from "@/components/ui/switch";
 import { Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
@@ -113,7 +118,7 @@ export function NavigationTreeEditor({
     cloneNavigationMenus(initialMenus),
   );
   const [activeMenuId] = useState(initialActiveMenu?.id ?? 0);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(() =>
     resolveFirstSelectableItemId(initialActiveMenu),
   );
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -675,6 +680,8 @@ function NavigationItemEditorModal({
   resourceCatalog,
   parentOptions,
 }: NavigationItemEditorModalProps) {
+  const { contains } = useFilter({ sensitivity: "base" });
+
   if (!item || !isOpen) {
     return null;
   }
@@ -683,6 +690,20 @@ function NavigationItemEditorModal({
     item.type,
     resourceCatalog,
   );
+  const searchableResourceOptions = activeResourceOptions.map((resource) => ({
+    ...resource,
+    id: String(resource.id),
+  }));
+  const searchableParentOptions = [
+    {
+      id: "root",
+      label: "Không có mục cha",
+    },
+    ...parentOptions.map((option) => ({
+      id: String(option.id),
+      label: option.label,
+    })),
+  ];
 
   return (
     <ModalContent
@@ -798,19 +819,40 @@ function NavigationItemEditorModal({
               >
                 <Label>Tài nguyên nội bộ</Label>
                 <SelectTrigger />
-                <SelectContent>
-                  {activeResourceOptions.map((resource) => (
-                    <SelectItem
-                      key={resource.id}
-                      id={String(resource.id)}
-                      textValue={resource.label}
-                    >
-                      <SelectLabel>
-                        {resource.label} · {resource.meta}
-                      </SelectLabel>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                <Popover className="entering:fade-in exiting:fade-out entering:animate-in exiting:animate-out flex max-h-80 w-(--trigger-width) flex-col overflow-hidden rounded-lg border border-border bg-overlay shadow-lg">
+                  <Dialog aria-label="Tài nguyên nội bộ">
+                    <Autocomplete filter={contains}>
+                      <div className="border-b border-border py-0.5">
+                        <SearchField
+                          autoFocus
+                          aria-label="Tìm kiếm tài nguyên nội bộ"
+                          className="rounded-none focus-within:ring-0"
+                        >
+                          <SearchInput
+                            className="border-none ring-0 focus:ring-0"
+                            placeholder="Tìm tài nguyên..."
+                          />
+                        </SearchField>
+                      </div>
+                      <ListBox
+                        className="max-h-[inherit] min-w-[inherit] rounded-t-none border-0 bg-transparent shadow-none"
+                        items={searchableResourceOptions}
+                        renderEmptyState={() => "Không tìm thấy tài nguyên."}
+                      >
+                        {(resource) => (
+                          <SelectItem
+                            id={resource.id}
+                            textValue={`${resource.label} ${resource.meta}`}
+                          >
+                            <SelectLabel>
+                              {resource.label} · {resource.meta}
+                            </SelectLabel>
+                          </SelectItem>
+                        )}
+                      </ListBox>
+                    </Autocomplete>
+                  </Dialog>
+                </Popover>
               </Select>
             )}
 
@@ -825,20 +867,35 @@ function NavigationItemEditorModal({
           >
             <Label>Mục cha</Label>
             <SelectTrigger />
-            <SelectContent>
-              <SelectItem id="root" textValue="Không có mục cha">
-                <SelectLabel>Không có mục cha</SelectLabel>
-              </SelectItem>
-              {parentOptions.map((option) => (
-                <SelectItem
-                  key={option.id}
-                  id={String(option.id)}
-                  textValue={option.label}
-                >
-                  <SelectLabel>{option.label}</SelectLabel>
-                </SelectItem>
-              ))}
-            </SelectContent>
+            <Popover className="entering:fade-in exiting:fade-out entering:animate-in exiting:animate-out flex max-h-80 w-(--trigger-width) flex-col overflow-hidden rounded-lg border border-border bg-overlay shadow-lg">
+              <Dialog aria-label="Mục cha">
+                <Autocomplete filter={contains}>
+                  <div className="border-b border-border py-0.5">
+                    <SearchField
+                      autoFocus
+                      aria-label="Tìm kiếm mục cha"
+                      className="rounded-none focus-within:ring-0"
+                    >
+                      <SearchInput
+                        className="border-none ring-0 focus:ring-0"
+                        placeholder="Tìm mục cha..."
+                      />
+                    </SearchField>
+                  </div>
+                  <ListBox
+                    className="max-h-[inherit] min-w-[inherit] rounded-t-none border-0 bg-transparent shadow-none"
+                    items={searchableParentOptions}
+                    renderEmptyState={() => "Không tìm thấy mục cha."}
+                  >
+                    {(option) => (
+                      <SelectItem id={option.id} textValue={option.label}>
+                        <SelectLabel>{option.label}</SelectLabel>
+                      </SelectItem>
+                    )}
+                  </ListBox>
+                </Autocomplete>
+              </Dialog>
+            </Popover>
           </Select>
 
           <Select
