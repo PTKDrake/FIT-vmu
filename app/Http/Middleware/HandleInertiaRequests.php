@@ -55,12 +55,15 @@ class HandleInertiaRequests extends Middleware
                 'type' => $request->session()->get('type') ?? 'success',
                 'data' => $request->session()->get('data'),
             ],
-            'layout' => fn () => ($defaultId = SiteSetting::defaultPageLayoutId())
-                ? PublicLayoutResolver::resolve(null, $defaultId)
+            'layout' => fn () => $this->shouldSharePublicSiteData($request)
+                ? $this->defaultLayout()
                 : null,
             'dynamicData' => function () use ($request): array {
-                $defaultId = SiteSetting::defaultPageLayoutId();
-                $layout = $defaultId ? PublicLayoutResolver::resolve(null, $defaultId) : null;
+                if (! $this->shouldSharePublicSiteData($request)) {
+                    return [];
+                }
+
+                $layout = $this->defaultLayout();
                 $payloads = $layout ? array_values(array_filter([
                     $layout['headerData'] ?? null,
                     $layout['footerData'] ?? null,
@@ -75,6 +78,32 @@ class HandleInertiaRequests extends Middleware
                 );
             },
         ];
+    }
+
+    private function shouldSharePublicSiteData(Request $request): bool
+    {
+        return $request->routeIs(
+            'home',
+            'public.*',
+            'posts.public.*',
+            'units.public.*',
+            'cms.pages.builder',
+            'cms.pages.show',
+            'cms.layouts.create',
+            'cms.layouts.edit',
+        );
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function defaultLayout(): ?array
+    {
+        $defaultId = SiteSetting::defaultPageLayoutId();
+
+        return $defaultId
+            ? PublicLayoutResolver::resolve(null, $defaultId)
+            : null;
     }
 
     private function blockNoteAiEnabled(): bool

@@ -14,8 +14,10 @@ use App\Models\StaffProfile;
 use App\Models\Unit;
 use App\Models\User;
 use Carbon\CarbonInterface;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class BuildPuckDynamicDataAction
@@ -38,12 +40,14 @@ class BuildPuckDynamicDataAction
      */
     public function __invoke(?User $viewer = null, bool $enforceVisibility = false, iterable $puckPayloads = []): array
     {
+        $units = $this->units();
+
         return [
-            'navigationMenus' => $this->navigationMenus(),
+            'navigationMenus' => $this->navigationMenus($units),
             'posts' => $this->posts($viewer, $enforceVisibility),
             'categories' => $this->categories(),
             'staff' => $this->staff(),
-            'units' => $this->units(),
+            'units' => $units,
             'pages' => $this->pages($viewer, $enforceVisibility),
             'media' => $this->media($puckPayloads),
         ];
@@ -61,7 +65,9 @@ class BuildPuckDynamicDataAction
             return [];
         }
 
-        return Media::query()
+        sort($mediaIds);
+
+        return $this->remember('media:'.implode(',', $mediaIds), fn (): array => Media::query()
             ->whereIn('id', $mediaIds)
             ->get()
             ->mapWithKeys(fn (Media $media): array => [
@@ -72,60 +78,65 @@ class BuildPuckDynamicDataAction
                     'mimeType' => $media->mime_type,
                 ],
             ])
-            ->all();
-    }
-
-    /** @return list<array{id: int, name: string, slug: string, location: ?string, items: list<array<string, mixed>>}> */
-    private function navigationMenus(): array
-    {
-        return array_values(NavigationMenu::query()
-            ->where('is_active', true)
-            ->with('items')
-            ->orderBy('location')
-            ->orderBy('name')
-            ->get()
-            ->map(fn (NavigationMenu $menu): array => [
-                'id' => $menu->id,
-                'name' => $menu->name,
-                'slug' => $menu->slug,
-                'location' => $menu->location,
-                'items' => $this->buildNavigationTree(array_values($menu->items->where('is_active', true)->all())),
-            ])
             ->all());
     }
 
     /**
+     * @param  list<array{id: int, name: string, slug: string, description: ?string, head: ?string}>  $units
+     * @return list<array{id: int, name: string, slug: string, location: ?string, items: list<array<string, mixed>>}>
+     */
+    private function navigationMenus(array $units): array
+    {
+        return $this->remember('navigation-menus:'.md5(json_encode($units, JSON_THROW_ON_ERROR)), function () use ($units): array {
+            $menus = NavigationMenu::query()
+                ->where('is_active', true)
+                ->with('items')
+                ->orderBy('location')
+                ->orderBy('name')
+                ->get();
+
+            $items = $menus
+                ->flatMap(fn (NavigationMenu $menu): Collection => $menu->items)
+                ->filter(fn (NavigationItem $item): bool => $item->is_active)
+                ->values();
+            $navigationItemUrls = $this->navigationItemUrls($items);
+            $unitNavigationChildren = $this->unitNavigationChildren($units);
+
+            return array_values($menus
+                ->map(fn (NavigationMenu $menu): array => [
+                    'id' => $menu->id,
+                    'name' => $menu->name,
+                    'slug' => $menu->slug,
+                    'location' => $menu->location,
+                    'items' => $this->buildNavigationTree(
+                        array_values($menu->items->where('is_active', true)->all()),
+                        $navigationItemUrls,
+                        $unitNavigationChildren,
+                    ),
+                ])
+                ->all());
+        });
+    }
+
+    /**
      * @param  list<NavigationItem>  $items
+     * @param  array<int, string>  $navigationItemUrls
+     * @param  list<array{id: int, title: string, type: string, url: string, target: string, children: list<array<string, mixed>>}>  $unitNavigationChildren
      * @return list<array<string, mixed>>
      */
-    private function buildNavigationTree(array $items, ?int $parentId = null): array
+    private function buildNavigationTree(array $items, array $navigationItemUrls, array $unitNavigationChildren, ?int $parentId = null): array
     {
         return array_values(collect($items)
             ->filter(fn (NavigationItem $item): bool => $item->parent_id === $parentId)
-            ->flatMap(function (NavigationItem $item) use ($items): array {
+            ->flatMap(function (NavigationItem $item) use ($items, $navigationItemUrls, $unitNavigationChildren): array {
                 if ($item->type === 'unit') {
-                    $activeUnits = Unit::query()
-                        ->where('is_active', true)
-                        ->orderBy('sort_order')
-                        ->orderBy('name')
-                        ->get();
-
-                    $unitChildren = $activeUnits->map(fn (Unit $unit): array => [
-                        'id' => 100000 + $unit->id,
-                        'title' => $unit->name,
-                        'type' => 'unit',
-                        'url' => '/don-vi/'.$unit->slug,
-                        'target' => '_self',
-                        'children' => [],
-                    ])->all();
-
                     return [[
                         'id' => $item->id,
                         'title' => $item->title,
                         'type' => $item->type,
                         'url' => '#',
                         'target' => $item->target,
-                        'children' => $unitChildren,
+                        'children' => $unitNavigationChildren,
                     ]];
                 }
 
@@ -133,109 +144,178 @@ class BuildPuckDynamicDataAction
                     'id' => $item->id,
                     'title' => $item->title,
                     'type' => $item->type,
-                    'url' => $this->navigationItemUrl($item),
+                    'url' => $navigationItemUrls[$item->id] ?? '#',
                     'target' => $item->target,
-                    'children' => $this->buildNavigationTree($items, $item->id),
+                    'children' => $this->buildNavigationTree($items, $navigationItemUrls, $unitNavigationChildren, $item->id),
                 ]];
             })
             ->all());
     }
 
-    private function navigationItemUrl(NavigationItem $item): string
+    /**
+     * @param  Collection<int, NavigationItem>  $items
+     * @return array<int, string>
+     */
+    private function navigationItemUrls(Collection $items): array
     {
-        if ($item->url) {
-            return $item->url;
-        }
+        $pageIds = $this->navigationLinkableIds($items, Page::class);
+        $postIds = $this->navigationLinkableIds($items, Post::class);
+        $categoryIds = $this->navigationLinkableIds($items, PostCategory::class);
 
-        if ($item->linkable_type === Page::class && $item->linkable_id) {
-            $page = Page::query()->find($item->linkable_id);
+        $pages = $pageIds === []
+            ? collect()
+            : Page::query()
+                ->whereIn('id', $pageIds)
+                ->get(['id', 'slug'])
+                ->keyBy('id');
+        $posts = $postIds === []
+            ? collect()
+            : Post::query()
+                ->with('categories')
+                ->whereIn('id', $postIds)
+                ->get()
+                ->keyBy('id');
+        $categories = $categoryIds === []
+            ? collect()
+            : PostCategory::query()
+                ->whereIn('id', $categoryIds)
+                ->get(['id', 'slug'])
+                ->keyBy('id');
 
-            return $page instanceof Page ? '/'.$page->slug : '#';
-        }
-
-        if ($item->linkable_type === Post::class && $item->linkable_id) {
-            $post = Post::query()->with('categories')->find($item->linkable_id);
-
-            if ($post instanceof Post) {
-                $primaryCategory = $post->categories
-                    ->where('is_active', true)
-                    ->sortBy('sort_order')
-                    ->first();
-
-                if ($primaryCategory instanceof PostCategory) {
-                    return '/'.$primaryCategory->slug.'/'.$post->slug;
+        return $items
+            ->mapWithKeys(function (NavigationItem $item) use ($pages, $posts, $categories): array {
+                if ($item->url) {
+                    return [$item->id => $item->url];
                 }
+
+                if ($item->linkable_type === Page::class && $item->linkable_id) {
+                    $page = $pages->get($item->linkable_id);
+
+                    return [$item->id => $page instanceof Page ? '/'.$page->slug : '#'];
+                }
+
+                if ($item->linkable_type === Post::class && $item->linkable_id) {
+                    $post = $posts->get($item->linkable_id);
+
+                    if ($post instanceof Post) {
+                        $primaryCategory = $post->categories
+                            ->where('is_active', true)
+                            ->sortBy('sort_order')
+                            ->first();
+
+                        if ($primaryCategory instanceof PostCategory) {
+                            return [$item->id => '/'.$primaryCategory->slug.'/'.$post->slug];
+                        }
+                    }
+
+                    return [$item->id => '#'];
+                }
+
+                if ($item->linkable_type === PostCategory::class && $item->linkable_id) {
+                    $category = $categories->get($item->linkable_id);
+
+                    return [$item->id => $category instanceof PostCategory ? '/'.$category->slug : '#'];
+                }
+
+                return [$item->id => '#'];
+            })
+            ->all();
+    }
+
+    /**
+     * @param  Collection<int, NavigationItem>  $items
+     * @return list<int>
+     */
+    private function navigationLinkableIds(Collection $items, string $linkableType): array
+    {
+        $ids = [];
+
+        foreach ($items as $item) {
+            if ($item->linkable_type !== $linkableType || ! is_int($item->linkable_id)) {
+                continue;
             }
 
-            return '#';
+            $ids[] = $item->linkable_id;
         }
 
-        if ($item->linkable_type === PostCategory::class && $item->linkable_id) {
-            $category = PostCategory::query()->find($item->linkable_id);
+        return array_values(array_unique($ids));
+    }
 
-            return $category instanceof PostCategory ? '/'.$category->slug : '#';
-        }
-
-        return '#';
+    /**
+     * @param  list<array{id: int, name: string, slug: string, description: ?string, head: ?string}>  $units
+     * @return list<array{id: int, title: string, type: string, url: string, target: string, children: list<array<string, mixed>>}>
+     */
+    private function unitNavigationChildren(array $units): array
+    {
+        return array_map(fn (array $unit): array => [
+            'id' => 100000 + $unit['id'],
+            'title' => $unit['name'],
+            'type' => 'unit',
+            'url' => '/don-vi/'.$unit['slug'],
+            'target' => '_self',
+            'children' => [],
+        ], $units);
     }
 
     /** @return list<array{id: int, title: string, slug: string, url: ?string, excerpt: ?string, date: ?string, author: ?string, thumbnailUrl: ?string, categoryIds: list<int>, categoryNames: list<string>}> */
     private function posts(?User $viewer = null, bool $enforceVisibility = false): array
     {
-        $query = Post::query()
-            ->with(['author', 'categories', 'thumbnail'])
-            ->latest('published_at')
-            ->latest()
-            ->limit(30);
+        return $this->remember($this->viewerCacheKey('posts', $viewer, $enforceVisibility), function () use ($viewer, $enforceVisibility): array {
+            $query = Post::query()
+                ->with(['author', 'categories', 'thumbnail'])
+                ->latest('published_at')
+                ->latest()
+                ->limit(30);
 
-        if ($enforceVisibility) {
-            $query->where('status', 'published');
-            $this->applyVisibilityConstraints($query, $viewer);
-        } else {
-            $query->where('status', 'published');
-        }
+            if ($enforceVisibility) {
+                $query->where('status', 'published');
+                $this->applyVisibilityConstraints($query, $viewer);
+            } else {
+                $query->where('status', 'published');
+            }
 
-        return array_values($query
-            ->get()
-            ->map(function (Post $post): array {
-                $categoryIds = array_values(
-                    $post->categories
-                        ->map(static fn (PostCategory $category): int => $category->id)
-                        ->all(),
-                );
+            return array_values($query
+                ->get()
+                ->map(function (Post $post): array {
+                    $categoryIds = array_values(
+                        $post->categories
+                            ->map(static fn (PostCategory $category): int => $category->id)
+                            ->all(),
+                    );
 
-                $categoryNames = array_values(
-                    $post->categories
-                        ->map(static fn (PostCategory $category): string => $category->name)
-                        ->filter(static fn (string $name): bool => $name !== '')
-                        ->all(),
-                );
+                    $categoryNames = array_values(
+                        $post->categories
+                            ->map(static fn (PostCategory $category): string => $category->name)
+                            ->filter(static fn (string $name): bool => $name !== '')
+                            ->all(),
+                    );
 
-                $primaryCategory = $post->categories
-                    ->where('is_active', true)
-                    ->sortBy('sort_order')
-                    ->first();
+                    $primaryCategory = $post->categories
+                        ->where('is_active', true)
+                        ->sortBy('sort_order')
+                        ->first();
 
-                return [
-                    'id' => $post->id,
-                    'title' => $post->title,
-                    'slug' => $post->slug,
-                    'url' => $primaryCategory instanceof PostCategory ? '/'.$primaryCategory->slug.'/'.$post->slug : null,
-                    'excerpt' => $post->excerpt,
-                    'date' => $this->formatDate($post->published_at),
-                    'author' => $post->author?->name,
-                    'thumbnailUrl' => $post->thumbnail?->preview_url,
-                    'categoryIds' => $categoryIds,
-                    'categoryNames' => $categoryNames,
-                ];
-            })
-            ->all());
+                    return [
+                        'id' => $post->id,
+                        'title' => $post->title,
+                        'slug' => $post->slug,
+                        'url' => $primaryCategory instanceof PostCategory ? '/'.$primaryCategory->slug.'/'.$post->slug : null,
+                        'excerpt' => $post->excerpt,
+                        'date' => $this->formatDate($post->published_at),
+                        'author' => $post->author?->name,
+                        'thumbnailUrl' => $post->thumbnail?->preview_url,
+                        'categoryIds' => $categoryIds,
+                        'categoryNames' => $categoryNames,
+                    ];
+                })
+                ->all());
+        });
     }
 
     /** @return list<array{id: int, name: string, slug: string, parentId: ?int, description: ?string}> */
     private function categories(): array
     {
-        return array_values(PostCategory::query()
+        return $this->remember('categories', fn (): array => array_values(PostCategory::query()
             ->where('is_active', true)
             ->withCount(['posts' => function (Builder $query): void {
                 $query->where('status', 'published');
@@ -251,13 +331,13 @@ class BuildPuckDynamicDataAction
                 'description' => $category->description,
                 'postCount' => $category->posts_count,
             ])
-            ->all());
+            ->all()));
     }
 
     /** @return list<array{id: int, name: string, fullName: string, academicTitle: ?string, slug: string, email: ?string, phone: ?string, avatarUrl: ?string, position: ?string, unitIds: list<int>, expertise: ?string}> */
     private function staff(): array
     {
-        return array_values(StaffProfile::query()
+        return $this->remember('staff', fn (): array => array_values(StaffProfile::query()
             ->where('is_public', true)
             ->with(['avatar', 'appointments.position', 'appointments.unit'])
             ->orderBy('full_name')
@@ -285,13 +365,13 @@ class BuildPuckDynamicDataAction
                     'expertise' => $primaryAppointment?->unit?->name,
                 ];
             })
-            ->all());
+            ->all()));
     }
 
     /** @return list<array{id: int, name: string, slug: string, description: ?string, head: ?string}> */
     private function units(): array
     {
-        return array_values(Unit::query()
+        return $this->remember('units', fn (): array => array_values(Unit::query()
             ->where('is_active', true)
             ->with(['staffAppointments.staffProfile', 'staffAppointments.position'])
             ->orderBy('sort_order')
@@ -304,32 +384,34 @@ class BuildPuckDynamicDataAction
                 'description' => $this->plainTextFromBlocknote($unit->description),
                 'head' => $unit->staffAppointments->first()?->staffProfile?->full_name,
             ])
-            ->all());
+            ->all()));
     }
 
     /** @return list<array{id: int, title: string, slug: string, url: string}> */
     private function pages(?User $viewer = null, bool $enforceVisibility = false): array
     {
-        $query = Page::query()
-            ->orderBy('title')
-            ->limit(50);
+        return $this->remember($this->viewerCacheKey('pages', $viewer, $enforceVisibility), function () use ($viewer, $enforceVisibility): array {
+            $query = Page::query()
+                ->orderBy('title')
+                ->limit(50);
 
-        if ($enforceVisibility) {
-            $query->whereNotNull('published_at');
-            $this->applyVisibilityConstraints($query, $viewer);
-        } else {
-            $query->whereNotNull('published_at');
-        }
+            if ($enforceVisibility) {
+                $query->whereNotNull('published_at');
+                $this->applyVisibilityConstraints($query, $viewer);
+            } else {
+                $query->whereNotNull('published_at');
+            }
 
-        return array_values($query
-            ->get(['id', 'title', 'slug'])
-            ->map(fn (Page $page): array => [
-                'id' => $page->id,
-                'title' => $page->title,
-                'slug' => $page->slug,
-                'url' => '/'.$page->slug,
-            ])
-            ->all());
+            return array_values($query
+                ->get(['id', 'title', 'slug'])
+                ->map(fn (Page $page): array => [
+                    'id' => $page->id,
+                    'title' => $page->title,
+                    'slug' => $page->slug,
+                    'url' => '/'.$page->slug,
+                ])
+                ->all());
+        });
     }
 
     /**
@@ -409,5 +491,44 @@ class BuildPuckDynamicDataAction
             ->implode(' ');
 
         return $text !== '' ? str($text)->limit(180)->toString() : null;
+    }
+
+    private function viewerCacheKey(string $prefix, ?User $viewer, bool $enforceVisibility): string
+    {
+        $viewerKey = $viewer instanceof User ? $viewer->getKey() : 'guest';
+
+        if (! is_scalar($viewerKey)) {
+            $viewerKey = 'guest';
+        }
+
+        return implode(':', [
+            $prefix,
+            $enforceVisibility ? 'visible' : 'all',
+            (string) $viewerKey,
+            trim((string) $viewer?->student?->student_code),
+        ]);
+    }
+
+    /**
+     * @template TValue
+     *
+     * @param  Closure(): TValue  $callback
+     * @return TValue
+     */
+    private function remember(string $key, Closure $callback): mixed
+    {
+        $request = request();
+        $cache = $request->attributes->get('puck_dynamic_data_cache', []);
+
+        if (! is_array($cache)) {
+            $cache = [];
+        }
+
+        if (! array_key_exists($key, $cache)) {
+            $cache[$key] = $callback();
+            $request->attributes->set('puck_dynamic_data_cache', $cache);
+        }
+
+        return $cache[$key];
     }
 }

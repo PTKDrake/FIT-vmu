@@ -5,10 +5,14 @@ declare(strict_types=1);
 use App\Actions\Puck\BuildPuckDynamicDataAction;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
+use App\Models\Page;
+use App\Models\Post;
+use App\Models\PostCategory;
 use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
@@ -221,4 +225,125 @@ test('navigation tree builder appends active units under unit type menu item', f
     expect($children[1]['title'])->toBe($unit1->name);
     expect($children[1]['url'])->toBe('/don-vi/'.$unit1->slug);
     expect($children[1]['target'])->toBe('_self');
+});
+
+test('navigation tree builder batches linkable urls for pages posts and categories', function () {
+    $menu = NavigationMenu::factory()->create([
+        'location' => 'header',
+        'is_active' => true,
+    ]);
+
+    $page = Page::factory()->create([
+        'slug' => 'gioi-thieu',
+        'published_at' => now(),
+    ]);
+    $category = PostCategory::factory()->create([
+        'slug' => 'thong-bao',
+        'is_active' => true,
+    ]);
+    $post = Post::factory()->create([
+        'slug' => 'lich-thi',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+    $post->categories()->sync([$category->id]);
+
+    NavigationItem::factory()->create([
+        'menu_id' => $menu->id,
+        'title' => 'Giới thiệu',
+        'type' => 'page',
+        'linkable_type' => Page::class,
+        'linkable_id' => $page->id,
+        'url' => null,
+        'target' => '_self',
+        'is_active' => true,
+        'sort_order' => 1,
+    ]);
+    NavigationItem::factory()->create([
+        'menu_id' => $menu->id,
+        'title' => 'Lịch thi',
+        'type' => 'post',
+        'linkable_type' => Post::class,
+        'linkable_id' => $post->id,
+        'url' => null,
+        'target' => '_self',
+        'is_active' => true,
+        'sort_order' => 2,
+    ]);
+    NavigationItem::factory()->create([
+        'menu_id' => $menu->id,
+        'title' => 'Thông báo',
+        'type' => 'category',
+        'linkable_type' => PostCategory::class,
+        'linkable_id' => $category->id,
+        'url' => null,
+        'target' => '_self',
+        'is_active' => true,
+        'sort_order' => 3,
+    ]);
+
+    request()->attributes->remove('puck_dynamic_data_cache');
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    /** @var BuildPuckDynamicDataAction $builder */
+    $builder = app(BuildPuckDynamicDataAction::class);
+    $data = $builder(null, true);
+
+    $queries = collect(DB::getQueryLog())->pluck('query');
+    DB::disableQueryLog();
+
+    $headerMenu = collect($data['navigationMenus'])->firstWhere('id', $menu->id);
+    expect(collect($headerMenu['items'])->pluck('url')->all())
+        ->toBe([
+            '/gioi-thieu',
+            '/thong-bao/lich-thi',
+            '/thong-bao',
+        ]);
+
+    expect($queries->filter(fn (string $query): bool => str_contains($query, 'where "post_categories"."id" = ?'))->count())
+        ->toBe(0);
+});
+
+test('navigation tree builder loads active units once for multiple unit menu items', function () {
+    $menu = NavigationMenu::factory()->create([
+        'location' => 'header',
+        'is_active' => true,
+    ]);
+
+    NavigationItem::factory()->create([
+        'menu_id' => $menu->id,
+        'title' => 'Đơn vị chính',
+        'type' => 'unit',
+        'is_active' => true,
+        'sort_order' => 1,
+    ]);
+    NavigationItem::factory()->create([
+        'menu_id' => $menu->id,
+        'title' => 'Đơn vị phụ',
+        'type' => 'unit',
+        'is_active' => true,
+        'sort_order' => 2,
+    ]);
+
+    Unit::factory()->count(3)->create(['is_active' => true]);
+
+    request()->attributes->remove('puck_dynamic_data_cache');
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    /** @var BuildPuckDynamicDataAction $builder */
+    $builder = app(BuildPuckDynamicDataAction::class);
+    $data = $builder(null, true);
+
+    $queries = collect(DB::getQueryLog())->pluck('query');
+    DB::disableQueryLog();
+
+    $headerMenu = collect($data['navigationMenus'])->firstWhere('id', $menu->id);
+    expect($headerMenu['items'])->toHaveCount(2)
+        ->and($headerMenu['items'][0]['children'])->toHaveCount(3)
+        ->and($headerMenu['items'][1]['children'])->toHaveCount(3);
+
+    expect($queries->filter(fn (string $query): bool => str_contains($query, 'from "units" where "is_active" = ? order by "sort_order" asc, "name" asc'))->count())
+        ->toBe(1);
 });

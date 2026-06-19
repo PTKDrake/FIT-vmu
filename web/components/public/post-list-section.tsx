@@ -382,10 +382,10 @@ export function PostListSection({
   };
 
   return (
-    <div className="mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8 flex flex-col justify-center items-center">
+    <div className="w-full max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8 flex flex-col items-stretch">
       {/* 01. Hero / Header danh mục */}
       {/* Desktop view */}
-      <div className="hidden md:flex min-h-[260px] items-stretch justify-between relative overflow-hidden rounded-3xl bg-[#023fa9] text-white shadow-xs">
+      <div className="hidden md:flex w-full min-h-[260px] items-stretch justify-between relative overflow-hidden rounded-3xl bg-[#023fa9] text-white shadow-xs">
         {/* SVG background */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <svg
@@ -414,14 +414,17 @@ export function PostListSection({
           <defs>
             <mask id="hero-image-mask" maskContentUnits="objectBoundingBox">
               <rect width="1" height="1" fill="white" />
-              <path d="M 0,0 L 0.15,0 C 0.05,0.2 0.02,0.55 0.15,1 L 0,1 Z" fill="black" />
+              <path
+                d="M 0,0 L 0.15,0 C 0.05,0.2 0.02,0.55 0.15,1 L 0,1 Z"
+                fill="black"
+              />
             </mask>
           </defs>
         </svg>
 
         <div className="flex-1 p-8 lg:p-12 relative z-10">
           <div className="mb-4">
-            <Breadcrumbs className="text-white/80 select-none [&_span]:text-white/40 [&_svg]:text-white/40">
+            <Breadcrumbs className="text-white/80 select-none [&_span]:text-white/40 [&_svg]:text-white/40 flex-wrap">
               <BreadcrumbsItem
                 href="/"
                 className="[&_a]:text-white/80 [&_a]:hover:text-white"
@@ -453,8 +456,8 @@ export function PostListSection({
           <div
             className="w-full h-full"
             style={{
-              maskImage: 'url(#hero-image-mask)',
-              WebkitMaskImage: 'url(#hero-image-mask)'
+              maskImage: "url(#hero-image-mask)",
+              WebkitMaskImage: "url(#hero-image-mask)",
             }}
           >
             <img
@@ -481,7 +484,7 @@ export function PostListSection({
       </div>
 
       {/* Mobile view */}
-      <div className="flex md:hidden flex-col overflow-hidden rounded-2xl bg-[#023fa9] text-white shadow-xs relative">
+      <div className="flex md:hidden w-full flex-col overflow-hidden rounded-2xl bg-[#023fa9] text-white shadow-xs relative">
         {/* SVG background */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <svg
@@ -510,7 +513,7 @@ export function PostListSection({
         </div>
 
         <div className="p-6 pb-8 flex flex-col gap-3 relative z-10">
-          <Breadcrumbs className="text-white/85 select-none [&_span]:text-white/40 [&_svg]:text-white/40">
+          <Breadcrumbs className="text-white/85 select-none [&_span]:text-white/40 [&_svg]:text-white/40 flex-wrap">
             <BreadcrumbsItem
               href="/"
               className="[&_a]:text-white/85 [&_a]:hover:text-white"
@@ -544,7 +547,13 @@ export function PostListSection({
               className="w-full h-full rotate-180"
             >
               <defs>
-                <linearGradient id="mobile-wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <linearGradient
+                  id="mobile-wave-grad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
                   <stop offset="0%" stopColor="#023fa9" />
                   <stop offset="35%" stopColor="#023fa9" />
                   <stop offset="45%" stopColor="#2056bb" />
@@ -569,7 +578,7 @@ export function PostListSection({
         </div>
       </div>
 
-      <div className="max-w-6xl space-y-8">
+      <div className="w-full space-y-8">
         {/* 02. Thanh tìm kiếm & Bộ lọc */}
         <div className="bg-overlay border border-border rounded-3xl p-5 md:p-6 shadow-xs flex flex-col gap-4">
           <PostListToolbar
@@ -625,7 +634,9 @@ export function PostListSection({
                       {/* Card Content */}
                       <CardContent className="p-5 flex-1 flex flex-col gap-3 py-5 px-5">
                         {/* Category badge */}
-                        <PostCategoryBadges categoryNames={post.categoryNames} />
+                        <PostCategoryBadges
+                          categoryNames={post.categoryNames}
+                        />
                         {/* Title */}
                         <Heading
                           level={3}
@@ -661,7 +672,7 @@ export function PostListSection({
               </div>
               {/* 04. Phân trang (Pagination) - Combined with Post List */}
               {posts.last_page > 1 && (
-                <div className="flex justify-center items-center gap-1.5 pt-6 border-t border-border">
+                <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 pt-6 border-t border-border">
                   {/* Previous page */}
                   <InertiaLink
                     href={posts.prev_page_url ?? "#"}

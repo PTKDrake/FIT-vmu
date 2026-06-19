@@ -14,12 +14,14 @@ interface SiteLayoutShellProps {
   children: ReactNode;
   layout?: SiteLayoutShellData | null;
   isPuckPage?: boolean;
+  disableMaxWidth?: boolean;
 }
 
 export function SiteLayoutShell({
   children,
   layout,
   isPuckPage = false,
+  disableMaxWidth = false,
 }: SiteLayoutShellProps) {
   const hasHeader = hasSlotContent(layout?.headerData);
   const hasFooter = hasSlotContent(layout?.footerData);
@@ -29,6 +31,7 @@ export function SiteLayoutShell({
   return (
     <SiteLayoutShellFrame
       isPuckPage={isPuckPage}
+      disableMaxWidth={disableMaxWidth}
       footer={
         hasFooter ? (
           <LazyPuckPageRender
@@ -78,6 +81,7 @@ interface SiteLayoutShellFrameProps {
   left?: ReactNode;
   right?: ReactNode;
   isPuckPage?: boolean;
+  disableMaxWidth?: boolean;
 }
 
 export function SiteLayoutShellFrame({
@@ -86,8 +90,11 @@ export function SiteLayoutShellFrame({
   header,
   left,
   right,
-  isPuckPage = false,
+  isPuckPage: isPuckPageProp = false,
+  disableMaxWidth = false,
 }: SiteLayoutShellFrameProps) {
+  const isPuckPage = isPuckPageProp || disableMaxWidth;
+
   const bodyClassName = getSiteLayoutBodyClassName(
     Boolean(left),
     Boolean(right),
@@ -124,9 +131,9 @@ export function SiteLayoutShellFrame({
 function getSiteLayoutBodyClassName(
   hasLeft: boolean,
   hasRight: boolean,
-  isPuckPage: boolean = false,
+  disableMaxWidth: boolean = false,
 ): string {
-  const maxWidth = isPuckPage ? "" : " max-w-7xl";
+  const maxWidth = disableMaxWidth ? "" : " max-w-7xl";
 
   if (hasLeft && hasRight) {
     return `mx-auto grid w-full${maxWidth} min-w-0 grid-cols-1 lg:grid-cols-[18rem_minmax(0,1fr)_18rem] lg:items-start lg:gap-8`;

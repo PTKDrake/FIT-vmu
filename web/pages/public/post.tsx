@@ -27,7 +27,7 @@ export default function PublicPost({ post, layout }: PublicPostPageProps) {
         ) : null}
       </Head>
 
-      <SiteLayoutShell layout={layout} isPuckPage={post.contentFormat === "puck_json"}>
+      <SiteLayoutShell layout={layout} disableMaxWidth={true}>
         {post.contentFormat === "puck_json" ? (
           <LazyPuckPageRender content={post.content} />
         ) : (

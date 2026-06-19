@@ -67,7 +67,7 @@ export default function PublicPostCategoryPage({
         ) : null}
       </Head>
 
-      <SiteLayoutShell layout={layout}>
+      <SiteLayoutShell layout={layout} disableMaxWidth={true}>
         <PostListSection
           category={category}
           posts={posts}
