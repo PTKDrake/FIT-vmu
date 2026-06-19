@@ -560,7 +560,7 @@ export function PostListSection({
 
       <div className="max-w-6xl space-y-8">
         {/* 02. Thanh tìm kiếm & Bộ lọc */}
-        <div className="bg-white border border-border rounded-3xl p-5 md:p-6 shadow-xs flex flex-col gap-4">
+        <div className="bg-overlay border border-border rounded-3xl p-5 md:p-6 shadow-xs flex flex-col gap-4">
           <PostListToolbar
             key={q ?? ""}
             category={category}
@@ -596,9 +596,9 @@ export function PostListSection({
                     href={post.url ?? "#"}
                     className="block group"
                   >
-                    <Card className="overflow-hidden p-0 gap-0 transition duration-300 border-border hover:border-primary/20 hover:shadow-lg hover:shadow-gray-100/50 flex flex-col h-full bg-white">
+                    <Card className="overflow-hidden p-0 gap-0 transition duration-300 border-border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 flex flex-col h-full bg-overlay">
                       {/* Thumbnail */}
-                      <div className="aspect-[16/10] w-full overflow-hidden bg-gray-50 relative shrink-0">
+                      <div className="aspect-[16/10] w-full overflow-hidden bg-muted/50 relative shrink-0">
                         {post.thumbnailUrl ? (
                           <img
                             src={post.thumbnailUrl}
@@ -606,7 +606,7 @@ export function PostListSection({
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="h-full w-full flex items-center justify-center text-muted-fg bg-gray-50 text-xs">
+                          <div className="h-full w-full flex items-center justify-center text-muted-fg bg-muted/50 text-xs">
                             Không có ảnh đại diện
                           </div>
                         )}
