@@ -607,6 +607,39 @@ export interface VmuFitPageBuilderComponents {
     viewAllLabel?: string;
     viewAllHref?: string;
   };
+  AnnouncementsCustom: {
+    title?: string;
+    actionLabel?: string;
+    actionHref?: string;
+    limit?: number;
+    includedCategories?: {
+      categoryId?: string;
+    }[];
+    excludedCategories?: {
+      categoryId?: string;
+    }[];
+    className?: string;
+  };
+  CtaCustom: {
+    logoUrl?: PuckImageValue;
+    logoAlt?: string;
+    siteName?: string;
+    organizationName?: string;
+    badge?: string;
+    title?: string;
+    highlightWords?: string;
+    description?: string;
+    imageUrl?: PuckImageValue;
+    primaryActionLabel?: string;
+    primaryActionHref?: string;
+    secondaryActionLabel?: string;
+    secondaryActionHref?: string;
+    trustItems?: {
+      icon?: string;
+      label?: string;
+    }[];
+    className?: string;
+  };
 }
 
 export interface PageBuilderRootProps {

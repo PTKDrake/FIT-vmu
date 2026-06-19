@@ -50,6 +50,8 @@ import {
   AboutCustomComponentConfig,
   MilestonesComponentConfig,
   NewsCustomComponentConfig,
+  AnnouncementsCustomComponentConfig,
+  CtaCustomComponentConfig,
 } from "../blocks";
 import { withSelectFieldDefaults } from "../blocks/shared";
 import type { PageBuilderConfig } from "../blocks/types";
@@ -92,6 +94,8 @@ const components = withSelectFieldDefaults({
   AboutCustom: AboutCustomComponentConfig,
   Milestones: MilestonesComponentConfig,
   NewsCustom: NewsCustomComponentConfig,
+  AnnouncementsCustom: AnnouncementsCustomComponentConfig,
+  CtaCustom: CtaCustomComponentConfig,
 
   LatestPosts: LatestPostsComponentConfig,
   LatestAnnouncements: LatestAnnouncementsComponentConfig,
@@ -163,6 +167,8 @@ export const pageConfig: PageBuilderConfig = {
         "AboutCustom",
         "Milestones",
         "NewsCustom",
+        "AnnouncementsCustom",
+        "CtaCustom",
       ],
     },
     dynamic_blocks: {

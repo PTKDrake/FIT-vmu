@@ -90,7 +90,7 @@ test('public site header seed is consolidated into the FIT navigation block', fu
         ]);
 });
 
-test('homepage seed keeps the CTA area in basic layout blocks only', function () {
+test('homepage seed includes the custom CTA block in the homepage content stack', function () {
     $this->seed(DatabaseSeeder::class);
 
     $page = Page::query()
@@ -106,24 +106,35 @@ test('homepage seed keeps the CTA area in basic layout blocks only', function ()
      */
     $pageContent = json_decode($page->content ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    $containerBlock = findSeededBlockById($pageContent['content'], 'homepage-cta-container');
-    $headingBlock = findSeededBlockById($pageContent['content'], 'homepage-cta-heading');
-    $actionsBlock = findSeededBlockById($pageContent['content'], 'homepage-cta-actions');
+    $newsBlock = findSeededBlockByType($pageContent['content'], 'NewsCustom');
+    $announcementsBlock = findSeededBlockByType($pageContent['content'], 'AnnouncementsCustom');
+    $ctaBlock = findSeededBlockByType($pageContent['content'], 'CtaCustom');
 
-    expect($containerBlock)->not->toBeNull()
-        ->and($containerBlock['props'])->toMatchArray([
-            'maxWidth' => 'xl',
+    expect($newsBlock)->not->toBeNull()
+        ->and($newsBlock['props'])->toMatchArray([
+            'title' => 'Tin tức nổi bật',
+            'viewAllHref' => '/posts',
+            'limit' => 4,
         ])
-        ->and($headingBlock)->not->toBeNull()
-        ->and($headingBlock['type'])->toBe('Heading')
-        ->and($actionsBlock)->not->toBeNull()
-        ->and($actionsBlock['type'])->toBe('ButtonGroup')
+        ->and($announcementsBlock)->not->toBeNull()
+        ->and($announcementsBlock['props'])->toMatchArray([
+            'title' => 'Thông báo mới nhất',
+            'actionHref' => '/posts',
+            'limit' => 4,
+        ])
+        ->and($ctaBlock)->not->toBeNull()
+        ->and($ctaBlock['props'])->toMatchArray([
+            'id' => 'CtaCustom-4db743f2-e5e9-4ac8-8c02-da529abe55c6',
+            'badge' => 'Tuyển sinh 2025',
+            'siteName' => 'Khoa CNTT',
+            'primaryActionLabel' => 'Tìm hiểu tuyển sinh',
+            'secondaryActionLabel' => 'Liên hệ tư vấn',
+        ])
         ->and(seedBlocksContainNoSectionTypes($pageContent['content']))->toBeTrue()
-        ->and($actionsBlock['props']['buttons'][0])->toMatchArray([
-            'text' => 'Xét tuyển trực tuyến',
-        ])
-        ->and($actionsBlock['props']['buttons'][1])->toMatchArray([
-            'text' => 'Tải cẩm nang tuyển sinh',
+        ->and($ctaBlock['props']['trustItems'])->toHaveCount(3)
+        ->and($ctaBlock['props']['imageUrl'])->toMatchArray([
+            'mediaId' => 32,
+            'mimeType' => 'image/jpeg',
         ]);
 });
 

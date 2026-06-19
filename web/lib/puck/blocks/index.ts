@@ -78,3 +78,7 @@ export { AuthStatusComponentConfig } from "./auth-status";
 // --- MILESTONES & NEWS CUSTOM BLOCKS ---
 export { MilestonesComponentConfig } from "./milestones";
 export { NewsCustomComponentConfig } from "./news";
+
+// --- CUSTOM ANNOUNCEMENTS & CTA BLOCKS ---
+export { AnnouncementsCustomComponentConfig } from "./announcements-custom";
+export { CtaCustomComponentConfig } from "./cta-custom";

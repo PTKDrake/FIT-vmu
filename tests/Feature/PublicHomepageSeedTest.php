@@ -32,17 +32,21 @@ test('public homepage is seeded through site layout and page data', function () 
      */
     $pageContent = json_decode($homepage->content ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    expect($pageContent['root']['props']['title'])->toBe('Trang chủ VMU')
+    expect($pageContent['root']['props']['title'])->toBe('Trang chủ khoa công nghệ thông tin')
         ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
+            'HeroCustom',
             'Container',
-            'Container',
-            'Container',
-            'Container',
-            'Container',
-            'Container',
-            'Container',
-            'Container',
-            'Container',
+        ])
+        ->and($pageContent['content'][0]['props'])->toMatchArray([
+            'id' => 'HeroCustom-ff7451f9-46ff-419f-92a3-bb35080c2a84',
+            'badge' => 'Tuyển sinh 2026',
+            'primaryActionLabel' => 'Giới thiệu khoa',
+            'secondaryActionLabel' => 'Tuyển sinh',
+        ])
+        ->and($pageContent['content'][1]['props'])->toMatchArray([
+            'id' => 'Container-8ea2593b-7cab-4366-a57c-a37786855931',
+            'maxWidth' => 'lg',
+            'surfacePadding' => 'md',
         ])
         ->and(collect(collectHomepageBlockIds($pageContent['content']))->filter()->isNotEmpty())->toBeTrue()
         ->and(homepageBlocksContainNoSectionTypes($pageContent['content']))->toBeTrue();
