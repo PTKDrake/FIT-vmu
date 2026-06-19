@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\Media;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -61,11 +62,7 @@ final class CmsMediaQueryBuilder
             return;
         }
 
-        $query->where(function (Builder $query) use ($searchTerm): void {
-            $query
-                ->where('display_name', 'like', "%{$searchTerm}%")
-                ->orWhere('mime_type', 'like', "%{$searchTerm}%");
-        });
+        NormalizedSearch::whereAnyLike($query, ['display_name', 'mime_type'], $searchTerm);
     }
 
     /** @param Builder<Media> $query */

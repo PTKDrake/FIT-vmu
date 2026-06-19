@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\UnitFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,8 @@ class Unit extends Model
 {
     /** @use HasFactory<UnitFactory> */
     use HasFactory;
+
+    use HasSearchText;
 
     /**
      * The attributes that are mass assignable.
@@ -51,6 +54,12 @@ class Unit extends Model
             'sort_order' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    /** @return list<string> */
+    protected function searchableTextColumns(): array
+    {
+        return ['name', 'slug', 'description'];
     }
 
     /** @return HasMany<StaffAppointment, $this> */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\NavigationMenu;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -44,11 +45,6 @@ final class CmsNavigationMenusQueryBuilder
             return;
         }
 
-        $query->where(function (Builder $query) use ($searchTerm): void {
-            $query
-                ->where('name', 'like', "%{$searchTerm}%")
-                ->orWhere('slug', 'like', "%{$searchTerm}%")
-                ->orWhere('location', 'like', "%{$searchTerm}%");
-        });
+        NormalizedSearch::whereAnyLike($query, ['name', 'slug', 'location'], $searchTerm);
     }
 }

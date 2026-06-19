@@ -256,6 +256,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('users/{user}', Controllers\Cms\UpdateUserController::class)
             ->can('update', 'user')
             ->name('users.update');
+        Route::delete('users/{user}', Controllers\Cms\DeleteUserController::class)
+            ->can('delete', 'user')
+            ->name('users.destroy');
 
         Route::get('roles-permissions', Controllers\Cms\RolesPermissionsIndexController::class)
             ->can('viewAny', Role::class)

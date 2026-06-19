@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\Position;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -41,10 +42,6 @@ final class CmsPositionsQueryBuilder
             return;
         }
 
-        $query->where(function (Builder $query) use ($searchTerm): void {
-            $query
-                ->where('name', 'like', "%{$searchTerm}%")
-                ->orWhere('slug', 'like', "%{$searchTerm}%");
-        });
+        NormalizedSearch::whereAnyLike($query, ['name', 'slug'], $searchTerm);
     }
 }

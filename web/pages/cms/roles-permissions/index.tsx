@@ -46,6 +46,7 @@ import { Code, Text } from "@/components/ui/text";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
 import { roleRouteArgument } from "@/lib/role-route-argument";
+import { includesNormalizedSearch, normalizeSearchText } from "@/lib/search";
 import rolesPermissions from "@/routes/cms/roles-permissions";
 
 interface RoleData {
@@ -209,7 +210,7 @@ export default function CmsRolesPermissionsPage({
 
   const groupedPermissions = (() => {
     const groups = new Map<string, PermissionData[]>();
-    const searchTerm = deferredMatrixSearch.trim().toLowerCase();
+    const searchTerm = normalizeSearchText(deferredMatrixSearch);
 
     permissions.forEach((permission) => {
       const category = getCategoryLabel(permission.name);
@@ -220,8 +221,8 @@ export default function CmsRolesPermissionsPage({
 
       if (
         searchTerm !== "" &&
-        !permission.name.toLowerCase().includes(searchTerm) &&
-        !category.toLowerCase().includes(searchTerm)
+        !includesNormalizedSearch(permission.name, searchTerm) &&
+        !includesNormalizedSearch(category, searchTerm)
       ) {
         return;
       }
@@ -241,10 +242,10 @@ export default function CmsRolesPermissionsPage({
       return allCategories;
     }
 
-    const keyword = categorySearch.toLowerCase();
+    const keyword = normalizeSearchText(categorySearch);
 
     return allCategories.filter((category) =>
-      category.toLowerCase().includes(keyword),
+      includesNormalizedSearch(category, keyword),
     );
   })();
 
@@ -253,10 +254,10 @@ export default function CmsRolesPermissionsPage({
       return allRoleNames;
     }
 
-    const keyword = roleSearch.toLowerCase();
+    const keyword = normalizeSearchText(roleSearch);
 
     return allRoleNames.filter((roleName) =>
-      roleName.toLowerCase().includes(keyword),
+      includesNormalizedSearch(roleName, keyword),
     );
   })();
 

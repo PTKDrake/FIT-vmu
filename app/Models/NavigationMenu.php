@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\NavigationMenuFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,8 @@ class NavigationMenu extends Model
 {
     /** @use HasFactory<NavigationMenuFactory> */
     use HasFactory;
+
+    use HasSearchText;
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +48,12 @@ class NavigationMenu extends Model
         return [
             'is_active' => 'boolean',
         ];
+    }
+
+    /** @return list<string> */
+    protected function searchableTextColumns(): array
+    {
+        return ['name', 'slug', 'location'];
     }
 
     /** @return HasMany<NavigationItem, $this> */

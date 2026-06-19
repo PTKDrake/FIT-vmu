@@ -63,6 +63,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { t } from "@/lib/i18n";
+import { includesNormalizedSearch } from "@/lib/search";
 
 // ==========================================
 // 1. DataTableBadge (Composing existing UI Badge)
@@ -283,7 +284,7 @@ export function DataTableFilterButton({
             const isExpanded = expandedSections[safeSectionId] ?? index === 0;
             const searchQuery = searchQueries[sectionId] || "";
             const filteredOptions = section.options.filter((opt) =>
-              opt.label.toLowerCase().includes(searchQuery.toLowerCase()),
+              includesNormalizedSearch(opt.label, searchQuery),
             );
 
             return (

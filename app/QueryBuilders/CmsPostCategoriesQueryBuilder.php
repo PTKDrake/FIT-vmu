@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\PostCategory;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -50,11 +51,6 @@ final class CmsPostCategoriesQueryBuilder
             return;
         }
 
-        $query->where(function (Builder $query) use ($searchTerm): void {
-            $query
-                ->where('name', 'like', "%{$searchTerm}%")
-                ->orWhere('slug', 'like', "%{$searchTerm}%")
-                ->orWhere('description', 'like', "%{$searchTerm}%");
-        });
+        NormalizedSearch::whereAnyLike($query, ['name', 'slug', 'description'], $searchTerm);
     }
 }

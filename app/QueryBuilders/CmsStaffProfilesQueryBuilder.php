@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\StaffProfile;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -48,13 +49,6 @@ final class CmsStaffProfilesQueryBuilder
             return;
         }
 
-        $query->where(function (Builder $query) use ($searchTerm): void {
-            $query
-                ->where('full_name', 'like', "%{$searchTerm}%")
-                ->orWhere('slug', 'like', "%{$searchTerm}%")
-                ->orWhere('email', 'like', "%{$searchTerm}%")
-                ->orWhere('phone', 'like', "%{$searchTerm}%")
-                ->orWhere('bio', 'like', "%{$searchTerm}%");
-        });
+        NormalizedSearch::whereAnyLike($query, ['full_name', 'slug', 'email', 'phone', 'bio'], $searchTerm);
     }
 }

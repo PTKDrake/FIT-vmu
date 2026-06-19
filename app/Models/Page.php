@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Concerns\HasContentVisibility;
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\PageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,8 @@ class Page extends Model
 
     /** @use HasFactory<PageFactory> */
     use HasFactory;
+
+    use HasSearchText;
 
     /**
      * The attributes that are mass assignable.
@@ -58,6 +61,12 @@ class Page extends Model
         return [
             'published_at' => 'datetime',
         ];
+    }
+
+    /** @return list<string> */
+    protected function searchableTextColumns(): array
+    {
+        return ['title', 'slug', 'excerpt', 'seo_title', 'seo_description'];
     }
 
     /** @return BelongsTo<Media, $this> */

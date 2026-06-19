@@ -33,7 +33,7 @@ class StaffProfileData extends Data
         $avatar = $staffProfile->relationLoaded('avatar') ? $staffProfile->avatar : null;
 
         return new self(
-            userId: $staffProfile->user_id,
+            userId: (int) $staffProfile->user_id,
             academicTitle: $staffProfile->academic_title,
             fullName: $staffProfile->full_name,
             slug: $staffProfile->slug,

@@ -2,11 +2,13 @@ import {
   EllipsisHorizontalIcon,
   PencilSquareIcon,
   PlusIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Head, Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import {
   CmsDataTable,
@@ -19,7 +21,16 @@ import type {
 } from "@/components/cms/types";
 import { useCmsTableQueryState } from "@/components/cms/use-cms-table-query-state";
 import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Menu, MenuContent, MenuItem } from "@/components/ui/menu";
+import {
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
 import {
   Select,
   SelectTrigger,
@@ -78,6 +89,8 @@ export default function CmsUsersPage({
   roleOptions,
 }: CmsUsersPageProps) {
   const { auth } = usePage<SharedData>().props;
+  const [userPendingDelete, setUserPendingDelete] =
+    useState<CmsUserTableRow | null>(null);
 
   const tableQueryState = useCmsTableQueryState({
     defaultPerPage: users.meta.perPage,
@@ -105,7 +118,7 @@ export default function CmsUsersPage({
               src={gravatarUrl}
               initials={row.original.name.substring(0, 2).toUpperCase()}
               alt={row.original.name}
-              className="size-9 bg-primary/10 text-primary font-medium"
+              className="[--avatar-size:--spacing(9)] overflow-hidden bg-primary/10 text-primary font-medium"
             />
             <span className="font-semibold text-fg text-sm">
               {row.original.name}
@@ -184,10 +197,13 @@ export default function CmsUsersPage({
         const isTargetSuperAdmin = row.original.roles.includes("super-admin");
         const isCurrentUserSuperAdmin =
           currentUserRoles.includes("super-admin");
+        const isCurrentUser = row.original.id === auth.user?.id;
 
         // Non-super-admins cannot update super-admins
         const isActionsDisabled =
           isTargetSuperAdmin && !isCurrentUserSuperAdmin;
+        const canDeleteUser =
+          can.manageUsers && !isActionsDisabled && !isCurrentUser;
 
         if (!can.manageUsers || isActionsDisabled) {
           return null;
@@ -205,6 +221,16 @@ export default function CmsUsersPage({
               <PencilSquareIcon />
               Chỉnh sửa
             </MenuItem>
+            {canDeleteUser ? (
+              <MenuItem
+                onAction={() => {
+                  setUserPendingDelete(row.original);
+                }}
+              >
+                <TrashIcon />
+                Xóa người dùng
+              </MenuItem>
+            ) : null}
           </DataTableActions>
         );
       },
@@ -278,6 +304,18 @@ export default function CmsUsersPage({
           title="Người dùng"
         />
       </div>
+
+      {userPendingDelete ? (
+        <DeleteUserDialog
+          isOpen={userPendingDelete !== null}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setUserPendingDelete(null);
+            }
+          }}
+          user={userPendingDelete}
+        />
+      ) : null}
     </>
   );
 }
@@ -309,4 +347,70 @@ function UsersFlashToast({
   });
 
   return null;
+}
+
+function DeleteUserDialog({
+  isOpen,
+  onOpenChange,
+  user,
+}: {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  user: CmsUserTableRow;
+}) {
+  const form = useForm({});
+
+  function submit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+
+    form.delete(usersRoutes.destroy.url({ user: user.id }), {
+      onSuccess: () => {
+        onOpenChange(false);
+      },
+      onError: () => {
+        toast.error("Không thể xóa người dùng.");
+      },
+      preserveScroll: true,
+    });
+  }
+
+  return (
+    <ModalContent
+      aria-label={`Xóa người dùng ${user.name}`}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      role="alertdialog"
+      size="md"
+    >
+      <form onSubmit={submit}>
+        <ModalHeader>
+          <ModalTitle>Xóa người dùng</ModalTitle>
+          <ModalDescription>
+            Hành động này không thể hoàn tác. Tài khoản "{user.name}" sẽ bị xóa
+            khỏi hệ thống nếu không còn liên kết với nội dung hoặc media.
+          </ModalDescription>
+        </ModalHeader>
+
+        <ModalBody>
+          <div className="rounded-lg border border-danger-subtle bg-danger-subtle/10 p-3 text-sm text-danger-fg">
+            Người dùng: <span className="font-semibold">{user.email}</span>
+          </div>
+        </ModalBody>
+
+        <ModalFooter className="space-x-2">
+          <Button
+            type="button"
+            intent="secondary"
+            onPress={() => onOpenChange(false)}
+            isDisabled={form.processing}
+          >
+            Hủy
+          </Button>
+          <Button type="submit" intent="danger" isDisabled={form.processing}>
+            {form.processing ? "Đang xóa..." : "Xóa người dùng"}
+          </Button>
+        </ModalFooter>
+      </form>
+    </ModalContent>
+  );
 }

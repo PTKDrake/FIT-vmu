@@ -52,6 +52,38 @@ test('public search returns matching pages posts and categories', function () {
         ]);
 });
 
+test('public search ignores vietnamese accents and letter case', function () {
+    $category = PostCategory::factory()->create([
+        'name' => 'Đào tạo',
+        'slug' => 'dao-tao',
+        'description' => 'Danh mục chương trình đào tạo',
+        'is_active' => true,
+    ]);
+
+    $post = Post::factory()->create([
+        'title' => 'Chương trình Đào tạo đại học',
+        'slug' => 'chuong-trinh-dao-tao-dai-hoc',
+        'excerpt' => 'Thông tin đào tạo',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+    $post->categories()->sync([$category->id]);
+
+    $this->getJson('/search?q=DAO TAO')
+        ->assertOk()
+        ->assertJsonFragment([
+            'type' => 'post',
+            'title' => $post->title,
+            'url' => "/{$category->slug}/{$post->slug}",
+        ])
+        ->assertJsonFragment([
+            'type' => 'category',
+            'title' => $category->name,
+            'url' => "/{$category->slug}",
+        ]);
+});
+
 test('public search matches page and post title description and slug', function () {
     $descriptionPage = Page::factory()->create([
         'title' => 'Trang gioi thieu khoa',

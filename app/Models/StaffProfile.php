@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\StaffProfileFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,8 @@ class StaffProfile extends Model
 {
     /** @use HasFactory<StaffProfileFactory> */
     use HasFactory;
+
+    use HasSearchText;
 
     /**
      * The attributes that are mass assignable.
@@ -53,6 +56,12 @@ class StaffProfile extends Model
         return [
             'is_public' => 'boolean',
         ];
+    }
+
+    /** @return list<string> */
+    protected function searchableTextColumns(): array
+    {
+        return ['full_name', 'slug', 'email', 'phone', 'bio'];
     }
 
     /** @return BelongsTo<User, $this> */

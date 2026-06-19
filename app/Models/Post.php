@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Concerns\HasContentVisibility;
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,8 @@ class Post extends Model
 
     /** @use HasFactory<PostFactory> */
     use HasFactory;
+
+    use HasSearchText;
 
     /**
      * The attributes that are mass assignable.
@@ -63,6 +66,12 @@ class Post extends Model
             'published_at' => 'datetime',
             'reviewed_at' => 'datetime',
         ];
+    }
+
+    /** @return list<string> */
+    protected function searchableTextColumns(): array
+    {
+        return ['title', 'slug', 'excerpt'];
     }
 
     /** @return BelongsTo<Media, $this> */

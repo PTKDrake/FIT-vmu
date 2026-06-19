@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSearchText;
 use Database\Factories\MediaFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,8 @@ class Media extends Model
 {
     /** @use HasFactory<MediaFactory> */
     use HasFactory;
+
+    use HasSearchText;
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +45,12 @@ class Media extends Model
         return [
             'size' => 'integer',
         ];
+    }
+
+    /** @return list<string> */
+    protected function searchableTextColumns(): array
+    {
+        return ['display_name', 'mime_type'];
     }
 
     /** @return Attribute<string, never> */

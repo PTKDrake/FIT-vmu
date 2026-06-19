@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Support\Facades\Gate;
@@ -21,8 +22,10 @@ test('user policy abilities follow manage users permission', function () {
     expect(Gate::forUser($admin)->allows('viewAny', User::class))->toBeTrue()
         ->and(Gate::forUser($admin)->allows('create', User::class))->toBeTrue()
         ->and(Gate::forUser($admin)->allows('update', $target))->toBeTrue()
+        ->and(Gate::forUser($admin)->allows('delete', $target))->toBeTrue()
         ->and(Gate::forUser($staff)->allows('viewAny', User::class))->toBeFalse()
-        ->and(Gate::forUser($staff)->allows('update', $target))->toBeFalse();
+        ->and(Gate::forUser($staff)->allows('update', $target))->toBeFalse()
+        ->and(Gate::forUser($staff)->allows('delete', $target))->toBeFalse();
 });
 
 test('cms users index renders filtered list with roles and verification status', function () {
@@ -132,6 +135,70 @@ test('staff users cannot access the cms user management routes', function () {
             'email_verified' => false,
         ])
         ->assertForbidden();
+
+    $this->actingAs($staff)
+        ->delete("/cms/users/{$target->id}")
+        ->assertForbidden();
+});
+
+test('admin can delete another user', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $target = User::factory()->create([
+        'email' => 'delete-me@example.com',
+    ]);
+    $target->assignRole('staff');
+
+    $this->actingAs($admin)
+        ->delete("/cms/users/{$target->id}")
+        ->assertRedirect('/cms/users');
+
+    expect(User::query()->where('email', 'delete-me@example.com')->exists())->toBeFalse();
+});
+
+test('admin cannot delete their own account from cms users list', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $this->actingAs($admin)
+        ->delete("/cms/users/{$admin->id}")
+        ->assertForbidden();
+
+    expect($admin->fresh())->not->toBeNull();
+});
+
+test('admin cannot delete super admin accounts', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $superAdmin = User::factory()->create();
+    $superAdmin->assignRole('super-admin');
+
+    $this->actingAs($admin)
+        ->delete("/cms/users/{$superAdmin->id}")
+        ->assertForbidden();
+
+    expect($superAdmin->fresh())->not->toBeNull();
+});
+
+test('admin cannot delete users linked to content', function () {
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $target = User::factory()->create([
+        'email' => 'author@example.com',
+    ]);
+
+    Post::factory()->for($target, 'author')->create();
+
+    $this->actingAs($admin)
+        ->delete("/cms/users/{$target->id}")
+        ->assertRedirect('/cms/users')
+        ->assertSessionHas('type', 'error')
+        ->assertSessionHas('message', 'Không thể xóa người dùng này vì tài khoản còn liên kết với nội dung hoặc media.');
+
+    expect($target->fresh())->not->toBeNull();
 });
 
 test('admin cannot elevate their own account to super admin', function () {

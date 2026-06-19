@@ -374,7 +374,40 @@ export function PostListSection({
     <div className="mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8 flex flex-col justify-center items-center">
       {/* 01. Hero / Header danh mục */}
       {/* Desktop view */}
-      <div className="hidden md:flex min-h-[260px] items-stretch justify-between relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary via-[#004ecb] to-primary text-white shadow-xs">
+      <div className="hidden md:flex min-h-[260px] items-stretch justify-between relative overflow-hidden rounded-3xl bg-[#023fa9] text-white shadow-xs">
+        {/* SVG background */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <svg
+            id="visual-desktop"
+            viewBox="0 0 960 540"
+            className="w-full h-full object-cover"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M748 540L762.3 517.5C776.7 495 805.3 450 813.3 405C821.3 360 808.7 315 789.5 270C770.3 225 744.7 180 751 135C757.3 90 795.7 45 814.8 22.5L834 0L960 0L960 22.5C960 45 960 90 960 135C960 180 960 225 960 270C960 315 960 360 960 405C960 450 960 495 960 517.5L960 540Z"
+              fill="#4b83de"
+            />
+            <path
+              d="M652 540L664.8 517.5C677.7 495 703.3 450 693.7 405C684 360 639 315 602.2 270C565.3 225 536.7 180 541.5 135C546.3 90 584.7 45 603.8 22.5L623 0L835 0L815.8 22.5C796.7 45 758.3 90 752 135C745.7 180 771.3 225 790.5 270C809.7 315 822.3 360 814.3 405C806.3 450 777.7 495 763.3 517.5L749 540Z"
+              fill="#366ccd"
+            />
+            <path
+              d="M412 540L421.5 517.5C431 495 450 450 446.8 405C443.7 360 418.3 315 367.2 270C316 225 239 180 229.3 135C219.7 90 277.3 45 306.2 22.5L335 0L624 0L604.8 22.5C585.7 45 547.3 90 542.5 135C537.7 180 566.3 225 603.2 270C640 315 685 360 694.7 405C704.3 450 678.7 495 665.8 517.5L653 540Z"
+              fill="#2056bb"
+            />
+          </svg>
+        </div>
+
+        {/* Hidden SVG mask for image clipping */}
+        <svg className="absolute w-0 h-0" aria-hidden="true">
+          <defs>
+            <mask id="hero-image-mask" maskContentUnits="objectBoundingBox">
+              <rect width="1" height="1" fill="white" />
+              <path d="M 0,0 L 0.15,0 C 0.05,0.2 0.02,0.55 0.15,1 L 0,1 Z" fill="black" />
+            </mask>
+          </defs>
+        </svg>
+
         <div className="flex-1 p-8 lg:p-12 relative z-10">
           <div className="mb-4">
             <Breadcrumbs className="text-white/80 select-none [&_span]:text-white/40 [&_svg]:text-white/40">
@@ -405,33 +438,66 @@ export function PostListSection({
           ) : null}
         </div>
 
-        <div className="relative w-[24%] shrink-0">
-          <div className="absolute inset-y-0 -left-12 w-16 z-10 pointer-events-none">
-            <svg
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              className="h-full w-full text-[#004ecb] fill-current"
-            >
-              <path d="M100,0 C35,20 15,55 100,100 L100,0 Z" />
-            </svg>
-            <svg
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              className="h-full w-full text-white/10 fill-current absolute top-0 -left-3"
-            >
-              <path d="M100,0 C25,15 5,45 100,100 L100,0 Z" />
-            </svg>
+        <div className="relative w-[30%] shrink-0 z-10">
+          <div
+            className="w-full h-full"
+            style={{
+              maskImage: 'url(#hero-image-mask)',
+              WebkitMaskImage: 'url(#hero-image-mask)'
+            }}
+          >
+            <img
+              src="/vmu/vmu.jpg"
+              className="h-full w-full object-cover"
+              alt={category.name}
+            />
           </div>
-          <img
-            src="/storage/media/2026/06/01kvfc5k5amm3t7k43yngahy46.jpg"
-            className="h-full w-full object-cover"
-            alt={category.name}
-          />
+
+          {/* White Highlight aligned with the mask curve */}
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            className="absolute inset-0 w-full h-full z-20 pointer-events-none"
+          >
+            <path
+              d="M 15,0 C 5,20 2,55 15,100"
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.15)"
+              strokeWidth="2"
+            />
+          </svg>
         </div>
       </div>
 
       {/* Mobile view */}
-      <div className="flex md:hidden flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-primary to-[#004ecb] text-white shadow-xs">
+      <div className="flex md:hidden flex-col overflow-hidden rounded-2xl bg-[#023fa9] text-white shadow-xs relative">
+        {/* SVG background */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <svg
+            id="visual-mobile"
+            viewBox="0 0 960 540"
+            className="w-full h-full object-cover"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M748 540L762.3 517.5C776.7 495 805.3 450 813.3 405C821.3 360 808.7 315 789.5 270C770.3 225 744.7 180 751 135C757.3 90 795.7 45 814.8 22.5L834 0L960 0L960 22.5C960 45 960 90 960 135C960 180 960 225 960 270C960 315 960 360 960 405C960 450 960 495 960 517.5L960 540Z"
+              fill="#4b83de"
+            />
+            <path
+              d="M652 540L664.8 517.5C677.7 495 703.3 450 693.7 405C684 360 639 315 602.2 270C565.3 225 536.7 180 541.5 135C546.3 90 584.7 45 603.8 22.5L623 0L835 0L815.8 22.5C796.7 45 758.3 90 752 135C745.7 180 771.3 225 790.5 270C809.7 315 822.3 360 814.3 405C806.3 450 777.7 495 763.3 517.5L749 540Z"
+              fill="#366ccd"
+            />
+            <path
+              d="M412 540L421.5 517.5C431 495 450 450 446.8 405C443.7 360 418.3 315 367.2 270C316 225 239 180 229.3 135C219.7 90 277.3 45 306.2 22.5L335 0L624 0L604.8 22.5C585.7 45 547.3 90 542.5 135C537.7 180 566.3 225 603.2 270C640 315 685 360 694.7 405C704.3 450 678.7 495 665.8 517.5L653 540Z"
+              fill="#2056bb"
+            />
+            <path
+              d="M0 540L0 517.5C0 495 0 450 0 405C0 360 0 315 0 270C0 225 0 180 0 135C0 90 0 45 0 22.5L0 0L336 0L307.2 22.5C278.3 45 220.7 90 230.3 135C240 180 317 225 368.2 270C419.3 315 444.7 360 447.8 405C451 450 432 495 422.5 517.5L413 540Z"
+              fill="#023fa9"
+            />
+          </svg>
+        </div>
+
         <div className="p-6 pb-8 flex flex-col gap-3 relative z-10">
           <Breadcrumbs className="text-white/85 select-none [&_span]:text-white/40 [&_svg]:text-white/40">
             <BreadcrumbsItem
@@ -459,18 +525,33 @@ export function PostListSection({
             />
           ) : null}
         </div>
-        <div className="relative h-44 overflow-hidden">
+        <div className="relative h-44 overflow-hidden z-10">
           <div className="absolute top-0 inset-x-0 h-6 -translate-y-[1px] z-10 pointer-events-none">
             <svg
               viewBox="0 0 1440 120"
               preserveAspectRatio="none"
-              className="w-full h-full text-[#004ecb] fill-current rotate-180"
+              className="w-full h-full rotate-180"
             >
-              <path d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+              <defs>
+                <linearGradient id="mobile-wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#023fa9" />
+                  <stop offset="35%" stopColor="#023fa9" />
+                  <stop offset="45%" stopColor="#2056bb" />
+                  <stop offset="60%" stopColor="#2056bb" />
+                  <stop offset="70%" stopColor="#366ccd" />
+                  <stop offset="78%" stopColor="#366ccd" />
+                  <stop offset="85%" stopColor="#4b83de" />
+                  <stop offset="100%" stopColor="#4b83de" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"
+                fill="url(#mobile-wave-grad)"
+              />
             </svg>
           </div>
           <img
-            src="/storage/media/2026/06/01kvfc5k5amm3t7k43yngahy46.jpg"
+            src="/vmu/vmu.jpg"
             className="h-full w-full object-cover"
             alt={category.name}
           />

@@ -44,6 +44,35 @@ test('cms posts query builder applies allowed filters sorts and includes', funct
         ->and($posts->first()?->relationLoaded('author'))->toBeTrue();
 });
 
+test('cms posts query builder search ignores vietnamese accents and letter case', function () {
+    $matchingAuthor = User::factory()->create();
+
+    Post::factory()->for($matchingAuthor, 'author')->create([
+        'title' => 'Chương trình Đào tạo chất lượng cao',
+        'slug' => 'chuong-trinh-dao-tao-chat-luong-cao',
+        'excerpt' => 'Thông tin tuyển sinh mới',
+        'status' => 'published',
+    ]);
+
+    Post::factory()->for($matchingAuthor, 'author')->create([
+        'title' => 'Tin khác',
+        'slug' => 'tin-khac',
+        'excerpt' => 'Không liên quan',
+        'status' => 'published',
+    ]);
+
+    bindQueryBuilderRequest([
+        'filter' => [
+            'search' => 'DAO TAO',
+        ],
+    ]);
+
+    $posts = CmsPostsQueryBuilder::make()->get();
+
+    expect($posts)->toHaveCount(1)
+        ->and($posts->first()?->title)->toBe('Chương trình Đào tạo chất lượng cao');
+});
+
 test('cms posts query builder rejects unknown filters', function () {
     bindQueryBuilderRequest([
         'filter' => [

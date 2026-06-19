@@ -10,6 +10,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { cx } from "@/lib/primitive";
+import { includesNormalizedSearch } from "@/lib/search";
 
 interface FieldOption {
   label: string;
@@ -80,7 +81,7 @@ export function PuckSelectField({
   const filteredOptions =
     isSearchable && search !== ""
       ? options.filter((opt) =>
-          opt.label.toLowerCase().includes(search.toLowerCase()),
+          includesNormalizedSearch(opt.label, search),
         )
       : options;
 

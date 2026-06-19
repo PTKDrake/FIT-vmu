@@ -8,6 +8,7 @@ use App\Models\Page;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\User;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -47,13 +48,11 @@ class SearchPublicContentAction
     {
         return array_values(Page::query()
             ->whereNotNull('published_at')
-            ->where(function (Builder $query) use ($searchTerm): void {
-                $query
-                    ->where('title', 'like', "%{$searchTerm}%")
-                    ->orWhere('slug', 'like', "%{$searchTerm}%")
-                    ->orWhere('excerpt', 'like', "%{$searchTerm}%")
-                    ->orWhere('seo_description', 'like', "%{$searchTerm}%");
-            })
+            ->where(fn (Builder $query) => NormalizedSearch::whereAnyLike(
+                $query,
+                ['title', 'slug', 'excerpt', 'seo_description'],
+                $searchTerm,
+            ))
             ->latest('published_at')
             ->limit(self::ResultLimit * 5)
             ->get(['id', 'title', 'slug', 'excerpt', 'seo_description', 'visibility'])
@@ -76,12 +75,11 @@ class SearchPublicContentAction
             ->where('status', 'published')
             ->whereNotNull('published_at')
             ->whereHas('categories', fn (Builder $query) => $query->where('is_active', true))
-            ->where(function (Builder $query) use ($searchTerm): void {
-                $query
-                    ->where('title', 'like', "%{$searchTerm}%")
-                    ->orWhere('slug', 'like', "%{$searchTerm}%")
-                    ->orWhere('excerpt', 'like', "%{$searchTerm}%");
-            })
+            ->where(fn (Builder $query) => NormalizedSearch::whereAnyLike(
+                $query,
+                ['title', 'slug', 'excerpt'],
+                $searchTerm,
+            ))
             ->latest('published_at')
             ->limit(self::ResultLimit * 5)
             ->get(['id', 'title', 'slug', 'excerpt', 'visibility', 'status', 'published_at'])
@@ -120,12 +118,11 @@ class SearchPublicContentAction
     {
         return array_values(PostCategory::query()
             ->where('is_active', true)
-            ->where(function (Builder $query) use ($searchTerm): void {
-                $query
-                    ->where('name', 'like', "%{$searchTerm}%")
-                    ->orWhere('slug', 'like', "%{$searchTerm}%")
-                    ->orWhere('description', 'like', "%{$searchTerm}%");
-            })
+            ->where(fn (Builder $query) => NormalizedSearch::whereAnyLike(
+                $query,
+                ['name', 'slug', 'description'],
+                $searchTerm,
+            ))
             ->withCount(['posts' => function (Builder $query): void {
                 $query
                     ->where('status', 'published')

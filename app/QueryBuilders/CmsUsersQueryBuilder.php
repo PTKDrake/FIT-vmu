@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\User;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -36,13 +37,7 @@ final class CmsUsersQueryBuilder
             return;
         }
 
-        $search = trim($value);
-
-        $query->where(function (Builder $builder) use ($search): void {
-            $builder
-                ->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
-        });
+        NormalizedSearch::whereAnyLike($query, ['name', 'email'], $value);
     }
 
     /** @param Builder<User> $query */

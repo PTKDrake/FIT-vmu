@@ -27,4 +27,9 @@ class UserPolicy
     {
         return $user->can('manage users');
     }
+
+    public function delete(User $user, User $model): bool
+    {
+        return $user->can('manage users');
+    }
 }

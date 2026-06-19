@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\QueryBuilders;
 
 use App\Models\Page;
+use App\Support\NormalizedSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -47,13 +48,10 @@ final class CmsPagesQueryBuilder
             return;
         }
 
-        $query->where(function (Builder $query) use ($searchTerm): void {
-            $query
-                ->where('title', 'like', "%{$searchTerm}%")
-                ->orWhere('slug', 'like', "%{$searchTerm}%")
-                ->orWhere('excerpt', 'like', "%{$searchTerm}%")
-                ->orWhere('seo_title', 'like', "%{$searchTerm}%")
-                ->orWhere('seo_description', 'like', "%{$searchTerm}%");
-        });
+        NormalizedSearch::whereAnyLike(
+            $query,
+            ['title', 'slug', 'excerpt', 'seo_title', 'seo_description'],
+            $searchTerm,
+        );
     }
 }
