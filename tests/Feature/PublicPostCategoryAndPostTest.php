@@ -285,9 +285,13 @@ test('public puck post props include media map and ignore legacy image url strin
         );
 });
 
-test('post with site_layout_id returns that layout and without falls back to default', function () {
+test('post detail layout prefers post layout, inherits a single category layout, and skips inheritance for multiple categories', function () {
     $postLayout = SiteLayout::factory()->create([
         'name' => 'Post Specific Layout',
+    ]);
+
+    $categoryLayout = SiteLayout::factory()->create([
+        'name' => 'Category Layout',
     ]);
 
     $defaultLayout = SiteLayout::factory()->create([
@@ -299,6 +303,7 @@ test('post with site_layout_id returns that layout and without falls back to def
     $category = PostCategory::factory()->create([
         'slug' => 'bo-cuc-bai-viet',
         'is_active' => true,
+        'site_layout_id' => $categoryLayout->id,
     ]);
 
     $postWithLayout = Post::factory()->create([
@@ -317,16 +322,37 @@ test('post with site_layout_id returns that layout and without falls back to def
             ->where('layout.id', $postLayout->id)
         );
 
-    $postWithoutLayout = Post::factory()->create([
-        'title' => 'Bai khong co layout',
-        'slug' => 'bai-khong-co-layout',
+    $postWithInheritedCategoryLayout = Post::factory()->create([
+        'title' => 'Bai ke thua layout category',
+        'slug' => 'bai-ke-thua-layout-category',
         'status' => 'published',
         'visibility' => 'public',
         'site_layout_id' => null,
     ]);
-    $postWithoutLayout->categories()->sync([$category->id]);
+    $postWithInheritedCategoryLayout->categories()->sync([$category->id]);
 
-    $this->get('/bo-cuc-bai-viet/bai-khong-co-layout')
+    $this->get('/bo-cuc-bai-viet/bai-ke-thua-layout-category')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/post')
+            ->where('layout.id', $categoryLayout->id)
+        );
+
+    $anotherCategory = PostCategory::factory()->create([
+        'slug' => 'bo-cuc-phu',
+        'is_active' => true,
+    ]);
+
+    $postWithMultipleCategories = Post::factory()->create([
+        'title' => 'Bai nhieu category',
+        'slug' => 'bai-nhieu-category',
+        'status' => 'published',
+        'visibility' => 'public',
+        'site_layout_id' => null,
+    ]);
+    $postWithMultipleCategories->categories()->sync([$category->id, $anotherCategory->id]);
+
+    $this->get('/bo-cuc-bai-viet/bai-nhieu-category')
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('public/post')

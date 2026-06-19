@@ -7,6 +7,7 @@ namespace App\Actions\PublicSite;
 use App\Actions\Puck\BuildPuckDynamicDataAction;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\SiteLayout;
 use App\Models\SiteSetting;
 use App\Models\User;
 use Carbon\Carbon;
@@ -29,8 +30,11 @@ final class BuildPublicPostPropsAction
      */
     public function __invoke(Post $post, PostCategory $category, ?User $viewer = null): array
     {
-        $post->loadMissing(['siteLayout', 'author', 'categories', 'thumbnail']);
-        $layout = PublicLayoutResolver::resolve($post->siteLayout, SiteSetting::defaultPostLayoutId());
+        $post->loadMissing(['siteLayout', 'author', 'categories.siteLayout', 'thumbnail']);
+        $layout = PublicLayoutResolver::resolve(
+            $this->resolvePostLayout($post),
+            SiteSetting::defaultPostLayoutId(),
+        );
 
         return [
             'post' => $this->postToArray($post, $category),
@@ -43,6 +47,22 @@ final class BuildPublicPostPropsAction
                 $this->puckPayloads($post->content, $layout),
             ),
         ];
+    }
+
+    private function resolvePostLayout(Post $post): ?SiteLayout
+    {
+        if ($post->siteLayout !== null) {
+            return $post->siteLayout;
+        }
+
+        if ($post->categories->count() !== 1) {
+            return null;
+        }
+
+        /** @var PostCategory $category */
+        $category = $post->categories->first();
+
+        return $category->siteLayout;
     }
 
     /**
