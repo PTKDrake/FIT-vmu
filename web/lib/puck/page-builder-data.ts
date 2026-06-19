@@ -585,6 +585,28 @@ export interface VmuFitPageBuilderComponents {
     buttonHref?: string;
     className?: string;
   };
+  Milestones: {
+    title?: string;
+    milestones?: {
+      icon?: string;
+      years?: string;
+      title?: string;
+      description?: string;
+    }[];
+  };
+  NewsCustom: {
+    categoryId?: string;
+    excludedCategories?: {
+      categoryId?: string;
+    }[];
+    includedCategories?: {
+      categoryId?: string;
+    }[];
+    limit?: number;
+    title?: string;
+    viewAllLabel?: string;
+    viewAllHref?: string;
+  };
 }
 
 export interface PageBuilderRootProps {
