@@ -34,7 +34,7 @@ export default function PublicPage({ layout, page }: PublicPageProps) {
         ) : null}
       </Head>
 
-      <SiteLayoutShell layout={layout}>
+      <SiteLayoutShell layout={layout} isPuckPage={true}>
         <PuckPageRender content={page.content} />
       </SiteLayoutShell>
     </>

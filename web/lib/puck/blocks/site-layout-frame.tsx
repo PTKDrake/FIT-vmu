@@ -166,6 +166,7 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
           >
             <div className="min-h-dvh overflow-visible rounded-[inherit] border border-border/50 bg-bg text-fg">
               <SiteLayoutShellFrame
+                isPuckPage={true}
                 footer={
                   <Footer className={slotClassName} minEmptyHeight={120} />
                 }

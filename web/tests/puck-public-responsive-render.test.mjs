@@ -41,9 +41,9 @@ test("public puck rendering provides container boundaries for responsive blocks"
     assert.match(siteLayoutShellSource, /export function SiteLayoutShellFrame/);
     assert.match(
         siteLayoutShellSource,
-        /getSiteLayoutBodyClassName\(\s*Boolean\(left\),\s*Boolean\(right\),\s*\)/,
+        /getSiteLayoutBodyClassName\(\s*Boolean\(left\),\s*Boolean\(right\),\s*isPuckPage\s*,?\s*\)/,
     );
-    assert.match(siteLayoutShellSource, /mx-auto grid w-full max-w-7xl/);
+    assert.match(siteLayoutShellSource, /mx-auto grid w-full\$\{maxWidth\}/);
     assert.match(
         siteLayoutShellSource,
         /lg:grid-cols-\[minmax\(0,1fr\)_18rem\]/,
