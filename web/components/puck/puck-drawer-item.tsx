@@ -25,7 +25,7 @@ function mergeStyle(
   extraStyle: CSSProperties,
 ): CSSProperties {
   return {
-    ...((currentStyle as CSSProperties | undefined) ?? {}),
+    ...(currentStyle as CSSProperties | undefined),
     ...extraStyle,
   };
 }

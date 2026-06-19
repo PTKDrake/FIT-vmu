@@ -126,7 +126,7 @@ export const pageBuilderComponents = withSelectFieldDefaults(
       {
         ...componentConfig,
         metadata: {
-          ...(componentConfig.metadata ?? {}),
+          ...componentConfig.metadata,
           englishName: getPuckEnglishName(componentName),
         },
       },
