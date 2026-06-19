@@ -595,22 +595,17 @@ export interface VmuFitPageBuilderComponents {
     }[];
   };
   NewsCustom: {
+    categoryId?: string;
+    excludedCategories?: {
+      categoryId?: string;
+    }[];
+    includedCategories?: {
+      categoryId?: string;
+    }[];
+    limit?: number;
     title?: string;
     viewAllLabel?: string;
     viewAllHref?: string;
-    featured?: {
-      image?: PuckImageValue;
-      date?: string;
-      title?: string;
-      description?: string;
-      href?: string;
-    };
-    items?: {
-      image?: PuckImageValue;
-      date?: string;
-      title?: string;
-      href?: string;
-    }[];
   };
 }
 

@@ -9,6 +9,7 @@ import type { PuckImageValue } from "@/lib/puck/media";
 
 export interface FeaturedNewsItem {
   image?: PuckImageValue;
+  imageUrl?: string | null;
   date?: string;
   title?: string;
   description?: string;
@@ -17,6 +18,7 @@ export interface FeaturedNewsItem {
 
 export interface SecondaryNewsItem {
   image?: PuckImageValue;
+  imageUrl?: string | null;
   date?: string;
   title?: string;
   href?: string;
@@ -41,7 +43,8 @@ export function NewsCustom({
 }: NewsCustomProps) {
   const hasFeatured = !!featured;
   const resolvedFeaturedImage = hasFeatured
-    ? getPuckImageUrl(featured.image) ||
+    ? featured.imageUrl ||
+      getPuckImageUrl(featured.image) ||
       "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80"
     : "";
 
@@ -88,7 +91,7 @@ export function NewsCustom({
                 <img
                   src={resolvedFeaturedImage}
                   alt={featured.title || "Featured News"}
-                  className="w-full h-full object-cover transition duration-500 group-hover:scale-102"
+                  className="w-full h-full object-cover"
                 />
                 {/* Featured Badge */}
                 <div className="absolute top-4 left-4 bg-primary text-primary-fg font-bold text-xs px-3.5 py-1.5 rounded-lg shadow-sm tracking-wider uppercase">
@@ -182,6 +185,7 @@ export function NewsCustom({
           <div className="flex flex-col">
             {items.map((item, index) => {
               const itemImage =
+                item.imageUrl ||
                 getPuckImageUrl(item.image) ||
                 "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=80";
 
@@ -199,7 +203,7 @@ export function NewsCustom({
                       <img
                         src={itemImage}
                         alt={item.title || "News Image"}
-                        className="w-full h-full object-cover transition duration-300 group-hover:scale-102"
+                        className="w-full h-full object-cover"
                       />
                     </Link>
 

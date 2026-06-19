@@ -65,12 +65,14 @@ export function PuckSelectField({
   name,
   onChange,
   readOnly,
+  value: fieldValue,
 }: PuckSelectFieldProps) {
-  const value = usePuck((state) => {
+  const puckValue = usePuck((state) => {
     const props = state.selectedItem?.props ?? state.appState.data.root.props;
 
     return getDeep(props, name) as FieldOption["value"];
   });
+  const value = fieldValue !== undefined ? fieldValue : puckValue;
   const options = field.options as FieldOption[];
   const isSearchable = options.length > SEARCH_THRESHOLD;
   const [search, setSearch] = useState("");

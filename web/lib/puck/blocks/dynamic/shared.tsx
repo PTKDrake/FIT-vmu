@@ -288,3 +288,21 @@ export async function buildStaffFieldOptions(
     })),
   ];
 }
+
+export async function buildCategoryFieldOptions(
+  emptyLabel: string,
+): Promise<Array<{ label: string; value: string }> | null> {
+  const items = await fetchSourceOptions("categories");
+
+  if (items === null) {
+    return null;
+  }
+
+  return [
+    { label: emptyLabel, value: "" },
+    ...items.map((item) => ({
+      label: item.meta?.parentId ? `${item.label} (danh mục con)` : item.label,
+      value: item.id.toString(),
+    })),
+  ];
+}
