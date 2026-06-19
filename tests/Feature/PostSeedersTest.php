@@ -32,9 +32,12 @@ test('post category seeder creates the new public category tree', function () {
     ]);
 });
 
-test('post seeder no longer creates seeded posts', function () {
-    $this->seed(PostCategorySeeder::class);
+test('post seeder creates crawl-based posts', function () {
     $this->seed(PostSeeder::class);
 
-    expect(Post::query()->count())->toBe(0);
+    expect(Post::query()->count())->toBe(48)
+        ->and(Post::query()->where('status', 'published')->count())->toBe(48)
+        ->and(Post::query()->where('slug', 'gioi-thieu-khoa-cong-nghe-thong-tin')->exists())->toBeTrue()
+        ->and(Post::query()->where('slug', 'don-vi-ban-chu-nhiem-khoa')->exists())->toBeTrue()
+        ->and(Post::query()->where('slug', 'hoi-thi-sinh-vien-voi-toan-khong-gian-mang-nam-2025')->exists())->toBeTrue();
 });
