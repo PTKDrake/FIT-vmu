@@ -1,4 +1,4 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, router, useForm } from "@inertiajs/react";
 import type { FormEvent, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import CmsLayout from "@/layouts/cms-layout";
 import { update } from "@/routes/cms/settings";
 import type { SharedData } from "@/types/shared";
@@ -60,6 +61,10 @@ function toStringId(value: number | null): string {
   return value !== null ? value.toString() : "";
 }
 
+function reloadSettings(): void {
+  router.reload({ only: ["layoutOptions", "pageOptions", "settings"] });
+}
+
 export default function SiteSettingsPage({
   layoutOptions,
   pageOptions,
@@ -74,9 +79,16 @@ export default function SiteSettingsPage({
     default_post_layout: toStringId(settings.default_post_layout),
   });
 
+  useCmsContentRealtime("settings", () => {
+    reloadSettings();
+  });
+
   function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    form.patch(update.url(), { preserveScroll: true });
+    form.patch(update.url(), {
+      onSuccess: reloadSettings,
+      preserveScroll: true,
+    });
   }
 
   return (

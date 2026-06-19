@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\User;
 
+use App\Events\CmsContentChanged;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,16 @@ class UpdateUserAction
             if (is_array($roles)) {
                 $user->syncRoles($roles);
             }
+
+            event(CmsContentChanged::forResource(
+                resource: 'users',
+                recordId: $user->getKey(),
+                title: $user->name,
+                status: $user->email_verified_at !== null ? 'verified' : 'unverified',
+                action: 'updated',
+                message: 'Đã cập nhật người dùng.',
+                updatedAt: $user->updated_at,
+            ));
 
             return $user->refresh();
         });

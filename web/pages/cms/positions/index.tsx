@@ -33,6 +33,7 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import { t } from "@/lib/i18n";
@@ -82,6 +83,10 @@ export default function CmsPositionsPage({
     initialItems: positions.data,
     initialMeta: positions.meta,
     resourceKey: "positions",
+  });
+
+  useCmsContentRealtime("positions", () => {
+    tableQueryState.list.reload();
   });
 
   const columns: Array<ColumnDef<CmsPositionRow, any>> = [
@@ -171,7 +176,10 @@ export default function CmsPositionsPage({
     setIsDeleting(true);
     router.delete(positionsRoutes.destroy.url({ position: deleteTarget.id }), {
       onFinish: () => setIsDeleting(false),
-      onSuccess: () => setDeleteTarget(null),
+      onSuccess: () => {
+        setDeleteTarget(null);
+        tableQueryState.list.reload();
+      },
       preserveScroll: true,
     });
   }
@@ -235,6 +243,7 @@ export default function CmsPositionsPage({
         initialValues={activePosition}
         isOpen={dialogOpen}
         mode={dialogMode}
+        onSaved={() => tableQueryState.list.reload()}
         onOpenChange={setDialogOpen}
       />
 

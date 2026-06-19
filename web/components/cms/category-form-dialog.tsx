@@ -52,6 +52,7 @@ interface CategoryFormDialogProps {
   isOpen: boolean;
   mode: "create" | "edit";
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
   parentOptions: Array<{
     label: string;
     parentId: number | null;
@@ -66,6 +67,7 @@ export function CategoryFormDialog({
   isOpen,
   mode,
   onOpenChange,
+  onSaved,
   parentOptions,
   layoutOptions,
   defaultCategoryLayoutId,
@@ -91,7 +93,10 @@ export function CategoryFormDialog({
 
     if (mode === "create") {
       form.post(storeCategory.url(), {
-        onSuccess: () => onOpenChange(false),
+        onSuccess: () => {
+          onOpenChange(false);
+          onSaved?.();
+        },
         preserveScroll: true,
       });
 
@@ -99,7 +104,10 @@ export function CategoryFormDialog({
     }
 
     form.patch(updateCategory.url({ post_category: initialValues.id ?? 0 }), {
-      onSuccess: () => onOpenChange(false),
+      onSuccess: () => {
+        onOpenChange(false);
+        onSaved?.();
+      },
       preserveScroll: true,
     });
   }

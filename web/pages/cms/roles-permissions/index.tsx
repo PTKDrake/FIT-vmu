@@ -8,7 +8,7 @@ import {
   PlusIcon,
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { Fragment, useDeferredValue, useState } from "react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
@@ -43,6 +43,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Code, Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useRegisterUnsavedChanges } from "@/hooks/use-unsaved-changes";
 import CmsLayout from "@/layouts/cms-layout";
 import { roleRouteArgument } from "@/lib/role-route-argument";
@@ -147,6 +148,13 @@ function arraysAreEqual(left: string[], right: string[]): boolean {
   return left.every((value, index) => value === right[index]);
 }
 
+function normalizeRoleItems(roles: RoleData[]): RoleData[] {
+  return roles.map((role) => ({
+    ...role,
+    permissions: normalizePermissionList(role.permissions),
+  }));
+}
+
 export default function CmsRolesPermissionsPage({
   can,
   roles,
@@ -154,15 +162,30 @@ export default function CmsRolesPermissionsPage({
   protectedRoleNames,
 }: CmsRolesPermissionsPageProps) {
   const [roleItems, setRoleItems] = useState<RoleData[]>(() =>
-    roles.map((role) => ({
-      ...role,
-      permissions: normalizePermissionList(role.permissions),
-    })),
+    normalizeRoleItems(roles),
   );
   const [draftPermissionsByRole, setDraftPermissionsByRole] = useState<
     Record<number, string[]>
   >({});
   const [isSavingChanges, setIsSavingChanges] = useState(false);
+
+  useCmsContentRealtime("roles", () => {
+    reloadRoles();
+  });
+
+  function reloadRoles(): void {
+    router.reload({
+      only: ["roles", "permissions"],
+      onSuccess: (page) => {
+        const nextRoles = page.props.roles;
+
+        if (Array.isArray(nextRoles)) {
+          setRoleItems(normalizeRoleItems(nextRoles as RoleData[]));
+          setDraftPermissionsByRole({});
+        }
+      },
+    });
+  }
 
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
@@ -859,6 +882,7 @@ export default function CmsRolesPermissionsPage({
           initialValues={formInitialValues}
           allPermissions={permissions}
           canManagePermissions={can.managePermissions}
+          onSaved={reloadRoles}
           protectedRoleNames={protectedRoleNames}
         />
       ) : null}
@@ -868,6 +892,7 @@ export default function CmsRolesPermissionsPage({
           isOpen={isActionDialogOpen}
           onOpenChange={setIsActionDialogOpen}
           mode={actionDialogMode}
+          onSaved={reloadRoles}
           role={actionRole}
         />
       ) : null}

@@ -15,37 +15,7 @@ function cmsBroadcastChannelAuthorizer(string $channelName): Closure
     return $channels[$channelName];
 }
 
-test('cms posts broadcast channel authorizes editors and rejects viewers without post access', function () {
-    $this->seed(RoleAndPermissionSeeder::class);
-
-    $editor = User::factory()->create();
-    $editor->assignRole('editor');
-
-    $staff = User::factory()->create();
-    $staff->assignRole('staff');
-
-    $authorize = cmsBroadcastChannelAuthorizer('cms.posts');
-
-    expect($authorize($editor))->toBeTrue()
-        ->and($authorize($staff))->toBeFalse();
-});
-
-test('cms pages broadcast channel authorizes editors and rejects viewers without page access', function () {
-    $this->seed(RoleAndPermissionSeeder::class);
-
-    $editor = User::factory()->create();
-    $editor->assignRole('editor');
-
-    $staff = User::factory()->create();
-    $staff->assignRole('staff');
-
-    $authorize = cmsBroadcastChannelAuthorizer('cms.pages');
-
-    expect($authorize($editor))->toBeTrue()
-        ->and($authorize($staff))->toBeFalse();
-});
-
-test('cms units broadcast channel authorizes editors and rejects viewers without unit access', function () {
+test('cms content broadcast channel authorizes dashboard users and rejects non cms users', function () {
     $this->seed(RoleAndPermissionSeeder::class);
 
     $editor = User::factory()->create();
@@ -54,23 +24,24 @@ test('cms units broadcast channel authorizes editors and rejects viewers without
     $student = User::factory()->create();
     $student->assignRole('student');
 
-    $authorize = cmsBroadcastChannelAuthorizer('cms.units');
+    $authorize = cmsBroadcastChannelAuthorizer('cms.{resource}');
 
-    expect($authorize($editor))->toBeTrue()
-        ->and($authorize($student))->toBeFalse();
-});
-
-test('cms staff profiles broadcast channel authorizes editors and rejects viewers without staff profile access', function () {
-    $this->seed(RoleAndPermissionSeeder::class);
-
-    $editor = User::factory()->create();
-    $editor->assignRole('editor');
-
-    $student = User::factory()->create();
-    $student->assignRole('student');
-
-    $authorize = cmsBroadcastChannelAuthorizer('cms.staff-profiles');
-
-    expect($authorize($editor))->toBeTrue()
-        ->and($authorize($student))->toBeFalse();
+    foreach ([
+        'layouts',
+        'media',
+        'navigation',
+        'pages',
+        'positions',
+        'post-categories',
+        'posts',
+        'roles',
+        'settings',
+        'staff-profiles',
+        'student-groups',
+        'units',
+        'users',
+    ] as $resource) {
+        expect($authorize($editor, $resource))->toBeTrue()
+            ->and($authorize($student, $resource))->toBeFalse();
+    }
 });

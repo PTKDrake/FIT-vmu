@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Media;
 
+use App\Events\CmsContentChanged;
 use App\Models\Media;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -29,6 +30,16 @@ class CreateMediaAction
                 'size' => $file->getSize() ?: 0,
                 'uploaded_by' => $user->getKey(),
             ]);
+
+            event(CmsContentChanged::forResource(
+                resource: 'media',
+                recordId: $media->getKey(),
+                title: $media->display_name,
+                status: $media->mime_type,
+                action: 'created',
+                message: 'Đã tải media lên.',
+                updatedAt: $media->updated_at,
+            ));
 
             return $media->fresh(['uploadedBy']) ?? $media;
         });

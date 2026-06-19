@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Media;
 
+use App\Events\CmsContentChanged;
 use App\Models\Media;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +35,16 @@ final class DuplicateMediaAction
                 'size' => $media->size,
                 'uploaded_by' => $user->getKey(),
             ]);
+
+            event(CmsContentChanged::forResource(
+                resource: 'media',
+                recordId: $duplicate->getKey(),
+                title: $duplicate->display_name,
+                status: $duplicate->mime_type,
+                action: 'duplicated',
+                message: 'Đã nhân bản media.',
+                updatedAt: $duplicate->updated_at,
+            ));
 
             return $duplicate->fresh(['uploadedBy']) ?? $duplicate;
         });

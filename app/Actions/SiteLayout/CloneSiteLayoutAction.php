@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\SiteLayout;
 
+use App\Events\CmsContentChanged;
 use App\Models\SiteLayout;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +21,16 @@ class CloneSiteLayoutAction
             $clone->name = sprintf('%s (Bản sao)', $siteLayout->name);
             $clone->key = $this->generateUniqueKey($siteLayout->key);
             $clone->save();
+
+            event(CmsContentChanged::forResource(
+                resource: 'layouts',
+                recordId: $clone->getKey(),
+                title: $clone->name,
+                status: $clone->key,
+                action: 'cloned',
+                message: 'Đã sao chép layout.',
+                updatedAt: $clone->updated_at,
+            ));
 
             return $clone->fresh() ?? $clone;
         });

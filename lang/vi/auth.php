@@ -12,6 +12,7 @@ return [
     'google_not_configured' => 'Đăng nhập bằng Google chưa được cấu hình.',
     'google_auth_failed' => 'Không thể hoàn tất xác thực Google. Vui lòng thử lại.',
     'google_missing_email' => 'Tài khoản Google của bạn không cung cấp địa chỉ email hợp lệ.',
+    'google_invalid_domain' => 'Chỉ hỗ trợ đăng nhập bằng email có tên miền @:domain.',
     'google_account_created' => 'Tài khoản của bạn đã được tạo bằng Google.',
     'not_authorized_assign_roles' => 'Bạn không có quyền gán vai trò.',
     'not_authorized_manage_permissions' => 'Bạn không có quyền quản lý quyền hạn.',

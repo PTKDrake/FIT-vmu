@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cms;
 
+use App\Events\CmsContentChanged;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -36,6 +37,16 @@ final class DeleteRoleController extends Controller
 
         // Flush Spatie permission cache
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        event(CmsContentChanged::forResource(
+            resource: 'roles',
+            recordId: $role->getKey(),
+            title: $role->name,
+            status: $role->guard_name,
+            action: 'deleted',
+            message: 'Đã xóa vai trò.',
+            updatedAt: $role->updated_at,
+        ));
 
         flash('Đã xóa vai trò.');
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Role;
 
+use App\Events\CmsContentChanged;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,16 @@ class UpdateRoleAction
         });
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        event(CmsContentChanged::forResource(
+            resource: 'roles',
+            recordId: $updatedRole->getKey(),
+            title: $updatedRole->name,
+            status: $updatedRole->guard_name,
+            action: 'updated',
+            message: 'Đã cập nhật vai trò.',
+            updatedAt: $updatedRole->updated_at,
+        ));
 
         return $updatedRole;
     }

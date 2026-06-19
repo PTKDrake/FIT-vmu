@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\SiteLayout;
 
+use App\Events\CmsContentChanged;
 use App\Models\SiteLayout;
 
 class CreateSiteLayoutAction
@@ -29,6 +30,16 @@ class CreateSiteLayoutAction
             'left_data' => $this->normalizeSlot($attributes['left_data'] ?? null),
             'right_data' => $this->normalizeSlot($attributes['right_data'] ?? null),
         ]);
+
+        event(CmsContentChanged::forResource(
+            resource: 'layouts',
+            recordId: $siteLayout->getKey(),
+            title: $siteLayout->name,
+            status: $siteLayout->key,
+            action: 'created',
+            message: 'Đã tạo layout.',
+            updatedAt: $siteLayout->updated_at,
+        ));
 
         return $siteLayout;
     }

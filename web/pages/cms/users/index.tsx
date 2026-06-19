@@ -38,6 +38,7 @@ import {
   SelectItem,
   SelectLabel,
 } from "@/components/ui/select";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import { t } from "@/lib/i18n";
@@ -99,6 +100,14 @@ export default function CmsUsersPage({
     initialMeta: users.meta,
     resourceKey: "users",
   });
+
+  useCmsContentRealtime("users", () => {
+    reloadUsersList();
+  });
+
+  function reloadUsersList(): void {
+    tableQueryState.list.reload();
+  }
 
   const currentUserFromList = users.data.find((u) => u.id === auth.user?.id);
   const currentUserRoles =
@@ -313,6 +322,7 @@ export default function CmsUsersPage({
               setUserPendingDelete(null);
             }
           }}
+          onDeleted={reloadUsersList}
           user={userPendingDelete}
         />
       ) : null}
@@ -352,10 +362,12 @@ function UsersFlashToast({
 function DeleteUserDialog({
   isOpen,
   onOpenChange,
+  onDeleted,
   user,
 }: {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  onDeleted: () => void;
   user: CmsUserTableRow;
 }) {
   const form = useForm({});
@@ -366,6 +378,7 @@ function DeleteUserDialog({
     form.delete(usersRoutes.destroy.url({ user: user.id }), {
       onSuccess: () => {
         onOpenChange(false);
+        onDeleted();
       },
       onError: () => {
         toast.error("Không thể xóa người dùng.");

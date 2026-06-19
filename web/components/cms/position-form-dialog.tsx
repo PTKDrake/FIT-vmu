@@ -38,6 +38,7 @@ interface PositionFormDialogProps {
   isOpen: boolean;
   mode: "create" | "edit";
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
 }
 
 export function PositionFormDialog({
@@ -45,6 +46,7 @@ export function PositionFormDialog({
   isOpen,
   mode,
   onOpenChange,
+  onSaved,
 }: PositionFormDialogProps) {
   const form = useForm<PositionFormValues>({
     is_active: initialValues.is_active,
@@ -58,7 +60,10 @@ export function PositionFormDialog({
 
     if (mode === "create") {
       form.post(storePosition.url(), {
-        onSuccess: () => onOpenChange(false),
+        onSuccess: () => {
+          onOpenChange(false);
+          onSaved?.();
+        },
         preserveScroll: true,
       });
 
@@ -66,7 +71,10 @@ export function PositionFormDialog({
     }
 
     form.patch(updatePosition.url({ position: initialValues.id ?? 0 }), {
-      onSuccess: () => onOpenChange(false),
+      onSuccess: () => {
+        onOpenChange(false);
+        onSaved?.();
+      },
       preserveScroll: true,
     });
   }

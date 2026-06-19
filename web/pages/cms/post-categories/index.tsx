@@ -33,6 +33,7 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import postCategoriesRoutes from "@/routes/cms/post-categories";
@@ -89,6 +90,10 @@ export default function CmsPostCategoriesPage({
     initialItems: categories.data,
     initialMeta: categories.meta,
     resourceKey: "categories",
+  });
+
+  useCmsContentRealtime("post-categories", () => {
+    tableQueryState.list.reload();
   });
 
   const columns: Array<ColumnDef<CmsPostCategoryRow, any>> = [
@@ -203,7 +208,10 @@ export default function CmsPostCategoriesPage({
       postCategoriesRoutes.destroy.url({ post_category: deleteTarget.id }),
       {
         onFinish: () => setIsDeleting(false),
-        onSuccess: () => setDeleteTarget(null),
+        onSuccess: () => {
+          setDeleteTarget(null);
+          tableQueryState.list.reload();
+        },
         preserveScroll: true,
       },
     );
@@ -268,6 +276,7 @@ export default function CmsPostCategoriesPage({
         initialValues={activeCategory}
         isOpen={dialogOpen}
         mode={dialogMode}
+        onSaved={() => tableQueryState.list.reload()}
         onOpenChange={setDialogOpen}
         parentOptions={parentOptions}
         layoutOptions={layoutOptions}

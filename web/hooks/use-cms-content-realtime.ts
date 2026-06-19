@@ -5,7 +5,20 @@ export type CmsContentChangedPayload = {
   action: string;
   message: string;
   record_id: number;
-  resource: "pages" | "posts" | "staff-profiles" | "units";
+  resource:
+    | "layouts"
+    | "media"
+    | "navigation"
+    | "pages"
+    | "positions"
+    | "post-categories"
+    | "posts"
+    | "roles"
+    | "settings"
+    | "staff-profiles"
+    | "student-groups"
+    | "units"
+    | "users";
   status: string;
   title: string;
   updated_at: string;

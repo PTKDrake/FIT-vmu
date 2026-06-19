@@ -25,6 +25,7 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import CmsLayout from "@/layouts/cms-layout";
 import studentGroupRoutes from "@/routes/cms/student-groups";
 
@@ -43,6 +44,10 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   minute: "2-digit",
 });
 
+function reloadStudentGroups(): void {
+  router.reload({ only: ["groups"] });
+}
+
 export default function CmsStudentGroupsPage({
   can,
   groups,
@@ -55,6 +60,10 @@ export default function CmsStudentGroupsPage({
   const [deleteTarget, setDeleteTarget] = useState<CmsStudentGroupRow | null>(
     null,
   );
+
+  useCmsContentRealtime("student-groups", () => {
+    reloadStudentGroups();
+  });
 
   function openCreateDialog(): void {
     setDialogMode("create");
@@ -203,6 +212,7 @@ export default function CmsStudentGroupsPage({
         initialValues={activeGroup}
         isOpen={dialogOpen}
         mode={dialogMode}
+        onSaved={reloadStudentGroups}
         onOpenChange={setDialogOpen}
       />
 
@@ -246,7 +256,10 @@ export default function CmsStudentGroupsPage({
                     student_group: deleteTarget.id,
                   }),
                   {
-                    onSuccess: () => setDeleteTarget(null),
+                    onSuccess: () => {
+                      setDeleteTarget(null);
+                      reloadStudentGroups();
+                    },
                     preserveScroll: true,
                   },
                 );

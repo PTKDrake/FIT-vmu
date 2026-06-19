@@ -22,6 +22,7 @@ interface SiteLayoutInfoFormDialogProps {
   };
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
 }
 
 interface SiteLayoutInfoFormValues {
@@ -33,6 +34,7 @@ export function SiteLayoutInfoFormDialog({
   initialValues,
   isOpen,
   onOpenChange,
+  onSaved,
 }: SiteLayoutInfoFormDialogProps) {
   if (!isOpen) {
     return null;
@@ -42,6 +44,7 @@ export function SiteLayoutInfoFormDialog({
     <SiteLayoutInfoFormDialogContent
       initialValues={initialValues}
       onOpenChange={onOpenChange}
+      onSaved={onSaved}
     />
   );
 }
@@ -53,11 +56,13 @@ interface SiteLayoutInfoFormDialogContentProps {
     name: string;
   };
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
 }
 
 function SiteLayoutInfoFormDialogContent({
   initialValues,
   onOpenChange,
+  onSaved,
 }: SiteLayoutInfoFormDialogContentProps) {
   const form = useForm<SiteLayoutInfoFormValues>({
     name: initialValues.name,
@@ -70,6 +75,7 @@ function SiteLayoutInfoFormDialogContent({
     form.patch(layoutRoutes.update.url({ siteLayout: initialValues.id }), {
       onSuccess: () => {
         onOpenChange(false);
+        onSaved?.();
       },
       preserveScroll: true,
     });

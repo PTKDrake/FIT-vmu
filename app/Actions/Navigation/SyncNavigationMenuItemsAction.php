@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Navigation;
 
+use App\Events\CmsContentChanged;
 use App\Models\NavigationItem;
 use App\Models\NavigationMenu;
 use App\Models\Page;
@@ -55,6 +56,16 @@ class SyncNavigationMenuItemsAction
             $this->createTree($navigationMenu, $itemsByParentId);
 
             $navigationMenu->touch();
+
+            event(CmsContentChanged::forResource(
+                resource: 'navigation',
+                recordId: $navigationMenu->getKey(),
+                title: $navigationMenu->name,
+                status: $navigationMenu->is_active ? 'active' : 'inactive',
+                action: 'items-synced',
+                message: 'Đã cập nhật cấu trúc điều hướng.',
+                updatedAt: $navigationMenu->updated_at,
+            ));
 
             return $navigationMenu->fresh(['items']) ?? $navigationMenu;
         });

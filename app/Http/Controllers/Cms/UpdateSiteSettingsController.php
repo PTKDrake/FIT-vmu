@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cms;
 
+use App\Events\CmsContentChanged;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\SiteLayout;
@@ -38,6 +39,16 @@ final class UpdateSiteSettingsController extends Controller
         foreach ($allKeys as $key) {
             SiteSetting::set($key, $validated[$key] ?? null);
         }
+
+        event(CmsContentChanged::forResource(
+            resource: 'settings',
+            recordId: 0,
+            title: 'Cài đặt site',
+            status: 'updated',
+            action: 'updated',
+            message: 'Đã cập nhật cài đặt site.',
+            updatedAt: now(),
+        ));
 
         return back();
     }

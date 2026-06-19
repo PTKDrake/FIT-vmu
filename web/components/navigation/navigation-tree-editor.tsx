@@ -364,6 +364,15 @@ export function NavigationTreeEditor({
       },
       {
         preserveScroll: true,
+        onSuccess: () => {
+          router.reload({
+            only: [
+              "navigationMenus",
+              "navigationStateVersion",
+              "resourceCatalog",
+            ],
+          });
+        },
         onFinish: () => {
           setPendingConfirmation(null);
         },

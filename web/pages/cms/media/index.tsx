@@ -87,6 +87,7 @@ import {
 } from "@/components/ui/select";
 import { Code, Strong, Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import { t } from "@/lib/i18n";
@@ -214,6 +215,11 @@ export default function CmsMediaPage({ can, flash, media }: CmsMediaPageProps) {
     mediaList.loadingState === "loading" && mediaList.items.length === 0
       ? media.data
       : mediaList.items;
+
+  useCmsContentRealtime("media", () => {
+    mediaList.reload();
+  });
+
   const deleteTargetMedia =
     visibleMedia.find((item) => item.id === deleteTargetMediaId) ?? null;
   const selectedMedia =

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\PostCategory;
 
+use App\Events\CmsContentChanged;
 use App\Models\PostCategory;
 use Illuminate\Support\Facades\DB;
 
@@ -32,6 +33,16 @@ class UpdatePostCategoryAction
                 'is_active' => $attributes['is_active'],
                 'site_layout_id' => $attributes['site_layout_id'] ?? null,
             ]);
+
+            event(CmsContentChanged::forResource(
+                resource: 'post-categories',
+                recordId: $postCategory->getKey(),
+                title: $postCategory->name,
+                status: $postCategory->is_active ? 'active' : 'inactive',
+                action: 'updated',
+                message: 'Đã cập nhật danh mục bài viết.',
+                updatedAt: $postCategory->updated_at,
+            ));
 
             return $postCategory->refresh();
         });

@@ -84,6 +84,26 @@ final class CmsContentChanged implements ShouldBroadcast, ShouldDispatchAfterCom
         );
     }
 
+    public static function forResource(
+        string $resource,
+        mixed $recordId,
+        string $title,
+        string $status,
+        string $action,
+        string $message,
+        ?CarbonInterface $updatedAt = null,
+    ): self {
+        return new self(
+            resource: $resource,
+            recordId: self::normalizeRecordId($recordId),
+            title: $title,
+            status: $status,
+            action: $action,
+            message: $message,
+            updatedAt: self::toIsoString($updatedAt),
+        );
+    }
+
     /**
      * @return array<int, PrivateChannel>
      */

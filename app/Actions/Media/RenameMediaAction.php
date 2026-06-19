@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Media;
 
+use App\Events\CmsContentChanged;
 use App\Models\Media;
 
 final class RenameMediaAction
@@ -19,6 +20,16 @@ final class RenameMediaAction
         $media->forceFill([
             'display_name' => $displayName,
         ])->save();
+
+        event(CmsContentChanged::forResource(
+            resource: 'media',
+            recordId: $media->getKey(),
+            title: $media->display_name,
+            status: $media->mime_type,
+            action: 'renamed',
+            message: 'Đã đổi tên media.',
+            updatedAt: $media->updated_at,
+        ));
 
         return $media->refresh();
     }

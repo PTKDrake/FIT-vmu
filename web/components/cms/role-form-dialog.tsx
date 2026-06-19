@@ -36,6 +36,7 @@ interface PermissionData {
 interface RoleFormDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
   mode: "create" | "edit";
   initialValues: RoleFormValues;
   allPermissions: PermissionData[];
@@ -79,6 +80,7 @@ const getCategory = (permissionName: string) => {
 export function RoleFormDialog({
   isOpen,
   onOpenChange,
+  onSaved,
   mode,
   initialValues,
   allPermissions,
@@ -160,6 +162,7 @@ export function RoleFormDialog({
         onSuccess: () => {
           toast.success("Tạo vai trò thành công!");
           onOpenChange(false);
+          onSaved?.();
         },
         onError: () => {
           toast.error("Có lỗi xảy ra khi tạo vai trò.");
@@ -186,6 +189,7 @@ export function RoleFormDialog({
         onSuccess: () => {
           toast.success("Cập nhật vai trò thành công!");
           onOpenChange(false);
+          onSaved?.();
         },
         onError: () => {
           toast.error("Có lỗi xảy ra khi cập nhật vai trò.");

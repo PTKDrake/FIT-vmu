@@ -52,6 +52,7 @@ interface StudentGroupFormDialogProps {
     code: string;
     scope: "global" | "private";
   }) => void;
+  onSaved?: () => void;
   submitMode?: "inertia" | "json";
 }
 
@@ -71,6 +72,7 @@ export function StudentGroupFormDialog({
   mode,
   onOpenChange,
   onCreated,
+  onSaved,
   submitMode = "inertia",
 }: StudentGroupFormDialogProps) {
   if (!isOpen) {
@@ -84,6 +86,7 @@ export function StudentGroupFormDialog({
       mode={mode}
       onCreated={onCreated}
       onOpenChange={onOpenChange}
+      onSaved={onSaved}
       submitMode={submitMode}
     />
   );
@@ -100,6 +103,7 @@ interface StudentGroupFormDialogContentProps {
     code: string;
     scope: "global" | "private";
   }) => void;
+  onSaved?: () => void;
   submitMode: "inertia" | "json";
 }
 
@@ -109,6 +113,7 @@ function StudentGroupFormDialogContent({
   mode,
   onOpenChange,
   onCreated,
+  onSaved,
   submitMode,
 }: StudentGroupFormDialogContentProps) {
   const [studentCodesText, setStudentCodesText] = useState(
@@ -221,6 +226,7 @@ function StudentGroupFormDialogContent({
           form.reset();
           setStudentCodesText("");
           onOpenChange(false);
+          onSaved?.();
         },
         preserveScroll: true,
       });
@@ -234,6 +240,7 @@ function StudentGroupFormDialogContent({
         onSuccess: () => {
           setStudentCodesText(studentCodes.join("\n"));
           onOpenChange(false);
+          onSaved?.();
         },
         preserveScroll: true,
       },

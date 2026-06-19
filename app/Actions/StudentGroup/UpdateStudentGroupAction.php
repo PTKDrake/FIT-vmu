@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\StudentGroup;
 
+use App\Events\CmsContentChanged;
 use App\Models\StudentGroup;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,16 @@ class UpdateStudentGroupAction
             ]);
 
             ($this->syncStudentGroupMembers)($studentGroup, $attributes['student_codes']);
+
+            event(CmsContentChanged::forResource(
+                resource: 'student-groups',
+                recordId: $studentGroup->getKey(),
+                title: $studentGroup->name,
+                status: $studentGroup->isGlobal() ? 'global' : 'private',
+                action: 'updated',
+                message: 'Đã cập nhật nhóm sinh viên.',
+                updatedAt: $studentGroup->updated_at,
+            ));
 
             return $studentGroup->fresh(['owner', 'members']) ?? $studentGroup;
         });

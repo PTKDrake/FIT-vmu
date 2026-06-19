@@ -35,6 +35,7 @@ interface PageFormDialogProps {
   isOpen: boolean;
   mode: "create" | "edit";
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
 }
 
 export function PageFormDialog({
@@ -42,6 +43,7 @@ export function PageFormDialog({
   isOpen,
   mode,
   onOpenChange,
+  onSaved,
 }: PageFormDialogProps) {
   const form = useForm({
     content: defaultPageJson,
@@ -58,14 +60,20 @@ export function PageFormDialog({
 
     if (mode === "create") {
       form.post(storePage.url(), {
-        onSuccess: () => onOpenChange(false),
+        onSuccess: () => {
+          onOpenChange(false);
+          onSaved?.();
+        },
       });
 
       return;
     }
 
     form.patch(updatePageMetadata.url({ page: initialValues.id ?? 0 }), {
-      onSuccess: () => onOpenChange(false),
+      onSuccess: () => {
+        onOpenChange(false);
+        onSaved?.();
+      },
       preserveScroll: true,
     });
   }

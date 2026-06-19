@@ -18,6 +18,8 @@ use Throwable;
 
 class GoogleOAuthController extends Controller
 {
+    private const AllowedHostedDomain = 'st.vimaru.edu.vn';
+
     public function redirect(): RedirectResponse
     {
         if (! $this->googleLoginIsConfigured()) {
@@ -31,6 +33,10 @@ class GoogleOAuthController extends Controller
 
         return $provider
             ->scopes(['openid', 'profile', 'email'])
+            ->with([
+                'hd' => self::AllowedHostedDomain,
+                'prompt' => 'select_account',
+            ])
             ->redirect();
     }
 
@@ -54,6 +60,12 @@ class GoogleOAuthController extends Controller
 
         if (! is_string($email) || $email === '') {
             flash(__('auth.google_missing_email'), type: 'error');
+
+            return to_route('login');
+        }
+
+        if (! $this->emailUsesAllowedHostedDomain($email)) {
+            flash(__('auth.google_invalid_domain', ['domain' => self::AllowedHostedDomain]), type: 'error');
 
             return to_route('login');
         }
@@ -91,5 +103,10 @@ class GoogleOAuthController extends Controller
         return filled(config('services.google.client_id'))
             && filled(config('services.google.client_secret'))
             && filled(config('services.google.redirect'));
+    }
+
+    private function emailUsesAllowedHostedDomain(string $email): bool
+    {
+        return str_ends_with(Str::lower($email), '@'.self::AllowedHostedDomain);
     }
 }

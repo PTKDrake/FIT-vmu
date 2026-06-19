@@ -1,7 +1,8 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import type { ReactNode } from "react";
 import type { CmsNavigationPageProps } from "@/components/cms/types";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import CmsLayout from "@/layouts/cms-layout";
 import { countNavigationItems } from "@/lib/navigation/tree";
 import { show } from "@/routes/cms/navigation";
@@ -14,6 +15,10 @@ const locationLabels: Record<string, string> = {
 export default function CmsNavigationIndexPage({
   navigationMenus,
 }: CmsNavigationPageProps) {
+  useCmsContentRealtime("navigation", () => {
+    router.reload({ only: ["navigationMenus"] });
+  });
+
   return (
     <>
       <Head title="Điều hướng" />

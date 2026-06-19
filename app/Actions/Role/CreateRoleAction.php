@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Role;
 
+use App\Events\CmsContentChanged;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,16 @@ class CreateRoleAction
         });
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        event(CmsContentChanged::forResource(
+            resource: 'roles',
+            recordId: $role->getKey(),
+            title: $role->name,
+            status: $role->guard_name,
+            action: 'created',
+            message: 'Đã tạo vai trò.',
+            updatedAt: $role->updated_at,
+        ));
 
         return $role;
     }

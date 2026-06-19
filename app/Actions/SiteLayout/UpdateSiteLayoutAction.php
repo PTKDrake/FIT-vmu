@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\SiteLayout;
 
+use App\Events\CmsContentChanged;
 use App\Models\SiteLayout;
 
 class UpdateSiteLayoutAction
@@ -39,6 +40,16 @@ class UpdateSiteLayoutAction
         }
 
         $siteLayout->update($payload);
+
+        event(CmsContentChanged::forResource(
+            resource: 'layouts',
+            recordId: $siteLayout->getKey(),
+            title: $siteLayout->name,
+            status: $siteLayout->key,
+            action: 'updated',
+            message: 'Đã cập nhật layout.',
+            updatedAt: $siteLayout->updated_at,
+        ));
 
         return $siteLayout->fresh(['pages', 'postCategories', 'posts']) ?? $siteLayout;
     }

@@ -29,6 +29,7 @@ interface RoleData {
 interface RoleActionDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  onSaved?: () => void;
   mode: "copy" | "rename" | "delete";
   role: RoleData;
 }
@@ -41,6 +42,7 @@ interface ActionFormValues {
 export function RoleActionDialog({
   isOpen,
   onOpenChange,
+  onSaved,
   mode,
   role,
 }: RoleActionDialogProps) {
@@ -59,6 +61,7 @@ export function RoleActionDialog({
             `Đã sao chép vai trò thành công thành "${form.data.name}".`,
           );
           onOpenChange(false);
+          onSaved?.();
         },
         onError: () => {
           toast.error("Có lỗi xảy ra khi sao chép vai trò.");
@@ -80,6 +83,7 @@ export function RoleActionDialog({
           onSuccess: () => {
             toast.success(`Đã đổi tên vai trò thành "${form.data.name}".`);
             onOpenChange(false);
+            onSaved?.();
           },
           onError: () => {
             toast.error("Có lỗi xảy ra khi đổi tên vai trò.");
@@ -102,6 +106,7 @@ export function RoleActionDialog({
           onSuccess: () => {
             toast.success(`Đã xóa vai trò "${role.name}" thành công.`);
             onOpenChange(false);
+            onSaved?.();
           },
           onError: () => {
             toast.error("Có lỗi xảy ra khi xóa vai trò.");

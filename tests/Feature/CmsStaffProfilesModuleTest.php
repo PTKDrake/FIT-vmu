@@ -283,7 +283,15 @@ test('user can update their own profile and upload a new avatar', function () {
     expect($media)->not->toBeNull();
     Storage::disk('public')->assertExists($media->path);
 
-    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatchedTimes(CmsContentChanged::class, 2);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'media'
+            && $event->action === 'created';
+    });
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'staff-profiles'
+            && $event->action === 'updated';
+    });
 });
 
 test('staff user cannot update other staff member profiles', function () {

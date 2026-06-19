@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Position;
 
+use App\Events\CmsContentChanged;
 use App\Models\Position;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,16 @@ class UpdatePositionAction
                 'sort_order' => $attributes['sort_order'],
                 'is_active' => $attributes['is_active'],
             ]);
+
+            event(CmsContentChanged::forResource(
+                resource: 'positions',
+                recordId: $position->getKey(),
+                title: $position->name,
+                status: $position->is_active ? 'active' : 'inactive',
+                action: 'updated',
+                message: 'Đã cập nhật chức vụ.',
+                updatedAt: $position->updated_at,
+            ));
 
             return $position->refresh();
         });

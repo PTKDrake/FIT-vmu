@@ -22,6 +22,7 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { useCmsContentRealtime } from "@/hooks/use-cms-content-realtime";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import CmsLayout from "@/layouts/cms-layout";
 import { clone, create, destroy, edit } from "@/routes/cms/layouts";
@@ -58,6 +59,10 @@ const VIETNAMESE_DATE_FORMATTER = new Intl.DateTimeFormat("vi-VN", {
   year: "numeric",
 });
 
+function reloadLayouts(): void {
+  router.reload({ only: ["defaultLayoutIds", "layouts"] });
+}
+
 export default function CmsLayoutsPage({
   flash,
   defaultLayoutIds,
@@ -65,6 +70,10 @@ export default function CmsLayoutsPage({
 }: CmsLayoutsPageProps) {
   const [editingLayout, setEditingLayout] = useState<CmsLayoutRow | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<CmsLayoutRow | null>(null);
+
+  useCmsContentRealtime("layouts", () => {
+    reloadLayouts();
+  });
 
   return (
     <>
@@ -88,6 +97,7 @@ export default function CmsLayoutsPage({
             setEditingLayout(null);
           }
         }}
+        onSaved={reloadLayouts}
       />
       {deleteTarget ? (
         <ModalContent
@@ -130,7 +140,10 @@ export default function CmsLayoutsPage({
               intent="danger"
               onPress={() =>
                 router.delete(destroy.url({ siteLayout: deleteTarget.id }), {
-                  onSuccess: () => setDeleteTarget(null),
+                  onSuccess: () => {
+                    setDeleteTarget(null);
+                    reloadLayouts();
+                  },
                   preserveScroll: true,
                 })
               }
@@ -237,6 +250,7 @@ export default function CmsLayoutsPage({
                                 clone.url({ siteLayout: layout.id }),
                                 {},
                                 {
+                                  onSuccess: reloadLayouts,
                                   preserveScroll: true,
                                 },
                               )
