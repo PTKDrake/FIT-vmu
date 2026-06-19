@@ -721,7 +721,7 @@ export default function CmsRolesPermissionsPage({
                                     <span className="text-xs text-muted-fg">
                                       {checkedCount}/{items.length}
                                     </span>
-                                    <div className="size-24 rounded-full bg-secondary">
+                                    <div className="w-24 rounded-full bg-secondary">
                                       <div
                                         className="h-2 rounded-full bg-primary transition-[width]"
                                         style={{
