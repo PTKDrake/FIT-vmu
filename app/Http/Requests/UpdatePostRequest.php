@@ -43,6 +43,11 @@ class UpdatePostRequest extends FormRequest
     {
         $post = $this->route('post');
         $postId = $post instanceof Post ? $post->getKey() : null;
+        $allowedStatuses = ['draft', 'pending'];
+
+        if ($this->user()?->can('publish posts')) {
+            $allowedStatuses[] = 'published';
+        }
 
         return [
             'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::visibilities())],
@@ -91,7 +96,7 @@ class UpdatePostRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                Rule::in(['draft', 'pending']),
+                Rule::in($allowedStatuses),
             ],
         ];
     }

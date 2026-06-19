@@ -30,7 +30,10 @@ final class UpdatePostController extends Controller
          */
         $validated = $request->validated();
 
-        $updateAction($post, $validated);
+        /** @var int $userId */
+        $userId = $request->user()?->getKey();
+
+        $updateAction($post, $validated, $userId);
 
         flash('Đã cập nhật bài viết.');
 

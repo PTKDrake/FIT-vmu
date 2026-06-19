@@ -44,5 +44,26 @@ test("Puck layout blocks share configurable surface fields without changing lega
             source,
             /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
         );
+        assert.doesNotMatch(source, /label: "Ẩn theo thiết bị"/);
     }
+});
+
+test("Puck shared block config injects one display visibility field for all blocks", async () => {
+    const sharedSource = await readFile("web/lib/puck/blocks/shared.tsx", "utf8");
+    const pageBuilderSource = await readFile(
+        "web/components/page-builder/puck-page-builder.tsx",
+        "utf8",
+    );
+    const layoutBuilderSource = await readFile(
+        "web/components/layout-builder/puck-layout-builder.tsx",
+        "utf8",
+    );
+
+    assert.match(sharedSource, /type: "displayVisibility"/);
+    assert.match(sharedSource, /label: "Hiển thị"/);
+    assert.match(sharedSource, /delete nextFields\[fieldName\]/);
+    assert.match(sharedSource, /nextDefaultProps\.displayOn = \[\.\.\.defaultDisplayDevices\]/);
+    assert.match(sharedSource, /getDisplayOnClass/);
+    assert.match(pageBuilderSource, /displayVisibility: PuckDisplayField/);
+    assert.match(layoutBuilderSource, /displayVisibility: PuckDisplayField/);
 });

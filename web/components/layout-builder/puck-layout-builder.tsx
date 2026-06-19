@@ -25,6 +25,7 @@ import type {
   VmuFitPageBuilderData,
   VmuFitPageBuilderValue,
 } from "@/lib/puck/page-builder-data";
+import { PuckDisplayField } from "./puck-display-field";
 import { PuckMediaField } from "./puck-media-field";
 import { PuckSelectField } from "./puck-select-field";
 
@@ -225,6 +226,7 @@ export function PuckLayoutBuilder({
           drawerItem: PuckDrawerItem as any,
           fieldTypes: {
             cmsMedia: PuckMediaField,
+            displayVisibility: PuckDisplayField,
             select: PuckSelectField,
           } as any,
           headerActions: () => (

@@ -52,6 +52,84 @@ test('public search returns matching pages posts and categories', function () {
         ]);
 });
 
+test('public search matches page and post title description and slug', function () {
+    $descriptionPage = Page::factory()->create([
+        'title' => 'Trang gioi thieu khoa',
+        'slug' => 'gioi-thieu-khoa',
+        'excerpt' => null,
+        'seo_description' => 'Thong tin ve chuong trinh dao tao logistics so',
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+
+    $slugPage = Page::factory()->create([
+        'title' => 'Trang noi dung khac',
+        'slug' => 'phong-thi-nghiem-ai',
+        'excerpt' => 'Khong trung keyword',
+        'seo_description' => null,
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+
+    $category = PostCategory::factory()->create([
+        'name' => 'Tin cong nghe',
+        'slug' => 'tin-cong-nghe',
+        'is_active' => true,
+    ]);
+
+    $descriptionPost = Post::factory()->create([
+        'title' => 'Thong bao sinh vien',
+        'slug' => 'thong-bao-sinh-vien',
+        'excerpt' => 'Noi dung ve hoc bong AI va du lieu',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+    $descriptionPost->categories()->sync([$category->id]);
+
+    $slugPost = Post::factory()->create([
+        'title' => 'Bai viet khac',
+        'slug' => 'lich-thuc-tap-doanh-nghiep',
+        'excerpt' => 'Khong trung keyword',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+    $slugPost->categories()->sync([$category->id]);
+
+    $this->getJson('/search?q=logistics')
+        ->assertOk()
+        ->assertJsonFragment([
+            'type' => 'page',
+            'title' => $descriptionPage->title,
+            'description' => $descriptionPage->seo_description,
+        ]);
+
+    $this->getJson('/search?q=phong-thi-nghiem')
+        ->assertOk()
+        ->assertJsonFragment([
+            'type' => 'page',
+            'title' => $slugPage->title,
+            'url' => "/{$slugPage->slug}",
+        ]);
+
+    $this->getJson('/search?q=hoc bong')
+        ->assertOk()
+        ->assertJsonFragment([
+            'type' => 'post',
+            'title' => $descriptionPost->title,
+            'description' => $descriptionPost->excerpt,
+        ]);
+
+    $this->getJson('/search?q=thuc-tap')
+        ->assertOk()
+        ->assertJsonFragment([
+            'type' => 'post',
+            'title' => $slugPost->title,
+            'url' => "/{$category->slug}/{$slugPost->slug}",
+        ]);
+});
+
 test('public search excludes unpublished inactive and inaccessible content', function () {
     $this->seed(RoleAndPermissionSeeder::class);
 

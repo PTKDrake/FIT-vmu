@@ -2,7 +2,6 @@ import {
   ArrowRightStartOnRectangleIcon,
   Cog6ToothIcon,
   HomeIcon,
-  MagnifyingGlassIcon,
   ShieldCheckIcon,
   UserCircleIcon,
   UserIcon,
@@ -11,7 +10,6 @@ import { Bars3Icon } from "@heroicons/react/24/solid";
 import { measureNaturalWidth, prepareWithSegments } from "@chenglou/pretext";
 import { router } from "@inertiajs/react";
 import {
-  useCallback,
   useMemo,
   useRef,
   useState,
@@ -25,6 +23,7 @@ import {
 } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { FitNavigationSearch } from "@/components/page-builder/fit-navigation-search";
 import {
   Disclosure,
   DisclosureGroup,
@@ -49,12 +48,6 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@/components/ui/menu";
-import {
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
-} from "@/components/ui/modal";
 import {
   NavbarGroup,
   NavbarItem,
@@ -182,9 +175,10 @@ export function FitNavigationBar({
           />
 
           <div className="ml-auto flex shrink-0 items-center gap-3">
-            <PublicSearchModal
+            <FitNavigationSearch
               fallbackHref={searchHref}
               label={searchLabel}
+              menuItems={menuItems}
               triggerSize="desktop"
             />
             <DesktopAuthAction
@@ -212,9 +206,10 @@ export function FitNavigationBar({
           />
 
           <div className="flex shrink-0 items-center gap-2">
-            <PublicSearchModal
+            <FitNavigationSearch
               fallbackHref={searchHref}
               label={searchLabel}
+              menuItems={menuItems}
               triggerSize="mobile"
             />
             <MobileNavigationDrawer
@@ -378,265 +373,6 @@ function DesktopNavigationEntry({
       ) : null}
     </NavbarMenu>
   );
-}
-
-function PublicSearchModal({
-  fallbackHref,
-  label,
-  triggerSize,
-}: {
-  fallbackHref: string;
-  label: string;
-  triggerSize: "desktop" | "mobile";
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<PublicSearchResult[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const timeoutRef = useRef<number | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const search = useCallback((nextQuery: string): void => {
-    const normalizedQuery = nextQuery.trim();
-
-    if (timeoutRef.current !== null) {
-      window.clearTimeout(timeoutRef.current);
-    }
-
-    abortControllerRef.current?.abort();
-
-    if (normalizedQuery.length < 2) {
-      setResults([]);
-      setIsSearching(false);
-      setHasSearched(false);
-
-      return;
-    }
-
-    setIsSearching(true);
-
-    timeoutRef.current = window.setTimeout(() => {
-      const abortController = new AbortController();
-      abortControllerRef.current = abortController;
-
-      fetch(searchUrl(normalizedQuery), {
-        headers: {
-          Accept: "application/json",
-        },
-        signal: abortController.signal,
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Search request failed.");
-          }
-
-          return response.json() as Promise<PublicSearchResponse>;
-        })
-        .then((payload) => {
-          setResults(payload.results);
-          setHasSearched(true);
-        })
-        .catch((error: unknown) => {
-          if (error instanceof DOMException && error.name === "AbortError") {
-            return;
-          }
-
-          setResults([]);
-          setHasSearched(true);
-        })
-        .finally(() => {
-          if (!abortController.signal.aborted) {
-            setIsSearching(false);
-          }
-        });
-    }, 180);
-  }, []);
-
-  useMountEffect(() => {
-    return () => {
-      if (timeoutRef.current !== null) {
-        window.clearTimeout(timeoutRef.current);
-      }
-
-      abortControllerRef.current?.abort();
-    };
-  });
-
-  function openSearch(): void {
-    setIsOpen(true);
-    window.setTimeout(() => inputRef.current?.focus(), 0);
-  }
-
-  function closeSearch(): void {
-    setIsOpen(false);
-  }
-
-  function updateQuery(nextQuery: string): void {
-    setQuery(nextQuery);
-    search(nextQuery);
-  }
-
-  function visitResult(url: string): void {
-    setIsOpen(false);
-    router.visit(url);
-  }
-
-  return (
-    <>
-      <IconButton label={label} onPress={openSearch} size={triggerSize}>
-        <MagnifyingGlassIcon />
-      </IconButton>
-
-      <ModalContent
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-        size="2xl"
-        aria-label={label}
-        className="overflow-hidden rounded-2xl border border-border bg-bg p-0 shadow-2xl ring-1 ring-border/60"
-        overlay={{ className: "bg-bg/35 backdrop-blur-sm" }}
-      >
-        <ModalHeader className="border-b border-border p-0">
-          <ModalTitle className="sr-only">{label}</ModalTitle>
-          <div className="flex min-h-14 items-center gap-3 px-4">
-            <MagnifyingGlassIcon className="size-5 shrink-0 text-muted-fg" />
-            <input
-              ref={inputRef}
-              aria-label={label}
-              className="h-14 min-w-0 flex-1 bg-transparent text-base text-fg outline-none placeholder:text-muted-fg"
-              onChange={(event) => updateQuery(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") {
-                  closeSearch();
-                }
-
-                if (event.key === "Enter" && results[0]) {
-                  visitResult(results[0].url);
-                }
-              }}
-              placeholder="Nhập từ khóa tìm kiếm..."
-              value={query}
-            />
-            {query ? (
-              <button
-                className="rounded-xl px-2 py-1 text-sm font-medium text-muted-fg transition hover:bg-muted hover:text-fg"
-                onClick={() => updateQuery("")}
-                type="button"
-              >
-                Xóa
-              </button>
-            ) : null}
-          </div>
-        </ModalHeader>
-
-        <ModalBody className="max-h-[min(60vh,32rem)] gap-1 overflow-y-auto px-2 py-2">
-          {query.trim().length < 2 ? (
-            <SearchEmptyState>
-              Nhập ít nhất 2 ký tự để tìm trang, bài viết hoặc danh mục.
-            </SearchEmptyState>
-          ) : null}
-
-          {query.trim().length >= 2 && isSearching ? (
-            <SearchEmptyState>Đang tìm kiếm...</SearchEmptyState>
-          ) : null}
-
-          {query.trim().length >= 2 && !isSearching && hasSearched && results.length === 0 ? (
-            <SearchEmptyState>Không tìm thấy kết quả phù hợp.</SearchEmptyState>
-          ) : null}
-
-          {!isSearching && results.length > 0 ? (
-            <div className="space-y-1">
-              {results.map((result) => (
-                <button
-                  className="flex w-full min-w-0 items-start gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
-                  key={`${result.type}:${result.url}`}
-                  onClick={() => visitResult(result.url)}
-                  type="button"
-                >
-                  <span className="mt-0.5 shrink-0 rounded-lg border border-border bg-muted px-2 py-1 text-xs font-semibold text-muted-fg">
-                    {searchTypeLabels[result.type] ?? "Kết quả"}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-fg">
-                      {result.title}
-                    </span>
-                    {result.description ? (
-                      <span className="mt-1 block line-clamp-2 text-sm text-muted-fg">
-                        {result.description}
-                      </span>
-                    ) : null}
-                  </span>
-                </button>
-              ))}
-            </div>
-          ) : null}
-
-          <a className="sr-only" href={fallbackHref}>
-            {label}
-          </a>
-        </ModalBody>
-      </ModalContent>
-    </>
-  );
-}
-
-function SearchEmptyState({ children }: { children: ReactNode }) {
-  return (
-    <div className="px-4 py-10 text-center text-sm text-muted-fg">
-      {children}
-    </div>
-  );
-}
-
-function IconButton({
-  children,
-  label,
-  onPress,
-  size = "desktop",
-}: {
-  children: ReactNode;
-  label: string;
-  onPress: () => void;
-  size?: "desktop" | "mobile";
-}) {
-  return (
-    <button
-      aria-label={label}
-      className={twMerge(
-        "inline-flex items-center justify-center rounded-2xl text-fg transition [--text:var(--color-fg)] hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring",
-        size === "mobile" ? "size-10" : "size-12",
-      )}
-      onClick={onPress}
-      type="button"
-    >
-      <span className={size === "mobile" ? "size-4" : "size-5"}>
-        {children}
-      </span>
-    </button>
-  );
-}
-
-interface PublicSearchResponse {
-  query: string;
-  results: PublicSearchResult[];
-}
-
-interface PublicSearchResult {
-  description: string | null;
-  title: string;
-  type: "category" | "page" | "post" | string;
-  url: string;
-}
-
-const searchTypeLabels: Record<string, string> = {
-  category: "Danh mục",
-  page: "Trang",
-  post: "Bài viết",
-};
-
-function searchUrl(query: string): string {
-  return `/search?${new URLSearchParams({ q: query }).toString()}`;
 }
 
 function DesktopAuthAction({

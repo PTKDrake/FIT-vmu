@@ -352,7 +352,12 @@ export function UnsavedChangesProvider({
       if (allSaved) {
         setIsModalOpen(false);
         continuePendingNavigation();
+
+        return;
       }
+
+      setIsModalOpen(false);
+      pendingNavigationRef.current = null;
     } catch (error) {
       console.error("Unsaved changes save error:", error);
     }

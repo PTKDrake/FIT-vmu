@@ -30,7 +30,7 @@ export function BlockNoteReadonly({
   return (
     <div
       className={twMerge(
-        "vmu-blocknote vmu-blocknote--readonly overflow-hidden rounded-xl border border-border bg-bg text-fg",
+        "vmu-blocknote vmu-blocknote--readonly overflow-hidden bg-bg text-fg",
         className,
       )}
     >

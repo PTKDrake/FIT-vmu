@@ -8,6 +8,7 @@ import { usePage } from "@inertiajs/react";
 import { Puck, createUsePuck, useGetPuck } from "@puckeditor/core";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { PuckDisplayField } from "@/components/layout-builder/puck-display-field";
 import { PuckMediaField } from "@/components/layout-builder/puck-media-field";
 import { PuckSelectField } from "@/components/layout-builder/puck-select-field";
 import { PuckDrawerItem } from "@/components/puck/puck-drawer-item";
@@ -258,6 +259,7 @@ export function PuckPageBuilder({
           drawerItem: PuckDrawerItem as any,
           fieldTypes: {
             cmsMedia: PuckMediaField,
+            displayVisibility: PuckDisplayField,
             select: PuckSelectField,
           } as any,
           headerActions: () => (

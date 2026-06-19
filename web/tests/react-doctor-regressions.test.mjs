@@ -34,6 +34,18 @@ test("media selector hoists pagination helpers and avoids index keys", () => {
     assert.doesNotMatch(mediaSelectorSource, /key=\{index\}/);
 });
 
+test("media selector supports uploading pasted clipboard images", () => {
+    assert.match(mediaSelectorSource, /function getImageFilesFromClipboard\(/);
+    assert.match(mediaSelectorSource, /item\.kind === "file"/);
+    assert.match(mediaSelectorSource, /ACCEPTED_IMAGE_MIME_TYPES\.includes/);
+    assert.match(mediaSelectorSource, /const handlePasteUpload = \(/);
+    assert.match(
+        mediaSelectorSource,
+        /activeTab === "upload" \? handlePasteUpload : undefined/,
+    );
+    assert.match(mediaSelectorSource, /dán ảnh từ clipboard/);
+});
+
 test("public content lists use stable keys derived from data", () => {
     assert.match(
         publicPostCategorySource,

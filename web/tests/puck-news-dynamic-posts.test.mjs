@@ -15,6 +15,7 @@ test("news custom puck block renders from dynamic posts", async () => {
         source,
         /<EmptyDynamicState label="Không có tin tức nào để hiển thị\." \/>/,
     );
+    assert.match(source, /if \(!isPuckEditorPreview\(\)\) \{\s*return null;\s*\}/);
     assert.doesNotMatch(source, /label: "Bài viết nổi bật chính"/);
     assert.doesNotMatch(source, /label: "Danh sách bài viết khác"/);
 });
@@ -32,6 +33,16 @@ test("news custom puck block supports category include and exclude fields", asyn
     assert.match(source, /label: "Loại trừ danh mục"/);
     assert.match(source, /buildCategoryFieldOptions\("Chọn danh mục"\)/);
     assert.match(sharedSource, /fetchSourceOptions\("categories"\)/);
+});
+
+test("empty dynamic puck states are hidden outside the editor preview", async () => {
+    const source = await readFile(
+        "web/lib/puck/blocks/dynamic/shared.tsx",
+        "utf8",
+    );
+
+    assert.match(source, /import \{ isPuckEditorPreview \} from "\.\.\/shared";/);
+    assert.match(source, /if \(!isPuckEditorPreview\(\)\) \{\s*return null;\s*\}/);
 });
 
 test("news custom component accepts post thumbnail urls", async () => {

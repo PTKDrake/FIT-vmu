@@ -38,12 +38,22 @@ export default function PostEditPage({
     "manage shared student groups",
   );
 
-  function handleSubmit(data: PostFormValues, form: any): void {
+  function handleSubmit(
+    data: PostFormValues,
+    form: any,
+    options?: {
+      onError?: () => void;
+      onFinish?: () => void;
+      onSuccess?: () => void;
+    },
+  ): void {
     if (!post.id) {
+      options?.onError?.();
+
       return;
     }
 
-    form.patch(postsRoutes.update.url({ post: post.id }));
+    form.patch(postsRoutes.update.url({ post: post.id }), options);
   }
 
   return (

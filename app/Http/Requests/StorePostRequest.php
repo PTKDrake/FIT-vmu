@@ -37,6 +37,12 @@ class StorePostRequest extends FormRequest
      */
     public function rules(): array
     {
+        $allowedStatuses = ['draft', 'pending'];
+
+        if ($this->user()?->can('publish posts')) {
+            $allowedStatuses[] = 'published';
+        }
+
         return [
             'visibility' => ['required', 'string', Rule::in(ContentVisibilityOptions::visibilities())],
             'title' => ['required', 'string', 'max:255'],
@@ -84,7 +90,7 @@ class StorePostRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                Rule::in(['draft', 'pending']),
+                Rule::in($allowedStatuses),
             ],
         ];
     }

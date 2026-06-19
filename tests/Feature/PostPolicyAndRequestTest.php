@@ -71,6 +71,8 @@ test('store post request validates the expected payload', function () {
     $existingPost = Post::factory()->create(['slug' => 'existing-post']);
     $editor = User::factory()->create();
     $editor->assignRole('editor');
+    $staff = User::factory()->create();
+    $staff->assignRole('staff');
 
     $validData = [
         'title' => 'VMUFit launch update',
@@ -86,6 +88,13 @@ test('store post request validates the expected payload', function () {
     expect(validateRequest(makeStorePostRequest($validData, $editor), $validData)->passes())->toBeTrue()
         ->and(validateRequest(makeStorePostRequest([
             ...$validData,
+            'status' => 'published',
+        ], $editor), [
+            ...$validData,
+            'status' => 'published',
+        ])->passes())->toBeTrue()
+        ->and(validateRequest(makeStorePostRequest([
+            ...$validData,
             'slug' => 'existing-post',
         ], $editor), [
             ...$validData,
@@ -94,7 +103,7 @@ test('store post request validates the expected payload', function () {
         ->and(validateRequest(makeStorePostRequest([
             ...$validData,
             'status' => 'published',
-        ], $editor), [
+        ], $staff), [
             ...$validData,
             'status' => 'published',
         ])->errors()->keys())->toContain('status')
@@ -117,6 +126,8 @@ test('store post request validates the expected payload', function () {
 test('update post request allows the current post slug and publish request enforces review payload', function () {
     $editor = User::factory()->create();
     $editor->assignRole('editor');
+    $staff = User::factory()->create();
+    $staff->assignRole('staff');
 
     $post = Post::factory()->create([
         'slug' => 'keep-this-slug',
@@ -145,6 +156,13 @@ test('update post request allows the current post slug and publish request enfor
             ...$updateData,
             'status' => 'published',
         ], $editor, $post), [
+            ...$updateData,
+            'status' => 'published',
+        ])->passes())->toBeTrue()
+        ->and(validateRequest(makeUpdatePostRequest([
+            ...$updateData,
+            'status' => 'published',
+        ], $staff, $post), [
             ...$updateData,
             'status' => 'published',
         ])->errors()->keys())->toContain('status')

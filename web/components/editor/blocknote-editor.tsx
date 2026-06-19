@@ -44,6 +44,18 @@ export interface BlockNoteEditorProps {
   ) => Promise<string | Record<string, unknown>>;
 }
 
+const blockNoteAiDictionary = {
+  ...blockNoteAiViDictionary,
+  ai_menu: {
+    ...blockNoteAiViDictionary.ai_menu,
+    status: {
+      ...blockNoteAiViDictionary.ai_menu.status,
+      thinking: "Đang phân tích yêu cầu…",
+      editing: "Đang áp dụng chỉnh sửa…",
+    },
+  },
+};
+
 export function BlockNoteEditor({
   className,
   content,
@@ -64,7 +76,7 @@ export function BlockNoteEditor({
       defaultStyles: true,
       dictionary: {
         ...blockNoteViDictionary,
-        ai: blockNoteAiViDictionary,
+        ai: blockNoteAiDictionary,
       },
       extensions: blockNoteAiEnabled ? [createBlockNoteAiExtension()] : [],
       initialContent,

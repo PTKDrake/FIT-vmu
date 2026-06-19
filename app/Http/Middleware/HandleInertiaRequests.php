@@ -44,8 +44,7 @@ class HandleInertiaRequests extends Middleware
                 ],
             ],
             'features' => [
-                'blocknoteAiEnabled' => filled(config('services.openrouter.api_key'))
-                    && filled(config('services.openrouter.blocknote_model')),
+                'blocknoteAiEnabled' => $this->blockNoteAiEnabled(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => fn () => [
@@ -54,5 +53,22 @@ class HandleInertiaRequests extends Middleware
                 'data' => $request->session()->get('data'),
             ],
         ];
+    }
+
+    private function blockNoteAiEnabled(): bool
+    {
+        $provider = config('services.blocknote_ai.provider', 'openrouter');
+
+        if (! is_string($provider) || $provider === '') {
+            return false;
+        }
+
+        return match ($provider) {
+            'nim' => filled(config('services.blocknote_ai.nim.api_key'))
+                && filled(config('services.blocknote_ai.nim.model')),
+            'openrouter' => filled(config('services.blocknote_ai.openrouter.api_key'))
+                && filled(config('services.blocknote_ai.openrouter.model')),
+            default => false,
+        };
     }
 }

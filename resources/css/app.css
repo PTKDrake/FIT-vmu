@@ -374,6 +374,7 @@
         --bn-colors-side-menu: var(--muted-fg);
         --bn-font-family: var(--font-sans);
         --bn-border-radius: var(--radius-lg);
+        --bn-ui-base-z-index: 1000;
     }
 
     .vmu-blocknote .bn-root {
@@ -421,6 +422,18 @@
     .vmu-blocknote .bn-popover,
     .bn-container .bn-menu,
     .bn-container .bn-popover {
+        background-color: var(--overlay);
+        color: var(--fg);
+    }
+
+    .vmu-blocknote-ai-popover {
+        z-index: 1100 !important;
+    }
+
+    .vmu-blocknote-ai-popover .bn-combobox,
+    .vmu-blocknote-ai-popover .bn-suggestion-menu {
+        position: relative;
+        z-index: 1;
         background-color: var(--overlay);
         color: var(--fg);
     }

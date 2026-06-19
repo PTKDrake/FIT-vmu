@@ -5,7 +5,7 @@ import {
   parseOptionalId,
   usePuckDynamicData,
 } from "./dynamic/shared";
-import { getPuckBlockDomId } from "./shared";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 interface CategorySelection {
@@ -52,6 +52,10 @@ function AnnouncementsCustomBlock(
     .slice(0, Math.max(1, limit));
 
   if (posts.length === 0) {
+    if (!isPuckEditorPreview()) {
+      return null;
+    }
+
     return (
       <div id={id} className="w-full">
         <EmptyDynamicState label="Không có thông báo nào để hiển thị." />

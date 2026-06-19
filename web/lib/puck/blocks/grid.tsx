@@ -1,6 +1,5 @@
 import { twMerge } from "tailwind-merge";
 import {
-  getHideOnClass,
   getGapAxisClass,
   getAlignItemsClass,
   getJustifyItemsClass,
@@ -21,7 +20,6 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
     alignItems: "stretch",
     justifyItems: "stretch",
     insetY: "none",
-    hideOn: "none",
     className: "",
   },
   fields: {
@@ -110,16 +108,6 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
         { label: "Lớn", value: "lg" },
       ],
     },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
     className: {
       type: "text",
       label: "CSS class bổ sung",
@@ -142,7 +130,6 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       justifyItems,
       insetY,
       anchorId,
-      hideOn,
       className,
       children: Children,
     } = props;
@@ -209,7 +196,6 @@ export const GridComponentConfig: PageBuilderComponentConfig<"Grid"> = {
       getAlignItemsClass(alignItems),
       getJustifyItemsClass(justifyItems),
       getSurfaceClassName(props, "", { includeDefaults: false }),
-      getHideOnClass(hideOn),
       className,
     );
 

@@ -51,18 +51,19 @@ class SearchPublicContentAction
                 $query
                     ->where('title', 'like', "%{$searchTerm}%")
                     ->orWhere('slug', 'like', "%{$searchTerm}%")
-                    ->orWhere('excerpt', 'like', "%{$searchTerm}%");
+                    ->orWhere('excerpt', 'like', "%{$searchTerm}%")
+                    ->orWhere('seo_description', 'like', "%{$searchTerm}%");
             })
             ->latest('published_at')
             ->limit(self::ResultLimit * 5)
-            ->get(['id', 'title', 'slug', 'excerpt', 'visibility'])
+            ->get(['id', 'title', 'slug', 'excerpt', 'seo_description', 'visibility'])
             ->filter(fn (Page $page): bool => $page->isVisibleTo($viewer))
             ->take(self::ResultLimit)
             ->map(fn (Page $page): array => [
                 'type' => 'page',
                 'title' => $page->title,
                 'url' => "/{$page->slug}",
-                'description' => $this->excerpt($page->excerpt),
+                'description' => $this->excerpt($page->excerpt) ?? $this->excerpt($page->seo_description),
             ])
             ->all());
     }

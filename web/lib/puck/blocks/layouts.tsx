@@ -7,21 +7,6 @@ import type { PageBuilderComponentConfig } from "./types";
 
 // --- HELPER CLASSES & FUNCTIONS ---
 
-export function getHideOnClass(
-  hideOn?: "none" | "mobile" | "tablet" | "desktop",
-) {
-  switch (hideOn) {
-    case "mobile":
-      return "hidden sm:block";
-    case "tablet":
-      return "sm:hidden lg:block";
-    case "desktop":
-      return "lg:hidden";
-    default:
-      return "";
-  }
-}
-
 export function getGapClass(gap?: "sm" | "md" | "lg" | "xl" | number) {
   if (typeof gap === "number") {
     if (gap <= 16) {
@@ -218,7 +203,6 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
     overlay: "none",
     contentAlign: "top",
     borderRadius: "none",
-    hideOn: "none",
     className: "",
   },
   fields: {
@@ -329,16 +313,6 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
         { label: "Rất lớn", value: "3xl" },
       ],
     },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
     className: {
       type: "text",
       label: "CSS class bổ sung",
@@ -363,7 +337,6 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
       contentAlign,
       borderRadius,
       anchorId,
-      hideOn,
       className,
       children: Children,
     } = props;
@@ -400,7 +373,6 @@ export const SectionComponentConfig: PageBuilderComponentConfig<"Section"> = {
           getSurfaceClassName(props, "", { includeDefaults: false }),
           minHeight && minHeight !== "auto" ? "flex flex-col" : "",
           alignClass,
-          getHideOnClass(hideOn),
           className,
         )}
         style={
@@ -448,7 +420,6 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       childGap: "md",
       stickyOnDesktop: false,
       stickyTop: "md",
-      hideOn: "none",
       className: "",
     },
     fields: {
@@ -535,16 +506,6 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
           { label: "Rất lớn", value: "xl" },
         ],
       },
-      hideOn: {
-        type: "select",
-        label: "Ẩn theo thiết bị",
-        options: [
-          { label: "Không ẩn", value: "none" },
-          { label: "Di động", value: "mobile" },
-          { label: "Máy tính bảng", value: "tablet" },
-          { label: "Máy tính", value: "desktop" },
-        ],
-      },
       className: {
         type: "text",
         label: "CSS class bổ sung",
@@ -566,7 +527,6 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
         childGap,
         stickyOnDesktop,
         stickyTop,
-        hideOn,
         className,
         children: Children,
       } = props;
@@ -598,7 +558,10 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
         ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
         : "";
       const stickyClassName = stickyOnDesktop
-        ? twMerge("lg:sticky", getStickyTopClass(stickyTop))
+        ? twMerge(
+            "lg:sticky lg:self-start lg:h-fit",
+            getStickyTopClass(stickyTop),
+          )
         : "";
       const childrenClassName = twMerge(
         "w-full",
@@ -618,7 +581,6 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
             getPaddingXClass(resolvedHorizontalPadding),
             getInsetYClass(insetY),
             getSurfaceClassName(props, "", { includeDefaults: false }),
-            getHideOnClass(hideOn),
             className,
           )}
         >
@@ -638,7 +600,6 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
       stackOnMobile: true,
       reverseOnMobile: false,
       verticalAlign: "center",
-      hideOn: "none",
       className: "",
     },
     fields: {
@@ -692,16 +653,6 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
           { label: "Kéo giãn", value: "stretch" },
         ],
       },
-      hideOn: {
-        type: "select",
-        label: "Ẩn theo thiết bị",
-        options: [
-          { label: "Không ẩn", value: "none" },
-          { label: "Di động", value: "mobile" },
-          { label: "Máy tính bảng", value: "tablet" },
-          { label: "Máy tính", value: "desktop" },
-        ],
-      },
       className: {
         type: "text",
         label: "CSS class bổ sung",
@@ -723,7 +674,6 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
         reverseOnMobile,
         verticalAlign,
         anchorId,
-        hideOn,
         className,
         left: Left,
         right: Right,
@@ -767,7 +717,6 @@ export const TwoColumnsComponentConfig: PageBuilderComponentConfig<"TwoColumns">
               stretch: "items-stretch",
             }[verticalAlign]
           : "items-center",
-        getHideOnClass(hideOn),
         className,
       );
 
@@ -806,7 +755,6 @@ export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
   defaultProps: {
     height: "md",
     mobileHeight: "sm",
-    hideOn: "none",
     className: "",
   },
   fields: {
@@ -836,23 +784,13 @@ export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
         { label: "Cực lớn", value: "xl" },
       ],
     },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
     className: {
       type: "text",
       label: "CSS class bổ sung",
     },
   },
   render: (props) => {
-    const { anchorId, height, mobileHeight, hideOn, className } = props;
+    const { anchorId, height, mobileHeight, className } = props;
     const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
     const desktopHeightClass = {
@@ -879,7 +817,6 @@ export const SpacerComponentConfig: PageBuilderComponentConfig<"Spacer"> = {
           "w-full clear-both",
           mobileHeightClass,
           desktopHeightClass,
-          getHideOnClass(hideOn),
           className,
         )}
       />
@@ -896,7 +833,6 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
     spacingY: "md",
     width: "full",
     align: "center",
-    hideOn: "none",
     className: "",
   },
   fields: {
@@ -953,24 +889,13 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
         { label: "Phải", value: "right" },
       ],
     },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
     className: {
       type: "text",
       label: "CSS class bổ sung",
     },
   },
   render: (props) => {
-    const { type, color, spacingY, width, align, anchorId, hideOn, className } =
-      props;
+    const { type, color, spacingY, width, align, anchorId, className } = props;
     const id = getPuckBlockDomId((props as { id?: string }).id, anchorId);
 
     const activeColor =
@@ -1010,7 +935,6 @@ export const DividerComponentConfig: PageBuilderComponentConfig<"Divider"> = {
         className={twMerge(
           "w-full",
           spacingYClass,
-          getHideOnClass(hideOn),
           className,
         )}
       >

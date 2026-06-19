@@ -75,11 +75,21 @@ interface PostFormProps {
   layoutOptions: CmsLayoutOption[];
   defaultPostLayoutId: number | null;
   allowGlobalGroupCreation: boolean;
-  onSubmit: (data: PostFormValues, formHelper: any) => void;
+  onSubmit: (
+    data: PostFormValues,
+    formHelper: any,
+    options?: PostFormSubmitOptions,
+  ) => void;
   submitLabel: string;
   cancelHref: string;
   canPublish?: boolean;
 }
+
+type PostFormSubmitOptions = {
+  onError?: () => void;
+  onFinish?: () => void;
+  onSuccess?: () => void;
+};
 
 export function PostForm({
   initialValues,
@@ -99,6 +109,7 @@ export function PostForm({
   const [rejectionReason, setRejectionReason] = useState("");
   const [rejectionError, setRejectionError] = useState("");
   const allowNextSubmitRef = useRef(false);
+  const pendingSubmitOptionsRef = useRef<PostFormSubmitOptions | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleApprove = () => {
@@ -162,7 +173,62 @@ export function PostForm({
     site_layout_id: initialValues.site_layout_id ?? null,
   });
 
-  function triggerSubmitWithStatus(status: "draft" | "pending"): void {
+  const isPendingEdit = Boolean(
+    initialValues.id && initialValues.status === "pending",
+  );
+  const primarySubmitStatus: "pending" | "published" = isPendingEdit
+    ? "pending"
+    : canPublish
+      ? "published"
+      : "pending";
+  const primarySubmitLabel = isPendingEdit
+    ? "Lưu"
+    : canPublish
+      ? "Đăng"
+      : "Gửi duyệt";
+
+  function completePendingSubmit(success: boolean): void {
+    const submitOptions = pendingSubmitOptionsRef.current;
+
+    if (!submitOptions) {
+      return;
+    }
+
+    if (success) {
+      submitOptions.onSuccess?.();
+    } else {
+      submitOptions.onError?.();
+    }
+
+    submitOptions.onFinish?.();
+  }
+
+  function triggerSubmitWithStatus(
+    status: "draft" | "pending" | "published",
+    options?: PostFormSubmitOptions,
+  ): Promise<boolean> | void {
+    if (options) {
+      return new Promise<boolean>((resolve) => {
+        pendingSubmitOptionsRef.current = {
+          ...options,
+          onError: () => {
+            options.onError?.();
+            resolve(false);
+          },
+          onFinish: () => {
+            pendingSubmitOptionsRef.current = null;
+            options.onFinish?.();
+          },
+          onSuccess: () => {
+            options.onSuccess?.();
+            resolve(true);
+          },
+        };
+
+        void triggerSubmitWithStatus(status);
+      });
+    }
+
     form.setData("status", status);
     setTimeout(() => {
       allowNextSubmitRef.current = true;
@@ -181,8 +247,9 @@ export function PostForm({
     {
       isDirty: form.isDirty,
       onSave: () => {
-        const targetStatus = form.data.status === "draft" ? "draft" : "pending";
-        triggerSubmitWithStatus(targetStatus);
+        const targetStatus =
+          form.data.status === "draft" ? "draft" : primarySubmitStatus;
+        return triggerSubmitWithStatus(targetStatus, {});
       },
     },
     "post-form",
@@ -208,7 +275,19 @@ export function PostForm({
     }
 
     allowNextSubmitRef.current = false;
-    onSubmit(form.data, form);
+    const submitOptions = pendingSubmitOptionsRef.current ?? undefined;
+
+    onSubmit(form.data, form, submitOptions);
+  }
+
+  function handleInvalid(event: FormEvent<HTMLFormElement>): void {
+    if (!pendingSubmitOptionsRef.current) {
+      return;
+    }
+
+    event.preventDefault();
+    allowNextSubmitRef.current = false;
+    completePendingSubmit(false);
   }
 
   const multipleSelectOptions = categories.map((category) => ({
@@ -220,6 +299,7 @@ export function PostForm({
   return (
     <form
       onSubmit={handleSubmit}
+      onInvalid={handleInvalid}
       className="border border/60 rounded-2xl p-4 bg-overlay relative min-h-[85vh] flex flex-col justify-between w-full"
     >
       {/* Hidden native submit button to route form submit action */}
@@ -501,6 +581,7 @@ export function PostForm({
               intent="secondary"
               isDisabled={form.processing || isPublishing}
               onPress={() => triggerSubmitWithStatus("draft")}
+              className={isPendingEdit ? "hidden" : undefined}
             >
               Lưu nháp
             </Button>
@@ -509,14 +590,15 @@ export function PostForm({
               type="button"
               intent="primary"
               isDisabled={form.processing || isPublishing}
-              onPress={() => triggerSubmitWithStatus("pending")}
+              onPress={() => triggerSubmitWithStatus(primarySubmitStatus)}
             >
-              {initialValues.id ? "Lưu thay đổi" : "Yêu cầu duyệt"}
+              {primarySubmitLabel}
             </Button>
 
             {initialValues.id &&
             initialValues.status === "pending" &&
-            canPublish ? (
+            canPublish &&
+            !isPendingEdit ? (
               <>
                 <div className="h-6 w-px bg-border mx-1" />
                 <Button

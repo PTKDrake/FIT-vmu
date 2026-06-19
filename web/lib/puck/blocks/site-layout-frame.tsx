@@ -164,7 +164,7 @@ export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLay
               "flex min-h-full h-full flex-1 flex-col",
             )}
           >
-            <div className="min-h-dvh overflow-hidden rounded-[inherit] border border-border/50 bg-bg text-fg">
+            <div className="min-h-dvh overflow-visible rounded-[inherit] border border-border/50 bg-bg text-fg">
               <SiteLayoutShellFrame
                 footer={
                   <Footer className={slotClassName} minEmptyHeight={120} />

@@ -5,7 +5,7 @@ import {
   parseOptionalId,
   usePuckDynamicData,
 } from "./dynamic/shared";
-import { getPuckBlockDomId } from "./shared";
+import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
 interface NewsCategorySelection {
@@ -56,6 +56,10 @@ function NewsCustomBlock(props: NewsCustomBlockProps & { id?: string }) {
   const [featuredPost, ...secondaryPosts] = posts;
 
   if (!featuredPost) {
+    if (!isPuckEditorPreview()) {
+      return null;
+    }
+
     return (
       <div id={id} className="w-full">
         <EmptyDynamicState label="Không có tin tức nào để hiển thị." />

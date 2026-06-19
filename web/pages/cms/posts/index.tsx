@@ -468,13 +468,11 @@ export default function CmsPostsPage({
             </ModalDescription>
           </ModalHeader>
           <ModalBody>
-            <div className="rounded-2xl border border-danger-subtle bg-danger-subtle/40 px-4 py-3">
               <Text className="text-danger">
                 {t(
-                  "Sau khi xóa, mọi liên kết đến bài viết này từ navigation menu hoặc trang công khai sẽ bị hỏng.",
+                  "Sau khi xóa, mọi liên kết đến bài viết này từ sẽ bị hỏng.",
                 )}
               </Text>
-            </div>
           </ModalBody>
           <ModalFooter>
             <Button intent="outline" onPress={() => setDeleteTarget(null)}>

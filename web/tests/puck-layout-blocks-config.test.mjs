@@ -91,6 +91,10 @@ const siteLayoutOutlinePluginSource = readFileSync(
     ),
     "utf8",
 );
+const pageBuilderSource = readFileSync(
+    new URL("../components/page-builder/puck-page-builder.tsx", import.meta.url),
+    "utf8",
+);
 
 test("layout blocks expose clearer Vietnamese labels for editor fields", () => {
     assert.match(layoutsSource, /label: "Giới hạn chiều rộng \(Container\)"/);
@@ -129,6 +133,9 @@ test("layout blocks include common design fields for spacing and presentation", 
     assert.match(flexSource, /gapY: \{/);
     assert.match(flexSource, /insetY: \{/);
     assert.match(flexSource, /puckSurfaceFields/);
+    assert.doesNotMatch(layoutsSource, /label: "Ẩn theo thiết bị"/);
+    assert.doesNotMatch(gridSource, /label: "Ẩn theo thiết bị"/);
+    assert.doesNotMatch(flexSource, /label: "Ẩn theo thiết bị"/);
     assert.match(
         layoutsSource,
         /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
@@ -141,6 +148,10 @@ test("layout blocks include common design fields for spacing and presentation", 
         flexSource,
         /getSurfaceClassName\(props, "", \{ includeDefaults: false \}\)/,
     );
+    assert.match(sharedSource, /displayOn = \[\.\.\.defaultDisplayDevices\]/);
+    assert.match(sharedSource, /getDisplayOnClass/);
+    assert.match(pageBuilderSource, /displayVisibility: PuckDisplayField/);
+    assert.match(layoutBuilderSource, /displayVisibility: PuckDisplayField/);
 });
 
 test("puck layout primitives use responsive classes without making grid a container root", () => {

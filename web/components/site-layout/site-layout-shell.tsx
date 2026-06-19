@@ -128,7 +128,7 @@ function getSiteLayoutBodyClassName(
     return "mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-8";
   }
 
-  return "mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1";
+  return "mx-auto grid w-full min-w-0 grid-cols-1";
 }
 
 function hasSlotContent(value: VmuFitPageBuilderValue): boolean {

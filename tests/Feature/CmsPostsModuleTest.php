@@ -137,6 +137,49 @@ test('cms post can be created by managers', function () {
     });
 });
 
+test('cms post can be created as published by authorized publishers', function () {
+    Event::fake([CmsContentChanged::class]);
+
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $category = PostCategory::factory()->create();
+
+    $payload = [
+        'title' => 'Bài viết xuất bản ngay',
+        'slug' => 'bai-viet-xuat-ban-ngay',
+        'category_ids' => [$category->id],
+        'excerpt' => 'Excerpt of published post',
+        'content' => '{"blocks":[]}',
+        'content_format' => 'blocknote_json',
+        'visibility' => 'public',
+        'status' => 'published',
+    ];
+
+    $this->actingAs($editor)
+        ->post('/cms/posts', $payload)
+        ->assertRedirect('/cms/posts');
+
+    $post = Post::query()->where('slug', 'bai-viet-xuat-ban-ngay')->firstOrFail();
+
+    $this->assertDatabaseHas('posts', [
+        'id' => $post->id,
+        'status' => 'published',
+        'author_id' => $editor->id,
+        'reviewed_by_id' => $editor->id,
+        'rejection_reason' => null,
+    ]);
+    expect($post->published_at)->not->toBeNull()
+        ->and($post->reviewed_at)->not->toBeNull();
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'created'
+            && $event->title === 'Bài viết xuất bản ngay';
+    });
+});
+
 test('cms post can be updated by managers', function () {
     Event::fake([CmsContentChanged::class]);
 
@@ -178,6 +221,58 @@ test('cms post can be updated by managers', function () {
         return $event->resource === 'posts'
             && $event->action === 'updated'
             && $event->title === 'Tiêu đề cập nhật';
+    });
+});
+
+test('cms draft post can be updated to published by authorized publishers', function () {
+    Event::fake([CmsContentChanged::class]);
+
+    $editor = User::factory()->create();
+    $editor->assignRole('editor');
+
+    $post = Post::factory()->create([
+        'author_id' => $editor->id,
+        'status' => 'draft',
+        'published_at' => null,
+        'reviewed_by_id' => null,
+        'reviewed_at' => null,
+        'rejection_reason' => 'Cũ',
+    ]);
+    $category = PostCategory::factory()->create();
+
+    $payload = [
+        'title' => 'Tiêu đề đăng ngay',
+        'slug' => 'tieu-de-dang-ngay',
+        'category_ids' => [$category->id],
+        'excerpt' => 'Excerpt updated',
+        'content' => '{"blocks":[{"type":"paragraph"}]}',
+        'content_format' => 'blocknote_json',
+        'visibility' => 'public',
+        'status' => 'published',
+    ];
+
+    $this->actingAs($editor)
+        ->patch("/cms/posts/{$post->id}", $payload)
+        ->assertRedirect('/cms/posts');
+
+    $post = $post->fresh();
+
+    $this->assertDatabaseHas('posts', [
+        'id' => $post->id,
+        'title' => 'Tiêu đề đăng ngay',
+        'slug' => 'tieu-de-dang-ngay',
+        'status' => 'published',
+        'reviewed_by_id' => $editor->id,
+        'rejection_reason' => null,
+    ]);
+    expect($post->published_at)->not->toBeNull()
+        ->and($post->reviewed_at)->not->toBeNull();
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 1);
+    Event::assertDispatched(CmsContentChanged::class, function (CmsContentChanged $event): bool {
+        return $event->resource === 'posts'
+            && $event->action === 'updated'
+            && $event->title === 'Tiêu đề đăng ngay';
     });
 });
 

@@ -33,6 +33,8 @@ class CreatePostAction
     public function __invoke(array $attributes, int $authorId): Post
     {
         return DB::transaction(function () use ($attributes, $authorId): Post {
+            $isPublished = $attributes['status'] === 'published';
+
             $post = Post::query()->create([
                 'title' => $attributes['title'],
                 'slug' => $attributes['slug'],
@@ -44,7 +46,10 @@ class CreatePostAction
                 'site_layout_id' => $attributes['site_layout_id'] ?? null,
                 'author_id' => $authorId,
                 'status' => $attributes['status'],
-                'published_at' => $attributes['status'] === 'published' ? now() : null,
+                'published_at' => $isPublished ? now() : null,
+                'reviewed_by_id' => $isPublished ? $authorId : null,
+                'reviewed_at' => $isPublished ? now() : null,
+                'rejection_reason' => null,
             ]);
 
             $post->categories()->sync($attributes['category_ids'] ?? []);

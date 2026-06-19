@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import layoutBuilderRoutes from "@/routes/cms/layout-builder";
 import type { SharedData } from "@/types/shared";
+import { isPuckEditorPreview } from "../shared";
 
 export interface PuckDynamicPost {
   author: string | null;
@@ -204,6 +205,10 @@ export function getResponsiveMaxWidthClass(
 }
 
 export function EmptyDynamicState({ label }: { label: string }) {
+  if (!isPuckEditorPreview()) {
+    return null;
+  }
+
   return (
     <div className="rounded-2xl border border-dashed border-border/80 p-8 text-center text-sm text-muted-fg">
       {label}

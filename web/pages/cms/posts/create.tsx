@@ -50,8 +50,16 @@ export default function PostCreatePage({
     "manage shared student groups",
   );
 
-  function handleSubmit(data: PostFormValues, form: any): void {
-    form.post(postsRoutes.store.url());
+  function handleSubmit(
+    data: PostFormValues,
+    form: any,
+    options?: {
+      onError?: () => void;
+      onFinish?: () => void;
+      onSuccess?: () => void;
+    },
+  ): void {
+    form.post(postsRoutes.store.url(), options);
   }
 
   return (

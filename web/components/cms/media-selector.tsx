@@ -6,7 +6,7 @@ import {
   TrashIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, type ClipboardEvent } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -72,6 +72,13 @@ const MEDIA_LIBRARY_SKELETON_KEYS = Array.from(
   { length: 8 },
   (_, index) => `media-library-skeleton-${index + 1}`,
 );
+
+const ACCEPTED_IMAGE_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+] as const;
 
 function normalizeMediaItem(item: any): CmsMediaItem {
   return {
@@ -165,6 +172,19 @@ function buildPaginationPages(
   }
 
   return pages;
+}
+
+function getImageFilesFromClipboard(clipboardData: DataTransfer): File[] {
+  return Array.from(clipboardData.items)
+    .filter((item) => item.kind === "file")
+    .map((item) => item.getAsFile())
+    .filter(
+      (file): file is File =>
+        file !== null &&
+        ACCEPTED_IMAGE_MIME_TYPES.includes(
+          file.type as (typeof ACCEPTED_IMAGE_MIME_TYPES)[number],
+        ),
+    );
 }
 
 export function MediaSelector({
@@ -308,7 +328,7 @@ export function MediaLibrarySelector({
   }
 
   async function handleUpload(files: File[]): Promise<void> {
-    if (files.length === 0) {
+    if (files.length === 0 || uploading) {
       return;
     }
 
@@ -331,10 +351,10 @@ export function MediaLibrarySelector({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      "image/jpeg": [".jpg", ".jpeg"],
-      "image/png": [".png"],
-      "image/webp": [".webp"],
-      "image/gif": [".gif"],
+      [ACCEPTED_IMAGE_MIME_TYPES[0]]: [".jpg", ".jpeg"],
+      [ACCEPTED_IMAGE_MIME_TYPES[1]]: [".png"],
+      [ACCEPTED_IMAGE_MIME_TYPES[2]]: [".webp"],
+      [ACCEPTED_IMAGE_MIME_TYPES[3]]: [".gif"],
     },
     maxFiles: 1,
     onDrop: handleUpload,
@@ -363,6 +383,21 @@ export function MediaLibrarySelector({
     setActiveTab("library");
     void loadLibrary(searchQuery, 1);
     setIsModalOpen(true);
+  };
+
+  const handlePasteUpload = (event: ClipboardEvent): void => {
+    if (event.defaultPrevented) {
+      return;
+    }
+
+    const imageFiles = getImageFilesFromClipboard(event.clipboardData);
+
+    if (imageFiles.length === 0) {
+      return;
+    }
+
+    event.preventDefault();
+    void handleUpload(imageFiles);
   };
 
   const currentPreview =
@@ -458,7 +493,10 @@ export function MediaLibrarySelector({
             <ModalHeader>
               <ModalTitle>{modalTitle}</ModalTitle>
             </ModalHeader>
-            <ModalBody className="space-y-6">
+            <ModalBody
+              className="space-y-6"
+              onPaste={activeTab === "upload" ? handlePasteUpload : undefined}
+            >
               {/* Tab Navigation */}
               <div className="flex border-b border-border/60">
                 <button
@@ -695,8 +733,8 @@ export function MediaLibrarySelector({
                             : "Tải ảnh từ máy tính của bạn"}
                         </p>
                         <p className="text-xs text-muted-fg">
-                          Kéo thả ảnh vào đây, hoặc click để duyệt tìm tệp tin
-                          (JPG, PNG, WEBP, GIF dưới 20MB)
+                          Kéo thả, dán ảnh từ clipboard, hoặc click để duyệt tìm
+                          tệp tin (JPG, PNG, WEBP, GIF dưới 20MB)
                         </p>
                       </div>
                     </div>

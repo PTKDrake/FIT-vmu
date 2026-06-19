@@ -20,3 +20,16 @@ test("announcements custom component matches styling and structure", async () =>
     assert.match(source, /size-5/);
     assert.match(source, /hover:shadow-xs/);
 });
+
+test("announcements custom puck block hides empty public output", async () => {
+    const source = await readFile(
+        new URL("../lib/puck/blocks/announcements-custom.tsx", import.meta.url),
+        "utf8",
+    );
+
+    assert.match(source, /if \(!isPuckEditorPreview\(\)\) \{\s*return null;\s*\}/);
+    assert.match(
+        source,
+        /<EmptyDynamicState label="Không có thông báo nào để hiển thị\." \/>/,
+    );
+});

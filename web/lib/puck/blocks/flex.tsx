@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { getHideOnClass, getGapAxisClass, getInsetYClass } from "./layouts";
+import { getGapAxisClass, getInsetYClass } from "./layouts";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import { getSurfaceClassName, puckSurfaceFields } from "./surface";
 import type { PageBuilderComponentConfig } from "./types";
@@ -16,7 +16,6 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
     wrap: true,
     childWidth: "auto",
     insetY: "none",
-    hideOn: "none",
     className: "",
   },
   fields: {
@@ -113,16 +112,6 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
         { label: "Lớn", value: "lg" },
       ],
     },
-    hideOn: {
-      type: "select",
-      label: "Ẩn theo thiết bị",
-      options: [
-        { label: "Không ẩn", value: "none" },
-        { label: "Di động", value: "mobile" },
-        { label: "Máy tính bảng", value: "tablet" },
-        { label: "Máy tính", value: "desktop" },
-      ],
-    },
     className: {
       type: "text",
       label: "CSS class bổ sung",
@@ -145,7 +134,6 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       wrap,
       childWidth,
       insetY,
-      hideOn,
       className,
       classes, // backwards compatibility
       children: Children,
@@ -217,7 +205,6 @@ export const FlexComponentConfig: PageBuilderComponentConfig<"Flex"> = {
       emptyPreviewClass,
       editorPreviewPuckWrapperClass,
       getSurfaceClassName(props, "", { includeDefaults: false }),
-      getHideOnClass(hideOn),
       className,
       classes,
     );

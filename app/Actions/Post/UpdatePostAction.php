@@ -30,9 +30,11 @@ class UpdatePostAction
      *     status: string
      * }  $attributes
      */
-    public function __invoke(Post $post, array $attributes): Post
+    public function __invoke(Post $post, array $attributes, int $actorId): Post
     {
-        return DB::transaction(function () use ($post, $attributes): Post {
+        return DB::transaction(function () use ($post, $attributes, $actorId): Post {
+            $isPublished = $attributes['status'] === 'published';
+
             $post->update([
                 'title' => $attributes['title'],
                 'slug' => $attributes['slug'],
@@ -43,7 +45,10 @@ class UpdatePostAction
                 'thumbnail_id' => $attributes['thumbnail_id'] ?? null,
                 'site_layout_id' => $attributes['site_layout_id'] ?? null,
                 'status' => $attributes['status'],
-                'published_at' => $attributes['status'] === 'published' && ! $post->published_at ? now() : $post->published_at,
+                'published_at' => $isPublished ? ($post->published_at ?? now()) : null,
+                'reviewed_by_id' => $isPublished ? $actorId : null,
+                'reviewed_at' => $isPublished ? now() : null,
+                'rejection_reason' => null,
             ]);
 
             $post->categories()->sync($attributes['category_ids'] ?? []);
