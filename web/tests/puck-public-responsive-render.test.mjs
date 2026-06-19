@@ -33,36 +33,39 @@ test("public puck rendering provides container boundaries for responsive blocks"
         layoutConfigsSource,
         /@container\/puck-slot flex h-full min-h-full min-w-0/,
     );
+    assert.match(siteLayoutShellSource, /@container\/layout-main min-w-0/);
     assert.match(
         siteLayoutShellSource,
-        /@container\/layout-main min-w-0 flex-1/,
-    );
-    assert.match(
-        siteLayoutShellSource,
-        /@container\/layout-side w-full min-w-0 shrink-0/,
+        /@container\/layout-side w-full min-w-0 lg:w-72/,
     );
     assert.match(siteLayoutShellSource, /export function SiteLayoutShellFrame/);
     assert.match(
         siteLayoutShellSource,
-        /mx-auto flex w-full min-w-0 flex-col lg:flex-row lg:items-start/,
+        /getSiteLayoutBodyClassName\(\s*Boolean\(left\),\s*Boolean\(right\),\s*\)/,
+    );
+    assert.match(siteLayoutShellSource, /mx-auto grid w-full max-w-7xl/);
+    assert.match(
+        siteLayoutShellSource,
+        /lg:grid-cols-\[minmax\(0,1fr\)_18rem\]/,
+    );
+    assert.match(
+        siteLayoutShellSource,
+        /lg:grid-cols-\[18rem_minmax\(0,1fr\)_18rem\]/,
     );
     assert.match(siteLayoutShellSource, /lg:w-72/);
 });
 
-test("default site layout seed keeps header navigation responsive", () => {
-    assert.match(defaultSiteLayoutSeederSource, /'id' => 'public-header-row'/);
-    assert.match(defaultSiteLayoutSeederSource, /'wrap' => true/);
-    assert.match(defaultSiteLayoutSeederSource, /'childWidth' => 'auto'/);
-    assert.match(defaultSiteLayoutSeederSource, /'insetY' => 'sm'/);
-    assert.match(defaultSiteLayoutSeederSource, /'fullWidthOnMobile' => true/);
-    assert.match(defaultSiteLayoutSeederSource, /'buttonLabel' => 'Đăng nhập'/);
-    assert.match(defaultSiteLayoutSeederSource, /'growFromMd' => true/);
+test("default post layout seed wraps the sidebar blocks in a sticky container", () => {
     assert.match(
         defaultSiteLayoutSeederSource,
-        /'id' => 'public-footer-container'/,
+        /'key' => 'default-post-layout'/,
     );
-    assert.match(defaultSiteLayoutSeederSource, /'maxWidth' => 'xl'/);
-    assert.match(defaultSiteLayoutSeederSource, /'insetY' => 'lg'/);
-    assert.match(defaultSiteLayoutSeederSource, /'textAlignFromLg' => 'left'/);
-    assert.match(defaultSiteLayoutSeederSource, /'type' => 'Grid'/);
+    assert.match(defaultSiteLayoutSeederSource, /'type' => 'Container'/);
+    assert.match(defaultSiteLayoutSeederSource, /'maxWidth' => 'full'/);
+    assert.match(defaultSiteLayoutSeederSource, /'horizontalPadding' => 'md'/);
+    assert.match(defaultSiteLayoutSeederSource, /'stackChildren' => true/);
+    assert.match(defaultSiteLayoutSeederSource, /'childGap' => 'lg'/);
+    assert.match(defaultSiteLayoutSeederSource, /'stickyOnDesktop' => true/);
+    assert.match(defaultSiteLayoutSeederSource, /'stickyTop' => 'lg'/);
+    assert.match(defaultSiteLayoutSeederSource, /'type' => 'SidebarSupport'/);
 });

@@ -50,6 +50,10 @@ const pageConfigSource = readFileSync(
     new URL("../lib/puck/configs/page-config.tsx", import.meta.url),
     "utf8",
 );
+const componentRegistrySource = readFileSync(
+    new URL("../lib/puck/component-registry.ts", import.meta.url),
+    "utf8",
+);
 const layoutConfigsSource = readFileSync(
     new URL("../lib/puck/configs/layout-configs.tsx", import.meta.url),
     "utf8",
@@ -112,6 +116,10 @@ test("layout blocks include common design fields for spacing and presentation", 
     assert.match(layoutsSource, /backgroundSize: \{/);
     assert.match(layoutsSource, /borderRadius: \{/);
     assert.match(layoutsSource, /horizontalPadding: \{/);
+    assert.match(layoutsSource, /stackChildren: \{/);
+    assert.match(layoutsSource, /childGap: \{/);
+    assert.match(layoutsSource, /stickyOnDesktop: \{/);
+    assert.match(layoutsSource, /stickyTop: \{/);
     assert.match(gridSource, /gapX: \{/);
     assert.match(gridSource, /gapY: \{/);
     assert.match(gridSource, /insetY: \{/);
@@ -198,11 +206,15 @@ test("page builder data types stay aligned with the new layout fields", () => {
         dataSource,
         /horizontalPadding\?: "none" \| "sm" \| "md" \| "lg"/,
     );
+    assert.match(dataSource, /stackChildren\?: boolean/);
+    assert.match(dataSource, /childGap\?: "sm" \| "md" \| "lg" \| "xl"/);
+    assert.match(dataSource, /stickyOnDesktop\?: boolean/);
+    assert.match(dataSource, /stickyTop\?: "sm" \| "md" \| "lg" \| "xl"/);
 });
 
 test("site layout builder uses one frame with four puck slots", () => {
     assert.match(dataSource, /SiteLayoutFrame: PuckSurfaceStyleProps & \{/);
-    assert.match(dataSource, /FitFooter: \{/);
+    assert.match(dataSource, /SiteFooter: \{/);
     assert.match(dataSource, /showBrand\?: boolean/);
     assert.match(dataSource, /quickLinksMenuId\?: string/);
     assert.match(dataSource, /logoUrl\?: PuckImageValue/);
@@ -248,7 +260,9 @@ test("site layout builder uses one frame with four puck slots", () => {
         /<Footer className=\{slotClassName\} minEmptyHeight=\{120\} \/>/,
     );
     assert.match(siteLayoutFrameSource, /"NewsletterForm"/);
-    assert.match(siteLayoutFrameSource, /"FitFooter"/);
+    assert.match(siteLayoutFrameSource, /"SiteFooter"/);
+    assert.match(siteLayoutFrameSource, /"RelatedPostFeed"/);
+    assert.match(layoutConfigsSource, /createPuckCategories\(siteLayoutFooterComponents\)/);
     assert.match(siteLayoutFrameSource, /<SiteLayoutShellFrame/);
     assert.match(layoutConfigsSource, /export const layoutBuilderConfig/);
     assert.match(layoutConfigsSource, /const layoutBuilderComponentNames = \[/);
@@ -263,27 +277,14 @@ test("site layout builder uses one frame with four puck slots", () => {
     assert.match(siteLayoutOutlinePluginSource, /Left sidebar/);
     assert.match(siteLayoutOutlinePluginSource, /Right sidebar/);
     assert.match(siteLayoutOutlinePluginSource, /Footer/);
-});
+})
 
-test("FitFooter is registered for layout footer only", () => {
+test("SiteFooter is registered through the canonical component registry", () => {
     assert.match(blocksIndexSource, /FitFooterComponentConfig/);
-    assert.match(pageConfigSource, /FitFooter:\s*FitFooterComponentConfig/);
+    assert.match(componentRegistrySource, /SiteFooter:\s*FitFooterComponentConfig/);
     assert.match(layoutConfigsSource, /siteLayoutFooterComponents/);
-    assert.match(layoutConfigsSource, /"FitFooter"/);
-    assert.match(
-        siteLayoutFrameSource,
-        /export const siteLayoutFooterComponents = \[/,
-    );
-    assert.match(siteLayoutFrameSource, /"FitFooter"/);
-
-    const pageCategoriesSource = pageConfigSource.slice(
-        pageConfigSource.indexOf("export const pageConfig"),
-    );
-
-    assert.doesNotMatch(
-        pageCategoriesSource,
-        /components:\s*\[[\s\S]*"FitFooter"/,
-    );
+    assert.match(siteLayoutFrameSource, /"SiteFooter"/);
+    assert.match(pageConfigSource, /componentName !== "SiteLayoutFrame"/);
 });
 
 test("FitFooter fields use cms media, navigation menu source, and toggle-gated details", () => {

@@ -91,7 +91,7 @@ function parseCategorySelections(
   );
 }
 
-export const AnnouncementsCustomComponentConfig: PageBuilderComponentConfig<"AnnouncementsCustom"> =
+export const AnnouncementsCustomComponentConfig: PageBuilderComponentConfig<"FeaturedAnnouncements"> =
   {
     label: "Thông báo nâng cao",
     defaultProps: {

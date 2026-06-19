@@ -53,7 +53,8 @@ test('it normalizes slot seed payloads from arrays', function () {
     ]), true, flags: JSON_THROW_ON_ERROR);
 
     expect($payload['root']['props'])->toBe([])
-        ->and($payload['content'][0]['props']['id'])->toBe('puck-slot-1-authstatus');
+        ->and($payload['content'][0]['type'])->toBe('AuthLinks')
+        ->and($payload['content'][0]['props']['id'])->toBe('puck-slot-1-authlinks');
 });
 
 test('it splits exported site layout payloads into slot strings', function () {

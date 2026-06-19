@@ -77,15 +77,22 @@ final class PuckSeedData
         array $rootProps,
         string $defaultPrefix,
     ): array {
-        $decoded = self::decode($data);
+        $decoded = PuckComponentTypeNormalizer::normalizeValue(self::decode($data));
+
+        if (! is_array($decoded)) {
+            throw new InvalidArgumentException('Invalid Puck seed JSON payload.');
+        }
+
+        /** @var array<string, mixed>|list<array<string, mixed>> $decoded */
         $content = self::extractContent($decoded);
+        $zones = array_is_list($decoded) ? [] : ($decoded['zones'] ?? []);
 
         $normalized = [
             'root' => [
                 'props' => array_replace(self::extractRootProps($decoded), $rootProps),
             ],
             'content' => self::assignBlockIds($content, $defaultPrefix),
-            'zones' => self::normalizeZones($decoded['zones'] ?? []),
+            'zones' => self::normalizeZones($zones),
         ];
 
         return $normalized;

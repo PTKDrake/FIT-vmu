@@ -100,7 +100,7 @@ interface FitFooterBlockProps {
 }
 
 type FitFooterFields = NonNullable<
-  PageBuilderComponentConfig<"FitFooter">["fields"]
+  PageBuilderComponentConfig<"SiteFooter">["fields"]
 >;
 
 const fitFooterToggleFields = {
@@ -659,7 +659,7 @@ function FitFooterColumn({
   );
 }
 
-export const FitFooterComponentConfig: PageBuilderComponentConfig<"FitFooter"> =
+export const FitFooterComponentConfig: PageBuilderComponentConfig<"SiteFooter"> =
   {
     label: "Footer FIT",
     defaultProps: {
@@ -734,7 +734,7 @@ export const FitFooterComponentConfig: PageBuilderComponentConfig<"FitFooter"> =
     resolveFields: async (data, { fields, lastFields }) => {
       const resolvedFields = {
         ...fitFooterToggleFields,
-      } as NonNullable<PageBuilderComponentConfig<"FitFooter">["fields"]>;
+      } as NonNullable<PageBuilderComponentConfig<"SiteFooter">["fields"]>;
       const props = data.props;
 
       if (props.showBrand) {
@@ -805,7 +805,7 @@ export const FitFooterComponentConfig: PageBuilderComponentConfig<"FitFooter"> =
     render: (props) => <FitFooterBlock {...props} />,
   };
 
-export const LinkListComponentConfig: PageBuilderComponentConfig<"LinkList"> = {
+export const LinkListComponentConfig: PageBuilderComponentConfig<"CustomLinkList"> = {
   label: "Danh sách link tùy chỉnh",
   defaultProps: {
     title: "Liên kết nhanh",

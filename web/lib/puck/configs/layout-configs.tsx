@@ -3,11 +3,12 @@ import {
   siteLayoutHeaderComponents,
   siteLayoutSideComponents,
 } from "../blocks/site-layout-frame";
+import { pageBuilderComponents } from "../component-registry";
+import { createPuckCategories } from "../component-categories";
 import type {
   PageBuilderComponentName,
   PageBuilderConfig,
 } from "../blocks/types";
-import { pageConfig } from "./page-config";
 
 const slotRoot: PageBuilderConfig["root"] = {
   permissions: {
@@ -27,161 +28,35 @@ const layoutBuilderComponentNames = [
     ...siteLayoutSideComponents,
     ...siteLayoutFooterComponents,
   ]),
-];
-
-const pageComponents = pageConfig.components as Record<
-  PageBuilderComponentName,
-  PageBuilderConfig["components"][PageBuilderComponentName]
->;
+] as PageBuilderComponentName[];
 
 const components = Object.fromEntries(
   layoutBuilderComponentNames.map((componentName) => [
     componentName,
-    pageComponents[componentName as PageBuilderComponentName],
+    pageBuilderComponents[componentName as PageBuilderComponentName],
   ]),
 ) as PageBuilderConfig["components"];
 
 export const layoutBuilderConfig: PageBuilderConfig = {
-  categories: {
-    layout_blocks: {},
-    content_blocks: {
-      title: "Nội dung",
-      components: [
-        "Container",
-        "Grid",
-        "Flex",
-        "Spacer",
-        "Divider",
-        "Heading",
-        "RichText",
-        "Image",
-        "Button",
-        "FitNavigationHeader",
-        "NavigationMenu",
-        "AuthStatus",
-        "LinkList",
-        "ContactInfo",
-        "SocialLinks",
-        "NewsletterForm",
-        "CopyrightBar",
-      ],
-    },
-    section_blocks: {
-      title: "Khối",
-      components: ["Section", "Card", "TagList"],
-    },
-    dynamic_blocks: {
-      title: "Dữ liệu",
-      components: [
-        "LatestPosts",
-        "LatestAnnouncements",
-        "Categories",
-        "PageLinks",
-        "UnitList",
-        "StaffGrid",
-        "StaffProfileCard",
-      ],
-    },
-  },
+  categories: createPuckCategories(layoutBuilderComponentNames),
   root: slotRoot,
   components,
 };
 
 export const headerConfig: PageBuilderConfig = {
-  categories: {
-    layout_blocks: {
-      title: "1. Bố cục header",
-      components: ["Container", "Grid", "Flex", "Spacer", "Divider"],
-    },
-    content_blocks: {
-      title: "2. Nội dung header",
-      components: ["Heading", "Image", "Button", "FitNavigationHeader"],
-    },
-    section_blocks: {
-      title: "3. Nhóm nhanh",
-      components: ["TagList"],
-    },
-    dynamic_blocks: {
-      title: "4. Dữ liệu",
-      components: ["UnitList", "PageLinks", "StaffProfileCard"],
-    },
-  },
+  categories: createPuckCategories(siteLayoutHeaderComponents),
   root: slotRoot,
   components,
 };
 
 export const footerConfig: PageBuilderConfig = {
-  categories: {
-    layout_blocks: {
-      title: "1. Bố cục footer",
-      components: ["Section", "Container", "Grid", "Flex", "Divider"],
-    },
-    content_blocks: {
-      title: "2. Nội dung footer",
-      components: [
-        "Heading",
-        "RichText",
-        "Button",
-        "FitFooter",
-        "NewsletterForm",
-        "TagList",
-      ],
-    },
-    section_blocks: {
-      title: "3. Khối",
-      components: ["Card"],
-    },
-    dynamic_blocks: {
-      title: "4. Dữ liệu",
-      components: [
-        "LatestPosts",
-        "LatestAnnouncements",
-        "Categories",
-        "PageLinks",
-        "UnitList",
-        "StaffProfileCard",
-      ],
-    },
-  },
+  categories: createPuckCategories(siteLayoutFooterComponents),
   root: slotRoot,
   components,
 };
 
 export const sideConfig: PageBuilderConfig = {
-  categories: {
-    layout_blocks: {
-      title: "1. Bố cục sidebar",
-      components: ["Container", "Flex", "Spacer", "Divider"],
-    },
-    content_blocks: {
-      title: "2. Nội dung sidebar",
-      components: [
-        "Heading",
-        "RichText",
-        "Button",
-        "NavigationMenu",
-        "AuthStatus",
-        "LinkList",
-        "Card",
-      ],
-    },
-    section_blocks: {
-      title: "3. Danh sách",
-      components: ["TagList"],
-    },
-    dynamic_blocks: {
-      title: "4. Dữ liệu",
-      components: [
-        "LatestPosts",
-        "LatestAnnouncements",
-        "Categories",
-        "StaffGrid",
-        "StaffProfileCard",
-        "PageLinks",
-        "UnitList",
-      ],
-    },
-  },
+  categories: createPuckCategories(siteLayoutSideComponents),
   root: slotRoot,
   components,
 };

@@ -2,7 +2,7 @@ import { AboutCustom } from "@/components/cms/about-custom";
 import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
-export const AboutCustomComponentConfig: PageBuilderComponentConfig<"AboutCustom"> =
+export const AboutCustomComponentConfig: PageBuilderComponentConfig<"AboutFeature"> =
   {
     label: "Khối giới thiệu nâng cao",
     defaultProps: {

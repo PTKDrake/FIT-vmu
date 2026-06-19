@@ -2,7 +2,7 @@ import { HeroCustom } from "@/components/cms/hero-custom";
 import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
-export const HeroCustomComponentConfig: PageBuilderComponentConfig<"HeroCustom"> =
+export const HeroCustomComponentConfig: PageBuilderComponentConfig<"FeaturedHero"> =
   {
     label: "Khối Hero nổi bật",
     defaultProps: {

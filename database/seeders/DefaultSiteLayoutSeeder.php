@@ -12,7 +12,7 @@ class DefaultSiteLayoutSeeder extends Seeder
 {
     public function run(): void
     {
-        $layoutData = PuckSeedData::splitSiteLayout(<<<'JSON'
+        $pageLayoutData = PuckSeedData::splitSiteLayout(<<<'JSON'
         {
             "root": {
                 "props": {}
@@ -23,7 +23,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                 "props": {
                     "footer": [
                         {
-                            "type": "FitFooter",
+                            "type": "SiteFooter",
                             "props": {
                             "showBrand": true,
                             "showContact": true,
@@ -100,7 +100,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                                 }
                             ],
                             "className": "",
-                            "id": "FitFooter-4eb723ee-fe67-4dec-a25c-37e20ed46e39"
+                            "id": "SiteFooter-4eb723ee-fe67-4dec-a25c-37e20ed46e39"
                             }
                         }
                     ],
@@ -108,7 +108,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                     "left": [],
                     "header": [
                     {
-                        "type": "FitNavigationHeader",
+                        "type": "SiteHeader",
                         "props": {
                         "logoUrl": "/logo.png",
                         "logoAlt": "Logo Khoa CNTT",
@@ -121,7 +121,7 @@ class DefaultSiteLayoutSeeder extends Seeder
                         "loginLabel": "Đăng nhập",
                         "profileLabel": "Tài khoản",
                         "className": "",
-                        "id": "FitNavigationHeader-51c792d8-e4de-40d7-8c2a-e0f2cb1f4b55"
+                        "id": "SiteHeader-51c792d8-e4de-40d7-8c2a-e0f2cb1f4b55"
                         }
                     }
                     ],
@@ -138,21 +138,105 @@ class DefaultSiteLayoutSeeder extends Seeder
             [
                 'name' => 'Bố cục trang mặc định',
                 'key' => 'default-page-layout',
-                'header_data' => $layoutData['header_data'],
-                'footer_data' => $layoutData['footer_data'],
+                'header_data' => $pageLayoutData['header_data'],
+                'footer_data' => $pageLayoutData['footer_data'],
                 'left_data' => null,
                 'right_data' => null,
             ],
         );
+
+        $postSidebarData = PuckSeedData::forSlot([
+            [
+                'type' => 'Container',
+                'props' => [
+                    'maxWidth' => 'full',
+                    'horizontalPadding' => 'md',
+                    'align' => 'left',
+                    'insetY' => 'md',
+                    'stackChildren' => true,
+                    'childGap' => 'lg',
+                    'stickyOnDesktop' => true,
+                    'stickyTop' => 'lg',
+                    'className' => '',
+                    'children' => [
+                        [
+                            'type' => 'PostFeed',
+                            'props' => [
+                                'title' => 'Bài viết mới nhất',
+                                'limit' => 4,
+                                'categoryId' => 'all',
+                                'includedCategories' => [],
+                                'excludedCategories' => [],
+                                'layout' => 'sidebar',
+                                'showCTA' => true,
+                                'className' => '',
+                            ],
+                        ],
+                        [
+                            'type' => 'PostCategoryList',
+                            'props' => [
+                                'title' => 'Danh mục',
+                                'parentId' => '',
+                                'limit' => 6,
+                                'layout' => 'sidebar',
+                                'includedCategories' => [],
+                                'excludedCategories' => [],
+                                'className' => '',
+                            ],
+                        ],
+                        [
+                            'type' => 'SidebarQuickLinks',
+                            'props' => [
+                                'title' => 'Liên kết nhanh',
+                                'links' => [
+                                    [
+                                        'label' => 'Tuyển sinh',
+                                        'url' => '/tuyen-sinh',
+                                        'icon' => 'graduation',
+                                    ],
+                                    [
+                                        'label' => 'Chương trình đào tạo',
+                                        'url' => '/chuong-trinh-dao-tao',
+                                        'icon' => 'program',
+                                    ],
+                                    [
+                                        'label' => 'Thư viện - Tài nguyên',
+                                        'url' => '/thu-vien',
+                                        'icon' => 'library',
+                                    ],
+                                    [
+                                        'label' => 'Hợp tác doanh nghiệp',
+                                        'url' => '/hop-tac-doanh-nghiep',
+                                        'icon' => 'handshake',
+                                    ],
+                                ],
+                                'className' => '',
+                            ],
+                        ],
+                        [
+                            'type' => 'SidebarSupport',
+                            'props' => [
+                                'title' => 'Cần hỗ trợ?',
+                                'description' => 'Đội ngũ của Khoa CNTT luôn sẵn sàng hỗ trợ bạn.',
+                                'buttonLabel' => 'Liên hệ ngay',
+                                'buttonHref' => '/lien-he',
+                                'className' => '',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], 'default-post-layout-sidebar');
+
         SiteLayout::query()->updateOrCreate(
             ['key' => 'default-post-layout'],
             [
                 'name' => 'Bố cục bài viết mặc định',
                 'key' => 'default-post-layout',
-                'header_data' => $layoutData['header_data'],
-                'footer_data' => $layoutData['footer_data'],
+                'header_data' => $pageLayoutData['header_data'],
+                'footer_data' => $pageLayoutData['footer_data'],
                 'left_data' => null,
-                'right_data' => null,
+                'right_data' => $postSidebarData,
             ],
         );
     }

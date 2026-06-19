@@ -1,4 +1,15 @@
+import { useState } from "react";
+import { usePage } from "@inertiajs/react";
 import { twMerge } from "tailwind-merge";
+import {
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  FileText,
+  Folder,
+  ArrowRight,
+} from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,10 +22,139 @@ import type { PageBuilderComponentConfig } from "../types";
 import {
   EmptyDynamicState,
   buildStaffFieldOptions,
+  buildCategoryFieldOptions,
   parseOptionalId,
   staffDisplayName,
   usePuckDynamicData,
 } from "./shared";
+
+// Reusable Accordion Widget for Sidebar
+function AccordionWidget({
+  title,
+  icon: Icon,
+  defaultOpen = false,
+  children,
+  showCTA,
+  ctaLink,
+  ctaText,
+}: {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+  showCTA?: boolean;
+  ctaLink?: string;
+  ctaText?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className="w-full rounded-2xl border border-border/60 bg-overlay shadow-xs overflow-hidden">
+      {/* Mobile Accordion Header */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex lg:hidden w-full items-center justify-between p-4 font-bold text-fg select-none active:bg-muted/10 transition"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+            <Icon className="size-5" />
+          </span>
+          <span className="text-base font-bold text-fg leading-none">
+            {title}
+          </span>
+        </div>
+        {isOpen ? (
+          <ChevronUp className="size-5 text-muted-fg" />
+        ) : (
+          <ChevronDown className="size-5 text-muted-fg" />
+        )}
+      </button>
+
+      {/* Desktop Heading (Non-clickable) */}
+      <div className="hidden lg:flex w-full items-center justify-between p-5 border-b border-border/40 pb-3">
+        <h3 className="text-base font-bold text-fg uppercase tracking-wide">
+          {title}
+        </h3>
+      </div>
+
+      {/* Accordion Content */}
+      <div
+        className={twMerge(
+          "px-4 pb-4 lg:px-5 lg:pb-5 lg:pt-4 lg:block",
+          isOpen ? "block" : "hidden",
+        )}
+      >
+        {/* Divider on mobile when expanded */}
+        <div className="border-t border-border/45 mb-4 lg:hidden" />
+
+        {children}
+
+        {showCTA && ctaLink && (
+          <div className="flex justify-center pt-4 border-t border-border/40 mt-4">
+            <Link
+              href={ctaLink}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary-subtle-fg transition-colors"
+            >
+              <span>{ctaText || "Xem tất cả"}</span>
+              <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const MOCK_RELATED_POSTS = [
+  {
+    id: 1,
+    title: "Sinh viên CNTT đạt giải vàng cuộc thi Hackathon",
+    slug: "sinh-vien-cntt-dat-giai-vang-hackathon",
+    url: "#",
+    excerpt:
+      "Sáng kiến xuất sắc của các bạn sinh viên đã xuất sắc vượt qua hơn 50 đội thi toàn quốc.",
+    date: "14/12/2024",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80",
+    categoryNames: ["Hoạt động sinh viên"],
+  },
+  {
+    id: 2,
+    title: "Hợp tác doanh nghiệp về đào tạo AI",
+    slug: "hop-tac-doanh-nghiep-ai",
+    url: "#",
+    excerpt:
+      "Khoa CNTT ký kết hợp tác chiến lược cùng doanh nghiệp nhằm xây dựng lab đào tạo AI.",
+    date: "10/12/2024",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=600&q=80",
+    categoryNames: ["Hợp tác đối ngoại"],
+  },
+  {
+    id: 3,
+    title: "Workshop: Ứng dụng AI trong phát triển phần mềm",
+    slug: "workshop-ai-phat-trien-phan-mem",
+    url: "#",
+    excerpt:
+      "Buổi chia sẻ thực chiến thu hút đông đảo sinh viên và các kỹ sư phần mềm tham dự.",
+    date: "05/12/2024",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80",
+    categoryNames: ["Hội thảo khoa học"],
+  },
+  {
+    id: 4,
+    title: "Sinh viên CNTT tham gia Ngày hội việc làm 2024",
+    slug: "sinh-vien-cntt-ngay-hoi-viec-lam-2024",
+    url: "#",
+    excerpt:
+      "Cơ hội tuyển dụng trực tiếp từ hơn 30 tập đoàn công nghệ lớn tại Việt Nam.",
+    date: "28/11/2024",
+    thumbnailUrl:
+      "https://images.unsplash.com/photo-1521791136368-1a9b7d89136d?auto=format&fit=crop&w=600&q=80",
+    categoryNames: ["Tuyển dụng"],
+  },
+];
 
 interface SurfaceProps {
   className?: string;
@@ -27,6 +167,8 @@ interface SurfaceProps {
 
 interface LatestPostsBlockProps extends SurfaceProps {
   categoryId?: string;
+  includedCategories?: Array<{ categoryId?: string }>;
+  excludedCategories?: Array<{ categoryId?: string }>;
   layout?: string;
   limit: number;
   showCTA?: boolean;
@@ -38,6 +180,8 @@ function LatestPostsBlock(props: LatestPostsBlockProps) {
     title,
     limit,
     categoryId,
+    includedCategories = [],
+    excludedCategories = [],
     layout,
     showCTA,
     surfaceTone,
@@ -50,14 +194,99 @@ function LatestPostsBlock(props: LatestPostsBlockProps) {
   const id = getPuckBlockDomId((props as { id?: string }).id);
   const dynamicData = usePuckDynamicData();
   const selectedCategoryId = parseOptionalId(categoryId);
+
+  const includedCategoryIds = selectedCategoryId
+    ? [selectedCategoryId]
+    : Array.from(
+        new Set(
+          includedCategories
+            .map((item) => parseOptionalId(item.categoryId))
+            .filter((id): id is number => id !== null),
+        ),
+      );
+  const excludedCategoryIds = Array.from(
+    new Set(
+      excludedCategories
+        .map((item) => parseOptionalId(item.categoryId))
+        .filter((id): id is number => id !== null),
+    ),
+  );
+
   const posts = dynamicData.posts
     .filter((post) =>
-      selectedCategoryId ? post.categoryIds.includes(selectedCategoryId) : true,
+      includedCategoryIds.length > 0
+        ? post.categoryIds.some((id) => includedCategoryIds.includes(id))
+        : true,
+    )
+    .filter(
+      (post) =>
+        !post.categoryIds.some((id) => excludedCategoryIds.includes(id)),
     )
     .slice(0, limit);
 
   if (posts.length === 0) {
     return <EmptyDynamicState label="Không có tin tức nào để hiển thị." />;
+  }
+
+  if (layout === "sidebar") {
+    return (
+      <div id={id} className={className}>
+        <AccordionWidget
+          title={title}
+          icon={FileText}
+          defaultOpen={true}
+          showCTA={showCTA}
+          ctaLink="/posts"
+          ctaText="Xem tất cả"
+        >
+          <div className="divide-y divide-border/40">
+            {posts.map((post) => {
+              const views = post.id
+                ? ((post.id * 143 + 321) % 4000) + 150
+                : 1250;
+              const formattedViews =
+                views.toLocaleString("vi-VN") + " lượt xem";
+              return (
+                <Link
+                  key={post.id}
+                  href={post.url ?? "#"}
+                  className="flex items-start gap-3 py-3 first:pt-0 last:pb-0 group"
+                >
+                  {post.thumbnailUrl ? (
+                    <div className="w-20 aspect-video shrink-0 overflow-hidden rounded-lg border border-border/50 bg-muted/10">
+                      <img
+                        src={post.thumbnailUrl}
+                        alt={post.title}
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <Heading
+                      level={4}
+                      className="text-xs sm:text-sm font-bold text-fg group-hover:text-primary transition-colors leading-snug line-clamp-2"
+                    >
+                      {post.title}
+                    </Heading>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-muted-fg font-medium">
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Calendar className="size-3 text-muted-fg/75" />
+                        <span>{post.date}</span>
+                      </div>
+                      <span className="hidden sm:inline text-border">|</span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Eye className="size-3 text-muted-fg/75" />
+                        <span>{formattedViews}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </AccordionWidget>
+      </div>
+    );
   }
 
   return (
@@ -624,16 +853,24 @@ function RelatedPostsBlock({
   surfaceShadow,
   className,
 }: RelatedPostsBlockProps) {
-  const related = usePuckDynamicData().posts.slice(0, limit);
+  const pageProps = usePage<any>().props;
 
-  if (related.length === 0) {
+  // Try page props first (relatedPosts is array), then dynamicData.posts, then MOCK_RELATED_POSTS
+  const posts =
+    pageProps.relatedPosts ||
+    pageProps.dynamicData?.posts ||
+    MOCK_RELATED_POSTS;
+
+  const displayPosts = posts.slice(0, limit);
+
+  if (displayPosts.length === 0) {
     return <EmptyDynamicState label="Không có tin liên quan để hiển thị." />;
   }
 
   return (
     <section
       className={twMerge(
-        "space-y-6 py-6 w-full relative",
+        "space-y-6 py-6 w-full relative select-none",
         getSurfaceClassName(
           {
             surfaceTone,
@@ -647,63 +884,133 @@ function RelatedPostsBlock({
         className,
       )}
     >
-      <div className="flex items-end justify-between border-b border-border/60 pb-3">
-        <Heading level={2} className="text-xl font-bold text-fg">
+      {/* Header: Indicia and Title & View All */}
+      <div className="flex items-center justify-between border-b border-border/40 pb-4">
+        <Heading
+          level={2}
+          className="text-xl md:text-2xl font-extrabold text-fg tracking-tight"
+        >
           {title}
         </Heading>
-        <Badge
-          intent="info"
-          isCircle={false}
-          className="text-[9px] font-bold border-info/20"
+        <Link
+          href="/posts"
+          className="text-sm font-bold text-primary hover:text-primary-subtle-fg transition-colors flex items-center gap-1.5"
         >
-          Tin liên quan
-        </Badge>
+          <span>Xem tất cả</span>
+          <ArrowRight className="size-4" />
+        </Link>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 w-full">
-        {related.map((post) => (
-          <Link key={post.id} href={post.url ?? "#"} className="block">
-            <Card
+      {/* Grid for PC */}
+      <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-4 w-full">
+        {displayPosts.map((post: any) => {
+          const views = post.id ? ((post.id * 143 + 321) % 4000) + 150 : 1250;
+          const formattedViews = views.toLocaleString("vi-VN") + " lượt xem";
+          return (
+            <Link key={post.id} href={post.url ?? "#"} className="block group">
+              <Card className="overflow-hidden py-0 transition duration-300 hover:shadow-md hover:border-primary/15 flex flex-col h-full cursor-pointer bg-overlay">
+                {post.thumbnailUrl ? (
+                  <div className="aspect-video w-full overflow-hidden border-b border-border/30">
+                    <img
+                      src={post.thumbnailUrl}
+                      alt={post.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                ) : null}
+                <CardContent className="p-4 flex-1 flex flex-col justify-between gap-4">
+                  <Heading
+                    level={3}
+                    className="text-sm font-bold text-fg group-hover:text-primary transition-colors leading-snug line-clamp-2"
+                  >
+                    {post.title}
+                  </Heading>
+                  <div className="flex items-center justify-between text-[10px] text-muted-fg font-semibold pt-2 border-t border-border/30">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="size-3 text-muted-fg/75" />
+                      {post.date}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Eye className="size-3 text-muted-fg/75" />
+                      {formattedViews}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Mobile: Swipable slider/carousel with dot pagination */}
+      <div className="block md:hidden w-full space-y-4">
+        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2">
+          {displayPosts.map((post: any) => {
+            const views = post.id ? ((post.id * 143 + 321) % 4000) + 150 : 1250;
+            const formattedViews = views.toLocaleString("vi-VN") + " lượt xem";
+            return (
+              <Link
+                key={post.id}
+                href={post.url ?? "#"}
+                className="w-[85vw] sm:w-[60vw] shrink-0 snap-center snap-always block"
+              >
+                <Card className="overflow-hidden py-0 flex flex-col h-full bg-overlay">
+                  {post.thumbnailUrl ? (
+                    <div className="aspect-video w-full overflow-hidden border-b border-border/30">
+                      <img
+                        src={post.thumbnailUrl}
+                        alt={post.title}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ) : null}
+                  <CardContent className="p-4 flex-1 flex flex-col justify-between gap-3">
+                    <Heading
+                      level={3}
+                      className="text-sm font-bold text-fg leading-snug"
+                    >
+                      {post.title}
+                    </Heading>
+                    <div className="flex items-center justify-between text-[10px] text-muted-fg font-semibold pt-2 border-t border-border/30">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="size-3" />
+                        {post.date}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Eye className="size-3" />
+                        {formattedViews}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="flex justify-center gap-1.5 pt-2">
+          {displayPosts.map((_: any, index: number) => (
+            <div
+              key={index}
               className={twMerge(
-                "py-0 shadow-none hover:shadow-md transition-shadow group flex flex-col justify-between cursor-pointer",
-                getSurfaceClassName(
-                  {
-                    surfaceTone,
-                    surfaceBorder,
-                    surfaceRadius,
-                    surfacePadding,
-                    surfaceShadow,
-                  },
-                  "",
-                ),
+                "size-2 rounded-full transition-all duration-300",
+                index === 0 ? "bg-primary w-4" : "bg-border",
               )}
-            >
-              <CardContent className="p-5 space-y-3">
-                <span className="text-[10px] text-primary font-bold uppercase tracking-wider block">
-                  {post.categoryNames[0] ?? "Tin tức"}
-                </span>
-                <Heading
-                  level={3}
-                  className="text-sm font-bold text-fg group-hover:text-primary transition-colors leading-snug"
-                >
-                  {post.title}
-                </Heading>
-                <Text className="text-xs text-muted-fg leading-relaxed line-clamp-2">
-                  {post.excerpt}
-                </Text>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
 interface CategoriesBlockProps extends SurfaceProps {
+  layout?: string;
   limit: number;
   parentId?: string;
   title: string;
+  includedCategories?: Array<{ categoryId?: string }>;
+  excludedCategories?: Array<{ categoryId?: string }>;
 }
 
 function CategoriesBlock(props: CategoriesBlockProps) {
@@ -711,6 +1018,9 @@ function CategoriesBlock(props: CategoriesBlockProps) {
     title,
     parentId,
     limit,
+    layout = "tags",
+    includedCategories = [],
+    excludedCategories = [],
     surfaceTone,
     surfaceBorder,
     surfaceRadius,
@@ -720,14 +1030,69 @@ function CategoriesBlock(props: CategoriesBlockProps) {
   } = props;
   const id = getPuckBlockDomId((props as { id?: string }).id);
   const selectedParentId = parseOptionalId(parentId);
+
+  const includedIds = Array.from(
+    new Set(
+      includedCategories
+        .map((item) => parseOptionalId(item.categoryId))
+        .filter((id): id is number => id !== null),
+    ),
+  );
+  const excludedIds = Array.from(
+    new Set(
+      excludedCategories
+        .map((item) => parseOptionalId(item.categoryId))
+        .filter((id): id is number => id !== null),
+    ),
+  );
+
   const categories = usePuckDynamicData()
     .categories.filter((category) =>
       selectedParentId ? category.parentId === selectedParentId : true,
     )
+    .filter((category) =>
+      includedIds.length > 0 ? includedIds.includes(category.id) : true,
+    )
+    .filter((category) => !excludedIds.includes(category.id))
     .slice(0, limit);
 
   if (categories.length === 0) {
     return <EmptyDynamicState label="Không có danh mục để hiển thị." />;
+  }
+
+  if (layout === "sidebar") {
+    return (
+      <div id={id} className={className}>
+        <AccordionWidget
+          title={title}
+          icon={Folder}
+          defaultOpen={false}
+          showCTA={true}
+          ctaLink="/posts"
+          ctaText="Xem tất cả"
+        >
+          <div className="divide-y divide-border/30">
+            {categories.map((category) => {
+              const count = category.postCount ?? 0;
+              return (
+                <Link
+                  key={category.id}
+                  href={`/${category.slug}`}
+                  className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0 text-sm font-semibold text-muted-fg hover:text-primary transition-colors group"
+                >
+                  <span className="truncate group-hover:translate-x-0.5 transition-transform duration-200">
+                    {category.name}
+                  </span>
+                  <span className="text-xs text-muted-fg bg-muted/30 px-2 py-0.5 rounded-md border border-border/40 shrink-0">
+                    {count}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </AccordionWidget>
+      </div>
+    );
   }
 
   return (
@@ -849,13 +1214,15 @@ function PageLinksBlock(props: PageLinksBlockProps) {
   );
 }
 
-export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts"> =
+export const LatestPostsComponentConfig: PageBuilderComponentConfig<"PostFeed"> =
   {
     label: "Tin tức mới nhất",
     defaultProps: {
       title: "Tin Tức & Hoạt Động Mới",
       limit: 3,
       categoryId: "all",
+      includedCategories: [],
+      excludedCategories: [],
       layout: "grid",
       showCTA: true,
       surfaceTone: "transparent",
@@ -871,7 +1238,7 @@ export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts
       limit: { type: "number", label: "Số lượng tin tức" },
       categoryId: {
         type: "text",
-        label: "ID Danh mục (để trống nếu lấy tất cả)",
+        label: "ID Danh mục gốc (để trống nếu lấy tất cả)",
       },
       layout: {
         type: "select",
@@ -879,6 +1246,7 @@ export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts
         options: [
           { label: "Dạng lưới", value: "grid" },
           { label: "Dạng danh sách", value: "list" },
+          { label: "Dạng Sidebar", value: "sidebar" },
         ],
       },
       showCTA: {
@@ -889,12 +1257,85 @@ export const LatestPostsComponentConfig: PageBuilderComponentConfig<"LatestPosts
           { label: "Không", value: false },
         ],
       },
+      includedCategories: {
+        type: "array",
+        label: "Chỉ lấy từ danh mục",
+        defaultItemProps: { categoryId: "" },
+        getItemSummary: (item) => item.categoryId || "Danh mục",
+        arrayFields: {
+          categoryId: {
+            type: "select",
+            label: "Danh mục",
+            options: [{ label: "Chọn danh mục", value: "" }],
+          },
+        },
+      },
+      excludedCategories: {
+        type: "array",
+        label: "Loại trừ danh mục",
+        defaultItemProps: { categoryId: "" },
+        getItemSummary: (item) => item.categoryId || "Danh mục",
+        arrayFields: {
+          categoryId: {
+            type: "select",
+            label: "Danh mục",
+            options: [{ label: "Chọn danh mục", value: "" }],
+          },
+        },
+      },
       className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    resolveFields: async (_data, { fields, lastFields }) => {
+      const lastIncludedCategoriesField = lastFields.includedCategories;
+      const lastExcludedCategoriesField = lastFields.excludedCategories;
+
+      if (
+        hasCategoryOptions(lastIncludedCategoriesField) &&
+        hasCategoryOptions(lastExcludedCategoriesField)
+      ) {
+        return lastFields;
+      }
+
+      const options = await buildCategoryFieldOptions("Chọn danh mục");
+
+      if (options === null) {
+        return fields;
+      }
+
+      return {
+        ...fields,
+        includedCategories: {
+          type: "array",
+          label: "Chỉ lấy từ danh mục",
+          defaultItemProps: { categoryId: "" },
+          getItemSummary: (item) => item.categoryId || "Danh mục",
+          arrayFields: {
+            categoryId: {
+              type: "select",
+              label: "Danh mục",
+              options,
+            },
+          },
+        },
+        excludedCategories: {
+          type: "array",
+          label: "Loại trừ danh mục",
+          defaultItemProps: { categoryId: "" },
+          getItemSummary: (item) => item.categoryId || "Danh mục",
+          arrayFields: {
+            categoryId: {
+              type: "select",
+              label: "Danh mục",
+              options,
+            },
+          },
+        },
+      };
     },
     render: (props) => <LatestPostsBlock {...props} />,
   };
 
-export const LatestAnnouncementsComponentConfig: PageBuilderComponentConfig<"LatestAnnouncements"> =
+export const LatestAnnouncementsComponentConfig: PageBuilderComponentConfig<"AnnouncementFeed"> =
   {
     label: "Thông báo mới",
     defaultProps: {
@@ -1057,12 +1498,12 @@ export const UnitListComponentConfig: PageBuilderComponentConfig<"UnitList"> = {
   render: (props) => <UnitListBlock {...props} />,
 };
 
-export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPosts"> =
+export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPostFeed"> =
   {
     label: "Tin tức liên quan",
     defaultProps: {
       title: "Bài Viết Liên Quan",
-      limit: 2,
+      limit: 4,
       surfaceTone: "transparent",
       surfaceBorder: "none",
       surfaceRadius: "none",
@@ -1073,19 +1514,22 @@ export const RelatedPostsComponentConfig: PageBuilderComponentConfig<"RelatedPos
     fields: {
       ...puckSurfaceFields,
       title: { type: "text", label: "Tiêu đề khối" },
-      limit: { type: "number", label: "Số bài viết liên quan" },
+      limit: { type: "number", label: "Số bài viết liên quan tối đa" },
       className: { type: "text", label: "Lớp CSS bổ sung" },
     },
     render: (props) => <RelatedPostsBlock {...props} />,
   };
 
-export const CategoriesComponentConfig: PageBuilderComponentConfig<"Categories"> =
+export const CategoriesComponentConfig: PageBuilderComponentConfig<"PostCategoryList"> =
   {
     label: "Danh mục bài viết",
     defaultProps: {
       title: "Danh mục",
       parentId: "",
       limit: 8,
+      layout: "tags",
+      includedCategories: [],
+      excludedCategories: [],
       surfaceTone: "transparent",
       surfaceBorder: "none",
       surfaceRadius: "none",
@@ -1098,12 +1542,93 @@ export const CategoriesComponentConfig: PageBuilderComponentConfig<"Categories">
       title: { type: "text", label: "Tiêu đề khối" },
       parentId: { type: "text", label: "ID danh mục cha (tùy chọn)" },
       limit: { type: "number", label: "Số danh mục tối đa" },
+      layout: {
+        type: "select",
+        label: "Kiểu bố cục",
+        options: [
+          { label: "Nút nhãn (Tags)", value: "tags" },
+          { label: "Dạng danh sách Sidebar", value: "sidebar" },
+        ],
+      },
+      includedCategories: {
+        type: "array",
+        label: "Chỉ hiển thị danh mục",
+        defaultItemProps: { categoryId: "" },
+        getItemSummary: (item) => item.categoryId || "Danh mục",
+        arrayFields: {
+          categoryId: {
+            type: "select",
+            label: "Danh mục",
+            options: [{ label: "Chọn danh mục", value: "" }],
+          },
+        },
+      },
+      excludedCategories: {
+        type: "array",
+        label: "Loại trừ danh mục",
+        defaultItemProps: { categoryId: "" },
+        getItemSummary: (item) => item.categoryId || "Danh mục",
+        arrayFields: {
+          categoryId: {
+            type: "select",
+            label: "Danh mục",
+            options: [{ label: "Chọn danh mục", value: "" }],
+          },
+        },
+      },
       className: { type: "text", label: "Lớp CSS bổ sung" },
+    },
+    resolveFields: async (_data, { fields, lastFields }) => {
+      const lastIncludedCategoriesField = lastFields.includedCategories;
+      const lastExcludedCategoriesField = lastFields.excludedCategories;
+
+      if (
+        hasCategoryOptions(lastIncludedCategoriesField) &&
+        hasCategoryOptions(lastExcludedCategoriesField)
+      ) {
+        return lastFields;
+      }
+
+      const options = await buildCategoryFieldOptions("Chọn danh mục");
+
+      if (options === null) {
+        return fields;
+      }
+
+      return {
+        ...fields,
+        includedCategories: {
+          type: "array",
+          label: "Chỉ hiển thị danh mục",
+          defaultItemProps: { categoryId: "" },
+          getItemSummary: (item) => item.categoryId || "Danh mục",
+          arrayFields: {
+            categoryId: {
+              type: "select",
+              label: "Danh mục",
+              options,
+            },
+          },
+        },
+        excludedCategories: {
+          type: "array",
+          label: "Loại trừ danh mục",
+          defaultItemProps: { categoryId: "" },
+          getItemSummary: (item) => item.categoryId || "Danh mục",
+          arrayFields: {
+            categoryId: {
+              type: "select",
+              label: "Danh mục",
+              options,
+            },
+          },
+        },
+      };
     },
     render: (props) => <CategoriesBlock {...props} />,
   };
 
-export const PageLinksComponentConfig: PageBuilderComponentConfig<"PageLinks"> =
+export const PageLinksComponentConfig: PageBuilderComponentConfig<"PageLinkList"> =
   {
     label: "Liên kết trang",
     defaultProps: {
@@ -1124,3 +1649,23 @@ export const PageLinksComponentConfig: PageBuilderComponentConfig<"PageLinks"> =
     },
     render: (props) => <PageLinksBlock {...props} />,
   };
+
+function hasCategoryOptions(field: unknown): boolean {
+  if (!field || typeof field !== "object" || !("arrayFields" in field)) {
+    return false;
+  }
+
+  const categoryField = (
+    field as {
+      arrayFields?: {
+        categoryId?: {
+          options?: unknown[];
+        };
+      };
+    }
+  ).arrayFields?.categoryId;
+
+  return (
+    Array.isArray(categoryField?.options) && categoryField.options.length > 1
+  );
+}

@@ -2,7 +2,7 @@ import { ProgramsCustom } from "@/components/cms/programs-custom";
 import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
-export const ProgramsCustomComponentConfig: PageBuilderComponentConfig<"ProgramsCustom"> =
+export const ProgramsCustomComponentConfig: PageBuilderComponentConfig<"ProgramGrid"> =
   {
     label: "Lưới chương trình đào tạo",
     defaultProps: {

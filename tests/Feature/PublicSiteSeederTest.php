@@ -22,7 +22,7 @@ test('public site footer seed stays aligned with social and copyright block prop
      */
     $footerContent = json_decode($layout->footer_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    $fitFooterBlock = findSeededBlockByType($footerContent['content'], 'FitFooter');
+    $fitFooterBlock = findSeededBlockByType($footerContent['content'], 'SiteFooter');
 
     expect($fitFooterBlock)->not->toBeNull()
         ->and($fitFooterBlock['props'])->toMatchArray([
@@ -75,7 +75,7 @@ test('public site header seed is consolidated into the FIT navigation block', fu
      */
     $headerContent = json_decode($layout->header_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    $navigationBlock = findSeededBlockByType($headerContent['content'], 'FitNavigationHeader');
+    $navigationBlock = findSeededBlockByType($headerContent['content'], 'SiteHeader');
 
     expect($navigationBlock)->not->toBeNull()
         ->and($navigationBlock['props'])->toMatchArray([
@@ -88,6 +88,80 @@ test('public site header seed is consolidated into the FIT navigation block', fu
             'loginLabel' => 'Đăng nhập',
             'profileLabel' => 'Tài khoản',
         ]);
+});
+
+test('default post layout seed provides the news-detail sidebar blocks', function () {
+    $this->seed(DatabaseSeeder::class);
+
+    $layout = SiteLayout::query()
+        ->where('key', 'default-post-layout')
+        ->firstOrFail();
+
+    /** @var array{
+     *     content: list<array{
+     *         type: string,
+     *         props: array<string, mixed>
+     *     }>
+     * } $rightContent
+     */
+    $rightContent = json_decode($layout->right_data ?? '', true, flags: JSON_THROW_ON_ERROR);
+
+    expect(collect($rightContent['content'])->pluck('type')->all())->toBe([
+        'Container',
+    ]);
+
+    $sidebarContainer = findSeededBlockByType($rightContent['content'], 'Container');
+    $latestPostsBlock = findSeededBlockByType($rightContent['content'], 'PostFeed');
+    $categoriesBlock = findSeededBlockByType($rightContent['content'], 'PostCategoryList');
+    $quickLinksBlock = findSeededBlockByType($rightContent['content'], 'SidebarQuickLinks');
+    $supportBlock = findSeededBlockByType($rightContent['content'], 'SidebarSupport');
+
+    expect($sidebarContainer)->not->toBeNull()
+        ->and($sidebarContainer['props'])->toMatchArray([
+            'maxWidth' => 'full',
+            'horizontalPadding' => 'md',
+            'align' => 'left',
+            'insetY' => 'md',
+            'stackChildren' => true,
+            'childGap' => 'lg',
+            'stickyOnDesktop' => true,
+            'stickyTop' => 'lg',
+        ])
+        ->and($sidebarContainer['props']['children'])->toHaveCount(4)
+        ->and(collect($sidebarContainer['props']['children'])->pluck('type')->all())->toBe([
+            'PostFeed',
+            'PostCategoryList',
+            'SidebarQuickLinks',
+            'SidebarSupport',
+        ])
+        ->and($latestPostsBlock)->not->toBeNull()
+        ->and($latestPostsBlock['props'])->toMatchArray([
+            'title' => 'Bài viết mới nhất',
+            'limit' => 4,
+            'layout' => 'sidebar',
+            'showCTA' => true,
+        ])
+        ->and($categoriesBlock)->not->toBeNull()
+        ->and($categoriesBlock['props'])->toMatchArray([
+            'title' => 'Danh mục',
+            'limit' => 6,
+            'layout' => 'sidebar',
+        ])
+        ->and($quickLinksBlock)->not->toBeNull()
+        ->and($quickLinksBlock['props']['links'])->toHaveCount(4)
+        ->and($quickLinksBlock['props']['links'][0])->toMatchArray([
+            'label' => 'Tuyển sinh',
+            'icon' => 'graduation',
+        ])
+        ->and($supportBlock)->not->toBeNull()
+        ->and($supportBlock['props'])->toMatchArray([
+            'title' => 'Cần hỗ trợ?',
+            'buttonLabel' => 'Liên hệ ngay',
+            'buttonHref' => '/lien-he',
+        ])
+        ->and(seedBlocksHaveIds($rightContent['content']))->toBeTrue()
+        ->and(seedBlocksHaveMatchingNodeIds($rightContent['content']))->toBeTrue()
+        ->and(seedBlocksContainNoSectionTypes($rightContent['content']))->toBeTrue();
 });
 
 test('homepage seed includes the custom CTA block in the homepage content stack', function () {
@@ -106,9 +180,9 @@ test('homepage seed includes the custom CTA block in the homepage content stack'
      */
     $pageContent = json_decode($page->content ?? '', true, flags: JSON_THROW_ON_ERROR);
 
-    $newsBlock = findSeededBlockByType($pageContent['content'], 'NewsCustom');
-    $announcementsBlock = findSeededBlockByType($pageContent['content'], 'AnnouncementsCustom');
-    $ctaBlock = findSeededBlockByType($pageContent['content'], 'CtaCustom');
+    $newsBlock = findSeededBlockByType($pageContent['content'], 'FeaturedNews');
+    $announcementsBlock = findSeededBlockByType($pageContent['content'], 'FeaturedAnnouncements');
+    $ctaBlock = findSeededBlockByType($pageContent['content'], 'EnrollmentCta');
 
     expect($newsBlock)->not->toBeNull()
         ->and($newsBlock['props'])->toMatchArray([
@@ -124,7 +198,7 @@ test('homepage seed includes the custom CTA block in the homepage content stack'
         ])
         ->and($ctaBlock)->not->toBeNull()
         ->and($ctaBlock['props'])->toMatchArray([
-            'id' => 'CtaCustom-4db743f2-e5e9-4ac8-8c02-da529abe55c6',
+            'id' => 'EnrollmentCta-4db743f2-e5e9-4ac8-8c02-da529abe55c6',
             'badge' => 'Tuyển sinh 2025',
             'siteName' => 'Khoa CNTT',
             'primaryActionLabel' => 'Tìm hiểu tuyển sinh',
@@ -214,6 +288,69 @@ function findSeededBlockById(array $blocks, string $id): ?array
     }
 
     return null;
+}
+
+/**
+ * @param  list<array<string, mixed>>  $blocks
+ */
+function seedBlocksHaveIds(array $blocks): bool
+{
+    foreach ($blocks as $block) {
+        if (! is_array($block)) {
+            return false;
+        }
+
+        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
+        $id = $props['id'] ?? null;
+
+        if (! is_string($id) || $id === '') {
+            return false;
+        }
+
+        foreach ($props as $value) {
+            if (! isSeededBlockList($value)) {
+                continue;
+            }
+
+            if (! seedBlocksHaveIds($value)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param  list<array<string, mixed>>  $blocks
+ */
+function seedBlocksHaveMatchingNodeIds(array $blocks): bool
+{
+    foreach ($blocks as $block) {
+        if (! is_array($block)) {
+            return false;
+        }
+
+        $props = is_array($block['props'] ?? null) ? $block['props'] : [];
+        $nodeId = $block['id'] ?? null;
+        $propId = $props['id'] ?? null;
+
+        if (! is_string($nodeId) || ! is_string($propId) || $nodeId === '' || $nodeId !== $propId) {
+            return false;
+        }
+
+        foreach ($props as $value) {
+            if (! isSeededBlockList($value)) {
+                continue;
+            }
+
+            if (! seedBlocksHaveMatchingNodeIds($value)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 /**

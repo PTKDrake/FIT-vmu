@@ -1,5 +1,6 @@
 import type { Data } from "@puckeditor/core";
 import type { PuckSurfaceStyleProps } from "./blocks/surface";
+import { normalizePuckComponentType } from "./component-types";
 import type { PuckImageValue } from "./media";
 
 export const PUCK_PAGE_CONTENT_FORMAT = "puck_json" as const;
@@ -39,6 +40,10 @@ export interface VmuFitPageBuilderComponents {
     horizontalPadding?: "none" | "sm" | "md" | "lg";
     align?: "center" | "left" | "right";
     insetY?: "none" | "xs" | "sm" | "md" | "lg";
+    stackChildren?: boolean;
+    childGap?: "sm" | "md" | "lg" | "xl";
+    stickyOnDesktop?: boolean;
+    stickyTop?: "sm" | "md" | "lg" | "xl";
     hideOn?: "none" | "mobile" | "tablet" | "desktop";
     className?: string;
     children?: any;
@@ -319,15 +324,17 @@ export interface VmuFitPageBuilderComponents {
   };
 
   // 4. Dynamic blocks
-  LatestPosts: PuckSurfaceStyleProps & {
+  PostFeed: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     categoryId: string;
-    layout: "grid" | "list" | "carousel";
+    includedCategories?: Array<{ categoryId?: string }>;
+    excludedCategories?: Array<{ categoryId?: string }>;
+    layout: "grid" | "list" | "sidebar";
     showCTA: boolean;
     className?: string;
   };
-  LatestAnnouncements: PuckSurfaceStyleProps & {
+  AnnouncementFeed: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     layout: "grid" | "list";
@@ -354,12 +361,12 @@ export interface VmuFitPageBuilderComponents {
     type: string;
     className?: string;
   };
-  RelatedPosts: PuckSurfaceStyleProps & {
+  RelatedPostFeed: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     className?: string;
   };
-  FitNavigationHeader: {
+  SiteHeader: {
     logoUrl?: PuckImageValue;
     logoAlt?: string;
     siteName?: string;
@@ -372,7 +379,7 @@ export interface VmuFitPageBuilderComponents {
     profileLabel?: string;
     className?: string;
   };
-  FitFooter: {
+  SiteFooter: {
     showBrand?: boolean;
     showContact?: boolean;
     showQuickLinks?: boolean;
@@ -440,18 +447,21 @@ export interface VmuFitPageBuilderComponents {
     orientation?: "horizontal" | "vertical";
     className?: string;
   };
-  Categories: PuckSurfaceStyleProps & {
+  PostCategoryList: PuckSurfaceStyleProps & {
     title: string;
     parentId?: string;
     limit: number;
+    layout?: "tags" | "sidebar";
+    includedCategories?: Array<{ categoryId?: string }>;
+    excludedCategories?: Array<{ categoryId?: string }>;
     className?: string;
   };
-  PageLinks: PuckSurfaceStyleProps & {
+  PageLinkList: PuckSurfaceStyleProps & {
     title: string;
     limit: number;
     className?: string;
   };
-  LinkList: PuckSurfaceStyleProps & {
+  CustomLinkList: PuckSurfaceStyleProps & {
     title: string;
     links: {
       label: string;
@@ -511,7 +521,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  AuthStatus: PuckSurfaceStyleProps & {
+  AuthLinks: PuckSurfaceStyleProps & {
     alignment?: "left" | "center" | "right";
     buttonLabel?: string;
     showName?: boolean;
@@ -525,7 +535,7 @@ export interface VmuFitPageBuilderComponents {
     noShrinkFromMd?: boolean;
     className?: string;
   };
-  HeroCustom: {
+  FeaturedHero: {
     badge?: string;
     title?: string;
     description?: string;
@@ -537,7 +547,7 @@ export interface VmuFitPageBuilderComponents {
     theme?: "light" | "dark";
     className?: string;
   };
-  StatsCustom: {
+  HighlightStats: {
     title?: string;
     viewAllLabel?: string;
     viewAllHref?: string;
@@ -548,7 +558,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  ProgramsCustom: {
+  ProgramGrid: {
     badge?: string;
     title?: string;
     description?: string;
@@ -562,7 +572,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  AboutCustom: {
+  AboutFeature: {
     badge?: string;
     title?: string;
     imageUrl?: PuckImageValue;
@@ -594,7 +604,7 @@ export interface VmuFitPageBuilderComponents {
       description?: string;
     }[];
   };
-  NewsCustom: {
+  FeaturedNews: {
     categoryId?: string;
     excludedCategories?: {
       categoryId?: string;
@@ -607,7 +617,7 @@ export interface VmuFitPageBuilderComponents {
     viewAllLabel?: string;
     viewAllHref?: string;
   };
-  AnnouncementsCustom: {
+  FeaturedAnnouncements: {
     title?: string;
     actionLabel?: string;
     actionHref?: string;
@@ -620,7 +630,7 @@ export interface VmuFitPageBuilderComponents {
     }[];
     className?: string;
   };
-  CtaCustom: {
+  EnrollmentCta: {
     logoUrl?: PuckImageValue;
     logoAlt?: string;
     siteName?: string;
@@ -638,6 +648,31 @@ export interface VmuFitPageBuilderComponents {
       icon?: string;
       label?: string;
     }[];
+    className?: string;
+  };
+  PostDetailHeader: {
+    showBreadcrumbs?: boolean;
+    showCategories?: boolean;
+    showAuthor?: boolean;
+    showDate?: boolean;
+    showViews?: boolean;
+    viewsCount?: number;
+    className?: string;
+  };
+  SidebarQuickLinks: {
+    title?: string;
+    links?: {
+      label: string;
+      url: string;
+      icon: "graduation" | "program" | "library" | "handshake" | "link";
+    }[];
+    className?: string;
+  };
+  SidebarSupport: {
+    title?: string;
+    description?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
     className?: string;
   };
 }
@@ -1032,7 +1067,7 @@ export function createPuckPageDataFromTemplate(
         },
       },
       {
-        type: "LatestPosts",
+        type: "PostFeed",
         props: {
           id: "news-academic",
           title: "Tin tức nổi bật liên quan",
@@ -1248,7 +1283,8 @@ function normalizePuckComponentData(
     return normalizePuckPropValue(value, config);
   }
 
-  const componentConfig = config.components[value.type];
+  const normalizedType = normalizePuckComponentType(value.type);
+  const componentConfig = config.components[normalizedType];
   const defaultProps = isPlainRecord(componentConfig?.defaultProps)
     ? componentConfig.defaultProps
     : {};
@@ -1256,6 +1292,7 @@ function normalizePuckComponentData(
 
   return {
     ...value,
+    type: normalizedType,
     props: mergePuckDefaultProps(defaultProps, props, config),
   };
 }

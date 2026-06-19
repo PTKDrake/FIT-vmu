@@ -121,7 +121,7 @@ final class BuildPublicPostPropsAction
             ->where('status', 'published')
             ->whereHas('categories', fn ($q) => $q->where('post_categories.id', $category->id))
             ->latest('published_at')
-            ->limit(3)
+            ->limit(4)
             ->get();
 
         if ($viewer instanceof User) {

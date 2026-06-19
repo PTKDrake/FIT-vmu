@@ -33,9 +33,9 @@ class HomepageSeeder extends Seeder
   },
   "content": [
     {
-      "type": "HeroCustom",
+      "type": "FeaturedHero",
       "props": {
-        "id": "HeroCustom-ff7451f9-46ff-419f-92a3-bb35080c2a84",
+        "id": "FeaturedHero-ff7451f9-46ff-419f-92a3-bb35080c2a84",
         "badge": "Tuyển sinh 2026",
         "title": "Đào tạo, nghiên cứu và đổi mới vì ngành hàng hải số",
         "description": "Khoa Công nghệ thông tin xây dựng chương trình đào tạo tiên tiến, gắn với thực tiễn, phát triển năng lực công nghệ, nghiên cứu ứng dụng và kết nối doanh nghiệp.",
@@ -57,9 +57,9 @@ class HomepageSeeder extends Seeder
       "props": {
         "children": [
           {
-            "type": "StatsCustom",
+            "type": "HighlightStats",
             "props": {
-              "id": "StatsCustom-af9bfa67-f71e-4d7b-bcf8-837d21a3e67f",
+              "id": "HighlightStats-af9bfa67-f71e-4d7b-bcf8-837d21a3e67f",
               "title": "Thống kê nổi bật",
               "viewAllLabel": "Xem tất cả",
               "viewAllHref": "#",
@@ -89,9 +89,9 @@ class HomepageSeeder extends Seeder
             }
           },
           {
-            "type": "ProgramsCustom",
+            "type": "ProgramGrid",
             "props": {
-              "id": "ProgramsCustom-279342b8-ad82-4e33-aea2-86ad3db04b25",
+              "id": "ProgramGrid-279342b8-ad82-4e33-aea2-86ad3db04b25",
               "badge": "CHƯƠNG TRÌNH ĐÀO TẠO",
               "title": "Các hướng đào tạo nổi bật",
               "description": "Các chương trình đào tạo chất lượng cao, cập nhật xu hướng công nghệ và đáp ứng nhu cầu thực tiễn của thị trường lao động.",
@@ -127,9 +127,9 @@ class HomepageSeeder extends Seeder
             }
           },
           {
-            "type": "AboutCustom",
+            "type": "AboutFeature",
             "props": {
-              "id": "AboutCustom-22bf69c0-bf06-447f-a8e6-da09c18fcd1d",
+              "id": "AboutFeature-22bf69c0-bf06-447f-a8e6-da09c18fcd1d",
               "badge": "• Về chúng tôi",
               "title": "Giới thiệu khoa",
               "imageUrl": {
@@ -219,9 +219,9 @@ class HomepageSeeder extends Seeder
             "props": {
               "children": [
                 {
-                  "type": "NewsCustom",
+                  "type": "FeaturedNews",
                   "props": {
-                    "id": "NewsCustom-8bce07ee-8f1a-454a-b3de-d59edd4116bc",
+                    "id": "FeaturedNews-8bce07ee-8f1a-454a-b3de-d59edd4116bc",
                     "title": "Tin tức nổi bật",
                     "viewAllLabel": "Xem tất cả",
                     "viewAllHref": "/posts",
@@ -238,9 +238,9 @@ class HomepageSeeder extends Seeder
                   }
                 },
                 {
-                  "type": "AnnouncementsCustom",
+                  "type": "FeaturedAnnouncements",
                   "props": {
-                    "id": "AnnouncementsCustom-392d5911-591a-40df-82ba-797d4f77cec7",
+                    "id": "FeaturedAnnouncements-392d5911-591a-40df-82ba-797d4f77cec7",
                     "title": "Thông báo mới nhất",
                     "actionLabel": "Xem tất cả thông báo",
                     "actionHref": "/posts",
@@ -251,7 +251,7 @@ class HomepageSeeder extends Seeder
                   }
                 },
                 {
-                  "type": "CtaCustom",
+                  "type": "EnrollmentCta",
                   "props": {
                     "logoUrl": null,
                     "logoAlt": "Logo FIT",
@@ -286,7 +286,7 @@ class HomepageSeeder extends Seeder
                       }
                     ],
                     "className": "",
-                    "id": "CtaCustom-4db743f2-e5e9-4ac8-8c02-da529abe55c6"
+                    "id": "EnrollmentCta-4db743f2-e5e9-4ac8-8c02-da529abe55c6"
                   }
                 }
               ],

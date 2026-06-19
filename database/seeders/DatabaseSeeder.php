@@ -41,8 +41,6 @@ class DatabaseSeeder extends Seeder
             MediaSeeder::class,
             PostCategorySeeder::class,
             PostSeeder::class,
-            IntroPostsSeeder::class,
-            DonViAndChuyenNganhSeeder::class,
             DefaultSiteLayoutSeeder::class,
             HomepageSeeder::class,
             NavigationSeeder::class,

@@ -208,6 +208,9 @@ class BuildPuckDynamicDataAction
     {
         return array_values(PostCategory::query()
             ->where('is_active', true)
+            ->withCount(['posts' => function (Builder $query): void {
+                $query->where('status', 'published');
+            }])
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get()
@@ -217,6 +220,7 @@ class BuildPuckDynamicDataAction
                 'slug' => $category->slug,
                 'parentId' => $category->parent_id,
                 'description' => $category->description,
+                'postCount' => $category->posts_count,
             ])
             ->all());
     }

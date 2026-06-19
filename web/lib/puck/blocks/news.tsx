@@ -99,7 +99,7 @@ function parseCategorySelections(
   );
 }
 
-export const NewsCustomComponentConfig: PageBuilderComponentConfig<"NewsCustom"> =
+export const NewsCustomComponentConfig: PageBuilderComponentConfig<"FeaturedNews"> =
   {
     label: "Tin tức nổi bật",
     defaultProps: {

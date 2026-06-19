@@ -80,25 +80,28 @@ export function SiteLayoutShellFrame({
   left,
   right,
 }: SiteLayoutShellFrameProps) {
+  const bodyClassName = getSiteLayoutBodyClassName(
+    Boolean(left),
+    Boolean(right),
+  );
+
   return (
     <div className="min-h-dvh bg-bg text-fg">
       {header ? (
         <header className="relative z-[200] overflow-visible">{header}</header>
       ) : null}
 
-      <div className="mx-auto flex w-full min-w-0 flex-col lg:flex-row lg:items-start">
+      <div className={bodyClassName}>
         {left ? (
-          <aside className="@container/layout-side w-full min-w-0 shrink-0 lg:w-72">
+          <aside className="@container/layout-side w-full min-w-0 lg:w-72">
             {left}
           </aside>
         ) : null}
 
-        <main className="@container/layout-main min-w-0 flex-1">
-          {children}
-        </main>
+        <main className="@container/layout-main min-w-0">{children}</main>
 
         {right ? (
-          <aside className="@container/layout-side w-full min-w-0 shrink-0 lg:w-72">
+          <aside className="@container/layout-side w-full min-w-0 lg:w-72">
             {right}
           </aside>
         ) : null}
@@ -107,6 +110,25 @@ export function SiteLayoutShellFrame({
       {footer ? <footer>{footer}</footer> : null}
     </div>
   );
+}
+
+function getSiteLayoutBodyClassName(
+  hasLeft: boolean,
+  hasRight: boolean,
+): string {
+  if (hasLeft && hasRight) {
+    return "mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1 lg:grid-cols-[18rem_minmax(0,1fr)_18rem] lg:items-start lg:gap-8";
+  }
+
+  if (hasLeft) {
+    return "mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start lg:gap-8";
+  }
+
+  if (hasRight) {
+    return "mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-8";
+  }
+
+  return "mx-auto grid w-full max-w-7xl min-w-0 grid-cols-1";
 }
 
 function hasSlotContent(value: VmuFitPageBuilderValue): boolean {

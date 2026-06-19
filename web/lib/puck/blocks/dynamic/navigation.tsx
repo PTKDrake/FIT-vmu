@@ -666,7 +666,7 @@ function normalizeNavigationPath(value: string): string {
   }
 }
 
-export const FitNavigationHeaderComponentConfig: PageBuilderComponentConfig<"FitNavigationHeader"> =
+export const FitNavigationHeaderComponentConfig: PageBuilderComponentConfig<"SiteHeader"> =
   {
     label: "Header điều hướng FIT",
     defaultProps: {

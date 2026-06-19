@@ -2,7 +2,7 @@ import { CtaCustom } from "@/components/cms/cta-custom";
 import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
-export const CtaCustomComponentConfig: PageBuilderComponentConfig<"CtaCustom"> =
+export const CtaCustomComponentConfig: PageBuilderComponentConfig<"EnrollmentCta"> =
   {
     label: "Khối CTA nâng cao",
     defaultProps: {

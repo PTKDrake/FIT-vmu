@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { PuckMediaField } from "@/components/layout-builder/puck-media-field";
 import { PuckSelectField } from "@/components/layout-builder/puck-select-field";
+import { PuckDrawerItem } from "@/components/puck/puck-drawer-item";
 import { PuckExportMenu } from "@/components/page-builder/puck-export-menu";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -254,6 +255,7 @@ export function PuckPageBuilder({
         headerTitle={headerTitle}
         onChange={handleEditorChange}
         overrides={{
+          drawerItem: PuckDrawerItem as any,
           fieldTypes: {
             cmsMedia: PuckMediaField,
             select: PuckSelectField,

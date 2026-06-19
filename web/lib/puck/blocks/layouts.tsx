@@ -110,6 +110,17 @@ export function getInsetYClass(insetY?: "none" | "xs" | "sm" | "md" | "lg") {
   return insetY ? insetClasses[insetY] : "";
 }
 
+export function getStickyTopClass(stickyTop?: "sm" | "md" | "lg" | "xl") {
+  const stickyTopClasses = {
+    sm: "lg:top-4",
+    md: "lg:top-6",
+    lg: "lg:top-8",
+    xl: "lg:top-10",
+  };
+
+  return stickyTop ? stickyTopClasses[stickyTop] : stickyTopClasses.md;
+}
+
 export function getBackgroundClass(background?: string) {
   const bgClasses: Record<string, string> = {
     transparent: "bg-transparent text-fg",
@@ -433,6 +444,10 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       horizontalPadding: "md",
       align: "center",
       insetY: "none",
+      stackChildren: false,
+      childGap: "md",
+      stickyOnDesktop: false,
+      stickyTop: "md",
       hideOn: "none",
       className: "",
     },
@@ -484,6 +499,42 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
           { label: "Lớn", value: "lg" },
         ],
       },
+      stackChildren: {
+        type: "radio",
+        label: "Xếp các block con theo cột",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      childGap: {
+        type: "select",
+        label: "Khoảng cách giữa các block con",
+        options: [
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+          { label: "Rất lớn", value: "xl" },
+        ],
+      },
+      stickyOnDesktop: {
+        type: "radio",
+        label: "Sticky trên desktop",
+        options: [
+          { label: "Có", value: true },
+          { label: "Không", value: false },
+        ],
+      },
+      stickyTop: {
+        type: "select",
+        label: "Khoảng cách sticky từ đỉnh",
+        options: [
+          { label: "Nhỏ", value: "sm" },
+          { label: "Vừa", value: "md" },
+          { label: "Lớn", value: "lg" },
+          { label: "Rất lớn", value: "xl" },
+        ],
+      },
       hideOn: {
         type: "select",
         label: "Ẩn theo thiết bị",
@@ -511,6 +562,10 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
         horizontalPadding,
         align,
         insetY,
+        stackChildren,
+        childGap,
+        stickyOnDesktop,
+        stickyTop,
         hideOn,
         className,
         children: Children,
@@ -542,12 +597,22 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
       const emptyPreviewClass = isPuckEditorPreview()
         ? "empty:min-h-20 empty:min-w-20 empty:w-full empty:rounded-2xl empty:border empty:border-dashed empty:border-border/50 empty:bg-muted/20"
         : "";
+      const stickyClassName = stickyOnDesktop
+        ? twMerge("lg:sticky", getStickyTopClass(stickyTop))
+        : "";
+      const childrenClassName = twMerge(
+        "w-full",
+        stackChildren ? "flex flex-col" : "",
+        stackChildren ? getGapClass(childGap) : "",
+        emptyPreviewClass,
+      );
 
       return (
         <div
           id={id}
           className={twMerge(
             "@container w-full min-w-0",
+            stickyClassName,
             alignClass,
             widthClass,
             getPaddingXClass(resolvedHorizontalPadding),
@@ -557,10 +622,7 @@ export const ContainerComponentConfig: PageBuilderComponentConfig<"Container"> =
             className,
           )}
         >
-          <Children
-            className={twMerge("w-full", emptyPreviewClass)}
-            minEmptyHeight={96}
-          />
+          <Children className={childrenClassName} minEmptyHeight={96} />
         </div>
       );
     },

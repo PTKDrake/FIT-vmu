@@ -2,7 +2,7 @@ import { StatsCustom } from "@/components/cms/stats-custom";
 import { getPuckBlockDomId } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
-export const StatsCustomComponentConfig: PageBuilderComponentConfig<"StatsCustom"> =
+export const StatsCustomComponentConfig: PageBuilderComponentConfig<"HighlightStats"> =
   {
     label: "Lưới thống kê nổi bật",
     defaultProps: {

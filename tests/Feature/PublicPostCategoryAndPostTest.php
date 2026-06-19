@@ -95,6 +95,43 @@ test('post detail page returns 200 with correct inertia component', function () 
         );
 });
 
+test('post detail page returns related posts up to 4 and categories with postCount', function () {
+    $category = PostCategory::factory()->create([
+        'name' => 'Tin Tuc',
+        'slug' => 'tin-tuc',
+        'is_active' => true,
+    ]);
+
+    $post = Post::factory()->create([
+        'title' => 'Main Post',
+        'slug' => 'main-post',
+        'status' => 'published',
+        'visibility' => 'public',
+    ]);
+    $post->categories()->sync([$category->id]);
+
+    // Create 5 related posts in the same category
+    $relatedPosts = Post::factory()->count(5)->create([
+        'status' => 'published',
+        'visibility' => 'public',
+    ]);
+    foreach ($relatedPosts as $rPost) {
+        $rPost->categories()->sync([$category->id]);
+    }
+
+    $this->get('/tin-tuc/main-post')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/post')
+            ->has('relatedPosts', 4)
+            ->where('dynamicData.categories', function ($categories) {
+                $category = collect($categories)->firstWhere('slug', 'tin-tuc');
+
+                return $category !== null && $category['postCount'] === 6;
+            })
+        );
+});
+
 test('draft post returns 404', function () {
     $category = PostCategory::factory()->create([
         'slug' => 'ban-tin-nhap',

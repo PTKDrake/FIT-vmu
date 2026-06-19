@@ -34,11 +34,11 @@ test('public homepage is seeded through site layout and page data', function () 
 
     expect($pageContent['root']['props']['title'])->toBe('Trang chủ khoa công nghệ thông tin')
         ->and(collect($pageContent['content'])->pluck('type')->all())->toBe([
-            'HeroCustom',
+            'FeaturedHero',
             'Container',
         ])
         ->and($pageContent['content'][0]['props'])->toMatchArray([
-            'id' => 'HeroCustom-ff7451f9-46ff-419f-92a3-bb35080c2a84',
+            'id' => 'FeaturedHero-ff7451f9-46ff-419f-92a3-bb35080c2a84',
             'badge' => 'Tuyển sinh 2026',
             'primaryActionLabel' => 'Giới thiệu khoa',
             'secondaryActionLabel' => 'Tuyển sinh',
@@ -55,10 +55,10 @@ test('public homepage is seeded through site layout and page data', function () 
     $footerContent = json_decode($layout->footer_data ?? '', true, flags: JSON_THROW_ON_ERROR);
 
     expect(collect($headerContent['content'])->pluck('type')->all())->toBe([
-        'FitNavigationHeader',
+        'SiteHeader',
     ])
         ->and(collect($footerContent['content'])->pluck('type')->all())->toBe([
-            'FitFooter',
+            'SiteFooter',
         ])
         ->and(homepageBlocksHaveIds($pageContent['content']))->toBeTrue()
         ->and(homepageBlocksHaveIds($headerContent['content']))->toBeTrue()

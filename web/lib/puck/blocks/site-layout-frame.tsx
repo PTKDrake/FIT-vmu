@@ -10,7 +10,10 @@ import {
   getSurfaceToneClass,
   puckSurfaceFields,
 } from "./surface";
-import type { PageBuilderComponentConfig } from "./types";
+import type {
+  PageBuilderComponentConfig,
+  PageBuilderComponentName,
+} from "./types";
 
 const siteLayoutSlotClassName =
   "w-full h-full rounded-2xl border border-dashed border-border/40 bg-muted/10 p-4";
@@ -26,11 +29,12 @@ export const siteLayoutHeaderComponents = [
   "Heading",
   "Image",
   "Button",
-  "FitNavigationHeader",
+  "SiteHeader",
   "TagList",
   "UnitList",
-  "PageLinks",
-];
+  "PageLinkList",
+  "PostDetailHeader",
+] satisfies PageBuilderComponentName[];
 
 export const siteLayoutFooterComponents = [
   "Section",
@@ -41,17 +45,18 @@ export const siteLayoutFooterComponents = [
   "Heading",
   "RichText",
   "Button",
-  "FitFooter",
+  "SiteFooter",
   "NewsletterForm",
   "TagList",
   "Card",
-  "LatestPosts",
-  "LatestAnnouncements",
-  "Categories",
-  "PageLinks",
+  "PostFeed",
+  "RelatedPostFeed",
+  "AnnouncementFeed",
+  "PostCategoryList",
+  "PageLinkList",
   "UnitList",
   "StaffProfileCard",
-];
+] satisfies PageBuilderComponentName[];
 
 export const siteLayoutSideComponents = [
   "Container",
@@ -62,18 +67,21 @@ export const siteLayoutSideComponents = [
   "RichText",
   "Button",
   "NavigationMenu",
-  "AuthStatus",
-  "LinkList",
+  "AuthLinks",
+  "CustomLinkList",
   "Card",
   "TagList",
-  "LatestPosts",
-  "LatestAnnouncements",
-  "Categories",
+  "PostFeed",
+  "RelatedPostFeed",
+  "AnnouncementFeed",
+  "PostCategoryList",
   "StaffGrid",
   "StaffProfileCard",
-  "PageLinks",
+  "PageLinkList",
   "UnitList",
-];
+  "SidebarQuickLinks",
+  "SidebarSupport",
+] satisfies PageBuilderComponentName[];
 
 export const SiteLayoutFrameComponentConfig: PageBuilderComponentConfig<"SiteLayoutFrame"> =
   {

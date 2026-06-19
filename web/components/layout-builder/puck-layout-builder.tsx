@@ -11,6 +11,7 @@ import type { Plugin } from "@puckeditor/core";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { PuckExportMenu } from "@/components/page-builder/puck-export-menu";
+import { PuckDrawerItem } from "@/components/puck/puck-drawer-item";
 import { Button } from "@/components/ui/button";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 import type { PageBuilderConfig } from "@/lib/puck/blocks/types";
@@ -221,6 +222,7 @@ export function PuckLayoutBuilder({
         onChange={handleEditorChange}
         plugins={plugins}
         overrides={{
+          drawerItem: PuckDrawerItem as any,
           fieldTypes: {
             cmsMedia: PuckMediaField,
             select: PuckSelectField,

@@ -29,7 +29,7 @@ import type { SharedData } from "@/types/shared";
 import { getPuckBlockDomId, isPuckEditorPreview } from "./shared";
 import type { PageBuilderComponentConfig } from "./types";
 
-export const AuthStatusComponentConfig: PageBuilderComponentConfig<"AuthStatus"> =
+export const AuthStatusComponentConfig: PageBuilderComponentConfig<"AuthLinks"> =
   {
     label: "Đăng nhập / Hồ sơ",
     defaultProps: {

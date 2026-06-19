@@ -82,3 +82,10 @@ export { NewsCustomComponentConfig } from "./news";
 // --- CUSTOM ANNOUNCEMENTS & CTA BLOCKS ---
 export { AnnouncementsCustomComponentConfig } from "./announcements-custom";
 export { CtaCustomComponentConfig } from "./cta-custom";
+
+// --- CUSTOM POST & SIDEBAR BLOCKS ---
+export {
+  PostHeaderComponentConfig,
+  SidebarQuickLinksComponentConfig,
+  SidebarSupportComponentConfig,
+} from "./post-custom";
