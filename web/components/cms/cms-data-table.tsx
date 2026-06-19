@@ -726,6 +726,8 @@ export function CmsDataTable<TData extends object>({
 }: CmsDataTableProps<TData>) {
   "use no memo";
 
+  const isFirstPage = meta.currentPage <= 1;
+  const isLastPage = meta.currentPage >= meta.lastPage;
   const storageKey = `cms-table-sizing-${title}`;
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() => {
     if (typeof window !== "undefined") {
@@ -997,14 +999,20 @@ export function CmsDataTable<TData extends object>({
         <Pagination className="mx-0 justify-start lg:justify-end">
           <PaginationList aria-label="Điều hướng phân trang">
             <PaginationFirst
+              isDisabled={isFirstPage}
               onPress={() => {
-                void onPageChange(1);
+                if (!isFirstPage) {
+                  void onPageChange(1);
+                }
               }}
               className="size-8"
             />
             <PaginationPrevious
+              isDisabled={isFirstPage}
               onPress={() => {
-                void onPageChange(Math.max(meta.currentPage - 1, 1));
+                if (!isFirstPage) {
+                  void onPageChange(Math.max(meta.currentPage - 1, 1));
+                }
               }}
               className="size-8"
             />
@@ -1021,8 +1029,11 @@ export function CmsDataTable<TData extends object>({
                   <PaginationItem
                     key={item}
                     isCurrent={item === meta.currentPage}
+                    isDisabled={item === meta.currentPage}
                     onPress={() => {
-                      void onPageChange(item);
+                      if (item !== meta.currentPage) {
+                        void onPageChange(item);
+                      }
                     }}
                     className="size-8 text-xs"
                   >
@@ -1031,10 +1042,13 @@ export function CmsDataTable<TData extends object>({
                 ),
             )}
             <PaginationNext
+              isDisabled={isLastPage}
               onPress={() => {
-                void onPageChange(
-                  Math.min(meta.currentPage + 1, meta.lastPage),
-                );
+                if (!isLastPage) {
+                  void onPageChange(
+                    Math.min(meta.currentPage + 1, meta.lastPage),
+                  );
+                }
               }}
               className="size-8"
             />

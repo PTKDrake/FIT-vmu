@@ -44,6 +44,20 @@ test('user can own one student and one staff profile record', function () {
         ->and($user->staffProfile?->is($staffProfile))->toBeTrue();
 });
 
+test('staff profiles can be created before linking user accounts', function () {
+    $firstProfile = StaffProfile::factory()->create([
+        'user_id' => null,
+    ]);
+
+    $secondProfile = StaffProfile::factory()->create([
+        'user_id' => null,
+    ]);
+
+    expect($firstProfile->user_id)->toBeNull()
+        ->and($firstProfile->user)->toBeNull()
+        ->and($secondProfile->user_id)->toBeNull();
+});
+
 test('student_code and user ownership stay unique', function () {
     $user = User::factory()->create();
     $student = Student::factory()->for($user)->create();

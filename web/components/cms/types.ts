@@ -333,7 +333,7 @@ export interface CmsStaffProfileFormPageProps extends SharedData {
   }>;
   profile?: {
     id: number | null;
-    userId?: number;
+    userId?: number | null;
     academicTitle: string | null;
     displayName?: string;
     fullName: string;

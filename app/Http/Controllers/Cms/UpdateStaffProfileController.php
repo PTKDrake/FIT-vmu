@@ -22,6 +22,7 @@ final class UpdateStaffProfileController extends Controller
         CreateMediaAction $createMedia
     ): RedirectResponse {
         /** @var array{
+         *     user_id?: int|null,
          *     academic_title?: string|null,
          *     full_name: string,
          *     slug: string,
@@ -53,6 +54,7 @@ final class UpdateStaffProfileController extends Controller
         }
 
         /** @var array{
+         *     user_id?: int|null,
          *     academic_title?: string|null,
          *     full_name: string,
          *     slug: string,
@@ -73,6 +75,7 @@ final class UpdateStaffProfileController extends Controller
          * } $payload
          */
         $payload = [
+            'user_id' => array_key_exists('user_id', $validated) ? $validated['user_id'] : $staffProfile->user_id,
             'academic_title' => $validated['academic_title'] ?? null,
             'full_name' => $validated['full_name'],
             'slug' => $validated['slug'],

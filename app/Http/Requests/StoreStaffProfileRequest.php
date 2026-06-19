@@ -21,7 +21,7 @@ class StoreStaffProfileRequest extends FormRequest
     {
         return [
             'user_id' => [
-                'required',
+                'nullable',
                 'integer',
                 Rule::exists('users', 'id'),
                 Rule::unique('staff_profiles', 'user_id'),

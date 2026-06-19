@@ -74,7 +74,8 @@ export default function CmsStaffProfilesPage({
             <Avatar
               src={profile.avatarUrl ?? undefined}
               initials={profile.fullName.substring(0, 2).toUpperCase()}
-              className="size-9 rounded-full border border-border"
+              size="lg"
+              className="border border-border"
               aria-label={`Ảnh đại diện của ${profile.displayName}`}
             />
             <Link

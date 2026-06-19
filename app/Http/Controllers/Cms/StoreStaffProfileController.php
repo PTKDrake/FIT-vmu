@@ -20,7 +20,7 @@ final class StoreStaffProfileController extends Controller
         CreateMediaAction $createMedia
     ): RedirectResponse {
         /** @var array{
-         *     user_id: int,
+         *     user_id?: int|null,
          *     academic_title?: string|null,
          *     full_name: string,
          *     slug: string,
@@ -52,7 +52,7 @@ final class StoreStaffProfileController extends Controller
         }
 
         /** @var array{
-         *     user_id: int,
+         *     user_id: int|null,
          *     academic_title?: string|null,
          *     full_name: string,
          *     slug: string,
@@ -73,7 +73,7 @@ final class StoreStaffProfileController extends Controller
          * } $payload
          */
         $payload = [
-            'user_id' => $validated['user_id'],
+            'user_id' => $validated['user_id'] ?? null,
             'academic_title' => $validated['academic_title'] ?? null,
             'full_name' => $validated['full_name'],
             'slug' => $validated['slug'],

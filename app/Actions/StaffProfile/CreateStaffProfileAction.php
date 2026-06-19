@@ -12,7 +12,7 @@ class CreateStaffProfileAction
 {
     /**
      * @param  array{
-     *     user_id: int,
+     *     user_id: ?int,
      *     academic_title?: ?string,
      *     full_name: string,
      *     slug: string,

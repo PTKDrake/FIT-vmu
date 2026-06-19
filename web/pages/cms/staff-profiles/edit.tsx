@@ -12,13 +12,14 @@ const EMPTY_POSITIONS: NonNullable<CmsStaffProfileFormPageProps["positions"]> =
 
 export default function CmsStaffProfileEditPage({
   profile,
+  users,
   units = EMPTY_UNITS,
   positions = EMPTY_POSITIONS,
 }: CmsStaffProfileFormPageProps) {
   const profileId = profile?.id ?? 0;
   const { data, setData, post, processing, errors, isDirty } = useForm({
     _method: "patch" as const,
-    user_id: profile?.userId ?? 0,
+    user_id: profile?.userId ?? null,
     academic_title: profile?.academicTitle ?? "",
     full_name: profile?.fullName ?? "",
     slug: profile?.slug ?? "",
@@ -79,6 +80,7 @@ export default function CmsStaffProfileEditPage({
           errors={errors}
           processing={processing}
           avatarUrl={profile.avatarUrl}
+          users={users}
           units={units}
           positions={positions}
           onSubmit={handleSubmit}

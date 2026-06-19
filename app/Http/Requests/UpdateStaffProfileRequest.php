@@ -27,7 +27,7 @@ class UpdateStaffProfileRequest extends FormRequest
         /** @var int|string|null $staffProfileId */
         $staffProfileId = $staffProfile instanceof StaffProfile ? $staffProfile->getKey() : null;
 
-        return [
+        $rules = [
             'academic_title' => ['nullable', 'string', 'max:50'],
             'full_name' => ['required', 'string', 'max:255'],
             'slug' => [
@@ -51,5 +51,16 @@ class UpdateStaffProfileRequest extends FormRequest
             'appointments.*.end_date' => ['nullable', 'date', 'after_or_equal:appointments.*.start_date'],
             'appointments.*.note' => ['nullable', 'string', 'max:1000'],
         ];
+
+        if ($this->user()?->can('update staff profiles') ?? false) {
+            $rules['user_id'] = [
+                'nullable',
+                'integer',
+                Rule::exists('users', 'id'),
+                Rule::unique('staff_profiles', 'user_id')->ignore($staffProfileId),
+            ];
+        }
+
+        return $rules;
     }
 }

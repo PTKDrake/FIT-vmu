@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 
 Route::get('/', Controllers\HomeController::class)->name('home');
+Route::get('search', Controllers\PublicSearchController::class)->name('public.search');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::redirect('dashboard', 'cms');

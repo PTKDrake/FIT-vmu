@@ -31,7 +31,7 @@ import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
 
 export interface StaffProfileFormData {
-  user_id: number;
+  user_id: number | null;
   academic_title: string;
   full_name: string;
   slug: string;
@@ -74,7 +74,7 @@ export function StaffProfileForm({
   processing,
   submitLabel,
   title,
-  users = [],
+  users,
   units = [],
   positions = [],
   avatarUrl,
@@ -82,6 +82,8 @@ export function StaffProfileForm({
   onUpdate,
 }: StaffProfileFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const unlinkedUserKey = "__unlinked__";
+  const userOptions = users ?? [];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -98,7 +100,7 @@ export function StaffProfileForm({
     }
   };
 
-  const isCreate = !data.user_id || users.length > 0;
+  const canSelectUser = users !== undefined;
   const appointments = data.appointments || [];
 
   const handleAddAppointment = () => {
@@ -147,19 +149,38 @@ export function StaffProfileForm({
         </Text>
 
         <FieldGroup>
-          {isCreate ? (
+          {canSelectUser ? (
             <div data-slot="control">
               <ComboBox
-                isRequired
                 name="user_id"
-                value={data.user_id || undefined}
-                onChange={(value) => onUpdate("user_id", Number(value))}
+                selectedKey={
+                  data.user_id ? String(data.user_id) : unlinkedUserKey
+                }
+                onSelectionChange={(value) => {
+                  if (value === null || String(value) === unlinkedUserKey) {
+                    onUpdate("user_id", null);
+
+                    return;
+                  }
+
+                  onUpdate("user_id", Number(value));
+                }}
               >
                 <Label>Liên kết tài khoản người dùng</Label>
-                <ComboBoxInput placeholder="Tìm theo tên hoặc email của tài khoản..." />
+                <ComboBoxInput placeholder="Có thể bỏ trống và gắn tài khoản sau..." />
                 <ComboBoxContent>
-                  {users.map((u) => (
-                    <ComboBoxItem key={u.id} id={u.id}>
+                  <ComboBoxItem
+                    id={unlinkedUserKey}
+                    textValue="Không liên kết tài khoản"
+                  >
+                    Không liên kết tài khoản
+                  </ComboBoxItem>
+                  {userOptions.map((u) => (
+                    <ComboBoxItem
+                      key={u.id}
+                      id={String(u.id)}
+                      textValue={`${u.name} (${u.email})`}
+                    >
                       {u.name} ({u.email})
                     </ComboBoxItem>
                   ))}
@@ -167,7 +188,8 @@ export function StaffProfileForm({
               </ComboBox>
               <FieldError>{errors.user_id}</FieldError>
               <Description>
-                Mỗi người dùng chỉ được có tối đa một hồ sơ cán bộ.
+                Có thể tạo hồ sơ trước và gắn tài khoản sau. Mỗi người dùng chỉ
+                được có tối đa một hồ sơ cán bộ.
               </Description>
             </div>
           ) : (
@@ -253,7 +275,8 @@ export function StaffProfileForm({
                     ? data.full_name.substring(0, 2).toUpperCase()
                     : "SP"
                 }
-                className="size-24 rounded-full border border-border shadow-xs"
+                size="5xl"
+                className="border border-border shadow-xs"
               />
             </div>
             <div data-slot="control" className="space-y-2">

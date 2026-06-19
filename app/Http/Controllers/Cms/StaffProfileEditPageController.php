@@ -9,7 +9,9 @@ use App\Models\Position;
 use App\Models\StaffAppointment;
 use App\Models\StaffProfile;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Inertia\Response;
 
 final class StaffProfileEditPageController extends Controller
@@ -30,7 +32,26 @@ final class StaffProfileEditPageController extends Controller
             ->get(['id', 'name'])
             ->all();
 
-        return inertia('cms/staff-profiles/edit', [
+        $canManageUserLink = request()->user()?->can('update staff profiles') ?? false;
+
+        $users = $canManageUserLink ? User::query()
+            ->where(function (Builder $query) use ($staffProfile): void {
+                $query->doesntHave('staffProfile');
+
+                if ($staffProfile->user_id !== null) {
+                    $query->orWhere('id', $staffProfile->user_id);
+                }
+            })
+            ->orderBy('name')
+            ->get(['id', 'name', 'email'])
+            ->map(fn (User $user): array => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ])
+            ->all() : null;
+
+        $props = [
             'units' => $units,
             'positions' => $positions,
             'profile' => [
@@ -58,7 +79,13 @@ final class StaffProfileEditPageController extends Controller
                     'note' => $appt->note,
                 ])->all(),
             ],
-        ]);
+        ];
+
+        if ($users !== null) {
+            $props['users'] = $users;
+        }
+
+        return inertia('cms/staff-profiles/edit', $props);
     }
 
     private function formatDate(mixed $value): ?string

@@ -169,6 +169,58 @@ test('admin/editor can access staff profile create page and persist new profile'
     Event::assertDispatchedTimes(CmsContentChanged::class, 1);
 });
 
+test('admin can create staff profile without user account and link it later', function () {
+    Event::fake([CmsContentChanged::class]);
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    $eligibleUser = User::factory()->create([
+        'name' => 'Phạm Minh D',
+        'email' => 'phamminhd@vmu.edu.vn',
+    ]);
+
+    $response = $this->actingAs($admin)
+        ->post('/cms/staff-profiles', [
+            'user_id' => null,
+            'academic_title' => 'ThS.',
+            'full_name' => 'Phạm Minh D',
+            'slug' => 'pham-minh-d',
+            'email' => 'phamminhd@vmu.edu.vn',
+            'phone' => '0912345679',
+            'bio' => blockNoteJsonTest('Tiểu sử giảng viên Phạm Minh D.'),
+            'bio_format' => 'blocknote_json',
+            'is_public' => false,
+            'appointments' => [],
+        ]);
+
+    $profile = StaffProfile::query()->where('slug', 'pham-minh-d')->firstOrFail();
+
+    $response->assertRedirect("/cms/staff-profiles/{$profile->id}");
+
+    expect($profile->user_id)->toBeNull();
+
+    $this->actingAs($admin)
+        ->post("/cms/staff-profiles/{$profile->id}", [
+            '_method' => 'patch',
+            'user_id' => $eligibleUser->id,
+            'academic_title' => 'ThS.',
+            'full_name' => 'Phạm Minh D',
+            'slug' => 'pham-minh-d',
+            'email' => 'phamminhd@vmu.edu.vn',
+            'phone' => '0912345679',
+            'bio' => blockNoteJsonTest('Tiểu sử giảng viên Phạm Minh D.'),
+            'bio_format' => 'blocknote_json',
+            'is_public' => false,
+            'appointments' => [],
+        ])
+        ->assertRedirect("/cms/staff-profiles/{$profile->id}");
+
+    expect($profile->refresh()->user_id)->toBe($eligibleUser->id);
+
+    Event::assertDispatchedTimes(CmsContentChanged::class, 2);
+});
+
 test('user can update their own profile and upload a new avatar', function () {
     Event::fake([CmsContentChanged::class]);
 

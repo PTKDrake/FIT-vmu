@@ -53,7 +53,8 @@ export default function CmsStaffProfileShowPage({
                 <Avatar
                   src={profile.avatarUrl ?? undefined}
                   initials={profile.fullName.substring(0, 2).toUpperCase()}
-                  className="size-28 rounded-full border-2 border-border shadow-xs"
+                  size="6xl"
+                  className="border-2 border-border shadow-xs"
                   aria-label={`Avatar của ${profile.displayName}`}
                 />
 

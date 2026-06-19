@@ -18,7 +18,7 @@ export default function CmsStaffProfileCreatePage({
   positions = EMPTY_POSITIONS,
 }: CmsStaffProfileFormPageProps) {
   const { data, setData, post, processing, errors, isDirty } = useForm({
-    user_id: 0,
+    user_id: null as number | null,
     academic_title: "",
     full_name: "",
     slug: "",

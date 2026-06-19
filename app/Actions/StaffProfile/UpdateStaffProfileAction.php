@@ -12,6 +12,7 @@ class UpdateStaffProfileAction
 {
     /**
      * @param  array{
+     *     user_id?: ?int,
      *     academic_title?: ?string,
      *     full_name: string,
      *     slug: string,
@@ -35,6 +36,7 @@ class UpdateStaffProfileAction
     {
         return DB::transaction(function () use ($staffProfile, $attributes): StaffProfile {
             $staffProfile->update([
+                'user_id' => array_key_exists('user_id', $attributes) ? $attributes['user_id'] : $staffProfile->user_id,
                 'academic_title' => blank($attributes['academic_title'] ?? null) ? null : trim((string) $attributes['academic_title']),
                 'full_name' => $attributes['full_name'],
                 'slug' => $attributes['slug'],
