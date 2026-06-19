@@ -73,6 +73,7 @@ const navigationTypeLabels: Record<NavigationItemType, string> = {
   page: "Trang",
   post: "Bài viết",
   post_category: "Danh mục bài viết",
+  unit: "Đơn vị (Tự động tải danh sách)",
 };
 
 const navigationTargetLabels: Record<NavigationItemTarget, string> = {
@@ -708,16 +709,20 @@ function NavigationItemEditorModal({
             onSelectionChange={(key) => {
               const nextType = String(key) as NavigationItemType;
 
-              onItemFieldChange(item.id, (currentItem) => ({
-                ...currentItem,
-                type: nextType,
-                linkableId:
-                  nextType === "custom_url"
-                    ? null
-                    : resolveDefaultResourceId(nextType, resourceCatalog),
-                linkableType: nextType === "custom_url" ? null : nextType,
-                url: nextType === "custom_url" ? (currentItem.url ?? "") : null,
-              }));
+              onItemFieldChange(item.id, (currentItem) => {
+                const isInternal = nextType !== "custom_url" && nextType !== "unit";
+                return {
+                  ...currentItem,
+                  type: nextType,
+                  linkableId: isInternal
+                    ? resolveDefaultResourceId(nextType, resourceCatalog)
+                    : null,
+                  linkableType: isInternal
+                    ? (nextType as NavigationInternalResourceType)
+                    : null,
+                  url: nextType === "custom_url" ? (currentItem.url ?? "") : null,
+                };
+              });
             }}
           >
             <Label>Loại item</Label>
@@ -731,7 +736,7 @@ function NavigationItemEditorModal({
             </SelectContent>
           </Select>
 
-          {item.type === "custom_url" ? (
+          {item.type === "custom_url" && (
             <TextField
               aria-label="Custom URL"
               value={item.url ?? ""}
@@ -745,7 +750,15 @@ function NavigationItemEditorModal({
               <Label>URL đích</Label>
               <Input placeholder="https://fit.vimaru.edu.vn/..." />
             </TextField>
-          ) : (
+          )}
+
+          {item.type === "unit" && (
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-4 text-xs text-muted-fg leading-relaxed">
+              Các đơn vị hoạt động trong cơ sở dữ liệu sẽ tự động được tải làm menu con của mục này. Bạn không cần chọn cụ thể đơn vị nào.
+            </div>
+          )}
+
+          {item.type !== "custom_url" && item.type !== "unit" && (
             <Select
               aria-label="Tài nguyên nội bộ"
               selectedKey={String(item.linkableId ?? "")}
@@ -981,7 +994,7 @@ function resolveResourceOptions(
     NavigationResourceOption[]
   >,
 ): NavigationResourceOption[] {
-  if (type === "custom_url") {
+  if (type === "custom_url" || type === "unit") {
     return [];
   }
 

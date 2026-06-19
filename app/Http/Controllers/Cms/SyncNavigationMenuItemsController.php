@@ -22,7 +22,7 @@ final class SyncNavigationMenuItemsController extends Controller
          *         id: int,
          *         parent_id: int|null,
          *         title: string,
-         *         type: 'custom_url'|'post_category'|'page'|'post',
+         *         type: 'custom_url'|'post_category'|'page'|'post'|'unit',
          *         linkable_type: 'post_category'|'page'|'post'|null,
          *         linkable_id: int|null,
          *         url: string|null,

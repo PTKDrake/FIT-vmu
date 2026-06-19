@@ -278,6 +278,8 @@ require __DIR__.'/dev.php';
 
 // Public post routes MUST precede the catch-all slug route so that
 // `/{category-slug}/{post-slug}` wins over single-segment slugs.
+Route::get('don-vi/{slug}', Controllers\PublicUnitController::class)
+    ->name('units.public.show');
 Route::get('{categorySlug}/{postSlug}', Controllers\PublicPostController::class)
     ->name('posts.public.show');
 Route::get('{slug}', Controllers\PublicSlugController::class)

@@ -102,13 +102,39 @@ class BuildPuckDynamicDataAction
     {
         return array_values(collect($items)
             ->filter(fn (NavigationItem $item): bool => $item->parent_id === $parentId)
-            ->map(fn (NavigationItem $item): array => [
-                'id' => $item->id,
-                'title' => $item->title,
-                'url' => $this->navigationItemUrl($item),
-                'target' => $item->target,
-                'children' => $this->buildNavigationTree($items, $item->id),
-            ])
+            ->flatMap(function (NavigationItem $item) use ($items): array {
+                if ($item->type === 'unit') {
+                    $activeUnits = Unit::query()
+                        ->where('is_active', true)
+                        ->orderBy('sort_order')
+                        ->orderBy('name')
+                        ->get();
+
+                    $unitChildren = $activeUnits->map(fn (Unit $unit): array => [
+                        'id' => 100000 + $unit->id,
+                        'title' => $unit->name,
+                        'url' => '/don-vi/'.$unit->slug,
+                        'target' => '_self',
+                        'children' => [],
+                    ])->all();
+
+                    return [[
+                        'id' => $item->id,
+                        'title' => $item->title,
+                        'url' => '#',
+                        'target' => $item->target,
+                        'children' => $unitChildren,
+                    ]];
+                }
+
+                return [[
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'url' => $this->navigationItemUrl($item),
+                    'target' => $item->target,
+                    'children' => $this->buildNavigationTree($items, $item->id),
+                ]];
+            })
             ->all());
     }
 

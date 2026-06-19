@@ -371,11 +371,11 @@ export function PostListSection({
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <div className="mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8 flex flex-col justify-center items-center">
       {/* 01. Hero / Header danh mục */}
       {/* Desktop view */}
       <div className="hidden md:flex min-h-[260px] items-stretch justify-between relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary via-[#004ecb] to-primary text-white shadow-xs">
-        <div className="flex-1 p-8 lg:p-12 flex flex-col justify-center relative z-10">
+        <div className="flex-1 p-8 lg:p-12 relative z-10">
           <div className="mb-4">
             <Breadcrumbs className="text-white/80 select-none [&_span]:text-white/40 [&_svg]:text-white/40">
               <BreadcrumbsItem
@@ -405,7 +405,7 @@ export function PostListSection({
           ) : null}
         </div>
 
-        <div className="relative w-[42%] shrink-0">
+        <div className="relative w-[24%] shrink-0">
           <div className="absolute inset-y-0 -left-12 w-16 z-10 pointer-events-none">
             <svg
               viewBox="0 0 100 100"
@@ -477,199 +477,188 @@ export function PostListSection({
         </div>
       </div>
 
-      {/* 02. Thanh tìm kiếm & Bộ lọc */}
-      <div className="bg-white border border-border rounded-3xl p-5 md:p-6 shadow-xs flex flex-col gap-4">
-        <PostListToolbar
-          key={q ?? ""}
-          category={category}
-          filterCategories={filterCategories}
-          initialSearch={q ?? ""}
-          sort={sort}
-        />
-      </div>
-
-      {/* 03. Danh sách bài viết & 04. Phân trang */}
-      <div>
-        <div className="flex items-center gap-2.5 mb-6">
-          <Badge
-            intent="primary"
-            isCircle={false}
-            className="rounded-md font-bold px-2 py-0.5"
-          >
-            {posts.total}
-          </Badge>
-          <Heading
-            level={2}
-            className="text-lg font-extrabold tracking-tight text-fg uppercase"
-          >
-            Danh sách bài viết
-          </Heading>
+      <div className="max-w-6xl space-y-8">
+        {/* 02. Thanh tìm kiếm & Bộ lọc */}
+        <div className="bg-white border border-border rounded-3xl p-5 md:p-6 shadow-xs flex flex-col gap-4">
+          <PostListToolbar
+            key={q ?? ""}
+            category={category}
+            filterCategories={filterCategories}
+            initialSearch={q ?? ""}
+            sort={sort}
+          />
         </div>
-
-        {posts.data.length > 0 ? (
-          <div className="space-y-10">
-            {/* Posts Grid */}
-            <div className="grid gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.data.map((post) => (
-                <Link
-                  key={post.id}
-                  href={post.url ?? "#"}
-                  className="block group"
-                >
-                  <Card className="overflow-hidden p-0 gap-0 transition duration-300 border-border hover:border-primary/20 hover:shadow-lg hover:shadow-gray-100/50 flex flex-col h-full bg-white">
-                    {/* Thumbnail */}
-                    <div className="aspect-[16/10] w-full overflow-hidden bg-gray-50 relative shrink-0">
-                      {post.thumbnailUrl ? (
-                        <img
-                          src={post.thumbnailUrl}
-                          alt={post.title}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center text-muted-fg bg-gray-50 text-xs">
-                          Không có ảnh đại diện
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Card Content */}
-                    <CardContent className="p-5 flex-1 flex flex-col gap-3 py-5 px-5">
-                      {/* Category badge */}
-                      <PostCategoryBadges categoryNames={post.categoryNames} />
-
-                      {/* Title */}
-                      <Heading
-                        level={3}
-                        className="text-base font-bold text-fg group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[2.75rem]"
-                      >
-                        {post.title}
-                      </Heading>
-
-                      {/* Excerpt */}
-                      {post.excerpt && (
-                        <Text className="text-xs leading-relaxed line-clamp-3 mb-2 flex-1">
-                          {post.excerpt}
-                        </Text>
-                      )}
-
-                      {/* Card Footer Meta */}
-                      <div className="flex items-center justify-between border-t border-border pt-3 text-[11px] font-medium text-muted-fg shrink-0">
-                        {post.date ? (
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5" />
-                            <span>{post.date}</span>
-                          </div>
+        {/* 03. Danh sách bài viết & 04. Phân trang */}
+        <div>
+          <div className="flex items-center gap-2.5 mb-6">
+            <Badge
+              intent="primary"
+              isCircle={false}
+              className="rounded-md font-bold px-2 py-0.5"
+            >
+              {posts.total}
+            </Badge>
+            <Heading
+              level={2}
+              className="text-lg font-extrabold tracking-tight text-fg uppercase"
+            >
+              Danh sách bài viết
+            </Heading>
+          </div>
+          {posts.data.length > 0 ? (
+            <div className="space-y-10">
+              {/* Posts Grid */}
+              <div className="grid gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {posts.data.map((post) => (
+                  <Link
+                    key={post.id}
+                    href={post.url ?? "#"}
+                    className="block group"
+                  >
+                    <Card className="overflow-hidden p-0 gap-0 transition duration-300 border-border hover:border-primary/20 hover:shadow-lg hover:shadow-gray-100/50 flex flex-col h-full bg-white">
+                      {/* Thumbnail */}
+                      <div className="aspect-[16/10] w-full overflow-hidden bg-gray-50 relative shrink-0">
+                        {post.thumbnailUrl ? (
+                          <img
+                            src={post.thumbnailUrl}
+                            alt={post.title}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
                         ) : (
-                          <div />
+                          <div className="h-full w-full flex items-center justify-center text-muted-fg bg-gray-50 text-xs">
+                            Không có ảnh đại diện
+                          </div>
                         )}
-                        <div className="flex items-center gap-1">
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>{getViewsCount(post.id)}</span>
-                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-
-            {/* 04. Phân trang (Pagination) - Combined with Post List */}
-            {posts.last_page > 1 && (
-              <div className="flex justify-center items-center gap-1.5 pt-6 border-t border-border">
-                {/* Previous page */}
-                <InertiaLink
-                  href={posts.prev_page_url ?? "#"}
-                  className={twMerge(
-                    "flex items-center justify-center w-9 h-9 rounded-xl border text-sm font-semibold transition cursor-pointer",
-                    posts.prev_page_url
-                      ? "border-border text-fg hover:bg-muted"
-                      : "border-border/50 text-muted-fg/40 pointer-events-none",
-                  )}
-                  preserveScroll
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </InertiaLink>
-
-                {/* Pages list */}
-                {Array.from({ length: posts.last_page }, (_, i) => {
-                  const pageNum = i + 1;
-                  const isActive = pageNum === posts.current_page;
-
-                  const showPage =
-                    pageNum === 1 ||
-                    pageNum === posts.last_page ||
-                    Math.abs(pageNum - posts.current_page) <= 1;
-
-                  if (!showPage) {
-                    if (pageNum === 2 && posts.current_page > 3) {
-                      return (
-                        <span
-                          key="gap-start"
-                          className="w-9 text-center font-semibold text-muted-fg"
+                      {/* Card Content */}
+                      <CardContent className="p-5 flex-1 flex flex-col gap-3 py-5 px-5">
+                        {/* Category badge */}
+                        <PostCategoryBadges categoryNames={post.categoryNames} />
+                        {/* Title */}
+                        <Heading
+                          level={3}
+                          className="text-base font-bold text-fg group-hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[2.75rem]"
                         >
-                          ...
-                        </span>
-                      );
-                    }
-                    if (
-                      pageNum === posts.last_page - 1 &&
-                      posts.current_page < posts.last_page - 2
-                    ) {
-                      return (
-                        <span
-                          key="gap-end"
-                          className="w-9 text-center font-semibold text-muted-fg"
-                        >
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  }
-
-                  const pageUrl = new URL(window.location.href);
-                  pageUrl.searchParams.set("page", String(pageNum));
-
-                  return (
-                    <InertiaLink
-                      key={pageNum}
-                      href={isActive ? undefined : pageUrl.toString()}
-                      className={twMerge(
-                        "flex items-center justify-center w-9 h-9 rounded-xl text-sm font-semibold transition cursor-pointer",
-                        isActive
-                          ? "bg-primary text-primary-fg shadow-xs"
-                          : "border border-border text-fg hover:bg-muted",
-                      )}
-                      preserveScroll
-                    >
-                      {pageNum}
-                    </InertiaLink>
-                  );
-                })}
-
-                {/* Next page */}
-                <InertiaLink
-                  href={posts.next_page_url ?? "#"}
-                  className={twMerge(
-                    "flex items-center justify-center w-9 h-9 rounded-xl border text-sm font-semibold transition cursor-pointer",
-                    posts.next_page_url
-                      ? "border-border text-fg hover:bg-muted"
-                      : "border-border/50 text-muted-fg/40 pointer-events-none",
-                  )}
-                  preserveScroll
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </InertiaLink>
+                          {post.title}
+                        </Heading>
+                        {/* Excerpt */}
+                        {post.excerpt && (
+                          <Text className="text-xs leading-relaxed line-clamp-3 mb-2 flex-1">
+                            {post.excerpt}
+                          </Text>
+                        )}
+                        {/* Card Footer Meta */}
+                        <div className="flex items-center justify-between border-t border-border pt-3 text-[11px] font-medium text-muted-fg shrink-0">
+                          {post.date ? (
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-3.5 h-3.5" />
+                              <span>{post.date}</span>
+                            </div>
+                          ) : (
+                            <div />
+                          )}
+                          <div className="flex items-center gap-1">
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>{getViewsCount(post.id)}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="rounded-3xl border border-dashed border-border p-16 text-center bg-muted/15">
-            <Text className="text-muted-fg text-sm font-medium">
-              Chưa có bài viết nào phù hợp trong danh mục này.
-            </Text>
-          </div>
-        )}
+              {/* 04. Phân trang (Pagination) - Combined with Post List */}
+              {posts.last_page > 1 && (
+                <div className="flex justify-center items-center gap-1.5 pt-6 border-t border-border">
+                  {/* Previous page */}
+                  <InertiaLink
+                    href={posts.prev_page_url ?? "#"}
+                    className={twMerge(
+                      "flex items-center justify-center w-9 h-9 rounded-xl border text-sm font-semibold transition cursor-pointer",
+                      posts.prev_page_url
+                        ? "border-border text-fg hover:bg-muted"
+                        : "border-border/50 text-muted-fg/40 pointer-events-none",
+                    )}
+                    preserveScroll
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </InertiaLink>
+                  {/* Pages list */}
+                  {Array.from({ length: posts.last_page }, (_, i) => {
+                    const pageNum = i + 1;
+                    const isActive = pageNum === posts.current_page;
+                    const showPage =
+                      pageNum === 1 ||
+                      pageNum === posts.last_page ||
+                      Math.abs(pageNum - posts.current_page) <= 1;
+                    if (!showPage) {
+                      if (pageNum === 2 && posts.current_page > 3) {
+                        return (
+                          <span
+                            key="gap-start"
+                            className="w-9 text-center font-semibold text-muted-fg"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      if (
+                        pageNum === posts.last_page - 1 &&
+                        posts.current_page < posts.last_page - 2
+                      ) {
+                        return (
+                          <span
+                            key="gap-end"
+                            className="w-9 text-center font-semibold text-muted-fg"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    }
+                    const pageUrl = new URL(window.location.href);
+                    pageUrl.searchParams.set("page", String(pageNum));
+                    return (
+                      <InertiaLink
+                        key={pageNum}
+                        href={isActive ? undefined : pageUrl.toString()}
+                        className={twMerge(
+                          "flex items-center justify-center w-9 h-9 rounded-xl text-sm font-semibold transition cursor-pointer",
+                          isActive
+                            ? "bg-primary text-primary-fg shadow-xs"
+                            : "border border-border text-fg hover:bg-muted",
+                        )}
+                        preserveScroll
+                      >
+                        {pageNum}
+                      </InertiaLink>
+                    );
+                  })}
+                  {/* Next page */}
+                  <InertiaLink
+                    href={posts.next_page_url ?? "#"}
+                    className={twMerge(
+                      "flex items-center justify-center w-9 h-9 rounded-xl border text-sm font-semibold transition cursor-pointer",
+                      posts.next_page_url
+                        ? "border-border text-fg hover:bg-muted"
+                        : "border-border/50 text-muted-fg/40 pointer-events-none",
+                    )}
+                    preserveScroll
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </InertiaLink>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-dashed border-border p-16 text-center bg-muted/15">
+              <Text className="text-muted-fg text-sm font-medium">
+                Chưa có bài viết nào phù hợp trong danh mục này.
+              </Text>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

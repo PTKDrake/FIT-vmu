@@ -35,7 +35,7 @@ class SyncNavigationMenuItemsRequest extends FormRequest
             'items.*.id' => ['required', 'integer', 'distinct'],
             'items.*.parent_id' => ['nullable', 'integer'],
             'items.*.title' => ['required', 'string', 'max:255'],
-            'items.*.type' => ['required', 'string', Rule::in(['custom_url', 'post_category', 'page', 'post'])],
+            'items.*.type' => ['required', 'string', Rule::in(['custom_url', 'post_category', 'page', 'post', 'unit'])],
             'items.*.linkable_type' => ['nullable', 'string', Rule::in(['post_category', 'page', 'post'])],
             'items.*.linkable_id' => ['nullable', 'integer'],
             'items.*.url' => ['nullable', 'string', 'max:2048'],
@@ -59,7 +59,7 @@ class SyncNavigationMenuItemsRequest extends FormRequest
          *     id: int,
          *     parent_id: int|null,
          *     title: string,
-         *     type: 'custom_url'|'post_category'|'page'|'post',
+         *     type: 'custom_url'|'post_category'|'page'|'post'|'unit',
          *     linkable_type: 'post_category'|'page'|'post'|null,
          *     linkable_id: int|null,
          *     url: string|null,
@@ -122,7 +122,7 @@ class SyncNavigationMenuItemsRequest extends FormRequest
          *     id: int,
          *     parent_id: int|null,
          *     title: string,
-         *     type: 'custom_url'|'post_category'|'page'|'post',
+         *     type: 'custom_url'|'post_category'|'page'|'post'|'unit',
          *     linkable_type: 'post_category'|'page'|'post'|null,
          *     linkable_id: int|null,
          *     url: string|null,
@@ -151,6 +151,22 @@ class SyncNavigationMenuItemsRequest extends FormRequest
 
                 if ($linkableId !== null) {
                     $validator->errors()->add("items.{$index}.linkable_id", 'The linkable id must be empty when type is custom_url.');
+                }
+
+                continue;
+            }
+
+            if ($type === 'unit') {
+                if ($url !== '') {
+                    $validator->errors()->add("items.{$index}.url", 'The url field must be empty when type is unit.');
+                }
+
+                if ($linkableType !== null) {
+                    $validator->errors()->add("items.{$index}.linkable_type", 'The linkable type must be empty when type is unit.');
+                }
+
+                if ($linkableId !== null) {
+                    $validator->errors()->add("items.{$index}.linkable_id", 'The linkable id must be empty when type is unit.');
                 }
 
                 continue;

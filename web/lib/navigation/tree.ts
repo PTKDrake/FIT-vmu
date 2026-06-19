@@ -4,11 +4,12 @@ export type NavigationItemType =
   | "custom_url"
   | "post_category"
   | "page"
-  | "post";
+  | "post"
+  | "unit";
 
 export type NavigationInternalResourceType = Exclude<
   NavigationItemType,
-  "custom_url"
+  "custom_url" | "unit"
 >;
 
 export type NavigationItemTarget = "_self" | "_blank";
@@ -845,6 +846,10 @@ export function describeNavigationDestination(
 ): string {
   if (item.type === "custom_url") {
     return item.url || "Chưa nhập URL";
+  }
+
+  if (item.type === "unit") {
+    return "Tự động tải danh sách đơn vị";
   }
 
   const selectedResource = item.linkableType
