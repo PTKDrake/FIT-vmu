@@ -8,14 +8,18 @@ import {
 import { useForm, Link, router } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { useRef, useState } from "react";
+import { Autocomplete, useFilter } from "react-aria-components/Autocomplete";
+import { Popover } from "react-aria-components/Popover";
 import { MediaSelector } from "@/components/cms/media-selector";
 import { StickyActionBar } from "@/components/cms/sticky-action-bar";
 import { StudentGroupPicker } from "@/components/cms/student-group-picker";
 import type { CmsLayoutOption } from "@/components/cms/types";
 import { BlockNoteEditor } from "@/components/editor/blocknote-editor";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { Description, FieldError, Label } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ListBox } from "@/components/ui/list-box";
 import {
   ModalBody,
   ModalContent,
@@ -36,6 +40,7 @@ import {
   SelectLabel,
   SelectTrigger,
 } from "@/components/ui/select";
+import { SearchField, SearchInput } from "@/components/ui/search-field";
 import { TextField } from "@/components/ui/text-field";
 import { Textarea } from "@/components/ui/textarea";
 import { useMountEffect } from "@/hooks/use-mount-effect";
@@ -203,32 +208,9 @@ export function PostForm({
     submitOptions.onFinish?.();
   }
 
-  function triggerSubmitWithStatus(
+  function dispatchSubmitWithStatus(
     status: "draft" | "pending" | "published",
-    options?: PostFormSubmitOptions,
-  ): Promise<boolean> | void {
-    if (options) {
-      return new Promise<boolean>((resolve) => {
-        pendingSubmitOptionsRef.current = {
-          ...options,
-          onError: () => {
-            options.onError?.();
-            resolve(false);
-          },
-          onFinish: () => {
-            pendingSubmitOptionsRef.current = null;
-            options.onFinish?.();
-          },
-          onSuccess: () => {
-            options.onSuccess?.();
-            resolve(true);
-          },
-        };
-
-        void triggerSubmitWithStatus(status);
-      });
-    }
-
+  ): void {
     form.setData("status", status);
     setTimeout(() => {
       allowNextSubmitRef.current = true;
@@ -241,6 +223,37 @@ export function PostForm({
 
       allowNextSubmitRef.current = false;
     }, 50);
+  }
+
+  function triggerSubmitWithStatus(
+    status: "draft" | "pending" | "published",
+    options?: PostFormSubmitOptions,
+  ): Promise<boolean> | void {
+    if (!options) {
+      dispatchSubmitWithStatus(status);
+
+      return;
+    }
+
+    return new Promise<boolean>((resolve) => {
+      pendingSubmitOptionsRef.current = {
+        ...options,
+        onError: () => {
+          options.onError?.();
+          resolve(false);
+        },
+        onFinish: () => {
+          pendingSubmitOptionsRef.current = null;
+          options.onFinish?.();
+        },
+        onSuccess: () => {
+          options.onSuccess?.();
+          resolve(true);
+        },
+      };
+
+      dispatchSubmitWithStatus(status);
+    });
   }
 
   useRegisterUnsavedChanges(
@@ -295,6 +308,14 @@ export function PostForm({
     name: category.label,
   }));
   const selectedCategoryValues = form.data.category_ids.map((id) => String(id));
+  const { contains } = useFilter({ sensitivity: "base" });
+  const searchableLayoutOptions = [
+    { id: "", name: "Dùng layout mặc định" },
+    ...layoutOptions.map((layout) => ({
+      id: String(layout.id),
+      name: `${layout.name}${layout.id === defaultPostLayoutId ? " (mặc định)" : ""}`,
+    })),
+  ];
 
   return (
     <form
@@ -428,28 +449,27 @@ export function PostForm({
           </TextField>
 
           <div className="space-y-2">
-            <Label
-              className="font-semibold text-fg text-sm"
-              htmlFor="post-visibility"
-            >
-              Phạm vi xem
-            </Label>
-            <select
-              id="post-visibility"
-              className="w-full rounded-xl border border-input bg-overlay px-3 py-2 text-sm text-fg shadow-xs"
+            <Select
+              aria-label="Phạm vi xem"
               value={form.data.visibility}
-              onChange={(event) =>
+              onChange={(value) =>
                 form.setData(
                   "visibility",
-                  event.target.value as PostFormValues["visibility"],
+                  value as PostFormValues["visibility"],
                 )
               }
             >
-              <option value="public">Công khai</option>
-              <option value="authenticated">Cần đăng nhập</option>
-              <option value="students">Mọi sinh viên</option>
-              <option value="student_groups">Nhóm sinh viên</option>
-            </select>
+              <Label className="font-semibold text-fg text-sm">
+                Phạm vi xem
+              </Label>
+              <SelectTrigger />
+              <SelectContent>
+                <SelectItem id="public">Công khai</SelectItem>
+                <SelectItem id="authenticated">Cần đăng nhập</SelectItem>
+                <SelectItem id="students">Mọi sinh viên</SelectItem>
+                <SelectItem id="student_groups">Nhóm sinh viên</SelectItem>
+              </SelectContent>
+            </Select>
             <Description>
               Chọn phạm vi xem sau khi bài viết được xuất bản.
             </Description>
@@ -539,23 +559,34 @@ export function PostForm({
                 Bố cục bài viết
               </Label>
               <SelectTrigger />
-              <SelectContent>
-                <SelectItem id="" textValue="Dùng layout mặc định">
-                  <SelectLabel>Dùng layout mặc định</SelectLabel>
-                </SelectItem>
-                {layoutOptions.map((layout) => (
-                  <SelectItem
-                    key={layout.id}
-                    id={String(layout.id)}
-                    textValue={layout.name}
-                  >
-                    <SelectLabel>
-                      {layout.name}
-                      {layout.id === defaultPostLayoutId ? " (mặc định)" : ""}
-                    </SelectLabel>
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              <Popover className="entering:fade-in exiting:fade-out entering:animate-in exiting:animate-out flex max-h-80 w-(--trigger-width) flex-col overflow-hidden rounded-lg border bg-overlay shadow-lg">
+                <Dialog aria-label="Bố cục bài viết">
+                  <Autocomplete filter={contains}>
+                    <div className="border-b py-0.5">
+                      <SearchField
+                        autoFocus
+                        aria-label="Tìm kiếm bố cục bài viết"
+                        className="rounded-none focus-within:ring-0"
+                      >
+                        <SearchInput
+                          className="border-none ring-0 focus:ring-0"
+                          placeholder="Tìm bố cục..."
+                        />
+                      </SearchField>
+                    </div>
+                    <ListBox
+                      className="max-h-[inherit] min-w-[inherit] rounded-t-none border-0 bg-transparent shadow-none"
+                      items={searchableLayoutOptions}
+                    >
+                      {(item) => (
+                        <SelectItem id={item.id} textValue={item.name}>
+                          <SelectLabel>{item.name}</SelectLabel>
+                        </SelectItem>
+                      )}
+                    </ListBox>
+                  </Autocomplete>
+                </Dialog>
+              </Popover>
               {form.errors.site_layout_id ? (
                 <FieldError>{form.errors.site_layout_id}</FieldError>
               ) : null}
