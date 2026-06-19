@@ -23,7 +23,6 @@ import {
   destroy,
   create as loginCreate,
 } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
-import PublicSearchController from "@/actions/App/Http/Controllers/PublicSearchController";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -422,7 +421,7 @@ function PublicSearchModal({
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
 
-      fetch(PublicSearchController.url({ query: { q: normalizedQuery } }), {
+      fetch(searchUrl(normalizedQuery), {
         headers: {
           Accept: "application/json",
         },
@@ -635,6 +634,10 @@ const searchTypeLabels: Record<string, string> = {
   page: "Trang",
   post: "Bài viết",
 };
+
+function searchUrl(query: string): string {
+  return `/search?${new URLSearchParams({ q: query }).toString()}`;
+}
 
 function DesktopAuthAction({
   authUser,
