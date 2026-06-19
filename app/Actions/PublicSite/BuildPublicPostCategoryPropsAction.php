@@ -29,7 +29,10 @@ final class BuildPublicPostCategoryPropsAction
      *     posts: array{data: list<array<string, mixed>>, current_page: int, last_page: int, next_page_url: ?string, prev_page_url: ?string, total: int},
      *     breadcrumbs: list<array{label: string, url: ?string}>,
      *     layout: array<string, mixed>|null,
-     *     dynamicData: array<string, mixed>
+     *     dynamicData: array<string, mixed>,
+     *     filterCategories: list<array{id: int, name: string, slug: string}>,
+     *     q: ?string,
+     *     sort: string
      * }
      */
     public function __invoke(PostCategory $category, ?User $viewer = null): array
@@ -51,9 +54,26 @@ final class BuildPublicPostCategoryPropsAction
         $query = Post::query()
             ->with(['author', 'categories', 'thumbnail'])
             ->whereHas('categories', fn (Builder $q) => $q->whereIn('post_categories.id', $categoryIds))
-            ->where('status', 'published')
-            ->latest('published_at')
-            ->latest();
+            ->where('status', 'published');
+
+        $searchQuery = request('q');
+        if (is_string($searchQuery) && trim($searchQuery) !== '') {
+            $searchTerm = trim($searchQuery);
+            $query->where(function (Builder $q) use ($searchTerm): void {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                    ->orWhere('excerpt', 'like', "%{$searchTerm}%");
+            });
+        } else {
+            $searchQuery = null;
+        }
+
+        $sortValue = request('sort', 'latest');
+        if ($sortValue === 'oldest') {
+            $query->orderBy('published_at', 'asc')->orderBy('id', 'asc');
+        } else {
+            $sortValue = 'latest';
+            $query->orderBy('published_at', 'desc')->orderBy('id', 'desc');
+        }
 
         $this->applyVisibilityConstraints($query, $viewer);
 
@@ -67,6 +87,68 @@ final class BuildPublicPostCategoryPropsAction
         /** @var LengthAwarePaginator<array-key, mixed> $typedPaginator */
         $typedPaginator = $paginator;
         $layout = PublicLayoutResolver::resolve($category->siteLayout, SiteSetting::defaultCategoryLayoutId());
+
+        // Resolve categories for the filter bar
+        $filterCategories = [];
+        if ($category->parent_id !== null) {
+            $parent = PostCategory::query()->find($category->parent_id);
+            if ($parent instanceof PostCategory) {
+                $filterCategories[] = [
+                    'id' => $parent->id,
+                    'name' => 'Tất cả',
+                    'slug' => $parent->slug,
+                ];
+                $siblings = PostCategory::query()
+                    ->where('parent_id', $parent->id)
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get();
+                foreach ($siblings as $sibling) {
+                    $filterCategories[] = [
+                        'id' => $sibling->id,
+                        'name' => $sibling->name,
+                        'slug' => $sibling->slug,
+                    ];
+                }
+            }
+        } else {
+            $childrenCount = PostCategory::query()->where('parent_id', $category->id)->where('is_active', true)->count();
+            if ($childrenCount > 0) {
+                $filterCategories[] = [
+                    'id' => $category->id,
+                    'name' => 'Tất cả',
+                    'slug' => $category->slug,
+                ];
+                $childrenList = PostCategory::query()
+                    ->where('parent_id', $category->id)
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get();
+                foreach ($childrenList as $child) {
+                    $filterCategories[] = [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                        'slug' => $child->slug,
+                    ];
+                }
+            } else {
+                $rootCategories = PostCategory::query()
+                    ->whereNull('parent_id')
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get();
+                foreach ($rootCategories as $rc) {
+                    $filterCategories[] = [
+                        'id' => $rc->id,
+                        'name' => $rc->slug === $category->slug ? 'Tất cả' : $rc->name,
+                        'slug' => $rc->slug,
+                    ];
+                }
+            }
+        }
 
         return [
             'category' => [
@@ -92,6 +174,9 @@ final class BuildPublicPostCategoryPropsAction
                 true,
                 $this->puckPayloads($layout),
             ),
+            'filterCategories' => $filterCategories,
+            'q' => $searchQuery,
+            'sort' => $sortValue,
         ];
     }
 

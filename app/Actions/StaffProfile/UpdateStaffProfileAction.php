@@ -29,7 +29,7 @@ class UpdateStaffProfileAction
      *         start_date: string,
      *         end_date?: ?string,
      *         note?: ?string
-     *     }>
+     *     }>|null
      * }  $attributes
      */
     public function __invoke(StaffProfile $staffProfile, array $attributes): StaffProfile
@@ -48,29 +48,31 @@ class UpdateStaffProfileAction
                 'is_public' => $attributes['is_public'] ?? false,
             ]);
 
-            if (isset($attributes['appointments'])) {
-                $existingIds = [];
-                foreach ($attributes['appointments'] as $appt) {
-                    $appointmentData = [
-                        'unit_id' => $appt['unit_id'],
-                        'position_id' => $appt['position_id'],
-                        'start_date' => $appt['start_date'],
-                        'end_date' => blank($appt['end_date'] ?? null) ? null : $appt['end_date'],
-                        'note' => blank($appt['note'] ?? null) ? null : $appt['note'],
-                    ];
+            if (array_key_exists('appointments', $attributes)) {
+                if ($attributes['appointments'] !== null) {
+                    $existingIds = [];
+                    foreach ($attributes['appointments'] as $appt) {
+                        $appointmentData = [
+                            'unit_id' => $appt['unit_id'],
+                            'position_id' => $appt['position_id'],
+                            'start_date' => $appt['start_date'],
+                            'end_date' => blank($appt['end_date'] ?? null) ? null : $appt['end_date'],
+                            'note' => blank($appt['note'] ?? null) ? null : $appt['note'],
+                        ];
 
-                    if (isset($appt['id'])) {
-                        $appointmentId = $appt['id'];
-                        $existingIds[] = $appointmentId;
-                        $staffProfile->appointments()->where('id', $appointmentId)->update($appointmentData);
-                    } else {
-                        $newAppt = $staffProfile->appointments()->create($appointmentData);
-                        $existingIds[] = $newAppt->id;
+                        if (isset($appt['id'])) {
+                            $appointmentId = $appt['id'];
+                            $existingIds[] = $appointmentId;
+                            $staffProfile->appointments()->where('id', $appointmentId)->update($appointmentData);
+                        } else {
+                            $newAppt = $staffProfile->appointments()->create($appointmentData);
+                            $existingIds[] = $newAppt->id;
+                        }
                     }
+                    $staffProfile->appointments()->whereNotIn('id', $existingIds)->delete();
+                } else {
+                    $staffProfile->appointments()->delete();
                 }
-                $staffProfile->appointments()->whereNotIn('id', $existingIds)->delete();
-            } else {
-                $staffProfile->appointments()->delete();
             }
 
             event(CmsContentChanged::forStaffProfile(

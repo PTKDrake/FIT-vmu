@@ -333,3 +333,77 @@ test('post with site_layout_id returns that layout and without falls back to def
             ->where('layout.id', $defaultLayout->id)
         );
 });
+
+test('category page filters posts by search query q', function () {
+    $category = PostCategory::factory()->create([
+        'name' => 'Mon hoc',
+        'slug' => 'mon-hoc',
+        'is_active' => true,
+    ]);
+
+    $post1 = Post::factory()->create([
+        'title' => 'Lap trinh PHP co ban',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+    $post1->categories()->sync([$category->id]);
+
+    $post2 = Post::factory()->create([
+        'title' => 'Co so du lieu nang cao',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now(),
+    ]);
+    $post2->categories()->sync([$category->id]);
+
+    $this->get('/mon-hoc?q=PHP')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/post-category')
+            ->has('posts.data', 1)
+            ->where('posts.data.0.title', 'Lap trinh PHP co ban')
+        );
+});
+
+test('category page sorts posts by oldest and latest', function () {
+    $category = PostCategory::factory()->create([
+        'name' => 'Tin tuc VMU',
+        'slug' => 'tin-tuc-vmu',
+        'is_active' => true,
+    ]);
+
+    $postOld = Post::factory()->create([
+        'title' => 'Bai cu',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now()->subDays(2),
+    ]);
+    $postOld->categories()->sync([$category->id]);
+
+    $postNew = Post::factory()->create([
+        'title' => 'Bai moi',
+        'status' => 'published',
+        'visibility' => 'public',
+        'published_at' => now()->subDay(),
+    ]);
+    $postNew->categories()->sync([$category->id]);
+
+    // Test sort=latest (default)
+    $this->get('/tin-tuc-vmu')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/post-category')
+            ->where('posts.data.0.title', 'Bai moi')
+            ->where('posts.data.1.title', 'Bai cu')
+        );
+
+    // Test sort=oldest
+    $this->get('/tin-tuc-vmu?sort=oldest')
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/post-category')
+            ->where('posts.data.0.title', 'Bai cu')
+            ->where('posts.data.1.title', 'Bai moi')
+        );
+});

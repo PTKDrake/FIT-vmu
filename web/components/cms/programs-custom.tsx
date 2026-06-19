@@ -79,6 +79,16 @@ export function ProgramsCustom({
         ]
       : undefined;
 
+  const itemCount = programs.length;
+  const basisClass =
+    itemCount === 1
+      ? "basis-full"
+      : itemCount === 2
+      ? "basis-full md:basis-1/2"
+      : itemCount === 3
+      ? "basis-full md:basis-1/2 lg:basis-1/3"
+      : "basis-full md:basis-1/2 lg:basis-1/4";
+
   return (
     <div className={twMerge("w-full py-8 space-y-8 lg:space-y-12", className)}>
       {/* Header section: Badge, Heading, and Subtext on left; Action Link on right */}
@@ -134,7 +144,7 @@ export function ProgramsCustom({
             return (
               <CarouselItem
                 key={index}
-                className="basis-full md:basis-1/2 lg:basis-1/4 ps-4 py-2"
+                className={twMerge(basisClass, "ps-4 py-2")}
               >
                 <div
                   className={twMerge(

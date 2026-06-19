@@ -4,8 +4,6 @@ import type { PropsWithChildren } from "react";
 const links = [
   { href: "/settings/profile", label: "Hồ sơ" },
   { href: "/settings/password", label: "Mật khẩu" },
-  { href: "/settings/appearance", label: "Giao diện" },
-  { href: "/settings/delete-account", label: "Xóa tài khoản" },
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {

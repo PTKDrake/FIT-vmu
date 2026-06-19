@@ -1,8 +1,12 @@
 import {
   ArrowRightStartOnRectangleIcon,
+  ComputerDesktopIcon,
   Cog6ToothIcon,
   HomeIcon,
+  MoonIcon,
+  PaintBrushIcon,
   ShieldCheckIcon,
+  SunIcon,
   UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
@@ -46,6 +50,7 @@ import {
   MenuItem,
   MenuSection,
   MenuSeparator,
+  MenuSubMenu,
   MenuTrigger,
 } from "@/components/ui/menu";
 import {
@@ -58,15 +63,16 @@ import { dashboard as cmsDashboard } from "@/routes/cms";
 import { edit } from "@/routes/profile";
 import type { AuthUser } from "@/types/shared";
 import { useMountEffect } from "@/hooks/use-mount-effect";
+import { useTheme } from "@/hooks/use-theme";
 
 const desktopNavigationFont =
-  '600 14px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+  '600 14px "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 const desktopBrandPrimaryFont =
-  '800 20px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+  '800 20px "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 const desktopBrandSecondaryFont =
-  '500 16px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+  '500 16px "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 const desktopActionFont =
-  '700 14px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+  '700 14px "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 const desktopHeaderHorizontalPadding = 48;
 const desktopHeaderColumnGap = 32;
 const desktopBrandLogoWidth = 64;
@@ -582,6 +588,8 @@ function MobileAuthSection({
   loginLabel: string;
   profileLabel: string;
 }) {
+  const { theme, updateTheme } = useTheme();
+
   if (!authUser) {
     return (
       <Link
@@ -634,6 +642,35 @@ function MobileAuthSection({
             <MobileProfileLink href={edit.url()} icon={<Cog6ToothIcon />}>
               Cài đặt tài khoản
             </MobileProfileLink>
+            <div className="rounded-xl border border-border/70 bg-bg/70 p-3">
+              <div className="mb-2 flex items-center gap-3 text-sm font-semibold text-fg">
+                <PaintBrushIcon className="size-5" />
+                Giao diện: {getThemeLabel(theme)}
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <MobileThemeButton
+                  currentTheme={theme}
+                  icon={<SunIcon />}
+                  label="Sáng"
+                  onPress={() => updateTheme("light")}
+                  theme="light"
+                />
+                <MobileThemeButton
+                  currentTheme={theme}
+                  icon={<MoonIcon />}
+                  label="Tối"
+                  onPress={() => updateTheme("dark")}
+                  theme="dark"
+                />
+                <MobileThemeButton
+                  currentTheme={theme}
+                  icon={<ComputerDesktopIcon />}
+                  label="Hệ thống"
+                  onPress={() => updateTheme("system")}
+                  theme="system"
+                />
+              </div>
+            </div>
             <Button
               className="flex min-h-10 w-full items-center justify-start gap-3 rounded-xl px-3 text-sm font-semibold text-danger transition hover:bg-danger-subtle"
               intent="plain"
@@ -646,6 +683,36 @@ function MobileAuthSection({
         </DisclosurePanel>
       </Disclosure>
     </DisclosureGroup>
+  );
+}
+
+function MobileThemeButton({
+  currentTheme,
+  icon,
+  label,
+  onPress,
+  theme,
+}: {
+  currentTheme: "light" | "dark" | "system";
+  icon: ReactNode;
+  label: string;
+  onPress: () => void;
+  theme: "light" | "dark" | "system";
+}) {
+  return (
+    <Button
+      className={twMerge(
+        "flex min-h-11 flex-col items-center justify-center gap-1 rounded-xl border px-2 text-xs font-semibold transition",
+        currentTheme === theme
+          ? "border-primary bg-primary-subtle text-primary"
+          : "border-border bg-bg text-muted-fg hover:bg-muted hover:text-fg",
+      )}
+      intent="plain"
+      onPress={onPress}
+    >
+      <span className="size-4">{icon}</span>
+      <span>{label}</span>
+    </Button>
   );
 }
 
@@ -670,6 +737,8 @@ function MobileProfileLink({
 }
 
 function ProfileMenuItems({ canViewCms }: { canViewCms: boolean }) {
+  const { theme, updateTheme } = useTheme();
+
   return (
     <>
       <MenuItem href={edit.url()}>
@@ -687,6 +756,27 @@ function ProfileMenuItems({ canViewCms }: { canViewCms: boolean }) {
         </MenuItem>
       ) : null}
       <MenuSeparator />
+      <MenuSubMenu>
+        <MenuItem>
+          <PaintBrushIcon />
+          Giao diện: {getThemeLabel(theme)}
+        </MenuItem>
+        <MenuContent placement="left top">
+          <MenuItem onAction={() => updateTheme("light")}>
+            <SunIcon />
+            Sáng
+          </MenuItem>
+          <MenuItem onAction={() => updateTheme("dark")}>
+            <MoonIcon />
+            Tối
+          </MenuItem>
+          <MenuItem onAction={() => updateTheme("system")}>
+            <ComputerDesktopIcon />
+            Hệ thống
+          </MenuItem>
+        </MenuContent>
+      </MenuSubMenu>
+      <MenuSeparator />
       <MenuItem href={edit.url()}>
         <Cog6ToothIcon />
         Cài đặt tài khoản
@@ -697,6 +787,18 @@ function ProfileMenuItems({ canViewCms }: { canViewCms: boolean }) {
       </MenuItem>
     </>
   );
+}
+
+function getThemeLabel(theme: "light" | "dark" | "system"): string {
+  if (theme === "light") {
+    return "Sáng";
+  }
+
+  if (theme === "dark") {
+    return "Tối";
+  }
+
+  return "Hệ thống";
 }
 
 function getUserInitials(user: AuthUser): string {

@@ -2,7 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\PublicSite\PublicLayoutResolver;
+use App\Actions\Puck\BuildPuckDynamicDataAction;
 use App\Http\Resources\AuthenticatedUserResource;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -33,7 +36,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user() ? AuthenticatedUserResource::make($request->user()) : null,
+                'user' => $request->user() ? AuthenticatedUserResource::make($request->user()->loadMissing('staffProfile.avatar')) : null,
                 'permissions' => fn (): array => $request->user()
                     ? $request->user()->getAllPermissions()->pluck('name')->sort()->values()->all()
                     : [],
@@ -52,6 +55,25 @@ class HandleInertiaRequests extends Middleware
                 'type' => $request->session()->get('type') ?? 'success',
                 'data' => $request->session()->get('data'),
             ],
+            'layout' => fn () => ($defaultId = SiteSetting::defaultPageLayoutId())
+                ? PublicLayoutResolver::resolve(null, $defaultId)
+                : null,
+            'dynamicData' => function () use ($request): array {
+                $defaultId = SiteSetting::defaultPageLayoutId();
+                $layout = $defaultId ? PublicLayoutResolver::resolve(null, $defaultId) : null;
+                $payloads = $layout ? array_values(array_filter([
+                    $layout['headerData'] ?? null,
+                    $layout['footerData'] ?? null,
+                    $layout['leftData'] ?? null,
+                    $layout['rightData'] ?? null,
+                ])) : [];
+
+                return app(BuildPuckDynamicDataAction::class)(
+                    $request->user(),
+                    true,
+                    $payloads
+                );
+            },
         ];
     }
 

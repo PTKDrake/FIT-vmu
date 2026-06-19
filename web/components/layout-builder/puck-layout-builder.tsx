@@ -329,7 +329,7 @@ const layoutBuilderStyles = `
 .vmu-puck-page-builder span,
 .vmu-puck-page-builder label,
 .vmu-puck-page-builder a {
-  font-family: "Google Sans", var(--font-sans), sans-serif !important;
+  font-family: var(--font-sans), sans-serif !important;
 }
 
 .vmu-puck-page-builder {

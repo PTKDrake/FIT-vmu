@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\StaffProfile;
 use App\Models\User;
 
 test('profile page is displayed', function () {
@@ -83,4 +84,41 @@ test('correct password must be provided to delete account', function () {
         ->assertRedirect('/settings/delete-account');
 
     expect($user->fresh())->not->toBeNull();
+});
+
+test('profile and staff profile details can be updated', function () {
+    $user = User::factory()->create();
+    $staffProfile = StaffProfile::factory()->create([
+        'user_id' => $user->id,
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->patch('/settings/profile', [
+            'name' => 'Test User',
+            'email' => $user->email,
+            'academic_title' => 'TS.',
+            'full_name' => 'Nguyễn Văn A',
+            'slug' => 'nguyen-van-a',
+            'staff_email' => 'test-staff@example.com',
+            'phone' => '0987654321',
+            'bio' => '{"blocks": []}',
+            'is_public' => true,
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/settings/profile');
+
+    $user->refresh();
+    $staffProfile->refresh();
+
+    expect($user->name)->toBe('Test User');
+    expect($staffProfile->academic_title)->toBe('TS.')
+        ->and($staffProfile->full_name)->toBe('Nguyễn Văn A')
+        ->and($staffProfile->slug)->toBe('nguyen-van-a')
+        ->and($staffProfile->email)->toBe('test-staff@example.com')
+        ->and($staffProfile->phone)->toBe('0987654321')
+        ->and($staffProfile->bio)->toBe('{"blocks": []}')
+        ->and($staffProfile->is_public)->toBeTrue();
 });

@@ -1,9 +1,24 @@
+export interface StaffProfileData {
+  id: number;
+  academic_title: string | null;
+  full_name: string;
+  slug: string;
+  avatar_id: number | null;
+  avatar_url: string | null;
+  email: string | null;
+  phone: string | null;
+  bio: string | null;
+  bio_format: "blocknote_json";
+  is_public: boolean;
+}
+
 export interface AuthUser {
   email: string;
   email_verified_at: string | null;
   gravatar: string;
   id: number;
   name: string;
+  staffProfile: StaffProfileData | null;
 }
 
 export interface FlashData {
@@ -25,4 +40,6 @@ export interface SharedData extends Record<string, unknown> {
   };
   flash: FlashData | null;
   sidebarOpen: boolean;
+  layout: any;
+  dynamicData: any;
 }

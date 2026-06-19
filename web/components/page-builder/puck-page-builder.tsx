@@ -29,6 +29,8 @@ import type {
 } from "@/lib/puck/page-builder-data";
 
 const usePageBuilderPuck = createUsePuck<typeof vmuFitPageBuilderConfig>();
+const beVietnamProSansFontFamily =
+  '"Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 
 export interface PuckPageBuilderChange {
   data: VmuFitPageBuilderData;
@@ -119,7 +121,6 @@ export function PuckPageBuilder({
           }
         }
 
-        // Programmatically inject Google Sans fonts and override CSS variable
         if (iframeHead) {
           if (!iframeHead.querySelector('link[href*="fonts.googleapis.com"]')) {
             const preconnect1 = iframe.contentDocument.createElement("link");
@@ -136,7 +137,7 @@ export function PuckPageBuilder({
             const fontLink = iframe.contentDocument.createElement("link");
             fontLink.rel = "stylesheet";
             fontLink.href =
-              "https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap";
+              "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap";
             iframeHead.appendChild(fontLink);
           }
 
@@ -145,11 +146,11 @@ export function PuckPageBuilder({
             fontOverride.id = "puck-iframe-font-override";
             fontOverride.innerHTML = `
               :root {
-                --font-sans: "Google Sans", "Inter", ui-sans-serif, system-ui, sans-serif !important;
-                --font-display: "Google Sans", "Inter", ui-sans-serif, system-ui, sans-serif !important;
+                --font-sans: ${beVietnamProSansFontFamily} !important;
+                --font-display: ${beVietnamProSansFontFamily} !important;
               }
               body, html, .puck-preview {
-                font-family: "Google Sans", "Inter", ui-sans-serif, system-ui, sans-serif !important;
+                font-family: ${beVietnamProSansFontFamily} !important;
               }
             `;
             iframeHead.appendChild(fontOverride);
@@ -369,7 +370,7 @@ const puckBuilderStyles = `
 .vmu-puck-page-builder span,
 .vmu-puck-page-builder label,
 .vmu-puck-page-builder a {
-  font-family: "Google Sans", var(--font-sans), sans-serif !important;
+  font-family: var(--font-sans), sans-serif !important;
 }
 
 .vmu-puck-page-builder {

@@ -6,6 +6,10 @@ const pretextTextareaSource = readFileSync(
     new URL("../components/ui/textarea.tsx", import.meta.url),
     "utf8",
 );
+const postListSectionSource = readFileSync(
+    new URL("../components/public/post-list-section.tsx", import.meta.url),
+    "utf8",
+);
 const pageCreateSource = readFileSync(
     new URL("../pages/cms/pages/create.tsx", import.meta.url),
     "utf8",
@@ -40,6 +44,22 @@ test("pretext textarea uses DOM-free multiline measurement", () => {
         /new ResizeObserver\(scheduleMeasurement\)/,
     );
     assert.match(pretextTextareaSource, /autosize\?: boolean/);
+});
+
+test("post list categories collapse with pretext width measurement", () => {
+    assert.match(postListSectionSource, /@chenglou\/pretext/);
+    assert.match(postListSectionSource, /measureNaturalWidth/);
+    assert.match(postListSectionSource, /prepareWithSegments/);
+    assert.match(
+        postListSectionSource,
+        /measuredCategoryBadgeWidths = new Map/,
+    );
+    assert.match(postListSectionSource, /new ResizeObserver/);
+    assert.match(
+        postListSectionSource,
+        /\+\{visibleCategoryBadges\.hiddenCount\}/,
+    );
+    assert.doesNotMatch(postListSectionSource, /categoryNames\[0\]/);
 });
 
 test("cms forms opt into textarea autosize", () => {
