@@ -47,3 +47,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/web/actions
+/web/routes
+/web/wayfinder
