@@ -1,7 +1,7 @@
-import publicMethod from "./public";
+import publicMethod from './public'
 
 const posts = {
-  public: Object.assign(publicMethod, publicMethod),
-};
+    public: Object.assign(publicMethod, publicMethod),
+}
 
-export default posts;
+export default posts

@@ -1,133 +1,92 @@
-import {
-  queryParams,
-  type RouteQueryOptions,
-  type RouteDefinition,
-  type RouteFormDefinition,
-  applyUrlDefaults,
-} from "./../../../../../wayfinder";
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
- * @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
- * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
- * @route '/cms/roles-permissions/{role}'
- */
-const DeleteRoleController = (
-  args:
-    | { role: number | { id: number } }
-    | [role: number | { id: number }]
-    | number
-    | { id: number },
-  options?: RouteQueryOptions,
-): RouteDefinition<"delete"> => ({
-  url: DeleteRoleController.url(args, options),
-  method: "delete",
-});
+* @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
+* @see app/Http/Controllers/Cms/DeleteRoleController.php:21
+* @route '/cms/roles-permissions/{role}'
+*/
+const DeleteRoleController = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: DeleteRoleController.url(args, options),
+    method: 'delete',
+})
 
 DeleteRoleController.definition = {
-  methods: ["delete"],
-  url: "/cms/roles-permissions/{role}",
-} satisfies RouteDefinition<["delete"]>;
+    methods: ["delete"],
+    url: '/cms/roles-permissions/{role}',
+} satisfies RouteDefinition<["delete"]>
 
 /**
- * @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
- * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
- * @route '/cms/roles-permissions/{role}'
- */
-DeleteRoleController.url = (
-  args:
-    | { role: number | { id: number } }
-    | [role: number | { id: number }]
-    | number
-    | { id: number },
-  options?: RouteQueryOptions,
-) => {
-  if (typeof args === "string" || typeof args === "number") {
-    args = { role: args };
-  }
+* @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
+* @see app/Http/Controllers/Cms/DeleteRoleController.php:21
+* @route '/cms/roles-permissions/{role}'
+*/
+DeleteRoleController.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { role: args }
+    }
 
-  if (typeof args === "object" && !Array.isArray(args) && "id" in args) {
-    args = { role: args.id };
-  }
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { role: args.id }
+    }
 
-  if (Array.isArray(args)) {
-    args = {
-      role: args[0],
-    };
-  }
+    if (Array.isArray(args)) {
+        args = {
+            role: args[0],
+        }
+    }
 
-  args = applyUrlDefaults(args);
+    args = applyUrlDefaults(args)
 
-  const parsedArgs = {
-    role: typeof args.role === "object" ? args.role.id : args.role,
-  };
+    const parsedArgs = {
+        role: typeof args.role === 'object'
+        ? args.role.id
+        : args.role,
+    }
 
-  return (
-    DeleteRoleController.definition.url
-      .replace("{role}", parsedArgs.role.toString())
-      .replace(/\/+$/, "") + queryParams(options)
-  );
-};
+    return DeleteRoleController.definition.url
+            .replace('{role}', parsedArgs.role.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
 
 /**
- * @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
- * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
- * @route '/cms/roles-permissions/{role}'
- */
-DeleteRoleController.delete = (
-  args:
-    | { role: number | { id: number } }
-    | [role: number | { id: number }]
-    | number
-    | { id: number },
-  options?: RouteQueryOptions,
-): RouteDefinition<"delete"> => ({
-  url: DeleteRoleController.url(args, options),
-  method: "delete",
-});
+* @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
+* @see app/Http/Controllers/Cms/DeleteRoleController.php:21
+* @route '/cms/roles-permissions/{role}'
+*/
+DeleteRoleController.delete = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: DeleteRoleController.url(args, options),
+    method: 'delete',
+})
 
 /**
- * @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
- * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
- * @route '/cms/roles-permissions/{role}'
- */
-const DeleteRoleControllerForm = (
-  args:
-    | { role: number | { id: number } }
-    | [role: number | { id: number }]
-    | number
-    | { id: number },
-  options?: RouteQueryOptions,
-): RouteFormDefinition<"post"> => ({
-  action: DeleteRoleController.url(args, {
-    [options?.mergeQuery ? "mergeQuery" : "query"]: {
-      _method: "DELETE",
-      ...(options?.query ?? options?.mergeQuery ?? {}),
-    },
-  }),
-  method: "post",
-});
+* @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
+* @see app/Http/Controllers/Cms/DeleteRoleController.php:21
+* @route '/cms/roles-permissions/{role}'
+*/
+const DeleteRoleControllerForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: DeleteRoleController.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
 
 /**
- * @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
- * @see app/Http/Controllers/Cms/DeleteRoleController.php:21
- * @route '/cms/roles-permissions/{role}'
- */
-DeleteRoleControllerForm.delete = (
-  args:
-    | { role: number | { id: number } }
-    | [role: number | { id: number }]
-    | number
-    | { id: number },
-  options?: RouteQueryOptions,
-): RouteFormDefinition<"post"> => ({
-  action: DeleteRoleController.url(args, {
-    [options?.mergeQuery ? "mergeQuery" : "query"]: {
-      _method: "DELETE",
-      ...(options?.query ?? options?.mergeQuery ?? {}),
-    },
-  }),
-  method: "post",
-});
+* @see \App\Http\Controllers\Cms\DeleteRoleController::__invoke
+* @see app/Http/Controllers/Cms/DeleteRoleController.php:21
+* @route '/cms/roles-permissions/{role}'
+*/
+DeleteRoleControllerForm.delete = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: DeleteRoleController.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
 
-DeleteRoleController.form = DeleteRoleControllerForm;
+DeleteRoleController.form = DeleteRoleControllerForm
 
-export default DeleteRoleController;
+export default DeleteRoleController

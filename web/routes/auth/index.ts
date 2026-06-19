@@ -1,7 +1,7 @@
-import google from "./google";
+import google from './google'
 
 const auth = {
-  google: Object.assign(google, google),
-};
+    google: Object.assign(google, google),
+}
 
-export default auth;
+export default auth

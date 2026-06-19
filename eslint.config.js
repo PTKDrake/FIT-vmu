@@ -25,6 +25,14 @@ const paddingAroundControl = [
 ];
 const noUseEffectMessage =
   "Direct useEffect is forbidden in this repository. Read skills/no-use-effect/SKILL.md and skills/no-use-effect/references/patterns.md. Use useMountEffect from @/hooks/use-mount-effect only for true mount-only external synchronization.";
+const wayfinderGeneratedPaths = [
+  "web/actions",
+  "web/actions/**",
+  "web/routes",
+  "web/routes/**",
+  "web/wayfinder",
+  "web/wayfinder/**",
+];
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -143,10 +151,8 @@ export default [
       "web/types/**/*.d.ts",
       "web/test-fixtures/**",
       "web/tests/*.mjs",
-      "web/actions/**",
       "web/components/ui/*",
-      "web/routes/**",
-      "web/wayfinder/**",
+      ...wayfinderGeneratedPaths,
     ],
   },
   prettier,

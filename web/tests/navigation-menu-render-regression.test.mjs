@@ -21,6 +21,10 @@ const fitNavigationBarSource = readFileSync(
     ),
     "utf8",
 );
+const drawerSource = readFileSync(
+    new URL("../components/ui/drawer.tsx", import.meta.url),
+    "utf8",
+);
 const siteLayoutShellSource = readFileSync(
     new URL("../components/site-layout/site-layout-shell.tsx", import.meta.url),
     "utf8",
@@ -87,10 +91,14 @@ test("Fit navigation header creates an unclipped dropdown stacking layer", () =>
     assert.match(fitNavigationBarSource, /backdrop-blur/);
     assert.match(fitNavigationBarSource, /<NavbarGroup/);
     assert.match(fitNavigationBarSource, /delayOpenMs=\{100\}/);
+    assert.match(fitNavigationBarSource, /backdropBlur=\{false\}/);
     assert.match(
         fitNavigationBarSource,
         /overlay=\{\{ className: "z-\[300\]" \}\}/,
     );
+    assert.match(drawerSource, /backdropBlur\?: boolean/);
+    assert.match(drawerSource, /backdropBlur = true/);
+    assert.match(drawerSource, /backdropBlur \? \{ backdropFilter/);
     assert.match(
         fitNavigationBarSource,
         /aria-label=\{`Mở hoặc đóng menu \$\{item\.title\}`\}/,
@@ -109,5 +117,31 @@ test("Fit navigation header creates an unclipped dropdown stacking layer", () =>
     assert.match(
         siteLayoutShellSource,
         /<header className="relative z-\[200\] overflow-visible">/,
+    );
+});
+
+test("Fit navigation header falls back to the mobile drawer when desktop items do not fit", () => {
+    assert.match(
+        fitNavigationBarSource,
+        /measureNaturalWidth, prepareWithSegments/,
+    );
+    assert.match(fitNavigationBarSource, /shouldUseMobileNavigationLayout/);
+    assert.match(fitNavigationBarSource, /getDesktopNavigationRequiredWidth/);
+    assert.match(
+        fitNavigationBarSource,
+        /useElementInlineSize\(headerElementRef\)/,
+    );
+    assert.match(
+        fitNavigationBarSource,
+        /shouldUseCompactNavigation \? "lg:hidden" : ""/,
+    );
+    assert.match(
+        fitNavigationBarSource,
+        /shouldUseCompactNavigation \? "lg:flex" : ""/,
+    );
+    assert.doesNotMatch(fitNavigationBarSource, /fit-navigation-overflow/);
+    assert.doesNotMatch(
+        fitNavigationBarSource,
+        /desktopNavigationOverflowLabel/,
     );
 });

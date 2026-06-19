@@ -160,7 +160,8 @@ class BuildPuckDynamicDataAction
             ->limit(30);
 
         if ($enforceVisibility) {
-            $this->applyPublishedVisibilityConstraints($query, $viewer);
+            $query->where('status', 'published');
+            $this->applyVisibilityConstraints($query, $viewer);
         } else {
             $query->where('status', 'published');
         }
@@ -281,9 +282,10 @@ class BuildPuckDynamicDataAction
             ->limit(50);
 
         if ($enforceVisibility) {
-            $this->applyPublishedVisibilityConstraints($query, $viewer);
+            $query->whereNotNull('published_at');
+            $this->applyVisibilityConstraints($query, $viewer);
         } else {
-            $query->where('status', 'published');
+            $query->whereNotNull('published_at');
         }
 
         return array_values($query
@@ -302,10 +304,8 @@ class BuildPuckDynamicDataAction
      *
      * @param  Builder<TModel>  $query
      */
-    private function applyPublishedVisibilityConstraints(Builder $query, ?User $viewer): void
+    private function applyVisibilityConstraints(Builder $query, ?User $viewer): void
     {
-        $query->where('status', 'published');
-
         if (! $viewer instanceof User) {
             $query->where('visibility', 'public');
 

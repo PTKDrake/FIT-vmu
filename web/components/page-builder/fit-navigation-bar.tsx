@@ -8,8 +8,15 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
+import { measureNaturalWidth, prepareWithSegments } from "@chenglou/pretext";
 import { router } from "@inertiajs/react";
-import type { ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { twMerge } from "tailwind-merge";
 import {
   destroy,
@@ -50,6 +57,31 @@ import {
 import { dashboard as cmsDashboard } from "@/routes/cms";
 import { edit } from "@/routes/profile";
 import type { AuthUser } from "@/types/shared";
+import { useMountEffect } from "@/hooks/use-mount-effect";
+
+const desktopNavigationFont =
+  '600 14px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+const desktopBrandPrimaryFont =
+  '800 20px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+const desktopBrandSecondaryFont =
+  '500 16px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+const desktopActionFont =
+  '700 14px "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+const desktopHeaderHorizontalPadding = 48;
+const desktopHeaderColumnGap = 32;
+const desktopBrandLogoWidth = 64;
+const desktopBrandGap = 16;
+const desktopSearchButtonWidth = 48;
+const desktopActionGap = 12;
+const desktopLoginIconWidth = 20;
+const desktopLoginGap = 8;
+const desktopActionHorizontalPadding = 24;
+const desktopProfileAvatarWidth = 32;
+const desktopProfileNameMaxWidth = 144;
+const desktopNavigationItemHorizontalPadding = 32;
+const desktopNavigationItemGap = 4;
+const desktopNavigationFitSafetyMargin = 24;
+const measuredNavigationItemWidths = new Map<string, number>();
 
 export interface FitNavigationItem {
   children: FitNavigationItem[];
@@ -92,14 +124,42 @@ export function FitNavigationBar({
   searchLabel = "Tìm kiếm",
   siteName = "Khoa CNTT",
 }: FitNavigationBarProps) {
+  const headerElementRef = useRef<HTMLElement | null>(null);
+  const headerInlineSize = useElementInlineSize(headerElementRef);
+  const shouldUseCompactNavigation = useMemo(
+    () =>
+      shouldUseMobileNavigationLayout({
+        authUser,
+        headerWidth: headerInlineSize,
+        items: menuItems,
+        loginLabel,
+        organizationName,
+        siteName,
+      }),
+    [
+      authUser,
+      headerInlineSize,
+      loginLabel,
+      menuItems,
+      organizationName,
+      siteName,
+    ],
+  );
+
   return (
     <header
+      ref={headerElementRef}
       className={twMerge(
         "relative z-200 w-full overflow-visible rounded-3xl border border-border bg-bg/95 px-3 py-2.5 text-fg shadow-xl shadow-fg/5 backdrop-blur md:px-6 md:py-3",
         className,
       )}
     >
-      <div className="hidden w-full items-center gap-8 lg:flex">
+      <div
+        className={twMerge(
+          "hidden w-full items-center gap-8 lg:flex",
+          shouldUseCompactNavigation ? "lg:hidden" : "",
+        )}
+      >
         <BrandLockup
           logoAlt={logoAlt}
           logoUrl={logoUrl}
@@ -126,7 +186,12 @@ export function FitNavigationBar({
         </div>
       </div>
 
-      <div className="flex w-full items-center gap-3 lg:hidden">
+      <div
+        className={twMerge(
+          "flex w-full items-center gap-3 lg:hidden",
+          shouldUseCompactNavigation ? "lg:flex" : "",
+        )}
+      >
         <BrandLockup
           className="min-w-0 flex-1"
           compact
@@ -413,6 +478,7 @@ function MobileNavigationDrawer({
       </DrawerTrigger>
       <DrawerContent
         aria-label={menuAriaLabel}
+        backdropBlur={false}
         className="max-w-sm"
         notch={false}
         overlay={{ className: "z-[300]" }}
@@ -720,4 +786,173 @@ function normalizeNavigationPath(value: string): string {
   } catch {
     return value.replace(/\/+$/, "") || "/";
   }
+}
+
+function shouldUseMobileNavigationLayout({
+  authUser,
+  headerWidth,
+  items,
+  loginLabel,
+  organizationName,
+  siteName,
+}: {
+  authUser: AuthUser | null;
+  headerWidth: number;
+  items: FitNavigationItem[];
+  loginLabel: string;
+  organizationName: string;
+  siteName: string;
+}): boolean {
+  if (headerWidth <= 0 || !canMeasureTextWithoutDom()) {
+    return false;
+  }
+
+  return (
+    getDesktopNavigationRequiredWidth({
+      authUser,
+      items,
+      loginLabel,
+      organizationName,
+      siteName,
+    }) > headerWidth
+  );
+}
+
+function getDesktopNavigationRequiredWidth({
+  authUser,
+  items,
+  loginLabel,
+  organizationName,
+  siteName,
+}: {
+  authUser: AuthUser | null;
+  items: FitNavigationItem[];
+  loginLabel: string;
+  organizationName: string;
+  siteName: string;
+}): number {
+  return (
+    desktopHeaderHorizontalPadding +
+    getDesktopBrandWidth(siteName, organizationName) +
+    desktopHeaderColumnGap +
+    getDesktopNavigationWidth(items) +
+    desktopHeaderColumnGap +
+    getDesktopActionsWidth(authUser, loginLabel) +
+    desktopNavigationFitSafetyMargin
+  );
+}
+
+function getDesktopBrandWidth(
+  siteName: string,
+  organizationName: string,
+): number {
+  return (
+    desktopBrandLogoWidth +
+    desktopBrandGap +
+    Math.max(
+      measureTextWidth(siteName, desktopBrandPrimaryFont),
+      measureTextWidth(organizationName, desktopBrandSecondaryFont),
+    )
+  );
+}
+
+function getDesktopNavigationWidth(items: FitNavigationItem[]): number {
+  const itemWidths = items.map((item) => getDesktopNavigationItemWidth(item));
+  const gapWidth =
+    Math.max(itemWidths.length - 1, 0) * desktopNavigationItemGap;
+
+  return itemWidths.reduce((total, width) => total + width, gapWidth);
+}
+
+function getDesktopNavigationItemWidth(item: FitNavigationItem): number {
+  const cacheKey = `${desktopNavigationFont}:${item.title}`;
+  const cachedWidth = measuredNavigationItemWidths.get(cacheKey);
+
+  if (cachedWidth !== undefined) {
+    return cachedWidth;
+  }
+
+  const measuredWidth =
+    measureTextWidth(item.title, desktopNavigationFont) +
+    desktopNavigationItemHorizontalPadding;
+
+  measuredNavigationItemWidths.set(cacheKey, measuredWidth);
+
+  return measuredWidth;
+}
+
+function getDesktopActionsWidth(
+  authUser: AuthUser | null,
+  loginLabel: string,
+): number {
+  return (
+    desktopSearchButtonWidth +
+    desktopActionGap +
+    (authUser
+      ? desktopActionHorizontalPadding +
+        desktopProfileAvatarWidth +
+        desktopLoginGap +
+        Math.min(
+          measureTextWidth(authUser.name, desktopActionFont),
+          desktopProfileNameMaxWidth,
+        )
+      : desktopActionHorizontalPadding +
+        desktopLoginIconWidth +
+        desktopLoginGap +
+        measureTextWidth(loginLabel, desktopActionFont))
+  );
+}
+
+function measureTextWidth(text: string, font: string): number {
+  return measureNaturalWidth(prepareWithSegments(text, font));
+}
+
+function canMeasureTextWithoutDom(): boolean {
+  return typeof window !== "undefined" && typeof document !== "undefined";
+}
+
+function useElementInlineSize<TElement extends HTMLElement>(
+  elementRef: RefObject<TElement | null>,
+): number {
+  const [inlineSize, setInlineSize] = useState(0);
+
+  useMountEffect(() => {
+    const element = elementRef.current;
+
+    if (!element || typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const updateInlineSize = (nextInlineSize: number): void => {
+      setInlineSize((currentInlineSize) =>
+        currentInlineSize === nextInlineSize
+          ? currentInlineSize
+          : nextInlineSize,
+      );
+    };
+
+    updateInlineSize(Math.round(element.getBoundingClientRect().width));
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) {
+        return;
+      }
+
+      const borderBoxSize = Array.isArray(entry.borderBoxSize)
+        ? entry.borderBoxSize[0]
+        : entry.borderBoxSize;
+
+      updateInlineSize(
+        Math.round(borderBoxSize?.inlineSize ?? entry.contentRect.width),
+      );
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  });
+
+  return inlineSize;
 }

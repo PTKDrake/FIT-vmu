@@ -41,29 +41,30 @@ export function HeroCustom({
   return (
     <div
       className={twMerge(
-        "relative overflow-hidden rounded-3xl p-6 md:p-12 lg:p-16 flex flex-col md:flex-row items-center gap-8",
+        "relative flex flex-col items-center gap-8 overflow-hidden rounded-3xl p-6 min-[1440px]:flex-row min-[1440px]:p-16",
         "bg-gradient-to-b from-[#0e56cc] to-[#083a96] text-white",
         !isDark &&
-          "md:bg-gradient-to-r md:from-[#ebf3fe] md:via-[#f1f7ff] md:to-white md:text-fg",
+          "min-[1440px]:bg-gradient-to-r min-[1440px]:from-[#ebf3fe] min-[1440px]:via-[#f1f7ff] min-[1440px]:to-white min-[1440px]:text-fg",
         "shadow-xs transition duration-300 hover:shadow-sm",
         className,
       )}
     >
       {/* Left Column: Text & Actions */}
-      <div className="w-full md:w-1/2 flex flex-col gap-5 md:gap-6 z-10 relative">
+      <div className="relative z-10 flex w-full flex-col gap-5 min-[1440px]:w-1/2 min-[1440px]:gap-6">
         {badge && (
           <div
             className={twMerge(
-              "inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold shadow-xs select-none w-fit border",
+              "inline-flex w-fit select-none items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold shadow-xs",
               "border-white/20 bg-white/10 text-white",
               !isDark &&
-                "md:border-primary/10 md:bg-white/90 md:text-primary md:backdrop-blur-xs dark:md:border-white/20 dark:md:bg-white/10 dark:md:text-white",
+                "min-[1440px]:border-primary/10 min-[1440px]:bg-white/90 min-[1440px]:text-primary min-[1440px]:backdrop-blur-xs dark:min-[1440px]:border-white/20 dark:min-[1440px]:bg-white/10 dark:min-[1440px]:text-white",
             )}
           >
             <School
               className={twMerge(
                 "size-4 shrink-0 text-white",
-                !isDark && "md:text-primary dark:md:text-white",
+                !isDark &&
+                  "min-[1440px]:text-primary dark:min-[1440px]:text-white",
               )}
             />
             <span>{badge}</span>
@@ -72,8 +73,8 @@ export function HeroCustom({
 
         <h1
           className={twMerge(
-            "text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white",
-            !isDark && "md:text-fg dark:md:text-white",
+            "text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-3xl min-[1440px]:text-5xl",
+            !isDark && "min-[1440px]:text-fg dark:min-[1440px]:text-white",
           )}
         >
           {title}
@@ -81,23 +82,24 @@ export function HeroCustom({
 
         <p
           className={twMerge(
-            "text-sm sm:text-base leading-relaxed whitespace-pre-line text-blue-100",
-            !isDark && "md:text-muted-fg dark:md:text-blue-100",
+            "whitespace-pre-line text-sm leading-relaxed text-blue-100 sm:text-base",
+            !isDark &&
+              "min-[1440px]:text-muted-fg dark:min-[1440px]:text-blue-100",
           )}
         >
           {description}
         </p>
 
-        <div className="flex flex-col sm:flex-row md:flex-wrap gap-4 pt-2 w-full sm:w-auto">
+        <div className="flex w-full flex-col gap-4 pt-2 sm:w-auto sm:flex-row min-[1440px]:flex-wrap">
           {primaryActionLabel && (
             <Link
               href={primaryActionHref || "#"}
               className={cx(
                 buttonStyles({ size: "lg" }),
-                "w-full sm:w-auto justify-center gap-2 group/btn cursor-pointer font-semibold",
+                "group/btn w-full cursor-pointer justify-center gap-2 font-semibold sm:w-auto",
                 "bg-white text-[#0e56cc] hover:bg-blue-50 border-transparent",
                 !isDark
-                  ? "md:bg-primary md:text-primary-fg md:hover:bg-primary/95 dark:md:bg-white dark:md:text-[#0e56cc] dark:md:hover:bg-blue-50 dark:md:border-transparent"
+                  ? "min-[1440px]:bg-primary min-[1440px]:text-primary-fg min-[1440px]:hover:bg-primary/95 dark:min-[1440px]:border-transparent dark:min-[1440px]:bg-white dark:min-[1440px]:text-[#0e56cc] dark:min-[1440px]:hover:bg-blue-50"
                   : "",
               )}
             >
@@ -113,10 +115,10 @@ export function HeroCustom({
               href={secondaryActionHref || "#"}
               className={cx(
                 buttonStyles({ size: "lg" }),
-                "w-full sm:w-auto justify-center gap-2 group/btn cursor-pointer font-semibold",
+                "group/btn w-full cursor-pointer justify-center gap-2 font-semibold sm:w-auto",
                 "border-white/30 text-white hover:bg-white/10 bg-transparent",
                 !isDark
-                  ? "md:border-primary/20 md:text-primary md:hover:bg-primary-subtle/25 dark:md:border-white/30 dark:md:text-white dark:md:hover:bg-white/10 dark:md:bg-transparent"
+                  ? "min-[1440px]:border-primary/20 min-[1440px]:text-primary min-[1440px]:hover:bg-primary-subtle/25 dark:min-[1440px]:border-white/30 dark:min-[1440px]:bg-transparent dark:min-[1440px]:text-white dark:min-[1440px]:hover:bg-white/10"
                   : "",
               )}
             >
@@ -133,7 +135,7 @@ export function HeroCustom({
       {resolvedImageUrl && (
         <>
           {/* Desktop Right Panel (Arc clipped image) */}
-          <div className="hidden md:block absolute right-0 top-0 bottom-0 w-1/2 rounded-l-full overflow-hidden select-none">
+          <div className="absolute top-0 right-0 bottom-0 hidden w-1/2 select-none overflow-hidden rounded-l-full min-[1440px]:block">
             <img
               src={resolvedImageUrl}
               alt={title || "FIT-VMU building"}
@@ -145,11 +147,11 @@ export function HeroCustom({
               }}
             />
             {/* Decorative bottom-right blue gradient overlay */}
-            <div className="absolute right-0 bottom-0 bg-gradient-to-tr from-[#083a96] to-[#0e56cc] rounded-tl-full w-48 h-48 translate-x-12 translate-y-12 opacity-90 pointer-events-none" />
+            <div className="pointer-events-none absolute right-0 bottom-0 size-48 translate-x-12 translate-y-12 rounded-tl-full bg-gradient-to-tr from-[#083a96] to-[#0e56cc] opacity-90" />
           </div>
 
           {/* Mobile Stacked Image (below text) */}
-          <div className="block md:hidden relative w-full aspect-video sm:aspect-[21/9] overflow-hidden rounded-2xl shadow-sm select-none">
+          <div className="relative block aspect-video w-full select-none overflow-hidden rounded-2xl shadow-sm min-[1440px]:hidden">
             <img
               src={resolvedImageUrl}
               alt={title || "FIT-VMU building"}

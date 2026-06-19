@@ -34,6 +34,7 @@ interface DrawerContentProps
       "aria-label" | "aria-labelledby" | "role" | "children" | "className"
     > {
   isFloat?: boolean;
+  backdropBlur?: boolean;
   className?: string;
   overlay?: Pick<ModalOverlayProps, "className">;
   side?: "top" | "bottom" | "left" | "right";
@@ -43,6 +44,7 @@ interface DrawerContentProps
 const DrawerContent = ({
   side = "bottom",
   isFloat = false,
+  backdropBlur = true,
   notch = true,
   children,
   className,
@@ -62,15 +64,15 @@ const DrawerContent = ({
           onOpenChange={onOpenChange}
           initial={{
             backgroundColor: "rgba(0, 0, 0, 0)",
-            backdropFilter: "blur(0px)",
+            ...(backdropBlur ? { backdropFilter: "blur(0px)" } : {}),
           }}
           animate={{
             backgroundColor: "rgba(0, 0, 0, 0.2)",
-            backdropFilter: "blur(1px)",
+            ...(backdropBlur ? { backdropFilter: "blur(1px)" } : {}),
           }}
           exit={{
             backgroundColor: "rgba(0, 0, 0, 0)",
-            backdropFilter: "blur(0px)",
+            ...(backdropBlur ? { backdropFilter: "blur(0px)" } : {}),
           }}
           transition={{ duration: 0.15, ease: "easeInOut" }}
           className={cx(

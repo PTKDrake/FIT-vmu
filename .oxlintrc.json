@@ -33,9 +33,12 @@
         "web/types/**/*.d.ts",
         "web/test-fixtures/**",
         "web/tests/*.mjs",
+        "web/actions",
         "web/actions/**/*.ts",
         "web/components/ui/*",
+        "web/routes",
         "web/routes/**/*.ts",
+        "web/wayfinder",
         "web/wayfinder/**/*.ts"
     ],
     "rules": {

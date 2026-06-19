@@ -250,7 +250,18 @@ final class CmsSiteLayoutsTest extends TestCase
         Page::factory()->createOne([
             'title' => 'Dynamic Page',
             'slug' => 'dynamic-page',
+            'published_at' => now(),
             'content' => '{"root":{"props":{"title":"Dynamic Page"}},"content":[{"type":"LatestPosts","props":{"id":"latest","title":"Tin mới","limit":3,"categoryId":"all","layout":"grid","showCTA":false}}]}',
+        ]);
+        Page::factory()->createOne([
+            'title' => 'Published Linked Page',
+            'slug' => 'published-linked-page',
+            'published_at' => now(),
+        ]);
+        Page::factory()->createOne([
+            'title' => 'Draft Linked Page',
+            'slug' => 'draft-linked-page',
+            'published_at' => null,
         ]);
 
         $this->get('/dynamic-page')
@@ -258,6 +269,9 @@ final class CmsSiteLayoutsTest extends TestCase
             ->assertInertia(fn (Assert $inertia) => $inertia
                 ->component('public/page')
                 ->where('dynamicData.posts.0.title', 'Dynamic published post')
+                ->has('dynamicData.pages', 2)
+                ->where('dynamicData.pages.0.title', 'Dynamic Page')
+                ->where('dynamicData.pages.1.title', 'Published Linked Page')
                 ->has('dynamicData.categories')
             );
     }
