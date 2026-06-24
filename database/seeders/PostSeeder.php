@@ -10,6 +10,8 @@ class PostSeeder extends Seeder
 {
     public function run(): void
     {
-        //
+        $this->call([
+            CrawledPostsSeeder::class,
+        ]);
     }
 }
